@@ -22,30 +22,32 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="space-y-4"
     >
-      {/* Main Seed Image Card - The whole card is just the rounded image */}
-      <motion.div
-        className="relative w-full h-80 rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow border-2 border-gray-600"
-        onClick={onClick}
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
-      >
-        {/* Seed Label Badge - overlaps to sit on the border */}
+      {/* Main Seed Image Card - with external label */}
+      <div className="relative">
+        {/* Seed Label Badge - placed outside to avoid clipping */}
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-[5]">
           <span className="bg-white border-2 border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
             {seed.label.toUpperCase()}
           </span>
         </div>
-        
-        {/* Seed Image - fills the entire rounded container */}
-        <Image
-          src={seed.seedImageUrl}
-          alt={seed.name}
-          fill
-          className="object-cover"
-          onLoad={handleImageLoad}
-          priority={index < 2}
-        />
-      </motion.div>
+
+        <motion.div
+          className="relative w-full h-80 rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow border-2 border-gray-600"
+          onClick={onClick}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
+        >
+          {/* Seed Image - fills the entire rounded container */}
+          <Image
+            src={seed.seedImageUrl}
+            alt={seed.name}
+            fill
+            className="object-cover"
+            onLoad={handleImageLoad}
+            priority={index < 2}
+          />
+        </motion.div>
+      </div>
       
       {/* Info Buttons - Separate from the image card */}
       <div className="grid grid-cols-3 gap-3 mb-6">
