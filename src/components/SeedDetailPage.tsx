@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Seed, weiToEth, formatAddress } from "@/types/seed";
+import { useState } from "react";
+import SeedbedPullUp from "@/components/SeedbedPullUp";
 
 interface SeedDetailPageProps {
   seed: Seed;
@@ -12,8 +14,11 @@ interface SeedDetailPageProps {
 }
 
 export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSeed }: SeedDetailPageProps) {
+  const [isSeedbedOpen, setIsSeedbedOpen] = useState(false);
+  const openSeedbed = () => setIsSeedbedOpen(true);
+  const closeSeedbed = () => setIsSeedbedOpen(false);
   return (
-    <div className="min-h-screen w-full bg-gray-50">
+    <div className="min-h-screen w-full bg-gray-50 relative">
       {/* Main White Card Container */}
       <motion.div 
         className="mx-4 mt-4 mb-6 bg-white rounded-2xl shadow-lg"
@@ -63,11 +68,6 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
           </button>
         </div>
         
-        {/* Page Title */}
-        <div className="px-6 pb-4">
-          <h1 className="text-2xl font-bold text-gray-900 text-center">SEED OVERVIEW</h1>
-        </div>
-        
         {/* Seed Image Section */}
         <div className="px-6 pb-6">
           <motion.div
@@ -93,66 +93,57 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
           </motion.div>
         </div>
         
-        {/* Information Buttons */}
+        {/* Metrics pills */}
         <div className="px-6 pb-6">
           <div className="grid grid-cols-3 gap-3">
-            {/* Raised Button */}
             <motion.div 
-              className="bg-white border-2 border-black rounded-lg p-3 text-center"
+              className="bg-white border-2 border-black rounded-full px-3 py-2 text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.4 }}
             >
-              <div className="text-xs font-medium text-black mb-1">RAISED</div>
-              <div className="font-bold text-black">
-                {weiToEth(seed.snapshotPrice)} ETH
-              </div>
+              <div className="text-[10px] tracking-wide text-black">RAISED</div>
+              <div className="text-lg font-semibold text-black">{weiToEth(seed.snapshotPrice)} ETH</div>
             </motion.div>
-            
-            {/* Seeder Button */}
             <motion.div 
-              className="bg-white border-2 border-black rounded-lg p-3 text-center"
+              className="bg-white border-2 border-black rounded-full px-3 py-2 text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.45 }}
             >
-              <div className="text-xs font-medium text-black mb-1">SEEDER</div>
-              <div className="font-bold text-black text-xs">
-                {formatAddress(seed.owner)}
-              </div>
+              <div className="text-[10px] tracking-wide text-black">STEWARD</div>
+              <div className="text-base font-semibold text-black">{formatAddress(seed.owner)}</div>
             </motion.div>
-            
-            {/* Evolution Button */}
             <motion.div 
-              className="bg-white border-2 border-black rounded-lg p-3 text-center"
+              className="bg-white border-2 border-black rounded-full px-3 py-2 text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 }}
             >
-              <div className="text-xs font-medium text-black mb-1">EVOLUTION</div>
-              <div className="font-bold text-black">
-                #{seed.snapshotCount}
-              </div>
+              <div className="text-[10px] tracking-wide text-black">EVOLUTIONS</div>
+              <div className="text-lg font-semibold text-black">{seed.snapshotCount}</div>
             </motion.div>
           </div>
         </div>
         
-        {/* Call to Action */}
-        <motion.button 
-          className="px-6 pb-6 text-center space-y-2 w-full hover:bg-gray-50 transition-colors"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.6 }}
-          onClick={onPlantSeed}
-        >
-          <p className="text-sm text-black">
-            PLANT YOUR SEED IN A PROJECT SEEDBED
-          </p>
-          <p className="text-base text-black underline">
-            Walkers Reserve
-          </p>
-        </motion.button>
+        {/* Pull up hint + seedbed preview card */}
+        <div className="px-6 pb-6">
+          <div className="relative">
+            <div className="absolute -top-6 left-1/2 -translate-x-1/2">
+              <button onClick={openSeedbed} aria-label="Open seedbed" className="w-10 h-10 rounded-full border-2 border-black bg-white flex items-center justify-center">↑</button>
+            </div>
+            <button onClick={openSeedbed} className="w-full bg-gray-200 rounded-3xl p-4 text-center border-2 border-black/30">
+              <div className="text-sm text-black/80">Pull up to explore the seedbed</div>
+              <div className="mt-3 rounded-2xl bg-white border-2 border-black/20 h-40 flex items-center justify-center">
+                <span className="text-xs text-black/50">THE SEEDBED</span>
+              </div>
+            </button>
+          </div>
+        </div>
       </motion.div>
+
+      {/* Bottom sheet */}
+      <SeedbedPullUp isOpen={isSeedbedOpen} onClose={closeSeedbed} selectedSeed={seed} seedbedImageSrc="/Seedbed.svg" />
     </div>
   );
 }

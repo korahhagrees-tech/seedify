@@ -1,12 +1,18 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import WalletConnectButton from "@/components/auth/WalletConnectButton";
+import { useRouter } from "next/navigation";
 
 interface SplashScreenProps {
   onStart: () => void;
 }
 
 export default function SplashScreen({ onStart }: SplashScreenProps) {
+  const router = useRouter();
+  const handleSuccess = () => {
+    if (onStart) onStart();
+    router.push("/garden");
+  };
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Background with gradient overlay */}
@@ -26,6 +32,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
           src="/flowers-bg.png"
           alt="Flowers background"
           fill
+          // sizes="100vw"
           className="object-cover opacity-80"
           priority
         />
@@ -55,7 +62,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
         
         {/* Wallet Connect Button with animation */}
         <WalletConnectButton
-          onSuccess={onStart}
+          onSuccess={handleSuccess}
           className="text-white text-lg hover:text-white mt-[450px] animate-bounce font-medium px-8 py-4 hover:bg-white/20 transition-colors backdrop-blur-sm"
         >
           Tap to Start

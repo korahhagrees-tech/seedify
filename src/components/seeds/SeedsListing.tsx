@@ -129,7 +129,7 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <h1 className="text-2xl font-bold text-gray-900">THE GARDEN</h1>
+        <h1 className="text-2xl font-bold text-gray-900 text-center">THE GARDEN</h1>
       </motion.div>
       
       {/* Seeds Grid */}

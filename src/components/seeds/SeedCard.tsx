@@ -24,14 +24,14 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
     >
       {/* Main Seed Image Card - The whole card is just the rounded image */}
       <motion.div
-        className="relative w-full h-80 rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow"
+        className="relative w-full h-80 rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow border-2 border-gray-600"
         onClick={onClick}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
       >
-        {/* Seed Label Badge */}
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-          <span className="bg-white border-2 border-black text-black px-3 py-1 rounded-lg text-sm font-medium">
+        {/* Seed Label Badge - overlaps to sit on the border */}
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-[5]">
+          <span className="bg-white border-2 border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
             {seed.label.toUpperCase()}
           </span>
         </div>
@@ -48,10 +48,10 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
       </motion.div>
       
       {/* Info Buttons - Separate from the image card */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3 mb-6">
         {/* Price Button */}
         <motion.div 
-          className="bg-white border-2 border-black rounded-lg p-3 text-center"
+          className="bg-white border-2 border-black rounded-full p-3 text-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
@@ -64,7 +64,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
         
         {/* Seeder Button - Owner's wallet address */}
         <motion.div 
-          className="bg-white border-2 border-black rounded-lg p-3 text-center"
+          className="bg-white border-2 border-black rounded-full p-3 text-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
@@ -77,7 +77,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
         
         {/* Flowers Count Button */}
         <motion.div 
-          className="bg-white border-2 border-black rounded-lg p-3 text-center"
+          className="bg-white border-2 border-black rounded-full p-3 text-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.3 }}
