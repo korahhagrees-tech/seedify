@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { usePrivy } from "@privy-io/react-auth";
+import { useGlobalLogout } from "@/lib/auth/useGlobalLogout";
 import { Seed } from "@/types/seed";
 import { fetchGardenData } from "@/lib/api/seeds";
 import SeedCard from "./SeedCard";
@@ -19,6 +20,7 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { logout } = usePrivy();
+  const globalLogout = useGlobalLogout();
 
   useEffect(() => {
     loadSeeds();
@@ -166,7 +168,7 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
       >
         <Button 
           variant="ghost" 
-          onClick={() => logout()}
+          onClick={globalLogout}
           className="w-full text-gray-600 underline hover:text-gray-800"
         >
           Disconnect

@@ -1,6 +1,7 @@
 "use client";
 
 import { usePrivy } from '@privy-io/react-auth';
+import { useGlobalLogout } from '@/lib/auth/useGlobalLogout';
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
@@ -9,7 +10,8 @@ interface UserProfileProps {
 }
 
 export default function UserProfile({ className }: UserProfileProps) {
-  const { ready, authenticated, user, logout } = usePrivy();
+  const { ready, authenticated, user } = usePrivy();
+  const globalLogout = useGlobalLogout();
 
   if (!ready) {
     return (
@@ -24,7 +26,7 @@ export default function UserProfile({ className }: UserProfileProps) {
   }
 
   const handleLogout = () => {
-    logout();
+    globalLogout();
   };
 
   // Get user's wallet address if available

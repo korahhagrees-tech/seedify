@@ -4,13 +4,15 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { usePrivy } from "@privy-io/react-auth";
+import { useGlobalLogout } from "@/lib/auth/useGlobalLogout";
 
 interface ProfileScreenProps {
   onBack: () => void;
 }
 
 export default function ProfileScreen({ onBack }: ProfileScreenProps) {
-  const { user, logout } = usePrivy();
+  const { user } = usePrivy();
+  const globalLogout = useGlobalLogout();
 
   return (
     <div className="min-h-screen w-full bg-gray-50">
@@ -107,7 +109,7 @@ export default function ProfileScreen({ onBack }: ProfileScreenProps) {
         >
           <Button 
             variant="ghost" 
-            onClick={() => logout()}
+            onClick={globalLogout}
             className="w-full text-gray-600 underline hover:text-gray-800"
           >
             Disconnect

@@ -43,9 +43,9 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
       
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-8">
-        {/* Logo with animation */}
+        {/* Logo with animation - perfectly centered on screen */}
         <motion.div 
-          className="mb-20"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
@@ -55,7 +55,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
             alt="THE WAY OF FLOWERS"
             width={354}
             height={84}
-            className="w-auto h-auto max-w-[280px] sm:max-w-[354px]"
+            className="w-auto h-auto max-w-[300px] sm:max-w-[354px]"
             priority
           />
         </motion.div>
