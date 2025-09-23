@@ -1,125 +1,90 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import { useState, useRef } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { Seed } from "@/types/seed";
 
 interface SeedbedPullUpProps {
-  isOpen: boolean;
-  onClose: () => void;
+  seedbedImageSrc: string;
   selectedSeed?: Seed | null;
-  seedbedImageSrc: string; // e.g. "/Seedbed.svg"
 }
 
-export default function SeedbedPullUp({ isOpen, onClose, selectedSeed, seedbedImageSrc }: SeedbedPullUpProps) {
-  const [isDragging, setIsDragging] = useState(false);
-  const [startY, setStartY] = useState(0);
-  const [currentY, setCurrentY] = useState(0);
-  const [translateY, setTranslateY] = useState(0);
+export default function SeedbedPullUp({ seedbedImageSrc, selectedSeed }: SeedbedPullUpProps) {
+  const [expanded, setExpanded] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      setTranslateY(0);
-    } else {
-      setTranslateY(100);
-    }
-  }, [isOpen]);
-
-  // Don't render if not open to prevent initial flash
-  if (!isOpen) {
-    return null;
-  }
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartY(e.clientY);
+  const handleWheel: React.WheelEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.deltaY > 0) setExpanded(true);
+    if (e.deltaY < 0) setExpanded(false);
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setIsDragging(true);
-    setStartY(e.touches[0].clientY);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    const deltaY = e.clientY - startY;
-    const newTranslateY = Math.max(0, Math.min(100, translateY + deltaY));
-    setTranslateY(newTranslateY);
-    setCurrentY(e.clientY);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-    const deltaY = e.touches[0].clientY - startY;
-    const newTranslateY = Math.max(0, Math.min(100, translateY + deltaY));
-    setTranslateY(newTranslateY);
-    setCurrentY(e.touches[0].clientY);
-  };
-
-  const handleMouseUp = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    
-    if (translateY > 30) {
-      onClose();
-    } else {
-      setTranslateY(0);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    
-    if (translateY > 30) {
-      onClose();
-    } else {
-      setTranslateY(0);
-    }
-  };
+  const handleTouch = (() => {
+    let startY = 0;
+    return {
+      start: (e: React.TouchEvent) => { startY = e.touches[0].clientY; },
+      move: (e: React.TouchEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const delta = e.touches[0].clientY - startY;
+        if (delta < -10) setExpanded(true);
+        if (delta > 10) setExpanded(false);
+      }
+    };
+  })();
 
   return (
-    <>
-      {/* Backdrop */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-40"
-          onClick={onClose}
-        />
-      )}
-      
-      {/* Pull-up panel */}
-      <div
-        className={`fixed bottom-0 left-0 right-0 bg-transparent z-50 transition-transform duration-300 ease-out ${
-          isDragging ? 'transition-none' : ''
-        }`}
-        style={{
-          transform: `translateY(${translateY}%)`,
-          height: '80vh'
-        }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Drag handle */}
-        <div className="flex justify-center pt-4 pb-2">
-          <div className="w-12 h-1 bg-gray-400 rounded-full cursor-pointer" />
-        </div>
+    <div
+      ref={containerRef}
+      onWheel={handleWheel}
+      onTouchStart={handleTouch.start}
+      onTouchMove={handleTouch.move}
+      className="relative px-4 select-none"
+      style={{ touchAction: 'none', overscrollBehavior: 'contain' as any }}
+    >
+      {/* Preview header with arrow */}
+      <div className="flex justify-center mb-2">
+        <button onClick={() => setExpanded(!expanded)} aria-label="Toggle seedbed" className="w-10 h-10 rounded-full border-2 border-black bg-white flex items-center justify-center">
+          {expanded ? "↓" : "↑"}
+        </button>
+      </div>
 
+      <motion.div
+        animate={{
+          y: expanded ? -200 : 0, // slide up ~40% higher to cover more of seed image
+          height: expanded ? 600 : 220,
+          borderRadius: expanded ? 24 : 28
+        }}
+        transition={{ type: "spring", stiffness: 160, damping: 20 }}
+        className="mx-auto w-full max-w-[calc(100%-0px)] relative z-10"
+      >
         {/* Dark shade card */}
-        <div className="px-4 h-full">
-          <div className="h-full w-full bg-gray-300 rounded-t-3xl p-3 border-2 border-black/20">
-            {/* White card */}
-            <div className="h-full w-full bg-white rounded-3xl p-4 overflow-hidden border-2 border-black/20">
-              {/* Seedbed image */}
-              <div className="relative w-full h-full">
-                <Image src={seedbedImageSrc} alt="Seedbed" fill className="object-contain" />
-              </div>
+        <div className="bg-gray-300 rounded-3xl p-3 border-2 border-black/20 h-full">
+          {/* White card */}
+          <div className="bg-white rounded-3xl p-4 overflow-hidden border-2 border-black/20 h-full flex flex-col">
+            {/* Title when expanded */}
+            {expanded && (
+              <div className="text-center text-black mb-2 tracking-widest flex-shrink-0">THE SEEDBED</div>
+            )}
+            {/* Seedbed image */}
+            <div className="relative w-full flex-1 min-h-0">
+              <Image 
+                src={seedbedImageSrc || '/Seedbed.svg'} 
+                alt="Seedbed" 
+                fill 
+                className="object-contain" 
+                priority
+              />
             </div>
           </div>
         </div>
-      </div>
-    </>
+      </motion.div>
+      {/* Helper text */}
+      {!expanded && (
+        <div className="text-center text-sm text-black/70 mt-2">Pull up to explore the seedbed</div>
+      )}
+    </div>
   );
 }

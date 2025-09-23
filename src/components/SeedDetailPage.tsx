@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Seed, weiToEth, formatAddress } from "@/types/seed";
-import { useState } from "react";
 import SeedbedPullUp from "@/components/SeedbedPullUp";
 
 interface SeedDetailPageProps {
@@ -14,14 +13,11 @@ interface SeedDetailPageProps {
 }
 
 export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSeed }: SeedDetailPageProps) {
-  const [isSeedbedOpen, setIsSeedbedOpen] = useState(false);
-  const openSeedbed = () => setIsSeedbedOpen(true);
-  const closeSeedbed = () => setIsSeedbedOpen(false);
   return (
-    <div className="min-h-screen w-full bg-gray-50 relative">
+    <div className="min-h-screen w-full bg-white relative">
       {/* Main White Card Container */}
       <motion.div 
-        className="mx-4 mt-4 mb-6 bg-white rounded-2xl shadow-lg"
+        className="mx-4 mt-4 mb-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -126,24 +122,11 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
           </div>
         </div>
         
-        {/* Pull up hint + seedbed preview card */}
-        <div className="px-6 pb-6">
-          <div className="relative">
-            <div className="absolute -top-6 left-1/2 -translate-x-1/2">
-              <button onClick={openSeedbed} aria-label="Open seedbed" className="w-10 h-10 rounded-full border-2 border-black bg-white flex items-center justify-center">↑</button>
-            </div>
-            <button onClick={openSeedbed} className="w-full bg-gray-200 rounded-3xl p-4 text-center border-2 border-black/30">
-              <div className="text-sm text-black/80">Pull up to explore the seedbed</div>
-              <div className="mt-3 rounded-2xl bg-white border-2 border-black/20 h-40 flex items-center justify-center">
-                <span className="text-xs text-black/50">THE SEEDBED</span>
-              </div>
-            </button>
-          </div>
+        {/* Inline expandable seedbed */}
+        <div className="px-6 pb-6 mt-6">
+          <SeedbedPullUp seedbedImageSrc="/Seedbed.svg" selectedSeed={seed} />
         </div>
       </motion.div>
-
-      {/* Bottom sheet */}
-      <SeedbedPullUp isOpen={isSeedbedOpen} onClose={closeSeedbed} selectedSeed={seed} seedbedImageSrc="/Seedbed.svg" />
     </div>
   );
 }
