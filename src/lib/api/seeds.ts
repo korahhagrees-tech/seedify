@@ -11,10 +11,10 @@ const mockSeeds: GardenDataResponse = {
       description: "A unique seed from the Way of Flowers collection",
       seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed1/seed.png",
       latestSnapshotUrl: null,
-      snapshotCount: 11,
+      snapshotCount: 643,
       owner: "0xc4b3CE8DD17F437ba4d9fc8D8e65E05e047792A8",
       depositAmount: null,
-      snapshotPrice: "11000000000000000",
+      snapshotPrice: "22, 232",
       isWithdrawn: false,
       isLive: true,
       metadata: {
@@ -37,7 +37,7 @@ const mockSeeds: GardenDataResponse = {
       snapshotCount: 8,
       owner: "0x98Db5558E91E3B2FFaE95187A6Ac98b7ae437970",
       depositAmount: null,
-      snapshotPrice: "11000000000000000",
+      snapshotPrice: "11, 111",
       isWithdrawn: false,
       isLive: true,
       metadata: {

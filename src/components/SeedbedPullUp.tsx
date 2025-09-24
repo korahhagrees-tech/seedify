@@ -46,8 +46,9 @@ export default function SeedbedPullUp({ seedbedImageSrc, selectedSeed }: Seedbed
     >
       {/* Preview header with arrow */}
       <div className="flex justify-center mb-2">
-        <button onClick={() => setExpanded(!expanded)} aria-label="Toggle seedbed" className="w-10 h-10 rounded-full border-2 border-black bg-white flex items-center justify-center">
-          {expanded ? "↓" : "↑"}
+        <button onClick={() => setExpanded(!expanded)} aria-label="Toggle seedbed" className="w-10 h-10 rounded-full border-1 border-black bg-white flex items-center justify-center">
+          {/* {expanded ? "↓" : "↑"} */}
+          <Image src="/arrow-up.svg" alt="Expand Arrow" width={20} height={20} />
         </button>
       </div>
 
@@ -71,10 +72,10 @@ export default function SeedbedPullUp({ seedbedImageSrc, selectedSeed }: Seedbed
             {/* Seedbed image */}
             <div className="relative w-full flex-1 min-h-0">
               <Image 
-                src={seedbedImageSrc || '/Seedbed.svg'} 
+                src={seedbedImageSrc || '/Subtract.svg'} 
                 alt="Seedbed" 
                 fill 
-                className="object-contain" 
+                className="object-contain scale-[1.2]" 
                 priority
               />
             </div>

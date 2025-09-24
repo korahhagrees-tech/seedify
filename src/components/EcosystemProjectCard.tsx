@@ -2,15 +2,15 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import GardenHeader from "@/components/GardenHeader";
 import { Switch } from "@/components/ui/switch";
 
 interface EcosystemProjectCardProps {
   backgroundImageUrl: string;
   title: string;
   subtitle?: string;
-  areaText?: string;
   shortText: string;
   extendedText: string;
   ctaText?: string;
@@ -25,7 +25,6 @@ export default function EcosystemProjectCard({
   backgroundImageUrl,
   title,
   subtitle,
-  areaText,
   shortText,
   extendedText,
   ctaText = "Tend Ecosystem",
@@ -47,54 +46,73 @@ export default function EcosystemProjectCard({
       />
 
       {/* Foreground content */}
-      <div className="relative z-10 px-4 pt-6 pb-8">
-        {/* Top controls mimicking back and pills */}
-        <div className="flex items-center justify-between max-w-md mx-auto">
-          <button className="w-10 h-10 rounded-full bg-white/90 border-2 border-black flex items-center justify-center">←</button>
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-white/60 border-2 border-black" />
-            <div className="w-10 h-10 rounded-full bg-white/60 border-2 border-black" />
-          </div>
-          <div className="w-6 h-6 rounded-full bg-white/70 border-2 border-black" />
+      <div className="relative z-10 px-4 pt-2 pb-8">
+        {/* Reuse the garden header */}
+        <div className="max-w-md mx-auto">
+          <GardenHeader />
         </div>
 
         {/* Card with cutout header */}
         <motion.div 
-          className="max-w-md mx-auto mt-3 bg-white rounded-[28px] shadow-xl border-2 border-black/70 overflow-hidden"
+          className="relative max-w-md mx-auto mt-3 bg-white rounded-[28px] shadow-xl border-2 border-black overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          {/* Cutout header overlay (transparent oval and small circles) */}
+          {/* Corner bolt cutouts */}
+          <div className="pointer-events-none absolute -top-3 left-3 w-6 h-6 rounded-full border-2 border-black bg-white" />
+          <div className="pointer-events-none absolute -top-3 right-3 w-6 h-6 rounded-full border-2 border-black bg-white" />
+
+          {/* Header oval window that reveals background image */}
           <div className="relative h-28">
-            <div className="absolute inset-0 bg-transparent" />
-            {/* Large transparent oval cutout */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-20 rounded-[100px] border-2 border-black/70 bg-white/10 backdrop-blur-[1px]" />
-            {/* Small circles to accent cutout */}
-            <div className="absolute top-2 left-2 w-6 h-6 rounded-full bg-white/20 border-2 border-black/70" />
-            <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/20 border-2 border-black/70" />
+            {/* Oval mask container */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[86%] h-20 rounded-[100px] overflow-hidden border-2 border-black">
+              {/* Duplicate background image inside the oval to simulate window */}
+              <Image
+                src={backgroundImageUrl}
+                alt="Header window"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+            {/* Lavender pips on the oval */}
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full border-2 border-black" style={{ backgroundColor: '#c6b1d9' }} />
+            <div className="absolute top-4 left-[calc(50%+36px)] -translate-y-1/2 w-6 h-6 rounded-full border-2 border-black" style={{ backgroundColor: '#c6b1d9' }} />
+            {/* Back button overlapping the oval */}
+            <button className="absolute left-10 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border-2 border-black flex items-center justify-center">←</button>
           </div>
 
-          {/* Text content */}
+          {/* Text content - fixed-height card body */}
           <div className="px-5 pb-4">
-            <h2 className="text-2xl text-black text-center leading-tight">{title}</h2>
-            {(subtitle || areaText) && (
-              <div className="text-[10px] text-black/70 text-center mt-1">
-                {subtitle && <div>{subtitle}</div>}
-                {areaText && <div>{areaText}</div>}
-              </div>
+            <h2 className="text-2xl text-black text-center leading-tight font-serif">{title}</h2>
+            {subtitle && (
+              <div className="text-[10px] text-black/70 text-center mt-1">{subtitle}</div>
             )}
 
-            <div className="mt-4 text-[13px] leading-relaxed text-black/90 max-h-56 overflow-y-auto pr-1">
-              {content}
+            {/* Fixed content viewport with hidden scrollbars */}
+            <div className="relative mt-4 text-[13px] leading-relaxed text-black/90 h-56 overflow-y-auto pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={showExtended ? 'extended' : 'short'}
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -10, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  {content}
+                </motion.div>
+              </AnimatePresence>
+              {/* Bottom blur fade */}
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white to-transparent" />
             </div>
           </div>
 
-          {/* Footer with CTA and inverted switch */}
-          <div className="flex items-center justify-between gap-3 px-4 py-3">
-            <Button variant="ghost" className="flex-1 rounded-full border-2 border-black text-black text-lg py-6">
+          {/* Footer with centered CTA and inverted switch next to it */}
+          <div className="relative px-4 py-4 flex items-center justify-center gap-4">
+            <Button variant="ghost" className="w-[70%] rounded-full border-2 border-black text-black text-lg py-6">
               {ctaText}
             </Button>
-            {/* Inverted: when checked => down (we rotate 180deg visually) */}
+            {/* Inverted switch: up = off (short), down = on (extended) */}
             <div className="rotate-180">
               <Switch checked={showExtended} onCheckedChange={setShowExtended} />
             </div>

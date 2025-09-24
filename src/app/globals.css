@@ -118,5 +118,27 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'FavoritMono', sans-serif;
   }
+}
+
+@font-face {
+  font-family: 'PeridiaDisplay';
+  src: local('PeridiaDisplay'), url('/fonts/PeridiaDisplay-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PeridiaDisplay Light';
+  src: local('PeridiaDisplay Light'), url('/fonts/PeridiaDisplay-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FavoritMono';
+  src: local('FavoritMono'), url('/fonts/ABCFavoritMono-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
 }

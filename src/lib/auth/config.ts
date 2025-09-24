@@ -1,4 +1,5 @@
-import type { PrivyClientConfig } from '@privy-io/react-auth';
+import type { PrivyClientConfig, useSyncJwtBasedAuthState } from '@privy-io/react-auth';
+import { base, baseSepolia } from '@privy-io/chains';
 
 export const privyConfig: PrivyClientConfig = {
   embeddedWallets: {
@@ -7,12 +8,18 @@ export const privyConfig: PrivyClientConfig = {
     },
     showWalletUIs: true
   },
-  loginMethods: ['wallet', 'email', 'sms'],
+  loginMethods: ['email', 'sms', 'google', 'twitter', 'discord', 'github','wallet'],
+  supportedChains: [baseSepolia, base],
   appearance: {
     showWalletLoginFirst: true,
-    walletChainType: 'ethereum-only',
-    walletList: ['metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect']
-  }
+    theme: 'light',
+    logo: '/assets/WOF_Logo-grey.png',
+    walletChainType: 'ethereum-and-solana',
+    walletList: ['metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect'],
+    landingHeader: 'Welcome to The Way of Flowers',
+    loginMessage: 'Sign in to your account',
+  },
+
 };
 
 // Get the Privy App ID and Client ID from environment variables
