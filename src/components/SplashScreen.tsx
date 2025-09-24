@@ -28,14 +28,28 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
       
       {/* Flowers background */}
       <div className="absolute inset-0">
-        <Image
+        <video
+          src={"/assets/video/video.mp4"}
+          autoPlay
+          playsInline
+          muted
+          className="object-cover opacity-80"
+          loop
+          style={{ 
+            width: "100%", 
+            height: "100%", 
+            objectFit: "cover", 
+            display: "block",
+          }}
+      />
+        {/* <Image
           src="/flowers-bg.png"
           alt="Flowers background"
           fill
           // sizes="100vw"
           className="object-cover opacity-80"
           priority
-        />
+        /> */}
       </div>
       
       {/* Dark backdrop overlay for better text visibility */}
@@ -57,7 +71,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
             height={84}
             className="w-auto h-auto max-w-[300px] sm:max-w-[354px]"
             priority
-          />
+            />
         </motion.div>
         
         {/* Wallet Connect Button with animation */}
