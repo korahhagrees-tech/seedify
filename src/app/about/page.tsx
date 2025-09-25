@@ -3,6 +3,7 @@
 import InfoModal from "@/components/InfoModal";
 import { useRouter } from "next/navigation";
 import EcosystemProjectCard from "@/components/EcosystemProjectCard";
+import GardenHeader from "@/components/GardenHeader";
 
 
 const title = "Grgich Hills Estate Regenerative Sheep Grazing";
@@ -25,15 +26,18 @@ export default function About() {
 
   return (
     <div className="min-h-screen w-full max-w-md mx-auto bg-white">
-      <EcosystemProjectCard 
+      <GardenHeader />
+      {/* <EcosystemProjectCard 
         backgroundImageUrl={"/public/assets/images/02__ELG.png"} 
         title={title} 
         subtitle={subtitle} 
         areaText={areaText} 
         shortText={shortText} 
         extendedText={extendedText} 
-      />
-      {/* <InfoModal open={true} onClose={handleClose} /> */}
+      /> */}
+      <div className="scale-[0.85]">
+        <InfoModal open={true} onClose={handleClose} />
+      </div>
     </div>
   );
 }

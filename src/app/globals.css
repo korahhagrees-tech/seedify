@@ -142,3 +142,24 @@
   font-weight: 300;
   font-style: normal;
 }
+
+.peridia-display {
+  font-family: 'PeridiaDisplay', sans-serif;
+}
+
+.peridia-display-light {
+  font-family: 'PeridiaDisplay Light', sans-serif;
+}
+
+.favorit-mono {
+  font-family: 'FavoritMono', sans-serif;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

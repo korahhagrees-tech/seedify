@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Seed, weiToEth, formatAddress } from "@/types/seed";
-import SeedbedPullUp from "@/components/SeedbedPullUp";
-import GardenHeader from "./GardenHeader";
+import SeedbedPullUp from "./SeedbedPullUp";
+import GardenHeader from "../GardenHeader";
 
 interface SeedDetailPageProps {
   seed: Seed;
@@ -15,7 +15,7 @@ interface SeedDetailPageProps {
 
 export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSeed }: SeedDetailPageProps) {
   return (
-    <div className="min-h-screen w-full bg-white relative">
+    <div className="h-screen w-full bg-white relative overflow-hidden" style={{ height: '100vh', overflowY: 'hidden' }}>
       {/* Main White Card Container */}
       <motion.div 
         className="mx-4 mt-4 mb-6"
@@ -35,8 +35,8 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             {/* Seed Label Badge */}
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-              <span className="bg-white border-1 border-black text-black px-3 py-1 rounded-full text-sm font-medium">
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-[5]">
+              <span className="bg-white border-1 border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
                 {seed.label.toUpperCase()}
               </span>
             </div>
@@ -53,46 +53,46 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
         
         {/* Metrics pills */}
         <div className="px-6 pb-6">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-3 scale-[0.9]">
             <motion.div 
-              className="bg-white border-2 border-black rounded-full px-3 py-2 text-center"
+              className="bg-white border-1 border-black rounded-full -px-3 py-2 text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.4 }}
             >
               <div className="text-xs font-medium text-black mb-1">RAISED</div>
-              <div className="font-medium text-black text-base scale-[1.2]">
+              <div className="font-medium text-black text-base scale-[1.1]">
                 € {seed.snapshotPrice}
               </div>
             </motion.div>
             <motion.div 
-              className="bg-white border-2 border-black rounded-full px-3 py-2 text-center"
+              className="bg-white border-1 border-black rounded-full px-3 py-2 text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.45 }}
             >
               <div className="text-xs font-medium text-black mb-1">STEWARD</div>
-              <div className="font-medium text-black text-base scale-[1.3]">
+              <div className="font-medium text-black text-base scale-[1.1]">
                 {formatAddress(seed.owner)}
                 </div>
             </motion.div>
             <motion.div 
-              className="bg-white border-2 border-black rounded-full px-3 py-2 text-center"
+              className="bg-white border-1 border-black rounded-full px-3 py-2 text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 }}
             >
               <div className="text-xs font-medium text-black mb-1 scale-[0.95]">EVOLUTIONS</div>
-              <div className="font-medium text-black text-base scale-[1.4]">
+              <div className="font-medium text-black text-base scale-[1.1]">
                 {seed.snapshotCount}
                 </div>
             </motion.div>
           </div>
         </div>
         
-        {/* Inline expandable seedbed */}
-        <div className="px-6 pb-6 mt-6">
-          <SeedbedPullUp seedbedImageSrc="/Subtract.svg" selectedSeed={seed} />
+        {/* Expandable seedbed */}
+        <div className="scale-[0.95]">
+          <SeedbedPullUp selectedSeed={seed} />
         </div>
       </motion.div>
     </div>

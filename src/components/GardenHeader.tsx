@@ -13,7 +13,7 @@ export default function GardenHeader({ onHomeClick, onProfileClick }: GardenHead
   return (
     <div className="flex items-center justify-between px-6 py-4">
       <button 
-        onClick={onHomeClick ?? (() => router.push('/'))}
+        onClick={onHomeClick ?? (() => router.push('/garden'))}
         className="w-14 h-14 flex-shrink-0 hover:opacity-80 transition-opacity"
       >
         <Image src="/Seedbed Button.svg" alt="Home" width={56} height={56} className="w-full h-full" />
@@ -30,7 +30,7 @@ export default function GardenHeader({ onHomeClick, onProfileClick }: GardenHead
       </div>
 
       <button 
-        onClick={onProfileClick}
+        onClick={onProfileClick ?? (() => router.push('/profile'))}
         className="w-14 h-14 flex-shrink-0 hover:opacity-80 transition-opacity"
       >
         <Image src="/Profile Button.svg" alt="Profile" width={56} height={56} className="w-full h-full" />

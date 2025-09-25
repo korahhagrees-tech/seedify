@@ -9,6 +9,7 @@ import { useGlobalLogout } from "@/lib/auth/useGlobalLogout";
 import { Seed } from "@/types/seed";
 import { fetchGardenData } from "@/lib/api/seeds";
 import SeedCard from "./SeedCard";
+import GardenHeader from "../GardenHeader";
 
 interface SeedsListingProps {
   onSeedClick?: (seed: Seed) => void;
@@ -87,50 +88,12 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
     <div className="min-h-screen w-full bg-gray-50">
       {/* Header - No background, just on the page */}
       <motion.div 
-        className="flex items-center justify-between px-6 py-4"
+        className=""
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        {/* Left icon - Seedbed Button */}
-        <button 
-          onClick={() => window.location.href = '/'}
-          className="w-14 h-14 flex-shrink-0 hover:opacity-80 transition-opacity"
-        >
-          <Image
-            src="/Seedbed Button.svg"
-            alt="Seedbed"
-            width={40}
-            height={40}
-            className="w-full h-full"
-          />
-        </button>
-        
-        {/* Center logo */}
-        <div className="flex-1 flex justify-center">
-          <Image
-            src="/test-pink.svg"
-            // src="/assets/WOF_Logo-grey.png"
-            alt="THE WAY OF FLOWERS"
-            width={200}
-            height={48}
-            className="w-full h-auto max-w-[220px]"
-          />
-        </div>
-        
-        {/* Right icon - Profile Button */}
-        <button 
-          onClick={onProfileClick}
-          className="w-14 h-14 flex-shrink-0 hover:opacity-80 transition-opacity"
-        >
-          <Image
-            src="/Profile Button.svg"
-            alt="Profile"
-            width={40}
-            height={40}
-            className="w-full h-full"
-          />
-        </button>
+        <GardenHeader />
       </motion.div>
       
       {/* Page Title */}

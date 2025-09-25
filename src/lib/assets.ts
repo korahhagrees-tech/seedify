@@ -1,0 +1,35 @@
+export const assets = {
+  // SVGs
+  subtract: "/Subtract.svg",
+  seedRoot: "/seed-root.svg",
+  seedTransparent: "/seed-transparent.svg",
+  arrowLeft: "/arrow-left.svg",
+  arrowUp: "/arrow-up.svg",
+  audioPlay: "/audio-play.svg",
+  exploreGarden: "/explore-garden.svg",
+  file: "/file.svg",
+  firstSeed: "/first-seed.png",
+  flowersBg: "/flowers-bg.png",
+  globe: "/globe.svg",
+  glowers: "/glowers.svg",
+  gradient: "/gradient.png",
+  next: "/next.svg",
+  profileButton: "/Profile Button.svg",
+  seedbedButton: "/Seedbed Button.svg",
+  seedRootSvg: "/seed-root.svg",
+  share: "/share.svg",
+  testPink: "/test-pink.svg",
+  text: "/text.svg",
+  vercel: "/vercel.svg",
+  window: "/window.svg",
+  seedbed: "/Seedbed.svg",
+  seedbedFrame: "/seed-bed-frame.svg",
+  project01: "/Project 01.svg",
+  // Location SVGs
+  buenaVista: "/Buena-Vista.svg",
+  elGlobo: "/EL-Globo.svg",
+  grgichHills: "/Grgich-Hills.svg",
+  walkersReserve: "/Walkers-R.svg",
+} as const;
+
+export type AssetKey = keyof typeof assets;

@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
 
 interface InfoModalProps {
   open: boolean;
@@ -17,7 +16,7 @@ const ABOUT_TEXT = [
 ].join("\n\n");
 
 const DISCLAIMER_TEXT = [
-  "CROSSLUCID is an artist collective (est. 2018) that engages in highly collaborative cross-disciplinary projects in co-evolution with technology. Their work and research converges around the exploration of the self as a network; speculative post-humanism; intimacy and the potential for pleasurable actualisation through the digital sphere, and the re-imagination of our alliances with technology seen as part of a sympoietic biosphere and universal post-material consciousness. Through explorations spanning filmmaking, poetic Artificial Intelligence, multi-layered techniques of collage, assemblage and experience-led interventions they create scenarios and build experiential formats that instigate prototyping and rehearsing potential futures and progressing ‘metamodern’ values. Their practice is process-driven with a set of enquiries and intuitive leaps of knowledge becoming long-term projects that materialise through ongoing iteration and experimentation to share findings with a deepening understanding.",
+  "CROSSLUCID is an artist collective (est. 2018) that engages in highly collaborative cross-disciplinary projects in co-evolution with technology. Their work and research converges around the exploration of the self as a network; speculative post-humanism; intimacy and the potential for pleasurable actualisation through the digital sphere, and the re-imagination of our alliances with technology seen as part of a sympoietic biosphere and universal post-material consciousness. Through explorations spanning filmmaking, poetic Artificial Intelligence, multi-layered techniques of collage, assemblage and experience-led interventions they create scenarios and build experiential formats that instigate prototyping and rehearsing potential futures and progressing 'metamodern' values. Their practice is process-driven with a set of enquiries and intuitive leaps of knowledge becoming long-term projects that materialise through ongoing iteration and experimentation to share findings with a deepening understanding.",
   "",
   "croslucid.zone",
   "create@crosslucid.zone"
@@ -35,7 +34,7 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-[2px] px-4 pt-10"
+          className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -46,16 +45,16 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
           >
-            <button
-              onClick={onClose}
-              className="mx-auto mb-4 block w-10 h-10 rounded-full border-2 border-black bg-white flex items-center justify-center"
-              aria-label="Close"
-            >
-              <X className="size-6" />
-            </button>
+            <div className="relative rounded-[50px] border-2 border-dotted border-black bg-white p-4">
+              {/* Close button */}
+              <button
+                onClick={onClose}
+                className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-white border-2 border-black flex items-center justify-center text-xl"
+              >
+                ×
+              </button>
 
-            <div className="relative rounded-3xl border-2 border-dotted border-black bg-white p-4">
-              <div className="flex gap-3 mb-3">
+              <div className="flex gap-14 mt-2 mb-6 mx-auto justify-center">
                 {[
                   { k: "about", label: "About" },
                   { k: "credits", label: "Credits" },
@@ -64,7 +63,7 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
                   <button
                     key={k}
                     onClick={() => setTab(k as any)}
-                    className={`px-4 py-1 rounded-full border-2 border-black ${tab === k ? "bg-white" : "bg-gray-100"}`}
+                    className={`px-5 py-1 rounded-full border border-black scale-[1.4] ${tab === k ? "bg-gray-200" : "bg-white"}`}
                   >
                     {label}
                   </button>
@@ -74,7 +73,7 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
               {tab === "about" && (
                 <div className="text-center mb-3">
                   <div className="text-2xl">About</div>
-                  <div className="mx-auto my-2 w-10 h-10 rounded-full border-2 border-black flex items-center justify-center">
+                  <div className="mx-auto my-2 w-10 h-10 rounded-full border border-black flex items-center justify-center">
                     <Image src="/audio-play.svg" alt="Audio" width={20} height={20} />
                   </div>
                 </div>
@@ -90,19 +89,25 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
                 <div
                   ref={scrollRef}
                   className="max-h-[420px] overflow-y-auto pr-1 text-sm leading-relaxed"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
-                  <p className="whitespace-pre-line">
+                  <p className="whitespace-pre-line mb-12">
                     {tab === "about" ? ABOUT_TEXT : tab === "tnc" ? DISCLAIMER_TEXT : "Credits coming soon."}
                   </p>
                 </div>
                 <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent" />
               </div>
             </div>
+            
+            <button
+              onClick={onClose}
+              className="mx-auto mt-4 w-full h-20 rounded-full border border-black bg-white flex items-center justify-center text-2xl tracking-widest"
+            >
+              <p className="scale-[0.9]">Explore the Garden</p>
+            </button>
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
   );
 }
-
-

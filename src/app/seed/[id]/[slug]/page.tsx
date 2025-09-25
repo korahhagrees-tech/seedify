@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import SeedDetailPage from "@/components/SeedDetailPage";
+import SeedDetailPage from "@/components/seeds/SeedDetailPage";
 import { Seed } from "@/types/seed";
 import { fetchSeedById } from "@/lib/api/seeds";
+import Image from "next/image";
 
 export default function SeedDetailsRoute() {
   const params = useParams();
@@ -26,7 +27,18 @@ export default function SeedDetailsRoute() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        <div className="text-center">
+          <div className="animate-pulse mx-auto mb-4">
+              <Image
+                src="/assets/WOF_Logo-black.png"
+                alt="Loading"
+                width={100}
+                height={100}
+                className="w-full h-full max-w-[420px] scale-[1.2]"
+                />
+              </div>
+            <p className="text-gray-600">Loading seed...</p>
+          </div>
       </div>
     );
   }
@@ -41,10 +53,12 @@ export default function SeedDetailsRoute() {
   }
 
   return (
-    <SeedDetailPage 
-      seed={seed}
-      onBack={() => router.push("/garden")}
-    />
+    <div className="-mt-4">
+      <SeedDetailPage 
+        seed={seed}
+        onBack={() => router.push("/garden")}
+      />
+    </div>
   );
 }
 
