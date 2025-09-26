@@ -1,6 +1,7 @@
 export const assets = {
   // SVGs
   subtract: "/Subtract.svg",
+  subtracts: "/assets/SeedbedText.svg",
   seedRoot: "/seed-root.svg",
   seedTransparent: "/seed-transparent.svg",
   arrowLeft: "/arrow-left.svg",

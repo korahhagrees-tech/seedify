@@ -1,13 +1,17 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { assets } from "@/lib/assets";
+import { Location } from "@/lib/utils";
+import { defaultLocations } from "@/lib/api/seeds";
 
 interface SeedbedCardProps {
   className?: string;
+  locations?: Location[];
 }
 
-export default function SeedbedCard({ className = "" }: SeedbedCardProps) {
+export default function SeedbedCard({ className = "", locations = defaultLocations }: SeedbedCardProps) {
   return (
     <div className={`relative ${className}`}>
       {/* Outer gray layer */}
@@ -24,6 +28,7 @@ export default function SeedbedCard({ className = "" }: SeedbedCardProps) {
             {/* Subtract.svg as the main outline */}
             <div className="absolute inset-0 scale-[1.2] -mb-5">
               <Image
+                // src={assets.subtracts}
                 src={assets.subtract}
                 alt="Seedbed network"
                 fill
@@ -34,68 +39,32 @@ export default function SeedbedCard({ className = "" }: SeedbedCardProps) {
             
             {/* Location SVG shapes positioned inside the subtract shape */}
             <div className="absolute inset-0">
-              {/* El Globo - top left area */}
-              <div className="absolute -top-14 left-6 lg:left-8 w-[155px] h-[155px] transform -rotate-4">
-                <Image
-                  src={assets.elGlobo}
-                  alt="El Globo Habitat Bank"
-                  fill
-                  className="object-contain hover:scale-[1.1] transition-all duration-300"
-                />
-              </div>
-              
-              {/* Walkers Reserve - top right area */}
-              <div className="absolute top-1 right-2 lg:right-6 w-14 h-14 transform rotate-12">
-                <Image
-                  src={assets.walkersReserve}
-                  alt="Walkers Reserve"
-                  fill
-                  className="object-contain hover:scale-[1.2] transition-all duration-300"
-                />
-              </div>
-              
-              {/* Buena Vista Heights - bottom left area */}
-              <div className="absolute lg:bottom-24 bottom-24 -left-5 lg:-left-3 w-28 h-28 transform -rotate-6">
-                <Image
-                  src={assets.buenaVista}
-                  alt="Buena Vista Heights"
-                  fill
-                  className="object-contain hover:scale-[1.1] transition-all duration-300"
-                />
-              </div>
-              
-              {/* Grgich Hills Estate - bottom right area */}
-              <div className="absolute lg:bottom-27 bottom-28 lg:-right-3 -right-6 w-34 h-34 transform rotate-6">
-                <Image
-                  src={assets.grgichHills}
-                  alt="Grgich Hills Estate"
-                  fill
-                  className="object-contain hover:scale-[1.1] transition-all duration-300"
-                />
-              </div>
+              {locations.map((location) => (
+                <Link
+                  key={location.id}
+                  href={`/ecosystem/${location.slug}`}
+                  className={`absolute ${location.position.top} ${location.position.left} ${location.position.width} ${location.position.height} ${location.position.transform} hover:scale-[1.1] transition-all duration-300`}
+                >
+                  <Image
+                    src={location.image}
+                    alt={location.name}
+                    fill
+                    className="object-contain"
+                  />
+                </Link>
+              ))}
             </div>
             
             {/* Text labels positioned around the shape */}
             <div className="absolute inset-0">
-              {/* El Globo Habitat Bank - left side */}
-              <div className="absolute -left-18 -top-10 transform -rotate-90 text-xs font-medium text-black whitespace-nowrap">
-                El Globo Habitat Bank
-              </div>
-              
-              {/* Buena Vista Heights - bottom left */}
-              <div className="absolute left-16 bottom-42 transform rotate-66 text-xs font-medium text-black whitespace-nowrap">
-                Buena Vista Heights
-              </div>
-              
-              {/* Grgich Hills Estate - right side */}
-              <div className="absolute right-18 top-1/2 transform -rotate-90 text-xs font-medium text-black whitespace-nowrap">
-                Grgich Hills Estate
-              </div>
-              
-              {/* Walkers Reserve - top right */}
-              <div className="absolute -right-10 -top-4 transform rotate-45 text-xs font-medium text-black whitespace-nowrap">
-                Walkers Reserve
-              </div>
+              {locations.map((location) => (
+                <div
+                  key={`${location.id}-label`}
+                  className={`absolute ${location.labelPosition.top} ${location.labelPosition.left} ${location.labelPosition.transform} text-xs font-medium text-black whitespace-nowrap`}
+                >
+                  {location.name}
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -138,6 +107,7 @@ export function SeedbedCard2({ className = "" }: SeedbedCardProps) {
             <div className="absolute inset-0 scale-[1.33]">
               <Image
                 src={assets.subtract}
+                // src={assets.subtracts}
                 alt="Seedbed network"
                 fill
                 className="object-contain -mt-7"

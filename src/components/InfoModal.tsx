@@ -34,7 +34,7 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-2"
+          className="fixed inset-0 z-50 flex items-start justify-center px-4 pt-2 peridia-display"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -46,14 +46,6 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
             exit={{ y: 20, opacity: 0 }}
           >
             <div className="relative rounded-[50px] border-2 border-dotted border-black bg-white p-4">
-              {/* Close button */}
-              <button
-                onClick={onClose}
-                className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-white border-2 border-black flex items-center justify-center text-xl"
-              >
-                ×
-              </button>
-
               <div className="flex gap-14 mt-2 mb-6 mx-auto justify-center">
                 {[
                   { k: "about", label: "About" },
@@ -63,7 +55,7 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
                   <button
                     key={k}
                     onClick={() => setTab(k as any)}
-                    className={`px-5 py-1 rounded-full border border-black scale-[1.4] ${tab === k ? "bg-gray-200" : "bg-white"}`}
+                    className={`px-4 py-1 rounded-full border border-black scale-[1.4] ${tab === k ? "bg-gray-200" : "bg-white"}`}
                   >
                     {label}
                   </button>

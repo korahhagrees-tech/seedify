@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 interface GardenHeaderProps {
   onHomeClick?: () => void;
   onProfileClick?: () => void;
+  logo?: string;
 }
 
-export default function GardenHeader({ onHomeClick, onProfileClick }: GardenHeaderProps) {
+export default function GardenHeader({ onHomeClick, onProfileClick, logo }: GardenHeaderProps) {
   const router = useRouter();
   return (
     <div className="flex items-center justify-between px-6 py-4">
@@ -21,7 +22,7 @@ export default function GardenHeader({ onHomeClick, onProfileClick }: GardenHead
 
       <div className="flex-1 flex justify-center">
         <Image
-          src="/test-pink.svg"
+          src={logo || "/test-pink.svg"}
           alt="THE WAY OF FLOWERS"
           width={220}
           height={48}
