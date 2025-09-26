@@ -56,32 +56,11 @@ export default function EcosystemProjectCard({
         </div>
 
         {/* Card with cutout header */}
-        <motion.div 
-          className="relative max-w-md mx-auto mt-8 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden"
+        <motion.div
+          className="relative max-w-md mx-auto mt-12 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          {/* Top navigation circles */}
-          <div className="absolute -top-3 left-38 w-10 h-10 rounded-full border-1 border-black bg-white flex items-center justify-center z-10">
-            <Image
-              src="/arrow-left.svg"
-              alt="Back"
-              width={12}
-              height={12}
-              className="w-6 h-6"
-            />
-          </div>
-          <div className="absolute -top-3 right-38 w-12 h-12 rounded-full border-1 border-black bg-white flex items-center justify-center z-10">
-            {seedEmblemUrl && (
-              <Image
-                src={seedEmblemUrl || assets.globe}
-                alt="Seed emblem"
-                width={24}
-                height={16}
-                className="w-8 h-8"
-              />
-            )}
-          </div>
 
           {/* Division bar with background image */}
           <div className="relative h-4 -bottom-18 bg-white">
@@ -131,7 +110,6 @@ export default function EcosystemProjectCard({
 
             {/* Oval mask container */}
             <div className="absolute left-1/2 top-16 -translate-x-1/2 -translate-y-1/2 w-[80%] h-34 rounded-[100px] overflow-hidden">
-              {/* Duplicate background image inside the oval to simulate window */}
               <Image
                 src={backgroundImageUrl}
                 alt="Header window"
@@ -144,16 +122,19 @@ export default function EcosystemProjectCard({
 
           {/* Text content - fixed-height card body */}
           <div className="px-5 pb-4 mt-10">
-            <h2 className="text-2xl text-black text-center leading-tight peridia-display-light">{title}</h2>
+            <h2 className="text-2xl text-black text-center leading-tight peridia-display-light">
+              {title}
+            </h2>
             {subtitle && (
-              <div className="text-[10px] text-black/70 text-center mt-1">{subtitle}</div>
+              <div className="text-[10px] text-black/70 text-center mt-1">
+                {subtitle}
+              </div>
             )}
 
-            {/* Fixed content viewport with hidden scrollbars */}
             <div className="relative mt-4 text-[13px] leading-relaxed text-black/90 h-56 overflow-y-auto pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
-                  key={showShort ? 'short' : 'extended'}
+                  key={showShort ? "short" : "extended"}
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -10, opacity: 0 }}
@@ -164,30 +145,45 @@ export default function EcosystemProjectCard({
                 </motion.div>
               </AnimatePresence>
             </div>
-              {/* Bottom blur fade */}
-              <div className="pointer-events-none absolute -bottom-8 left-0 right-0 h-40 bg-gradient-to-b from-white to-transparent" />
+            {/* Bottom blur fade */}
+            <div className="pointer-events-none absolute -bottom-8 left-0 right-0 h-40 bg-gradient-to-b from-white to-transparent" />
           </div>
 
           {/* Footer with centered CTA and inverted switch next to it */}
           <div className="relative px-4 py-4 flex items-center justify-center gap-4">
-            <Button variant="ghost" className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col">
-              {/* {ctaText} */}
+            <Button
+              variant="ghost"
+              className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col"
+            >
               <span className="text-2xl -mt-1">Tend </span>
               <span className="text-2xl -mt-4">Ecosystem</span>
             </Button>
-            {/* Inverted switch: up = off (short), down = on (extended) */}
+            {/* Inverted switch */}
             <div className="-rotate-90 scale-[1.8]">
-              <Switch 
-                checked={showShort} 
-                onCheckedChange={setShowShort} 
-                className="border-1 border-black/40 data-[state=checked]:bg-white data-[state=unchecked]:bg-gray-400 [&>span]:border-1 [&>span]:scale-[0.9] [&>span]:data-[state=checked]:bg-gray-400 [&>span]:data-[state=unchecked]:bg-white" 
+              <Switch
+                checked={showShort}
+                onCheckedChange={setShowShort}
+                className="border-1 border-black/40 data-[state=checked]:bg-white data-[state=unchecked]:bg-gray-400 [&>span]:border-1 [&>span]:scale-[0.9] [&>span]:data-[state=checked]:bg-gray-400 [&>span]:data-[state=unchecked]:bg-white"
               />
             </div>
           </div>
         </motion.div>
+
+        {/* Navigation circles - positioned on the card border */}
+        <div className="relative max-w-md mx-auto -mt-[36.5rem] z-20 flex justify-center items-center gap-8">
+          {/* Back Arrow - left side */}
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
+            <Image src="/arrow-left.svg" alt="Back" width={18} height={18} />
+          </div>
+
+          {/* Globe - right side */}
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md">
+            {seedEmblemUrl && (
+              <Image src={seedEmblemUrl || assets.globe} alt="Seed emblem" width={20} height={20} />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
-
