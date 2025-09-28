@@ -16,6 +16,13 @@ interface SeedDetailPageProps {
 export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSeed }: SeedDetailPageProps) {
   return (
     <div className="h-screen w-full bg-white relative overflow-hidden" style={{ height: '100vh', overflowY: 'hidden' }}>
+      {/* Seed Label Badge - completely outside motion containers */}
+      <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[10]">
+        <span className="bg-white border-1 border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
+          {seed.label.toUpperCase()}
+        </span>
+      </div>
+
       {/* Main White Card Container */}
       <motion.div 
         className="mx-4 mt-4 mb-6"
@@ -34,13 +41,6 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            {/* Seed Label Badge */}
-            <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-[5]">
-              <span className="bg-white border-1 border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
-                {seed.label.toUpperCase()}
-              </span>
-            </div>
-            
             {/* Seed Image */}
             <Image
               src={seed.seedImageUrl}
