@@ -8,7 +8,7 @@ const mockSeeds: GardenDataResponse = {
   seeds: [
     {
       id: "1",
-      label: "seed 01",
+      label: "seed 001",
       name: "Seed #1",
       description: "A unique seed from the Way of Flowers collection",
       seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed1/seed.png",
@@ -31,7 +31,7 @@ const mockSeeds: GardenDataResponse = {
     },
     {
       id: "2",
-      label: "seed 02",
+      label: "seed 002",
       name: "Seed #2",
       description: "A unique seed from the Way of Flowers collection",
       seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed2/seed.png",
