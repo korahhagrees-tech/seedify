@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { Seed, weiToEth, formatAddress } from "@/types/seed";
 import SeedbedPullUp from "./SeedbedPullUp";
 import GardenHeader from "../GardenHeader";
@@ -93,6 +94,20 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
         {/* Expandable seedbed */}
         <div className="scale-[0.95]">
           <SeedbedPullUp selectedSeed={seed} />
+        </div>
+
+        {/* Way of Flowers Card Link */}
+        <div className="px-6 pb-6 mt-6">
+          <Link href={`/way-of-flowers/${seed.id}`}>
+            <motion.div
+              className="bg-white border-2 border-dashed border-black/30 rounded-2xl p-6 text-center cursor-pointer hover:bg-gray-50 transition-colors"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <h3 className="text-lg font-medium text-black mb-2">The Way of Flowers</h3>
+              <p className="text-sm text-gray-600">Explore the philosophical journey of this seed</p>
+            </motion.div>
+          </Link>
         </div>
       </motion.div>
     </div>
