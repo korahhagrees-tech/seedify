@@ -6,6 +6,12 @@ export interface SeedMetadata {
   }>;
 }
 
+export interface SeedStory {
+  title: string;
+  author: string;
+  story: string;
+}
+
 export interface Seed {
   id: string;
   label: string;
@@ -20,6 +26,7 @@ export interface Seed {
   isWithdrawn: boolean;
   isLive: boolean;
   metadata: SeedMetadata;
+  story: SeedStory;
 }
 
 export interface GardenDataResponse {

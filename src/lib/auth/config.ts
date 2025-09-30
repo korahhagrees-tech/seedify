@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { PrivyClientConfig, useSyncJwtBasedAuthState } from '@privy-io/react-auth';
 import { base, baseSepolia } from '@privy-io/chains';
 

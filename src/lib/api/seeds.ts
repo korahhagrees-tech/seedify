@@ -1,6 +1,7 @@
 import { Seed, GardenDataResponse } from '@/types/seed';
-import { Location } from '@/lib/utils';
+import { Beneficiary } from '@/lib/utils';
 import { assets } from '@/lib/assets';
+import { getSeedStory } from '@/lib/data/componentData';
 
 // Mock data based on the API response you provided
 const mockSeeds: GardenDataResponse = {
@@ -27,7 +28,8 @@ const mockSeeds: GardenDataResponse = {
           { trait_type: "Snapshots", value: 11 },
           { trait_type: "Live", value: "yes" }
         ]
-      }
+      },
+      story: getSeedStory("1")
     },
     {
       id: "2",
@@ -50,7 +52,8 @@ const mockSeeds: GardenDataResponse = {
           { trait_type: "Snapshots", value: 8 },
           { trait_type: "Live", value: "yes" }
         ]
-      }
+      },
+      story: getSeedStory("2")
     }
   ],
   timestamp: Date.now()
@@ -94,8 +97,8 @@ export async function fetchSeedById(id: string): Promise<Seed | null> {
   }
 }
 
-// Default locations data
-export const defaultLocations: Location[] = [
+// Default beneficiaries data
+export const defaultBeneficiaries: Beneficiary[] = [
   {
     id: "el-globo",
     name: "El Globo Habitat Bank",

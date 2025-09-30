@@ -40,7 +40,7 @@ export default function WayOfFlowersCard({
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Background image with glass blur effect */}
+      {/* Background image with light glass transparency (no heavy blur) */}
       <Image
         src={backgroundImageUrl}
         alt="Background"
@@ -49,8 +49,8 @@ export default function WayOfFlowersCard({
         priority
       />
       
-      {/* Glass blur overlay */}
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
+      {/* Transparent glass overlay (subtle tint) */}
+      <div className="absolute inset-0 bg-white/10" />
 
       {/* Foreground content */}
       <div className="relative z-10 px-4 pt-8 pb-8">
@@ -66,22 +66,23 @@ export default function WayOfFlowersCard({
             />
           </div>
 
-          {/* Main card with dashed border */}
+          {/* Main card */}
           <motion.div 
-            className="relative bg-white rounded-[40px] border-2 border-dashed border-black/30 shadow-2xl overflow-hidden"
+            className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-2 border-dotted border-white/70"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Seed transparent SVG shape */}
-            <div className="absolute inset-0">
-              <Image
-                src="/seed-transparent.svg"
-                alt="Card shape"
-                fill
-                className="object-contain"
-                priority
-              />
+            {/* Header window + dots (match EcosystemProjectCard layout, white dots) */}
+            <div className="relative h-28">
+              {/* Four small solid white circles */}
+              <div className="absolute top-8 left-6 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute top-24 left-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute top-8 right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute bottom-4 right-0 -translate-x-1/2 translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+
+              {/* Oval white header shape */}
+              <div className="absolute left-1/2 top-16 -translate-x-1/2 -translate-y-1/2 w-[80%] h-34 rounded-[100px] bg-white" />
             </div>
 
             {/* Content positioned on the card */}
@@ -100,7 +101,7 @@ export default function WayOfFlowersCard({
                 </div>
 
                 {/* Three text lines */}
-                <div className="space-y-2 text-black font-medium text-sm">
+                <div className="space-y-0 mt-4 text-black font-medium text-base">
                   <div>{firstText}</div>
                   <div>{secondText}</div>
                   <div>{thirdText}</div>
@@ -109,9 +110,9 @@ export default function WayOfFlowersCard({
 
               {/* Main quote section */}
               <div className="mb-8">
-                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-black/10">
+                <div className="bg-white/92 rounded-2xl p-6 shadow-lg">
                   <p className="text-black text-sm leading-relaxed font-serif italic">
-                    "{mainQuote}"
+                    {`"${mainQuote}"`}
                   </p>
                   <p className="text-black/70 text-xs mt-3 font-medium">
                     — {author}
@@ -123,7 +124,7 @@ export default function WayOfFlowersCard({
               <div className="text-center">
                 {/* Blooming text with pulse animation */}
                 <motion.div
-                  className="text-black font-medium text-lg mb-6"
+                  className="text-white font-medium text-lg mb-4"
                   animate={{
                     scale: [1, 1.05, 1],
                     opacity: [0.8, 1, 0.8],
@@ -134,7 +135,7 @@ export default function WayOfFlowersCard({
                     ease: "easeInOut",
                   }}
                 >
-                  Blooming
+                  <p className="mt-2">Blooming</p>
                 </motion.div>
 
                 {/* Explore button with ease-in animation */}
@@ -150,7 +151,7 @@ export default function WayOfFlowersCard({
                     >
                       <Button
                         onClick={onExploreClick}
-                        className="w-full max-w-xs rounded-full border-2 border-black text-black text-lg py-4 hover:bg-black hover:text-white transition-all duration-300"
+                        className="mx-auto w-[160px] rounded-full border border-white/70 text-white text-base py-2 bg-transparent hover:bg-white/20 transition-all duration-300"
                       >
                         Explore
                       </Button>

@@ -25,12 +25,14 @@ export const assets = {
   window: "/window.svg",
   seedbed: "/Seedbed.svg",
   seedbedFrame: "/seed-bed-frame.svg",
-  project01: "/Project 01.svg",
+  project01: "/seeds/02__ELG_small.svg",
   // Location SVGs
   buenaVista: "/Buena-Vista.svg",
   elGlobo: "/EL-Globo.svg",
   grgichHills: "/Grgich-Hills.svg",
   walkersReserve: "/Walkers-R.svg",
+
+
 } as const;
 
 export type AssetKey = keyof typeof assets;

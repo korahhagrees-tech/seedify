@@ -9,8 +9,7 @@ export default function WayOfFlowers({ params }: { params: { seedId: string } })
   const wayOfFlowersData = getWayOfFlowersData(params.seedId);
 
   const handleExploreClick = () => {
-    // Navigate to the garden or seed detail page
-    router.push(`/seed/${params.seedId}/seed-${params.seedId.padStart(3, '0')}`);
+    router.push(`/way-of-flowers/${params.seedId}/blooming`);
   };
 
   return (

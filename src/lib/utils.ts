@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-export interface Location {
+export interface Beneficiary {
   id: string;
   name: string;
   slug: string;

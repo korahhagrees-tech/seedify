@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import Image from "next/image";
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import GardenHeader from "@/components/GardenHeader";
 import { Switch } from "@/components/ui/switch";
 import { assets } from "@/lib/assets";
+import { useRouter } from "next/navigation";
 
 interface EcosystemProjectCardProps {
   backgroundImageUrl: string;
@@ -16,6 +18,7 @@ interface EcosystemProjectCardProps {
   extendedText: string;
   ctaText?: string;
   seedEmblemUrl?: string;
+  seedId?: string;
 }
 
 /**
@@ -31,10 +34,11 @@ export default function EcosystemProjectCard({
   extendedText,
   ctaText = "Tend Ecosystem",
   seedEmblemUrl,
+  seedId,
 }: EcosystemProjectCardProps) {
   // Inverted switch: up = off (short), down = on (extended)
   const [showShort, setShowShort] = useState(true);
-
+  const router = useRouter();
   const content = showShort ? shortText : extendedText;
 
   return (
@@ -154,6 +158,11 @@ export default function EcosystemProjectCard({
             <Button
               variant="ghost"
               className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col"
+              onClick={() => {
+                // route to Way of Flowers for this seed
+                const id = seedId || "1";
+                router.push(`/way-of-flowers/${id}`);
+              }}
             >
               <span className="text-2xl -mt-1">Tend </span>
               <span className="text-2xl -mt-4">Ecosystem</span>
@@ -170,16 +179,18 @@ export default function EcosystemProjectCard({
         </motion.div>
 
         {/* Navigation circles - positioned on the card border */}
-        <div className="relative max-w-md mx-auto -mt-[36.5rem] z-20 flex justify-center items-center gap-8">
+        <div className="relative max-w-md mx-auto -mt-[620px] z-20 flex justify-center items-center gap-8">
           {/* Back Arrow - left side */}
-          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
-            <Image src="/arrow-left.svg" alt="Back" width={18} height={18} />
-          </div>
+          <button onClick={() => router.back()}>
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
+              <Image src="/arrow-left.svg" alt="Back" width={24} height={24} />
+            </div>
+          </button>
 
-          {/* Globe - right side */}
-          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md">
+          {/* Seed emblem - right side */}
+          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-md">
             {seedEmblemUrl && (
-              <Image src={seedEmblemUrl || assets.globe} alt="Seed emblem" width={20} height={20} />
+              <Image src={seedEmblemUrl || assets.glowers} alt="Seed emblem" width={30} height={30} />
             )}
           </div>
         </div>

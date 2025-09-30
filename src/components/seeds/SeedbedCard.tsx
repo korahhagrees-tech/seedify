@@ -3,15 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { assets } from "@/lib/assets";
-import { Location } from "@/lib/utils";
-import { defaultLocations } from "@/lib/api/seeds";
+import { Beneficiary } from "@/lib/utils";
+import { defaultBeneficiaries } from "@/lib/api/seeds";
 
 interface SeedbedCardProps {
   className?: string;
-  locations?: Location[];
+  beneficiaries?: Beneficiary[];
 }
 
-export default function SeedbedCard({ className = "", locations = defaultLocations }: SeedbedCardProps) {
+export default function SeedbedCard({ className = "", beneficiaries = defaultBeneficiaries }: SeedbedCardProps) {
   return (
     <div className={`relative ${className}`}>
       {/* Outer gray layer */}
@@ -39,15 +39,15 @@ export default function SeedbedCard({ className = "", locations = defaultLocatio
             
             {/* Location SVG shapes positioned inside the subtract shape */}
             <div className="absolute inset-0">
-              {locations.map((location) => (
+              {beneficiaries.map((beneficiary) => (
                 <Link
-                  key={location.id}
-                  href={`/ecosystem/${location.slug}`}
-                  className={`absolute ${location.position.top} ${location.position.left} ${location.position.width} ${location.position.height} ${location.position.transform} hover:scale-[1.1] transition-all duration-300`}
+                  key={beneficiary.id}
+                  href={`/ecosystem/${beneficiary.slug}`}
+                  className={`absolute ${beneficiary.position.top} ${beneficiary.position.left} ${beneficiary.position.width} ${beneficiary.position.height} ${beneficiary.position.transform} hover:scale-[1.1] transition-all duration-300`}
                 >
                   <Image
-                    src={location.image}
-                    alt={location.name}
+                    src={beneficiary.image}
+                    alt={beneficiary.name}
                     fill
                     className="object-contain"
                   />
@@ -57,12 +57,12 @@ export default function SeedbedCard({ className = "", locations = defaultLocatio
             
             {/* Text labels positioned around the shape */}
             <div className="absolute inset-0">
-              {locations.map((location) => (
+              {beneficiaries.map((beneficiary) => (
                 <div
-                  key={`${location.id}-label`}
-                  className={`absolute ${location.labelPosition.top} ${location.labelPosition.left} ${location.labelPosition.transform} text-xs font-medium text-black whitespace-nowrap`}
+                  key={`${beneficiary.id}-label`}
+                  className={`absolute ${beneficiary.labelPosition.top} ${beneficiary.labelPosition.left} ${beneficiary.labelPosition.transform} text-xs font-medium text-black whitespace-nowrap`}
                 >
-                  {location.name}
+                  {beneficiary.name}
                 </div>
               ))}
             </div>
