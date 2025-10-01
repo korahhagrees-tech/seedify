@@ -61,8 +61,8 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
         >
           <div className="text-xs font-medium text-black mb-1">RAISED</div>
           <div className="font-medium text-black text-base scale-[1.2]">
-            {/* {weiToEth(seed.snapshotPrice)} ETH */}
-            € {seed.snapshotPrice}
+            {weiToEth(seed.snapshotPrice)} ETH
+            {/* € {seed.snapshotPrice} */}
           </div>
         </motion.div>
         

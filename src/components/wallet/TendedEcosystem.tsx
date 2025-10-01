@@ -35,25 +35,27 @@ export default function TendedEcosystem({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="mb-6"
-    >
+      >
       {/* Date and Seed Emblem */}
-      <div className="flex items-center gap-3 mb-3">
-        <span className="text-sm text-gray-600">{date}</span>
-        <div className="w-8 h-8 rounded-full border-2 border-dashed border-gray-400 flex items-center justify-center bg-gray-100">
+      <span className="text-sm text-gray-600">{date}</span>
+      {/* Emblem + Gradient Bar (conjoined) */}
+      <div className="relative mb-4">
+        {/* Gradient bar */}
+        <div className="w-[460px] rounded-full py-2 pl-16 pr-4 -ml-8 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.8]">
+          <span className="text-sm text-gray-700 text-nowrap -ml-4">{beneficiaryName}</span>
+        </div>
+        {/* Emblem overlapping on the bar */}
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border-2 border-dashed border-gray-500 bg-white flex items-center justify-center shadow">
           <Image
             src={seedEmblemUrl}
             alt="Seed emblem"
-            width={20}
-            height={20}
-            className="w-5 h-5"
+            width={22}
+            height={22}
+            className="w-6 h-6"
           />
         </div>
       </div>
 
-      {/* Beneficiary Name Bar */}
-      <div className="bg-gray-200 rounded-full px-4 py-2 mb-4">
-        <span className="text-sm text-gray-700">{beneficiaryName}</span>
-      </div>
 
       {/* Main Card */}
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">

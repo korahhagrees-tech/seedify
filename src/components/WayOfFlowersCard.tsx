@@ -39,7 +39,7 @@ export default function WayOfFlowersCard({
   }, []);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-hidden backdrop-blur-lg">
       {/* Background image with light glass transparency (no heavy blur) */}
       <Image
         src={backgroundImageUrl}
@@ -50,7 +50,7 @@ export default function WayOfFlowersCard({
       />
       
       {/* Transparent glass overlay (subtle tint) */}
-      <div className="absolute inset-0 bg-white/10" />
+      <div className="absolute inset-0 bg-white/70" />
 
       {/* Foreground content */}
       <div className="relative z-10 px-4 pt-8 pb-8">
@@ -76,13 +76,13 @@ export default function WayOfFlowersCard({
             {/* Header window + dots (match EcosystemProjectCard layout, white dots) */}
             <div className="relative h-28">
               {/* Four small solid white circles */}
-              <div className="absolute top-8 left-6 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
-              <div className="absolute top-24 left-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
-              <div className="absolute top-8 right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
-              <div className="absolute bottom-4 right-0 -translate-x-1/2 translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute top-12 left-6 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute top-32 left-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute top-12 right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute -bottom-4 right-0 -translate-x-1/2 translate-y-1/2 w-6 h-6 rounded-full bg-white" />
 
               {/* Oval white header shape */}
-              <div className="absolute left-1/2 top-16 -translate-x-1/2 -translate-y-1/2 w-[80%] h-34 rounded-[100px] bg-white" />
+              <div className="absolute left-1/2 top-20 -translate-x-1/2 -translate-y-1/2 w-[80%] h-34 rounded-[100px] bg-white mt-4" />
             </div>
 
             {/* Content positioned on the card */}
@@ -151,7 +151,7 @@ export default function WayOfFlowersCard({
                     >
                       <Button
                         onClick={onExploreClick}
-                        className="mx-auto w-[160px] rounded-full border border-white/70 text-white text-base py-2 bg-transparent hover:bg-white/20 transition-all duration-300"
+                        className="mx-auto w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
                       >
                         Explore
                       </Button>
