@@ -30,7 +30,10 @@ function convertBackendSeedToFrontend(backendSeed: any): Seed {
       exists: false,
       attributes: []
     },
-    story: backendSeed.story?.title ? backendSeed.story : getSeedStory(backendSeed.id)
+    story: backendSeed.story?.title ? backendSeed.story : getSeedStory(backendSeed.id),
+    location: backendSeed.location,
+    wayOfFlowersData: backendSeed.wayOfFlowersData,
+    beneficiaries: backendSeed.beneficiaries || []
   };
 }
 
