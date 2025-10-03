@@ -21,6 +21,17 @@ export interface APIResponse<T> {
 // Beneficiary Types
 // ============================================
 
+export interface BeneficiaryProjectData {
+  title: string;
+  subtitle: string;
+  location: string;
+  area: string;
+  description: string;
+  benefits: string[];
+  moreDetails: string;
+  backgroundImage: string;
+}
+
 export interface BeneficiaryData {
   index: number;
   address: string;
@@ -32,6 +43,8 @@ export interface BeneficiaryData {
   isActive: boolean;
   percentage: string;
   beneficiaryValue: string;
+  slug?: string;
+  projectData?: BeneficiaryProjectData;
 }
 
 export interface BeneficiariesResponse {

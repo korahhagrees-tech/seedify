@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Seed } from "@/types/seed";
-import SeedbedCard,  { SeedbedCard2 } from "./SeedbedCard";  
+import SeedbedCard,  { SeedbedCard2 } from "./SeedbedCard";
+import { convertBeneficiariesToSeedbedFormat } from "@/lib/api";
 
 interface SeedbedPullUpProps {
   selectedSeed?: Seed | null;
@@ -14,6 +15,14 @@ interface SeedbedPullUpProps {
 export default function SeedbedPullUp({ selectedSeed }: SeedbedPullUpProps) {
   const [expanded, setExpanded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Convert backend beneficiaries to seedbed format
+  const seedbedBeneficiaries = useMemo(() => {
+    if (selectedSeed?.beneficiaries && selectedSeed.beneficiaries.length > 0) {
+      return convertBeneficiariesToSeedbedFormat(selectedSeed.beneficiaries);
+    }
+    return undefined; // Will use default beneficiaries
+  }, [selectedSeed]);
 
   const handleWheel: React.WheelEventHandler<HTMLDivElement> = (e) => {
     e.preventDefault();
@@ -54,7 +63,7 @@ export default function SeedbedPullUp({ selectedSeed }: SeedbedPullUpProps) {
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
           >
-            <SeedbedCard2 />
+            <SeedbedCard2 beneficiaries={seedbedBeneficiaries} />
           </motion.div>
         ) : (
           <motion.div
@@ -63,9 +72,9 @@ export default function SeedbedPullUp({ selectedSeed }: SeedbedPullUpProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
-               className="-mt-70"
+               className="-mt-88"
           >
-            <SeedbedCard />
+            <SeedbedCard beneficiaries={seedbedBeneficiaries} />
           </motion.div>
         )}
       </AnimatePresence>

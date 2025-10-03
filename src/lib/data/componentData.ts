@@ -96,12 +96,31 @@ The seeds know this truth: in the space between code and chlorophyll, between da
 };
 
 // Helper functions to get data by seed ID
+/**
+ * @deprecated Use beneficiary data from API response instead
+ * This is kept for backward compatibility only
+ */
 export function getEcosystemProject(seedId: string) {
   return ecosystemProjects[seedId] || ecosystemProjects["1"]; // fallback to seed 1
 }
 
-export function getWayOfFlowersData(seedId: string) {
-  return wayOfFlowersData[seedId] || wayOfFlowersData["1"]; // fallback to seed 1
+/**
+ * Get Way of Flowers data by seed ID
+ * Now checks backend response first, falls back to local data
+ */
+export function getWayOfFlowersData(seedId: string, backendData?: any) {
+  // If backend provides data with any non-empty field, use it
+  if (backendData && (
+    backendData.backgroundImageUrl ||
+    backendData.seedEmblemUrl ||
+    backendData.firstText ||
+    backendData.mainQuote
+  )) {
+    return backendData;
+  }
+  
+  // Otherwise fallback to local data
+  return wayOfFlowersData[seedId] || wayOfFlowersData["1"];
 }
 
 export function getSeedStory(seedId: string) {

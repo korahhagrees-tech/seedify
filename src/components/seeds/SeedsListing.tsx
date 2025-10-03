@@ -99,7 +99,7 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
       
       {/* Page Title */}
       <motion.div 
-        className="px-6 py-4 mb-4 -mt-4 scale-[1.1]"
+        className="px-6 py-4 -mb-12 -mt-4 scale-[1.1]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
@@ -109,7 +109,7 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
       
       {/* Seeds Grid */}
       <motion.div 
-        className="px-6 pb-6 space-y-16"
+        className="px-6 pb-6 -space-y-4 items-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.4 }}

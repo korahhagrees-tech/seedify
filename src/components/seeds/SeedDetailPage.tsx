@@ -18,8 +18,20 @@ interface SeedDetailPageProps {
 export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSeed }: SeedDetailPageProps) {
   return (
     <div className="h-screen w-full bg-white relative overflow-hidden" style={{ height: '100vh', overflowY: 'hidden' }}>
+            <div className="relative -bottom-34 z-10">
+          <motion.div 
+            className="bg-white border-1 border-black rounded-full p-3 text-center scale-[0.5] bottom-14"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.25 }}
+          >
+            <div className="font-medium text-black text-lg scale-[1.3]">
+              <span className="">STEWARD</span> {formatAddress(seed.owner)}
+            </div>
+          </motion.div>
+      </div>
       {/* Seed Label Badge - completely outside motion containers */}
-      <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[10]">
+      <div className="fixed top-39 md:left-58 lg:left-145 left-14 -translate-x-1/2 z-[10]">
         <span className="bg-white border-1 border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
           {seed.label.toUpperCase()}
         </span>
@@ -27,7 +39,7 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
 
       {/* Main White Card Container */}
       <motion.div 
-        className="mx-4 mt-4 mb-6"
+        className="mx-4 -mt-5 lg:-mt-8 mb-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -36,9 +48,9 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
         <GardenHeader />
         
         {/* Seed Image Section */}
-        <div className="px-6 pb-6">
+        <div className="px-6 pb-6 mt-10 lg:mt-12">
           <motion.div
-            className="relative w-full h-80 rounded-2xl overflow-hidden"
+            className="relative w-96 h-96 mx-auto -ml-4 rounded-[60px] overflow-hidden"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -63,8 +75,8 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
               transition={{ duration: 0.3, delay: 0.4 }}
             >
               <div className="text-xs font-medium text-black mb-1">RAISED</div>
-              <div className="font-medium text-black text-base scale-[1.1]">
-                € {seed.snapshotPrice}
+              <div className="font-medium text-black text-xs text-nowrap lg:text-xs scale-[1.25]">
+                {seed.depositAmount} ETH
               </div>
             </motion.div>
             <motion.div 
@@ -73,9 +85,9 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.45 }}
             >
-              <div className="text-xs font-medium text-black mb-1">STEWARD</div>
-              <div className="font-medium text-black text-base scale-[1.1]">
-                {formatAddress(seed.owner)}
+              <div className="text-xs font-medium text-black mb-1 scale-[0.9]"> SNAP PRICE</div>
+              <div className="font-medium text-black text-xs text-nowrap lg:text-xs scale-[1.2]">
+                {seed.snapshotPrice} ETH
                 </div>
             </motion.div>
             <motion.div 

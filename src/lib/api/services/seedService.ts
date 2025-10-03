@@ -1,13 +1,12 @@
 /**
  * Seed Service
- * Handles all seed-related API calls with mock data fallback
+ * Handles all seed-related API calls
  */
 
 import { apiClient, APIError } from '../client';
 import { API_CONFIG, API_ENDPOINTS } from '../config';
 import { SeedsResponse, SeedResponse, CountResponse } from '@/types/api';
 import { Seed, GardenDataResponse } from '@/types/seed';
-import { mockSeedsData } from '../mocks/seedMocks';
 import { getEcosystemProject, getWayOfFlowersData, getSeedStory } from '@/lib/data/componentData';
 
 /**
@@ -39,14 +38,7 @@ function convertBackendSeedToFrontend(backendSeed: any): Seed {
  * Fetch all seeds (Garden Data)
  */
 export async function fetchGardenData(): Promise<GardenDataResponse> {
-  console.log('🌸 [SEED-SERVICE] Fetching garden data...');
-  console.log('🌸 [SEED-SERVICE] Use Mock Data:', API_CONFIG.useMockData);
-
-  // Use mock data if configured
-  if (API_CONFIG.useMockData) {
-    console.log('🌸 [SEED-SERVICE] Using mock data');
-    return mockSeedsData;
-  }
+  console.log('🌸 [SEED-SERVICE] Fetching garden data from:', API_CONFIG.baseUrl);
 
   try {
     const response = await apiClient.get<SeedsResponse>(API_ENDPOINTS.seeds);
@@ -67,8 +59,7 @@ export async function fetchGardenData(): Promise<GardenDataResponse> {
     };
   } catch (error) {
     console.error('🌸 [SEED-SERVICE] Error fetching garden data:', error);
-    console.log('🌸 [SEED-SERVICE] Falling back to mock data');
-    return mockSeedsData;
+    throw error;
   }
 }
 
@@ -77,13 +68,6 @@ export async function fetchGardenData(): Promise<GardenDataResponse> {
  */
 export async function fetchSeedById(id: string): Promise<Seed | null> {
   console.log('🌸 [SEED-SERVICE] Fetching seed by ID:', id);
-
-  // Use mock data if configured
-  if (API_CONFIG.useMockData) {
-    console.log('🌸 [SEED-SERVICE] Using mock data');
-    const seed = mockSeedsData.seeds.find(s => s.id === id);
-    return seed || null;
-  }
 
   try {
     const response = await apiClient.get<SeedResponse>(API_ENDPOINTS.seedById(id));
@@ -104,15 +88,7 @@ export async function fetchSeedById(id: string): Promise<Seed | null> {
     return seed;
   } catch (error) {
     console.error('🌸 [SEED-SERVICE] Error fetching seed:', error);
-    
-    // Fallback to mock data
-    const seed = mockSeedsData.seeds.find(s => s.id === id);
-    if (seed) {
-      console.log('🌸 [SEED-SERVICE] Using mock data for seed:', id);
-      return seed;
-    }
-    
-    return null;
+    throw error;
   }
 }
 
@@ -122,17 +98,12 @@ export async function fetchSeedById(id: string): Promise<Seed | null> {
 export async function fetchSeedCount(): Promise<number> {
   console.log('🌸 [SEED-SERVICE] Fetching seed count...');
 
-  // Use mock data if configured
-  if (API_CONFIG.useMockData) {
-    return mockSeedsData.seeds.length;
-  }
-
   try {
     const response = await apiClient.get<CountResponse>(API_ENDPOINTS.seedsCount);
     return response.count;
   } catch (error) {
     console.error('🌸 [SEED-SERVICE] Error fetching seed count:', error);
-    return mockSeedsData.seeds.length;
+    throw error;
   }
 }
 

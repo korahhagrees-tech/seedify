@@ -21,12 +21,15 @@ export interface Seed {
   latestSnapshotUrl: string | null;
   snapshotCount: number;
   owner: string;
-  depositAmount: string | null;
+  depositAmount: string;
   snapshotPrice: string;
   isWithdrawn: boolean;
   isLive: boolean;
   metadata: SeedMetadata;
   story: SeedStory;
+  location?: string;
+  wayOfFlowersData?: any;
+  beneficiaries?: any[]; // BeneficiaryData[] from backend
 }
 
 export interface GardenDataResponse {
@@ -44,6 +47,6 @@ export function weiToEth(wei: string): string {
 // Helper function to format address
 export function formatAddress(address: string): string {
   if (!address) return '';
-  // return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  return `...${address.slice(-4)}`;
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  // return `...${address.slice(-4)}`;
 }

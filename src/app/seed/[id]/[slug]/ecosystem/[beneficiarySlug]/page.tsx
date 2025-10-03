@@ -1,15 +1,19 @@
 "use client"
 
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import EcosystemProjectCard from "@/components/EcosystemProjectCard";
 import { fetchSeedById, beneficiaryToEcosystemProject } from "@/lib/api";
 
-export default function Ecosystem({ params }: { params: { slug: string } }) {
+export default function EcosystemPage() {
   const router = useRouter();
+  const params = useParams();
   const [ecosystemData, setEcosystemData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const seedId = params?.id as string;
+  const beneficiarySlug = params?.beneficiarySlug as string;
 
   useEffect(() => {
     async function loadEcosystemData() {
@@ -17,34 +21,29 @@ export default function Ecosystem({ params }: { params: { slug: string } }) {
         setLoading(true);
         setError(null);
 
-        // Try fetching seeds 1 and 2 to find beneficiaries
-        // Most seeds will have the same beneficiaries, so we check both
-        let seedWithBeneficiaries = null;
-        let beneficiary = null;
+        console.log('🌱 Loading ecosystem for seed:', seedId, 'beneficiary:', beneficiarySlug);
 
-        for (const seedId of ['1', '2']) {
-          try {
-            const seed = await fetchSeedById(seedId);
-            
-            if (seed?.beneficiaries && seed.beneficiaries.length > 0) {
-              // Try to find matching beneficiary by slug
-              const matchingBen = seed.beneficiaries.find(
-                (ben: any) => ben.slug === params.slug
-              );
-              
-              if (matchingBen) {
-                beneficiary = matchingBen;
-                break;
-              }
-            }
-          } catch (err) {
-            console.log(`Seed ${seedId} not found, trying next...`);
-          }
+        // Fetch the seed by ID to get beneficiaries with full project data
+        const seed = await fetchSeedById(seedId);
+
+        if (!seed) {
+          throw new Error(`Seed ${seedId} not found`);
         }
+
+        if (!seed.beneficiaries || seed.beneficiaries.length === 0) {
+          throw new Error("No beneficiaries data found for this seed");
+        }
+
+        // Find the matching beneficiary by slug
+        const beneficiary = seed.beneficiaries.find(
+          (ben: any) => ben.slug === beneficiarySlug
+        );
 
         if (!beneficiary) {
-          throw new Error(`Beneficiary with slug "${params.slug}" not found`);
+          throw new Error(`Beneficiary "${beneficiarySlug}" not found`);
         }
+
+        console.log('🌱 Found beneficiary:', beneficiary.name);
 
         // Convert beneficiary data to ecosystem project format
         const ecosystem = beneficiaryToEcosystemProject(beneficiary);
@@ -57,8 +56,10 @@ export default function Ecosystem({ params }: { params: { slug: string } }) {
       }
     }
 
-    loadEcosystemData();
-  }, [params.slug]);
+    if (seedId && beneficiarySlug) {
+      loadEcosystemData();
+    }
+  }, [seedId, beneficiarySlug]);
 
   if (loading) {
     return (
@@ -99,3 +100,4 @@ export default function Ecosystem({ params }: { params: { slug: string } }) {
     </div>
   );
 }
+

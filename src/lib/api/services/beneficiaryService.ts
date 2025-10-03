@@ -6,19 +6,12 @@
 import { apiClient, APIError } from '../client';
 import { API_CONFIG, API_ENDPOINTS } from '../config';
 import { BeneficiariesResponse, BeneficiaryResponse, BeneficiaryData } from '@/types/api';
-import { mockBeneficiariesData } from '../mocks/beneficiaryMocks';
 
 /**
  * Fetch all beneficiaries
  */
 export async function fetchBeneficiaries(): Promise<BeneficiaryData[]> {
   console.log('🌱 [BENEFICIARY-SERVICE] Fetching beneficiaries...');
-
-  // Use mock data if configured
-  if (API_CONFIG.useMockData) {
-    console.log('🌱 [BENEFICIARY-SERVICE] Using mock data');
-    return mockBeneficiariesData;
-  }
 
   try {
     const response = await apiClient.get<BeneficiariesResponse>(
@@ -38,8 +31,7 @@ export async function fetchBeneficiaries(): Promise<BeneficiaryData[]> {
     return response.beneficiaries;
   } catch (error) {
     console.error('🌱 [BENEFICIARY-SERVICE] Error fetching beneficiaries:', error);
-    console.log('🌱 [BENEFICIARY-SERVICE] Falling back to mock data');
-    return mockBeneficiariesData;
+    throw error;
   }
 }
 
@@ -50,12 +42,6 @@ export async function fetchBeneficiaryByIndex(
   index: number
 ): Promise<BeneficiaryData | null> {
   console.log('🌱 [BENEFICIARY-SERVICE] Fetching beneficiary by index:', index);
-
-  // Use mock data if configured
-  if (API_CONFIG.useMockData) {
-    const beneficiary = mockBeneficiariesData.find((b) => b.index === index);
-    return beneficiary || null;
-  }
 
   try {
     const response = await apiClient.get<BeneficiaryResponse>(
@@ -70,15 +56,7 @@ export async function fetchBeneficiaryByIndex(
     return response.beneficiary;
   } catch (error) {
     console.error('🌱 [BENEFICIARY-SERVICE] Error fetching beneficiary:', error);
-
-    // Fallback to mock data
-    const beneficiary = mockBeneficiariesData.find((b) => b.index === index);
-    if (beneficiary) {
-      console.log('🌱 [BENEFICIARY-SERVICE] Using mock data for beneficiary:', index);
-      return beneficiary;
-    }
-
-    return null;
+    throw error;
   }
 }
 
@@ -89,12 +67,6 @@ export async function fetchBeneficiaryByCode(
   code: string
 ): Promise<BeneficiaryData | null> {
   console.log('🌱 [BENEFICIARY-SERVICE] Fetching beneficiary by code:', code);
-
-  // Use mock data if configured
-  if (API_CONFIG.useMockData) {
-    const beneficiary = mockBeneficiariesData.find((b) => b.code === code);
-    return beneficiary || null;
-  }
 
   try {
     const response = await apiClient.get<BeneficiaryResponse>(
@@ -109,15 +81,7 @@ export async function fetchBeneficiaryByCode(
     return response.beneficiary;
   } catch (error) {
     console.error('🌱 [BENEFICIARY-SERVICE] Error fetching beneficiary:', error);
-
-    // Fallback to mock data
-    const beneficiary = mockBeneficiariesData.find((b) => b.code === code);
-    if (beneficiary) {
-      console.log('🌱 [BENEFICIARY-SERVICE] Using mock data for beneficiary:', code);
-      return beneficiary;
-    }
-
-    return null;
+    throw error;
   }
 }
 

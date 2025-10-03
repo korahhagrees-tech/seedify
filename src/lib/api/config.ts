@@ -2,13 +2,11 @@
  * API Configuration
  * 
  * Environment variables:
- * - NEXT_PUBLIC_API_BASE_URL: Backend API base URL
- * - NEXT_PUBLIC_USE_MOCK_DATA: Toggle between mock and live backend (true/false)
+ * - NEXT_PUBLIC_API_BASE_URL: Backend API base URL (required)
  */
 
 export const API_CONFIG = {
   baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api',
-  useMockData: process.env.NEXT_PUBLIC_USE_MOCK_DATA === 'true',
   timeout: 10000, // 10 seconds
   retries: 3,
 } as const;

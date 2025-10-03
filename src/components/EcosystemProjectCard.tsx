@@ -14,6 +14,7 @@ interface EcosystemProjectCardProps {
   backgroundImageUrl: string;
   title: string;
   subtitle?: string;
+  location?: string; // New: location from backend
   shortText: string;
   extendedText: string;
   ctaText?: string;
@@ -30,6 +31,7 @@ export default function EcosystemProjectCard({
   backgroundImageUrl,
   title,
   subtitle,
+  location,
   shortText,
   extendedText,
   ctaText = "Tend Ecosystem",
@@ -40,6 +42,9 @@ export default function EcosystemProjectCard({
   const [showShort, setShowShort] = useState(true);
   const router = useRouter();
   const content = showShort ? shortText : extendedText;
+  
+  // Use location if provided, otherwise use subtitle
+  const displaySubtitle = location || subtitle;
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
@@ -129,9 +134,9 @@ export default function EcosystemProjectCard({
             <h2 className="text-2xl text-black text-center leading-tight peridia-display-light">
               {title}
             </h2>
-            {subtitle && (
+            {displaySubtitle && (
               <div className="text-[10px] text-black/70 text-center mt-1">
-                {subtitle}
+                {displaySubtitle}
               </div>
             )}
 

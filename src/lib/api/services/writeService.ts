@@ -121,42 +121,19 @@ export async function prepareMintSnapshot(
 }
 
 /**
- * Execute a write transaction using wagmi/viem
- * This helper function will be used by components to execute the prepared transaction
+ * Note: Transaction execution is now handled by the useWriteTransaction hook.
+ * This service only prepares transaction data from the backend.
+ * 
+ * For executing transactions, use the useWriteTransaction hook in your components:
+ * 
+ * @example
+ * ```typescript
+ * import { prepareMintSnapshot, useWriteTransaction } from '@/lib/api';
+ * 
+ * const { execute, isLoading } = useWriteTransaction();
+ * 
+ * const txData = await prepareMintSnapshot({...});
+ * const hash = await execute(txData);
+ * ```
  */
-export interface ExecuteTransactionParams {
-  transactionData: WriteTransactionData;
-  writeContract: any; // wagmi's writeContract function
-  waitForTransactionReceipt: any; // wagmi's waitForTransactionReceipt function
-}
-
-export async function executeTransaction({
-  transactionData,
-  writeContract,
-  waitForTransactionReceipt,
-}: ExecuteTransactionParams): Promise<string> {
-  console.log('✍️ [WRITE-SERVICE] Executing transaction:', transactionData);
-
-  try {
-    // Execute the transaction
-    const hash = await writeContract({
-      address: transactionData.contractAddress as `0x${string}`,
-      functionName: transactionData.functionName,
-      args: transactionData.args,
-      value: BigInt(transactionData.value),
-    });
-
-    console.log('✍️ [WRITE-SERVICE] Transaction submitted:', hash);
-
-    // Wait for confirmation
-    const receipt = await waitForTransactionReceipt({ hash });
-
-    console.log('✍️ [WRITE-SERVICE] Transaction confirmed:', receipt);
-
-    return hash;
-  } catch (error) {
-    console.error('✍️ [WRITE-SERVICE] Transaction failed:', error);
-    throw error;
-  }
-}
 

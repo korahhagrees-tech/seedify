@@ -14,7 +14,6 @@ import {
   CountResponse,
 } from '@/types/api';
 import { Seed } from '@/types/seed';
-import { mockUserData } from '../mocks/userMocks';
 
 /**
  * Fetch user's seeds
@@ -24,15 +23,6 @@ export async function fetchUserSeeds(address: string): Promise<{
   count: number;
 }> {
   console.log('👤 [USER-SERVICE] Fetching user seeds for:', address);
-
-  // Use mock data if configured
-  if (API_CONFIG.useMockData) {
-    console.log('👤 [USER-SERVICE] Using mock data');
-    return {
-      seeds: mockUserData.seeds,
-      count: mockUserData.seeds.length,
-    };
-  }
 
   try {
     const response = await apiClient.get<UserSeedsResponse>(
@@ -51,10 +41,7 @@ export async function fetchUserSeeds(address: string): Promise<{
     };
   } catch (error) {
     console.error('👤 [USER-SERVICE] Error fetching user seeds:', error);
-    return {
-      seeds: mockUserData.seeds,
-      count: mockUserData.seeds.length,
-    };
+    throw error;
   }
 }
 
@@ -64,10 +51,6 @@ export async function fetchUserSeeds(address: string): Promise<{
 export async function fetchUserSeedCount(address: string): Promise<number> {
   console.log('👤 [USER-SERVICE] Fetching user seed count for:', address);
 
-  if (API_CONFIG.useMockData) {
-    return mockUserData.seeds.length;
-  }
-
   try {
     const response = await apiClient.get<CountResponse>(
       API_ENDPOINTS.userSeedsCount(address)
@@ -75,7 +58,7 @@ export async function fetchUserSeedCount(address: string): Promise<number> {
     return response.count;
   } catch (error) {
     console.error('👤 [USER-SERVICE] Error fetching user seed count:', error);
-    return mockUserData.seeds.length;
+    throw error;
   }
 }
 
@@ -84,14 +67,6 @@ export async function fetchUserSeedCount(address: string): Promise<number> {
  */
 export async function fetchUserSnapshots(address: string) {
   console.log('👤 [USER-SERVICE] Fetching user snapshots for:', address);
-
-  if (API_CONFIG.useMockData) {
-    console.log('👤 [USER-SERVICE] Using mock data');
-    return {
-      snapshots: mockUserData.snapshots,
-      count: mockUserData.snapshots.length,
-    };
-  }
 
   try {
     const response = await apiClient.get<UserSnapshotsResponse>(
@@ -110,10 +85,7 @@ export async function fetchUserSnapshots(address: string) {
     };
   } catch (error) {
     console.error('👤 [USER-SERVICE] Error fetching user snapshots:', error);
-    return {
-      snapshots: mockUserData.snapshots,
-      count: mockUserData.snapshots.length,
-    };
+    throw error;
   }
 }
 
@@ -123,10 +95,6 @@ export async function fetchUserSnapshots(address: string) {
 export async function fetchUserSnapshotCount(address: string): Promise<number> {
   console.log('👤 [USER-SERVICE] Fetching user snapshot count for:', address);
 
-  if (API_CONFIG.useMockData) {
-    return mockUserData.snapshots.length;
-  }
-
   try {
     const response = await apiClient.get<CountResponse>(
       API_ENDPOINTS.userSnapshotsCount(address)
@@ -134,7 +102,7 @@ export async function fetchUserSnapshotCount(address: string): Promise<number> {
     return response.count;
   } catch (error) {
     console.error('👤 [USER-SERVICE] Error fetching user snapshot count:', error);
-    return mockUserData.snapshots.length;
+    throw error;
   }
 }
 
@@ -143,10 +111,6 @@ export async function fetchUserSnapshotCount(address: string): Promise<number> {
  */
 export async function fetchUserBalance(address: string) {
   console.log('👤 [USER-SERVICE] Fetching user balance for:', address);
-
-  if (API_CONFIG.useMockData) {
-    return mockUserData.balance;
-  }
 
   try {
     const response = await apiClient.get<UserBalanceResponse>(
@@ -165,7 +129,7 @@ export async function fetchUserBalance(address: string) {
     };
   } catch (error) {
     console.error('👤 [USER-SERVICE] Error fetching user balance:', error);
-    return mockUserData.balance;
+    throw error;
   }
 }
 
@@ -174,10 +138,6 @@ export async function fetchUserBalance(address: string) {
  */
 export async function fetchUserStats(address: string) {
   console.log('👤 [USER-SERVICE] Fetching user stats for:', address);
-
-  if (API_CONFIG.useMockData) {
-    return mockUserData.stats;
-  }
 
   try {
     const response = await apiClient.get<UserStatsResponse>(
@@ -193,7 +153,7 @@ export async function fetchUserStats(address: string) {
     return response.stats;
   } catch (error) {
     console.error('👤 [USER-SERVICE] Error fetching user stats:', error);
-    return mockUserData.stats;
+    throw error;
   }
 }
 
@@ -202,14 +162,6 @@ export async function fetchUserStats(address: string) {
  */
 export async function fetchUserPortfolio(address: string) {
   console.log('👤 [USER-SERVICE] Fetching user portfolio for:', address);
-
-  if (API_CONFIG.useMockData) {
-    return {
-      seeds: mockUserData.seeds,
-      snapshots: mockUserData.snapshots,
-      summary: mockUserData.stats,
-    };
-  }
 
   try {
     const response = await apiClient.get<UserPortfolioResponse>(
@@ -225,11 +177,7 @@ export async function fetchUserPortfolio(address: string) {
     return response.portfolio;
   } catch (error) {
     console.error('👤 [USER-SERVICE] Error fetching user portfolio:', error);
-    return {
-      seeds: mockUserData.seeds,
-      snapshots: mockUserData.snapshots,
-      summary: mockUserData.stats,
-    };
+    throw error;
   }
 }
 

@@ -6,8 +6,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { executeTransaction } from '../services/writeService';
+import { useWriteContract } from 'wagmi';
 import { WriteTransactionData } from '@/types/api';
 
 interface UseWriteTransactionResult {
@@ -38,7 +37,6 @@ export function useWriteTransaction(): UseWriteTransactionResult {
   const [txHash, setTxHash] = useState<string | null>(null);
 
   const { writeContractAsync } = useWriteContract();
-  const { waitForTransactionReceipt: waitForTransactionReceiptAsync } = useWaitForTransactionReceipt();
 
   const execute = async (txData: WriteTransactionData): Promise<string> => {
     setIsLoading(true);
@@ -47,11 +45,21 @@ export function useWriteTransaction(): UseWriteTransactionResult {
     setTxHash(null);
 
     try {
-      const hash = await executeTransaction({
-        transactionData: txData,
-        writeContract: writeContractAsync,
-        waitForTransactionReceipt: waitForTransactionReceiptAsync as any,
-      });
+      // Execute the transaction directly with writeContractAsync
+      const txConfig: any = {
+        address: txData.contractAddress as `0x${string}`,
+        functionName: txData.functionName,
+        args: txData.args,
+      };
+      
+      // Only include value if it's not "0"
+      if (txData.value !== "0") {
+        txConfig.value = BigInt(txData.value);
+      }
+      
+      const hash = await writeContractAsync(txConfig);
+
+      console.log('✍️ [WRITE-HOOK] Transaction submitted:', hash);
 
       setTxHash(hash);
       setIsSuccess(true);
@@ -59,6 +67,7 @@ export function useWriteTransaction(): UseWriteTransactionResult {
       return hash;
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Transaction failed');
+      console.error('✍️ [WRITE-HOOK] Transaction failed:', error);
       setError(error);
       setIsLoading(false);
       throw error;
