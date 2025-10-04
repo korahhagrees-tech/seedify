@@ -28,7 +28,7 @@ export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData) {
   // Use location as subtitle
   const subtitle = projectData.location;
   
-  // Combine description and benefits for short text
+  // Combine description and benefits for short text (each benefit on new line)
   const benefitsList = projectData.benefits
     .map(benefit => `• ${benefit}`)
     .join('\n');

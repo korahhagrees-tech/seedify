@@ -38,10 +38,9 @@ export default function EcosystemProjectCard({
   seedEmblemUrl,
   seedId,
 }: EcosystemProjectCardProps) {
-  // Inverted switch: up = off (short), down = on (extended)
-  const [showShort, setShowShort] = useState(true);
+  // Switch controls whether to show extended text (additive to short text)
+  const [showExtended, setShowExtended] = useState(false);
   const router = useRouter();
-  const content = showShort ? shortText : extendedText;
   
   // Use location if provided, otherwise use subtitle
   const displaySubtitle = location || subtitle;
@@ -141,17 +140,24 @@ export default function EcosystemProjectCard({
             )}
 
             <div className="relative mt-4 text-[13px] leading-relaxed text-black/90 h-56 overflow-y-auto pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={showShort ? "short" : "extended"}
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -10, opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="mb-8"
-                >
-                  {content}
-                </motion.div>
+              {/* Short text - always visible */}
+              <div className="mb-4 whitespace-pre-line">
+                {shortText}
+              </div>
+              
+              {/* Extended text - toggles on/off */}
+              <AnimatePresence>
+                {showExtended && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden whitespace-pre-line"
+                  >
+                    {extendedText}
+                  </motion.div>
+                )}
               </AnimatePresence>
             </div>
             {/* Bottom blur fade */}
@@ -172,11 +178,11 @@ export default function EcosystemProjectCard({
               <span className="text-2xl -mt-1">Tend </span>
               <span className="text-2xl -mt-4">Ecosystem</span>
             </Button>
-            {/* Inverted switch */}
+            {/* Inverted switch - toggles extended text visibility */}
             <div className="-rotate-90 scale-[1.8]">
               <Switch
-                checked={showShort}
-                onCheckedChange={setShowShort}
+                checked={!showExtended}
+                onCheckedChange={(checked) => setShowExtended(!checked)}
                 className="border-1 border-black/40 data-[state=checked]:bg-white data-[state=unchecked]:bg-gray-400 [&>span]:border-1 [&>span]:scale-[0.9] [&>span]:data-[state=checked]:bg-gray-400 [&>span]:data-[state=unchecked]:bg-white"
               />
             </div>
