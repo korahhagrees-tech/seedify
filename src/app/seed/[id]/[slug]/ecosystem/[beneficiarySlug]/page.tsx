@@ -45,8 +45,8 @@ export default function EcosystemPage() {
 
         console.log('🌱 Found beneficiary:', beneficiary.name);
 
-        // Convert beneficiary data to ecosystem project format
-        const ecosystem = beneficiaryToEcosystemProject(beneficiary);
+        // Convert beneficiary data to ecosystem project format, passing seed data for seedEmblemUrl
+        const ecosystem = beneficiaryToEcosystemProject(beneficiary, seed);
         setEcosystemData(ecosystem);
       } catch (err) {
         console.error('Error loading ecosystem data:', err);
@@ -94,8 +94,11 @@ export default function EcosystemPage() {
         title={ecosystemData.title} 
         subtitle={ecosystemData.subtitle}
         location={ecosystemData.location}
+        area={ecosystemData.area}
         shortText={ecosystemData.shortText} 
-        extendedText={ecosystemData.extendedText} 
+        extendedText={ecosystemData.extendedText}
+        seedEmblemUrl={ecosystemData.seedEmblemUrl}
+        seedId={ecosystemData.seedId}
       />
     </div>
   );

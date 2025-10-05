@@ -1,17 +1,152 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { assets } from "@/lib/assets";
-import { Beneficiary } from "@/lib/utils";
+import { Beneficiary, shortenBeneficiaryName } from "@/lib/utils";
 import { defaultBeneficiaries } from "@/lib/api/seeds";
+import CurvedText from "@/components/ui/CurvedText";
 
-interface SeedbedCardProps {
+interface SeedbedCardStatsProps {
   className?: string;
   beneficiaries?: Beneficiary[];
+  state?: 'frame1' | 'frame2'; // Two different states as shown in screenshot
 }
 
-export default function SeedbedCard({ className = "", beneficiaries = defaultBeneficiaries }: SeedbedCardProps) {
+export default function SeedbedCardStats({ 
+  className = "", 
+  beneficiaries = defaultBeneficiaries,
+  state = 'frame1'
+}: SeedbedCardStatsProps) {
+  // Sort beneficiaries by percentage (highest first) for consistent ordering
+  const sortedBeneficiaries = [...beneficiaries]
+    .sort((a, b) => parseFloat(b.percentage || "0") - parseFloat(a.percentage || "0"));
+
+  // Different circle configurations for the two states
+  const circleConfigs = {
+    frame1: {
+      // Frame 1: El Globo (45%), Pantanal (42%), Walkers (12%), Grgich (63%)
+      circles: [
+        {
+          id: 'grgich',
+          name: 'Grgich Hills Estate',
+          percentage: '63%',
+          size: 'w-40 h-40', // Largest
+          position: 'bottom-right',
+          top: 'bottom-20',
+          left: '-right-8',
+          transform: 'rotate-6',
+          labelPosition: { top: 'right-20', left: 'top-1/2', transform: '-rotate-90' },
+          radius: 80,
+          angle: Math.PI * 0.5,
+          rotationOffset: 0.2
+        },
+        {
+          id: 'elglobo',
+          name: 'El Globo Habitat Bank',
+          percentage: '45%',
+          size: 'w-36 h-36', // Second largest
+          position: 'top-left',
+          top: '-top-16',
+          left: 'left-4',
+          transform: '-rotate-4',
+          labelPosition: { top: '-left-20', left: '-top-8', transform: '-rotate-90' },
+          radius: 75,
+          angle: Math.PI * 0.45,
+          rotationOffset: -0.1
+        },
+        {
+          id: 'pantanal',
+          name: 'Pantanal biome',
+          percentage: '42%',
+          size: 'w-32 h-32', // Medium
+          position: 'top-right',
+          top: '-top-8',
+          left: 'right-4',
+          transform: 'rotate-8',
+          labelPosition: { top: '-right-16', left: '-top-2', transform: 'rotate-45' },
+          radius: 70,
+          angle: Math.PI * 0.4,
+          rotationOffset: 0.1
+        },
+        {
+          id: 'walkers',
+          name: 'Walkers Reserve',
+          percentage: '12%',
+          size: 'w-20 h-20', // Smallest
+          position: 'bottom-left',
+          top: 'bottom-16',
+          left: '-left-4',
+          transform: '-rotate-6',
+          labelPosition: { top: 'left-12', left: 'bottom-32', transform: 'rotate-60' },
+          radius: 50,
+          angle: Math.PI * 0.3,
+          rotationOffset: -0.2
+        }
+      ]
+    },
+    frame2: {
+      // Frame 2: El Globo (45%), Pantanal (42%), Walkers (51%), Grgich (63%)
+      circles: [
+        {
+          id: 'grgich',
+          name: 'Grgich Hills Estate',
+          percentage: '63%',
+          size: 'w-40 h-40', // Still largest
+          position: 'bottom-right',
+          top: 'bottom-20',
+          left: '-right-8',
+          transform: 'rotate-6',
+          labelPosition: { top: 'right-20', left: 'top-1/2', transform: '-rotate-90' },
+          radius: 80,
+          angle: Math.PI * 0.5,
+          rotationOffset: 0.2
+        },
+        {
+          id: 'walkers',
+          name: 'Walkers Reserve',
+          percentage: '51%', // Increased from 12%
+          size: 'w-38 h-38', // Much larger now
+          position: 'bottom-left',
+          top: 'bottom-18',
+          left: '-left-6',
+          transform: '-rotate-6',
+          labelPosition: { top: 'left-16', left: 'bottom-36', transform: 'rotate-60' },
+          radius: 78,
+          angle: Math.PI * 0.48,
+          rotationOffset: -0.2
+        },
+        {
+          id: 'elglobo',
+          name: 'El Globo Habitat Bank',
+          percentage: '45%',
+          size: 'w-36 h-36', // Same as frame 1
+          position: 'top-left',
+          top: '-top-16',
+          left: 'left-4',
+          transform: '-rotate-4',
+          labelPosition: { top: '-left-20', left: '-top-8', transform: '-rotate-90' },
+          radius: 75,
+          angle: Math.PI * 0.45,
+          rotationOffset: -0.1
+        },
+        {
+          id: 'pantanal',
+          name: 'Pantanal biome',
+          percentage: '42%',
+          size: 'w-32 h-32', // Same as frame 1
+          position: 'top-right',
+          top: '-top-8',
+          left: 'right-4',
+          transform: 'rotate-8',
+          labelPosition: { top: '-right-16', left: '-top-2', transform: 'rotate-45' },
+          radius: 70,
+          angle: Math.PI * 0.4,
+          rotationOffset: 0.1
+        }
+      ]
+    }
+  };
+
+  const config = circleConfigs[state];
+
   return (
     <div className={`relative ${className}`}>
       {/* Outer gray layer */}
@@ -23,48 +158,55 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
             THE SEEDBED
           </div>
           
-          {/* Main subtract shape container */}
+          {/* Four conjoined circles container */}
           <div className="relative w-full h-96">
-            {/* Subtract.svg as the main outline */}
-            <div className="absolute inset-0 scale-[1.2] -mb-5">
-              <Image
-                // src={assets.subtracts}
-                src={assets.subtract}
-                alt="Seedbed network"
-                fill
-                className="object-contain -mt-7"
-                priority
-              />
+            {/* Conjoined circles */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              {/* Main organic shape formed by four conjoined circles */}
+              <div className="relative w-80 h-80">
+                {/* Background organic shape */}
+                <div className="absolute inset-0 bg-white rounded-full opacity-50"></div>
+                
+                {/* Individual circles with dynamic sizing */}
+                {config.circles.map((circle, index) => (
+                  <div
+                    key={circle.id}
+                    className={`absolute ${circle.top} ${circle.left} ${circle.size} ${circle.transform} z-10`}
+                  >
+                    {/* Circle with border */}
+                    <div className="w-full h-full rounded-full border-2 border-black bg-white relative overflow-hidden">
+                      {/* Percentage display */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-lg font-bold text-black">{circle.percentage}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
             
-            {/* Location SVG shapes positioned inside the subtract shape */}
-            <div className="absolute inset-0">
-              {beneficiaries.map((beneficiary) => (
-                <Link
-                  key={beneficiary.id}
-                  href={`/ecosystem/${beneficiary.slug}`}
-                  className={`absolute ${beneficiary.position.top} ${beneficiary.position.left} ${beneficiary.position.width} ${beneficiary.position.height} ${beneficiary.position.transform} hover:scale-[1.1] transition-all duration-300`}
-                >
-                  <Image
-                    src={beneficiary.image}
-                    alt={beneficiary.name}
-                    fill
-                    className="object-contain"
-                  />
-                </Link>
-              ))}
-            </div>
-            
-            {/* Text labels positioned around the shape */}
-            <div className="absolute inset-0">
-              {beneficiaries.map((beneficiary) => (
-                <div
-                  key={`${beneficiary.id}-label`}
-                  className={`absolute ${beneficiary.labelPosition.top} ${beneficiary.labelPosition.left} ${beneficiary.labelPosition.transform} text-xs font-medium text-black whitespace-nowrap`}
-                >
-                  {beneficiary.name}
-                </div>
-              ))}
+            {/* Curved text labels */}
+            <div className="absolute inset-0 z-0">
+              {config.circles.map((circle, index) => {
+                const shortName = shortenBeneficiaryName(circle.name);
+                return (
+                  <div
+                    key={`${circle.id}-label`}
+                    className={`absolute ${circle.labelPosition.top} ${circle.labelPosition.left} ${circle.labelPosition.transform} pointer-events-none`}
+                  >
+                    <CurvedText
+                      text={shortName}
+                      radius={circle.radius}
+                      angle={circle.angle}
+                      fontSize={10}
+                      color="#000000"
+                      width={circle.radius * 2}
+                      height={circle.radius * 2}
+                      rotationOffset={circle.rotationOffset}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -73,20 +215,16 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
   );
 }
 
-export function SeedbedCard2({ className = "" }: SeedbedCardProps) {
+export function SeedbedCardStats2({ className = "" }: SeedbedCardStatsProps) {
   return (
     <div className={`relative ${className}`}>
       {/* Outer gray layer */}
       <div className="bg-[#D9D9D9] rounded-3xl p-3">
         {/* Arrow circle on border */}
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white border-1 border-black flex items-center justify-center">
-          <Image
-            src={assets.arrowUp}
-            alt="Pull up"
-            width={20}
-            height={20}
-            className="w-6 h-6"
-          />
+          <div className="w-6 h-6 flex items-center justify-center">
+            <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+          </div>
         </div>
         
         {/* Pull up text */}
@@ -101,83 +239,46 @@ export function SeedbedCard2({ className = "" }: SeedbedCardProps) {
             THE SEEDBED
           </div>
           
-          {/* Main subtract shape container */}
+          {/* Simplified conjoined circles for default state */}
           <div className="relative w-full h-96">
-            {/* Subtract.svg as the main outline */}
-            <div className="absolute inset-0 scale-[1.33]">
-              <Image
-                src={assets.subtract}
-                // src={assets.subtracts}
-                alt="Seedbed network"
-                fill
-                className="object-contain -mt-7"
-                priority
-              />
-            </div>
-            
-            {/* Location SVG shapes positioned inside the subtract shape */}
-            <div className="absolute inset-0">
-              {/* El Globo - top left area */}
-              <div className="absolute -top-20 left-4 w-[170px] h-[170px] transform -rotate-4">
-                <Image
-                  src={assets.elGlobo}
-                  alt="El Globo Habitat Bank"
-                  fill
-                  className="object-contain hover:scale-[1.1] transition-all duration-300"
-                />
-              </div>
-              
-              {/* Walkers Reserve - top right area */}
-              <div className="absolute -top-2 right-1 w-12 h-12 transform rotate-12">
-                <Image
-                  src={assets.walkersReserve}
-                  alt="Walkers Reserve"
-                  fill
-                  className="object-contain hover:scale-[1.2] transition-all duration-300"
-                />
-              </div>
-              
-              {/* Buena Vista Heights - bottom left area */}
-              <div className="absolute bottom-24 -left-3 w-32 h-32 transform -rotate-6">
-                <Image
-                  src={assets.buenaVista}
-                  alt="Buena Vista Heights"
-                  fill
-                  className="object-contain hover:scale-[1.1] transition-all duration-300"
-                />
-              </div>
-              
-              {/* Grgich Hills Estate - bottom right area */}
-              <div className="absolute bottom-28 -right-8 w-38 h-38 transform rotate-6">
-                <Image
-                  src={assets.grgichHills}
-                  alt="Grgich Hills Estate"
-                  fill
-                  className="object-contain hover:scale-[1.1] transition-all duration-300"
-                />
+            <div className="absolute inset-0 flex items-center justify-center">
+              {/* Four simple conjoined circles */}
+              <div className="relative w-80 h-80">
+                {/* El Globo - top left */}
+                <div className="absolute -top-16 left-4 w-36 h-36 rounded-full border-2 border-dashed border-black bg-white flex items-center justify-center transform -rotate-4">
+                  <span className="text-lg font-bold text-black">45%</span>
+                </div>
+                
+                {/* Pantanal - top right */}
+                <div className="absolute -top-8 right-4 w-32 h-32 rounded-full border-2 border-dotted border-black bg-white flex items-center justify-center transform rotate-8">
+                  <span className="text-lg font-bold text-black">42%</span>
+                </div>
+                
+                {/* Walkers - bottom left */}
+                <div className="absolute bottom-16 -left-4 w-20 h-20 rounded-full border-2 border-dotted border-black bg-white flex items-center justify-center transform -rotate-6">
+                  <span className="text-lg font-bold text-black">12%</span>
+                </div>
+                
+                {/* Grgich - bottom right */}
+                <div className="absolute bottom-20 -right-8 w-40 h-40 rounded-full border-2 border-dotted border-black bg-white flex items-center justify-center transform rotate-6">
+                  <span className="text-lg font-bold text-black">63%</span>
+                </div>
               </div>
             </div>
             
-            {/* Text labels positioned around the shape */}
-            <div className="absolute inset-0">
-              {/* El Globo Habitat Bank - left side */}
-              <div className="absolute -left-18 -top-10 transform -rotate-90 text-xs font-medium text-black whitespace-nowrap">
+            {/* Simple text labels */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute -left-20 -top-8 transform -rotate-90 text-xs font-medium text-black whitespace-nowrap">
                 El Globo Habitat Bank
               </div>
-              
-              {/* Buena Vista Heights - bottom left */}
-              <div className="absolute left-16 bottom-42 transform rotate-66 text-xs font-medium text-black whitespace-nowrap">
-                Buena Vista Heights
+              <div className="absolute -right-16 -top-2 transform rotate-45 text-xs font-medium text-black whitespace-nowrap">
+                Pantanal biome
               </div>
-              
-              {/* Grgich Hills Estate - right side */}
-              <div className="absolute right-18 top-1/2 transform -rotate-90 text-xs font-medium text-black whitespace-nowrap">
-                Grgich Hills Estate
-              </div>
-              
-              {/* Walkers Reserve - top right */}
-              <div className="absolute -right-10 -top-4 transform rotate-45 text-xs font-medium text-black whitespace-nowrap">
+              <div className="absolute left-12 bottom-32 transform rotate-60 text-xs font-medium text-black whitespace-nowrap">
                 Walkers Reserve
+              </div>
+              <div className="absolute right-20 top-1/2 transform -rotate-90 text-xs font-medium text-black whitespace-nowrap">
+                Grgich Hills Estate
               </div>
             </div>
           </div>

@@ -72,12 +72,15 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
             className="w-auto h-auto max-w-[300px] sm:max-w-[354px]"
             priority
             />
+            <div className="bg-transparent peridia-display text-white text-xl item-center justify-center mx-auto">
+              <p>by  CROSSLUCID.</p>
+            </div>
         </motion.div>
         
         {/* Wallet Connect Button with animation */}
         <WalletConnectButton
           onSuccess={handleSuccess}
-          className="text-white text-lg hover:text-white mt-[450px] animate-bounce font-medium px-8 py-4 hover:bg-white/20 transition-colors backdrop-blur-sm"
+          className="text-white text-lg hover:text-white lg:mt-[630px] mt-[750px] animate-bounce font-medium px-8 py-4 hover:bg-white/20 transition-colors bg-transparent"
         >
           Tap to Start
         </WalletConnectButton>

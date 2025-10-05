@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { assets } from "@/lib/assets";
+import { useWaitForTransactionReceipt } from "wagmi";
+import { useSearchParams } from "next/navigation";
 
 interface WayOfFlowersCardProps {
   backgroundImageUrl: string;
@@ -15,6 +17,7 @@ interface WayOfFlowersCardProps {
   mainQuote: string;
   author: string;
   onExploreClick?: () => void;
+  onTryAgainClick?: () => void;
 }
 
 export default function WayOfFlowersCard({
@@ -26,17 +29,61 @@ export default function WayOfFlowersCard({
   mainQuote,
   author,
   onExploreClick,
+  onTryAgainClick,
 }: WayOfFlowersCardProps) {
-  const [showExplore, setShowExplore] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
+  const [transactionStatus, setTransactionStatus] = useState<'pending' | 'success' | 'failed'>('pending');
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const searchParams = useSearchParams();
 
+  // Get transaction hash from URL params
   useEffect(() => {
-    // Show explore button after 40 seconds
-    const timer = setTimeout(() => {
-      setShowExplore(true);
-    }, 40000);
+    const hash = searchParams.get('txHash');
+    if (hash) {
+      setTxHash(hash);
+    }
+  }, [searchParams]);
 
-    return () => clearTimeout(timer);
-  }, []);
+  // Use wagmi to wait for transaction
+  const { data: receipt, isLoading, isError } = useWaitForTransactionReceipt({
+    hash: txHash as `0x${string}`,
+    query: {
+      enabled: !!txHash,
+      retry: 10,
+      retryDelay: 4000, // 4 seconds between retries
+    }
+  });
+
+  // Handle transaction status changes
+  useEffect(() => {
+    if (receipt) {
+      setTransactionStatus('success');
+      setShowButtons(true);
+    } else if (isError) {
+      setTransactionStatus('failed');
+      setShowButtons(true);
+    } else if (!isLoading && txHash) {
+      // If we have a hash but no receipt and not loading, wait for timeout
+      const timer = setTimeout(() => {
+        setTransactionStatus('failed');
+        setShowButtons(true);
+      }, 40000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [receipt, isError, isLoading, txHash]);
+
+  // Fallback: if no transaction hash, show explore after 40 seconds (original behavior)
+  useEffect(() => {
+    if (!txHash) {
+      const timer = setTimeout(() => {
+        setShowButtons(true);
+        setTransactionStatus('success');
+      }, 40000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [txHash]);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden backdrop-blur-lg">
@@ -138,9 +185,9 @@ export default function WayOfFlowersCard({
                   <p className="mt-2">Blooming</p>
                 </motion.div>
 
-                {/* Explore button with ease-in animation */}
+                {/* Buttons based on transaction status */}
                 <AnimatePresence>
-                  {showExplore && (
+                  {showButtons && (
                     <motion.div
                       initial={{ opacity: 0, y: 20, scale: 0.9 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -148,13 +195,36 @@ export default function WayOfFlowersCard({
                         duration: 0.8,
                         ease: "easeOut",
                       }}
+                      className="flex flex-col items-center gap-3"
                     >
-                      <Button
-                        onClick={onExploreClick}
-                        className="mx-auto w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
-                      >
-                        Explore
-                      </Button>
+                      {transactionStatus === 'success' && (
+                        <>
+                          <Button
+                            onClick={onExploreClick}
+                            className="w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
+                          >
+                            Explore
+                          </Button>
+                          {txHash && (
+                            <Button
+                              variant="ghost"
+                              onClick={() => window.open(`https://basescan.org/tx/${txHash}`, '_blank')}
+                              className="text-white underline hover:text-white/80 transition-colors text-sm"
+                            >
+                              View on Explorer
+                            </Button>
+                          )}
+                        </>
+                      )}
+                      
+                      {transactionStatus === 'failed' && (
+                        <Button
+                          onClick={onTryAgainClick}
+                          className="w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
+                        >
+                          Try Again
+                        </Button>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>

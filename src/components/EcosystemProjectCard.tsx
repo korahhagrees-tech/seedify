@@ -9,12 +9,15 @@ import GardenHeader from "@/components/GardenHeader";
 import { Switch } from "@/components/ui/switch";
 import { assets } from "@/lib/assets";
 import { useRouter } from "next/navigation";
+import { formatArea } from "@/lib/utils";
+import PaymentModal from "@/components/PaymentModal";
 
 interface EcosystemProjectCardProps {
   backgroundImageUrl: string;
   title: string;
   subtitle?: string;
   location?: string; // New: location from backend
+  area?: string; // New: area from backend
   shortText: string;
   extendedText: string;
   ctaText?: string;
@@ -32,6 +35,7 @@ export default function EcosystemProjectCard({
   title,
   subtitle,
   location,
+  area,
   shortText,
   extendedText,
   ctaText = "Tend Ecosystem",
@@ -40,10 +44,13 @@ export default function EcosystemProjectCard({
 }: EcosystemProjectCardProps) {
   // Switch controls whether to show extended text (additive to short text)
   const [showExtended, setShowExtended] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const router = useRouter();
   
-  // Use location if provided, otherwise use subtitle
-  const displaySubtitle = location || subtitle;
+  // Create display subtitle with location and area
+  const displaySubtitle = location && area 
+    ? `${location}\n${formatArea(area)}`
+    : location || subtitle;
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
@@ -134,7 +141,7 @@ export default function EcosystemProjectCard({
               {title}
             </h2>
             {displaySubtitle && (
-              <div className="text-[10px] text-black/70 text-center mt-1">
+              <div className="text-[10px] text-black/70 text-center mt-1 whitespace-pre-line">
                 {displaySubtitle}
               </div>
             )}
@@ -169,11 +176,7 @@ export default function EcosystemProjectCard({
             <Button
               variant="ghost"
               className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col"
-              onClick={() => {
-                // route to Way of Flowers for this seed
-                const id = seedId || "1";
-                router.push(`/way-of-flowers/${id}`);
-              }}
+              onClick={() => setShowPaymentModal(true)}
             >
               <span className="text-2xl -mt-1">Tend </span>
               <span className="text-2xl -mt-4">Ecosystem</span>
@@ -190,7 +193,7 @@ export default function EcosystemProjectCard({
         </motion.div>
 
         {/* Navigation circles - positioned on the card border */}
-        <div className="relative max-w-md mx-auto -mt-[620px] z-20 flex justify-center items-center gap-8">
+        <div className="relative max-w-md mx-auto -mt-[640px] z-20 flex justify-center items-center gap-8">
           {/* Back Arrow - left side */}
           <button onClick={() => router.back()}>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
@@ -201,11 +204,19 @@ export default function EcosystemProjectCard({
           {/* Seed emblem - right side */}
           <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-md">
             {seedEmblemUrl && (
-              <Image src={seedEmblemUrl || assets.glowers} alt="Seed emblem" width={30} height={30} />
+              <Image src={seedEmblemUrl || assets.glowers} alt="Seed emblem" width={60} height={60} className="rounded-full" />
             )}
           </div>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        seedId={seedId}
+        amount={50}
+      />
     </div>
   );
 }

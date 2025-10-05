@@ -34,6 +34,7 @@ export default function Ecosystem({ params }: { params: { slug: string } }) {
               
               if (matchingBen) {
                 beneficiary = matchingBen;
+                seedWithBeneficiaries = seed; // Store the seed data for seedEmblemUrl
                 break;
               }
             }
@@ -46,8 +47,8 @@ export default function Ecosystem({ params }: { params: { slug: string } }) {
           throw new Error(`Beneficiary with slug "${params.slug}" not found`);
         }
 
-        // Convert beneficiary data to ecosystem project format
-        const ecosystem = beneficiaryToEcosystemProject(beneficiary);
+        // Convert beneficiary data to ecosystem project format, passing seed data for seedEmblemUrl
+        const ecosystem = beneficiaryToEcosystemProject(beneficiary, seedWithBeneficiaries);
         setEcosystemData(ecosystem);
       } catch (err) {
         console.error('Error loading ecosystem data:', err);
@@ -93,8 +94,11 @@ export default function Ecosystem({ params }: { params: { slug: string } }) {
         title={ecosystemData.title} 
         subtitle={ecosystemData.subtitle}
         location={ecosystemData.location}
+        area={ecosystemData.area}
         shortText={ecosystemData.shortText} 
-        extendedText={ecosystemData.extendedText} 
+        extendedText={ecosystemData.extendedText}
+        seedEmblemUrl={ecosystemData.seedEmblemUrl}
+        seedId={ecosystemData.seedId}
       />
     </div>
   );

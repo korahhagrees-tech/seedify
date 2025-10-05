@@ -14,8 +14,9 @@ import { BeneficiaryData, BeneficiaryProjectData } from '@/types/api';
  * - shortText: projectData.description + formatted benefits list
  * - extendedText: projectData.moreDetails
  * - backgroundImageUrl: projectData.backgroundImage
+ * - seedEmblemUrl: from wayOfFlowersData.seedEmblemUrl
  */
-export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData) {
+export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData, seedData?: any) {
   const { projectData } = beneficiary;
   
   if (!projectData) {
@@ -41,6 +42,9 @@ export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData) {
   // Use backgroundImage
   const backgroundImageUrl = projectData.backgroundImage;
   
+  // Get seedEmblemUrl from wayOfFlowersData if available
+  const seedEmblemUrl = seedData?.wayOfFlowersData?.seedEmblemUrl;
+  
   return {
     title,
     subtitle,
@@ -52,6 +56,8 @@ export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData) {
     benefits: projectData.benefits,
     beneficiaryCode: beneficiary.code,
     beneficiarySlug: beneficiary.slug || '',
+    seedEmblemUrl,
+    seedId: seedData?.id,
   };
 }
 
@@ -60,7 +66,8 @@ export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData) {
  */
 export function getEcosystemProjectBySlug(
   beneficiaries: BeneficiaryData[],
-  slug: string
+  slug: string,
+  seedData?: any
 ) {
   const beneficiary = beneficiaries.find(b => b.slug === slug);
   
@@ -68,14 +75,14 @@ export function getEcosystemProjectBySlug(
     return null;
   }
   
-  return beneficiaryToEcosystemProject(beneficiary);
+  return beneficiaryToEcosystemProject(beneficiary, seedData);
 }
 
 /**
  * Get all ecosystem projects from seed beneficiaries
  */
-export function getAllEcosystemProjects(beneficiaries: BeneficiaryData[]) {
-  return beneficiaries.map(beneficiaryToEcosystemProject);
+export function getAllEcosystemProjects(beneficiaries: BeneficiaryData[], seedData?: any) {
+  return beneficiaries.map(beneficiary => beneficiaryToEcosystemProject(beneficiary, seedData));
 }
 
 /**
