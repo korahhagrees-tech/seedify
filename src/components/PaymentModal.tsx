@@ -4,6 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { usePrivy } from '@privy-io/react-auth';
+import { parseEther } from 'viem';
+import { toast } from 'sonner';
 import { useRouter } from "next/navigation";
 import { prepareDepositToSeed } from "@/lib/api/services/writeService";
 import { useWriteTransaction } from "@/lib/api/hooks/useWriteTransaction";
@@ -22,6 +24,7 @@ export default function PaymentModal({
   amount = 50 
 }: PaymentModalProps) {
   const [email, setEmail] = useState("");
+  const [amountInput, setAmountInput] = useState(String(amount));
   const [isProcessing, setIsProcessing] = useState(false);
   const { authenticated } = usePrivy();
   const { execute } = useWriteTransaction();
@@ -32,12 +35,12 @@ export default function PaymentModal({
       setIsProcessing(true);
       
       // Prepare transaction data
-      console.log('Calling prepareDepositToSeed with:', { seedId, amount: amount.toString() });
+      console.log('Calling prepareDepositToSeed with:', { seedId, amount: amountInput });
       
       let txData;
       try {
         txData = await prepareDepositToSeed(seedId, {
-          amount: amount.toString()
+          amount: amountInput
         });
       } catch (apiError) {
         console.warn('Backend API not available, using mock transaction data:', apiError);
@@ -45,9 +48,9 @@ export default function PaymentModal({
         // Mock transaction data for testing when backend is not available
         txData = {
           contractAddress: "0xF9CBaA0CEFeADf4BCf4dBDC6810c19C92e4688f8", // SeedFactory address from schema
-          functionName: "depositToSeed",
-          args: [BigInt(seedId), BigInt(amount.toString())],
-          value: "0",
+          functionName: "depositForSeed",
+          args: [BigInt(parseEther(amountInput)), BigInt(seedId)],
+          value: String(parseEther(amountInput)),
           description: "Deposit to seed"
         };
       }
@@ -69,6 +72,7 @@ export default function PaymentModal({
       // Execute the transaction
       const hash = await execute(txData);
       console.log('Transaction executed:', hash);
+      toast.success('Transaction submitted', { description: 'Waiting for confirmation…' });
 
       // Route to Way of Flowers with transaction hash
       router.push(`/way-of-flowers/${seedId}?txHash=${hash}`);
@@ -85,8 +89,7 @@ export default function PaymentModal({
         console.error('Error stack:', error.stack);
       }
       
-      // Handle error (could show toast notification)
-      alert(`Transaction failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error('Transaction failed', { description: error instanceof Error ? error.message : 'Unknown error' });
     } finally {
       setIsProcessing(false);
     }
@@ -128,9 +131,9 @@ export default function PaymentModal({
               {/* Price and Allocation */}
               <div className="flex items-start gap-4 mb-6">
                 {/* Price */}
-                <div className="bg-white rounded-full px-8 py-2 border-1 border-black/40 flex-shrink-2 scale-[0.8] -ml-4 -mt-6">
-                  <div className="text-black text-xs font-medium uppercase mb-1">PRICE</div>
-                  <div className="text-black text-2xl font-bold">€{amount}</div>
+                <div className="bg-white rounded-full px-4 py-2 border-1 border-black/40 flex-none scale-[0.8] -ml-4 -mt-6 w-[100px]">
+                  <div className="text-black text-[10px] font-medium uppercase mb-1">PRICE</div>
+                  <div className="text-black text-2xl font-bold break-all whitespace-normal leading-tight">€{amountInput}</div>
                 </div>
 
                 {/* Allocation Breakdown */}
@@ -147,18 +150,34 @@ export default function PaymentModal({
                 </div>
               </div>
 
-              {/* Email Input */}
+              {/* Amount Input */}
+              <div className="mb-4">
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.001"
+                    value={amountInput}
+                    onChange={(e) => setAmountInput(e.target.value)}
+                    className="w-full bg-white rounded-[20px] px-4 py-3 text-black text-sm border-1 border-black/30 outline-none pr-16"
+                    placeholder="Enter amount"
+                  />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-black/70 text-xs uppercase favorit-mono">ETH</span>
+                </div>
+              </div>
+
+              {/* Email Input with inside label */}
               <div className="mb-6">
-                <label className="text-black text-xs text-nowrap favorit-mono font-medium uppercase block mb-2 top-8">
-                  ENTER YOUR EMAIL ADDRESS
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white rounded-[20px] px-4 py-3 text-black text-sm border-none outline-none"
-                  placeholder="user@mail.com"
-                />
+                <div className="relative">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-white rounded-[20px] px-4 py-5 text-black text-sm border-1 border-black/30 outline-none placeholder:text-black/50"
+                    placeholder="user@mail.com"
+                  />
+                  <span className="absolute left-4 top-2 text-black text-[10px] favorit-mono uppercase">ENTER YOUR EMAIL ADDRESS</span>
+                </div>
               </div>
 
                {/* Pay/Deposit Button */}

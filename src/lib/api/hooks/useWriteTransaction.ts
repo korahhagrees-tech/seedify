@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { useWriteContract } from 'wagmi';
+import type { Abi } from 'viem';
 import { WriteTransactionData } from '@/types/api';
 
 interface UseWriteTransactionResult {
@@ -51,6 +52,25 @@ export function useWriteTransaction(): UseWriteTransactionResult {
         functionName: txData.functionName,
         args: txData.args,
       };
+
+      // If backend didn't provide ABI, use a minimal fallback for SeedFactory.depositForSeed
+      // This prevents encodeFunctionData from crashing on undefined ABI
+      if (!('abi' in txData) || !(txData as any).abi) {
+        const fallbackAbi: Abi = [
+          {
+            type: 'function',
+            name: 'depositForSeed',
+            stateMutability: 'payable',
+            inputs: [
+              { name: 'seedId', type: 'uint256' },
+            ],
+            outputs: [],
+          },
+        ];
+        (txConfig as any).abi = fallbackAbi;
+      } else {
+        (txConfig as any).abi = (txData as any).abi as Abi;
+      }
       
       // Only include value if it's not "0"
       if (txData.value !== "0") {

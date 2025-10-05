@@ -86,7 +86,7 @@ export default function WayOfFlowersCard({
   }, [txHash]);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden backdrop-blur-lg">
+    <div className="relative min-h-screen w-full overflow-hidden bg-black/50 backdrop-blur-lg">
       {/* Background image with light glass transparency (no heavy blur) */}
       <Image
         src={backgroundImageUrl}
@@ -115,11 +115,21 @@ export default function WayOfFlowersCard({
 
           {/* Main card */}
           <motion.div 
-            className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-2 border-dotted border-white/70"
+            className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-4 border-dotted border-white/70 h-[750px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
+            {/* Blooming SVG frame */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+              <Image
+                src="/Blooming.svg"
+                alt="Blooming frame"
+                fill
+                className="object-contain scale-[1.0] lg:mt-4 md:-mt-1 -mt-1"
+                priority
+              />
+            </div>
             {/* Header window + dots (match EcosystemProjectCard layout, white dots) */}
             <div className="relative h-28">
               {/* Four small solid white circles */}
@@ -127,9 +137,6 @@ export default function WayOfFlowersCard({
               <div className="absolute top-32 left-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
               <div className="absolute top-12 right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
               <div className="absolute -bottom-4 right-0 -translate-x-1/2 translate-y-1/2 w-6 h-6 rounded-full bg-white" />
-
-              {/* Oval white header shape */}
-              <div className="absolute left-1/2 top-20 -translate-x-1/2 -translate-y-1/2 w-[80%] h-34 rounded-[100px] bg-white mt-4" />
             </div>
 
             {/* Content positioned on the card */}
@@ -137,41 +144,36 @@ export default function WayOfFlowersCard({
               {/* Top section with seed emblem and text */}
               <div className="text-center mb-8">
                 {/* Seed emblem */}
-                <div className="mb-6 flex justify-center">
+                <div className="mb-6 flex justify-center -mt-12">
                   <Image
                     src={seedEmblemUrl}
                     alt="Seed emblem"
                     width={60}
                     height={60}
-                    className="w-15 h-15"
+                    className="w-37 h-37 -mt-14 mb-6"
                   />
                 </div>
 
                 {/* Three text lines */}
-                <div className="space-y-0 mt-4 text-black font-medium text-base">
+                <div className="-space-y-1 -mt-3 text-black font-medium text-base scale-[0.85]">
                   <div>{firstText}</div>
                   <div>{secondText}</div>
                   <div>{thirdText}</div>
                 </div>
               </div>
 
-              {/* Main quote section */}
-              <div className="mb-8">
-                <div className="bg-white/92 rounded-2xl p-6 shadow-lg">
-                  <p className="text-black text-sm leading-relaxed font-serif italic">
-                    {`"${mainQuote}"`}
-                  </p>
-                  <p className="text-black/70 text-xs mt-3 font-medium">
-                    — {author}
-                  </p>
-                </div>
+              {/* Main quote section (no background, over SVG shape) */}
+              <div className="mb-8 -px-12 lg:scale-[0.98] md:scale-[0.95] scale-[0.98] lg:mt-1 -mt-2">
+                <p className="text-black text-left lg:text-[17px] md:text-[17px] text-[16px] leading-tight peridia-display-light">
+                  {`"${mainQuote}"`} <span className="text-black/70 mt-3 text-xs favorit-mono font-bold text-center">{author}</span>
+                </p>
               </div>
 
               {/* Bottom section with Blooming and Explore */}
               <div className="text-center">
                 {/* Blooming text with pulse animation */}
                 <motion.div
-                  className="text-white font-medium text-lg mb-4"
+                  className="text-white font-medium mb-4 text-2xl"
                   animate={{
                     scale: [1, 1.05, 1],
                     opacity: [0.8, 1, 0.8],
@@ -182,7 +184,7 @@ export default function WayOfFlowersCard({
                     ease: "easeInOut",
                   }}
                 >
-                  <p className="mt-2">Blooming</p>
+                  <p className="mt-26 mb-9 peridia-display">B<span className="mt-3 favorit-mono font-bold text-center">looming</span></p>
                 </motion.div>
 
                 {/* Buttons based on transaction status */}
@@ -201,26 +203,17 @@ export default function WayOfFlowersCard({
                         <>
                           <Button
                             onClick={onExploreClick}
-                            className="w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
+                            className="w-[160px] rounded-full border border-white/70 text-black text-xl scale-[0.85] ml-4 py-2 bg-white hover:bg-white/20 transition-all duration-300"
                           >
-                            Explore
+                            <span className="peridia-display">E<span className="favorit-mono">xplore</span></span>
                           </Button>
-                          {txHash && (
-                            <Button
-                              variant="ghost"
-                              onClick={() => window.open(`https://basescan.org/tx/${txHash}`, '_blank')}
-                              className="text-white underline hover:text-white/80 transition-colors text-sm"
-                            >
-                              View on Explorer
-                            </Button>
-                          )}
                         </>
                       )}
                       
                       {transactionStatus === 'failed' && (
                         <Button
-                          onClick={onTryAgainClick}
-                          className="w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
+                        onClick={onTryAgainClick}
+                        className="w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
                         >
                           Try Again
                         </Button>
@@ -231,6 +224,15 @@ export default function WayOfFlowersCard({
               </div>
             </div>
           </motion.div>
+            {txHash && (
+              <Button
+                variant="ghost"
+                onClick={() => window.open(`https://basescan.org/tx/${txHash}`, '_blank')}
+                className="text-white justify-center items-center mt-2 ml-24 underline hover:text-white/80 transition-colors text-sm"
+              >
+                View on Explorer
+              </Button>
+            )}
         </div>
       </div>
     </div>

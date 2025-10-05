@@ -179,9 +179,9 @@ export default function SeedbedCardStats({
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-lg font-bold text-black">{circle.percentage}</span>
                       </div>
-                    </div>
-                  </div>
-                ))}
+            </div>
+                </div>
+              ))}
               </div>
             </div>
             
@@ -247,22 +247,22 @@ export function SeedbedCardStats2({ className = "" }: SeedbedCardStatsProps) {
                 {/* El Globo - top left */}
                 <div className="absolute -top-16 left-4 w-36 h-36 rounded-full border-2 border-dashed border-black bg-white flex items-center justify-center transform -rotate-4">
                   <span className="text-lg font-bold text-black">45%</span>
-                </div>
-                
+            </div>
+            
                 {/* Pantanal - top right */}
                 <div className="absolute -top-8 right-4 w-32 h-32 rounded-full border-2 border-dotted border-black bg-white flex items-center justify-center transform rotate-8">
                   <span className="text-lg font-bold text-black">42%</span>
-                </div>
-                
+              </div>
+              
                 {/* Walkers - bottom left */}
                 <div className="absolute bottom-16 -left-4 w-20 h-20 rounded-full border-2 border-dotted border-black bg-white flex items-center justify-center transform -rotate-6">
                   <span className="text-lg font-bold text-black">12%</span>
-                </div>
-                
+              </div>
+              
                 {/* Grgich - bottom right */}
                 <div className="absolute bottom-20 -right-8 w-40 h-40 rounded-full border-2 border-dotted border-black bg-white flex items-center justify-center transform rotate-6">
                   <span className="text-lg font-bold text-black">63%</span>
-                </div>
+              </div>
               </div>
             </div>
             

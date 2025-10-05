@@ -51,7 +51,7 @@ export const wayOfFlowersData: Record<string, {
     firstText: "Evolving through",
     secondText: "ecosystem nurturing...",
     thirdText: "Grown by community stewardship.",
-    mainQuote: "Evidence for the non-metaphorical memory of light residing in plant leaves...",
+    mainQuote: "Evidence for the non-metaphorical memory of light residing in plant leaves adds insult to the injury suffered by the argument of those who still insist on the exceptionalism of the central nervous system. In other words, when consciousness is wholly embedded in its biochemical substratum, it becomes increasingly indistinguishable from the cellular and molecular processes of other, presumably nonconscious organisms, such as plants.",
     author: "Michael Marder"
   },
   "2": {

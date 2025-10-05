@@ -202,8 +202,8 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
                 const config = textConfigs[index] || textConfigs[0];
                 
                 return (
-                  <div
-                    key={`${beneficiary.id}-label`}
+                <div
+                  key={`${beneficiary.id}-label`}
                     className={`absolute ${beneficiary.labelPosition.top} ${beneficiary.labelPosition.left} ${beneficiary.labelPosition.transform} pointer-events-none`}
                     style={{
                       transform: `translate(${config.offsetX}px, ${config.offsetY}px) ${beneficiary.labelPosition.transform.includes('translate') ? beneficiary.labelPosition.transform.replace('transform', '').trim() : ''}`
@@ -219,7 +219,7 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
                       height={config.height}
                       rotationOffset={config.rotationOffset}
                     />
-                  </div>
+                </div>
                 );
               })}
             </div>
@@ -435,8 +435,8 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
                 const config = textConfigs[index] || textConfigs[0];
                 
                 return (
-                  <div
-                    key={`${beneficiary.id}-label`}
+                <div
+                  key={`${beneficiary.id}-label`}
                     className={`absolute ${beneficiary.labelPosition.top} ${beneficiary.labelPosition.left} ${beneficiary.labelPosition.transform} pointer-events-none`}
                     style={{
                       transform: `translate(${config.offsetX}px, ${config.offsetY}px) ${beneficiary.labelPosition.transform.includes('translate') ? beneficiary.labelPosition.transform.replace('transform', '').trim() : ''}`
@@ -452,7 +452,7 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
                       height={config.height}
                       rotationOffset={config.rotationOffset}
                     />
-                  </div>
+                </div>
                 );
               })}
             </div>

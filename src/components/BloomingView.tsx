@@ -46,12 +46,12 @@ export default function BloomingView({
         </div>
 
         {/* Large rounded image card (match seed preview sizing) */}
-        <div className="relative w-full h-96 rounded-[50px] overflow-hidden bordeer-2 border-dashed border-black/70 bg-white mb-8 mt-4 scale-[1.0]">
-          <Image src={seedEmblemUrl} alt="Seed emblem" fill className="object-contain" />
+        <div className="relative w-full h-98 rounded-[50px] overflow-hidden bordeer-2 border-dashed border-black/70 bg-white mb-8 mt-4 scale-[1.0]">
+          <Image src={seedEmblemUrl} alt="Seed emblem" fill className="object-contain scale-[0.9]" />
         </div>
           {/* Share button bottom-right */}
-          <button onClick={onShare} className="absolute top-132 right-4 w-12 h-12 rounded-full bg-white/95 shadow flex items-center justify-center">
-            <Image src={assets.share} alt="Share" width={18} height={18} />
+          <button onClick={onShare} className="absolute top-132 right-4 w-12 h-12 rounded-full bg-white/95 opacity-70 shadow flex items-center justify-center">
+            <Image src={assets.share} alt="Share" width={18} height={18} className="opacity-100" />
           </button>
 
         {/* Root shape area */}
