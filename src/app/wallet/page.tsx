@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { assets } from "@/lib/assets";
 import RootShapeArea from "@/components/wallet/RootShapeArea";
 import TendedEcosystem from "@/components/wallet/TendedEcosystem";
+import StewardSeedCard from "@/components/wallet/StewardSeedCard";
 import WalletModal from "@/components/wallet/WalletModal";
 import { useAuth } from "@/components/auth/AuthProvider";
 import GardenHeader from "@/components/GardenHeader";
+import { fetchUserSeeds } from "@/lib/api";
 
 // Mock data for tended ecosystems
 const mockTendedEcosystems = [
@@ -32,11 +34,52 @@ const mockTendedEcosystems = [
   }
 ];
 
+// Mock data for steward seeds (displayed above tended ecosystems when user is a steward)
+const mockStewardSeeds = [
+  {
+    id: "001",
+    label: "SEED 001",
+    name: "Way Of Flowers Seed 001",
+    description: "Mock steward seed",
+    seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed1/seed.png",
+    latestSnapshotUrl: null,
+    snapshotCount: 43,
+    owner: "0x1234567890abcdef1234567890abcdef12345678",
+    depositAmount: "1.011",
+    snapshotPrice: "0.025",
+    isWithdrawn: false,
+    isLive: true,
+    metadata: { exists: true, attributes: [] },
+    story: { title: "", author: "", story: "" },
+  },
+];
+
 export default function WalletPage() {
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout, walletAddress } = useAuth();
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const [tendedEcosystems] = useState(mockTendedEcosystems);
+  const [stewardSeeds, setStewardSeeds] = useState<any[]>(mockStewardSeeds);
+
+  // Backend check using connected wallet; default to steward with mock if none/error
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      if (!walletAddress) return;
+      try {
+        const { seeds } = await fetchUserSeeds(walletAddress);
+        if (!cancelled) {
+          setStewardSeeds(seeds && seeds.length > 0 ? seeds : mockStewardSeeds);
+        }
+      } catch (_e) {
+        if (!cancelled) setStewardSeeds(mockStewardSeeds);
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [walletAddress]);
 
   const handleReadMore = (ecosystemId: string) => {
     // Route to seed detail page
@@ -89,6 +132,20 @@ export default function WalletPage() {
 
       {/* Content Area - Tended Ecosystems List */}
       <div className="px-4 pb-32">
+        {/* Steward Seeds Section (always show; defaults to mock if backend empty) */}
+        {stewardSeeds.length > 0 && (
+          <div className="space-y-8 mb-10">
+            {stewardSeeds.map((seed, index) => (
+              <StewardSeedCard
+                key={seed.id}
+                seed={seed}
+                index={index}
+                onTendSeed={() => router.push(`/way-of-flowers/${seed.id}/blooming`)}
+                onExplore={() => router.push(`/seed/${seed.id}/${encodeURIComponent(seed.label)}`)}
+              />
+            ))}
+          </div>
+        )}
         {tendedEcosystems.length === 0 ? (
           /* Empty State */
           <motion.div
@@ -135,15 +192,17 @@ export default function WalletPage() {
       </div>
 
       {/* Wallet Modal */}
-      <WalletModal
-        isOpen={isWalletModalOpen}
-        onClose={handleWalletModalClose}
-        onLogout={handleLogout}
-        onAddFunds={handleAddFunds}
-        onExportKey={handleExportKey}
-        onSwitchWallet={handleSwitchWallet}
-        onPrivyHome={handlePrivyHome}
-      />
+      <div className="">
+        <WalletModal
+          isOpen={isWalletModalOpen}
+          onClose={handleWalletModalClose}
+          onLogout={handleLogout}
+          onAddFunds={handleAddFunds}
+          onExportKey={handleExportKey}
+          onSwitchWallet={handleSwitchWallet}
+          onPrivyHome={handlePrivyHome}
+        />
+      </div>
     </div>
   );
 }

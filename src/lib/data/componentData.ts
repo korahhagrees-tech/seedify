@@ -75,12 +75,9 @@ export const seedStories: Record<string, {
     title: "We are the Soil for What Comes Next",
     author: "Stanley Qiufan Chen",
     story: `As a kid, I fever-dreamed too often. I wasn't in my bed but underground, dark, warm, damp, my limbs unraveling into a long, tangle of strings growing through a tunnel made of humming light. I could taste the hum of the cartoons with my fingers; it tasted like putting your tongue on a sour battery.
-
-CROSSLUCID had made my dream literal—or perhaps I never woke. The Way of Flowers sprawls before me like a hallucination of late capitalism finally eating its own tail, birthing something beautiful and monstrous: a garden where generative code photosynthesizes and collective devotion blossoms into literal biomes.
-
-The "seeds" pulse with impossible life—neither plant nor code, but a fusion that renders the distinction obsolete. Watch: a participant in Tokyo dedicates their support to protect jaguars in Brazil. Instantly, the botanical on screen convulses. Tendrils erupt. Leaves shift from emerald to jade. Aerial roots descend like synaptic connections seeking soil that exists only as verified biodiversity outcomes. The Morphological Art Engine doesn't simulate growth; it channels it from a parallel dimension where our conservation actions have already crystallized as matter.
-
-In this fevered ecology, Marder's "vegetal thinking" becomes protocol. The botanicals think without brains, remember without neurons, evolve without DNA—unless you count the seed ecosystems each steward selects. This is a living code woven from six distinct bioregions, more complex than any double helix, entangling California vineyard mycorrhizae with Barbadian mangrove pneumatophores in impossible anatomies.`
+    CROSSLUCID had made my dream literal—or perhaps I never woke. The Way of Flowers sprawls before me like a hallucination of late capitalism finally eating its own tail, birthing something beautiful and monstrous: a garden where generative code photosynthesizes and collective devotion blossoms into literal biomes.
+    The "seeds" pulse with impossible life—neither plant nor code, but a fusion that renders the distinction obsolete. Watch: a participant in Tokyo dedicates their support to protect jaguars in Brazil. Instantly, the botanical on screen convulses. Tendrils erupt. Leaves shift from emerald to jade. Aerial roots descend like synaptic connections seeking soil that exists only as verified biodiversity outcomes. The Morphological Art Engine doesn't simulate growth; it channels it from a parallel dimension where our conservation actions have already crystallized as matter.
+    In this fevered ecology, Marder's "vegetal thinking" becomes protocol. The botanicals think without brains, remember without neurons, evolve without DNA—unless you count the seed ecosystems each steward selects. This is a living code woven from six distinct bioregions, more complex than any double helix, entangling California vineyard mycorrhizae with Barbadian mangrove pneumatophores in impossible anatomies.`
   },
   "2": {
     title: "Digital Roots",

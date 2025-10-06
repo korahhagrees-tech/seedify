@@ -4,13 +4,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import GardenHeader from "@/components/GardenHeader";
-import SeedbedCardStats, { SeedbedCardStats2 } from "@/components/seeds/SeedbedCardStats";
 import RootShapeArea from "@/components/wallet/RootShapeArea";
 import InfoModal from "@/components/InfoModal";
-import StoryPanel from "@/components/StoryPanel";
-import { assets } from "@/lib/assets";
+import StoryPanel from "@/components/StoryPanel"; 
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { getSeedStory } from "@/lib/data/componentData";
 
 export default function About() {
   const router = useRouter();
@@ -90,11 +89,12 @@ export default function About() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -300 }}
                 transition={{ duration: 0.3 }}
+                className="scale-[1.05]"
               >
                 <StoryPanel
-                  text="The Way of Flowers represents a fundamental reimagining of environmental art through dynamic digital botanical compositions that maintain living connections to real-world conservation efforts. Collectors become original seeders, acquiring seeds that are collectively nurtured through their community and its engagement with specific ecosystem projects, creating uniquely evolving artworks that form a digital permaculture garden cultivated through ecosystem nurturing and grown by community stewardship."
-                  title="The Story"
-                  author="CROSSLUCID"
+                  text={getSeedStory("1").story}
+                  title={getSeedStory("1").title}
+                  author={getSeedStory("1").author}
                   onBack={handleBackFromStory}
                 />
               </motion.div>
