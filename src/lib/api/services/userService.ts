@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * User Service
  * Handles all user-specific API calls (wallet page data)

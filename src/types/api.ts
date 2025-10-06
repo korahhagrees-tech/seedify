@@ -3,7 +3,7 @@
  * Matching the backend schema from BACKEND_API_SCHEMA.md
  */
 
-import { Seed, SeedMetadata, SeedStory } from './seed';
+import { SeedMetadata, SeedStory } from './seed';
 
 // ============================================
 // Base Response Types

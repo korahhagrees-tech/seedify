@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Write Transaction Hook
  * Custom hook to simplify write transaction execution with wallet

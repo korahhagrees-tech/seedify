@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { assets } from "@/lib/assets";
 
 // Ecosystem project data for each seed

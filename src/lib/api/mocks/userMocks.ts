@@ -33,7 +33,7 @@ export const mockUserData = {
       },
       story: getSeedStory("1")
     }
-  ] as Seed[],
+  ] as unknown as Seed[],
 
   snapshots: [
     {

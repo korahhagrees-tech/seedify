@@ -112,7 +112,7 @@ export default function BloomingView({
         <div className="text-center text-[12px] leading-5 text-black/95 mb-4">
           <div>You funded <span className="peridia-display">{beneficiary}</span></div>
           <div>Regenerative Sheep Grazing and here is how the</div>
-          <div>plant's morphology carries this as memory</div>
+          <div>{`plant's morphology carries this as memory`}</div>
         </div>
 
         {/* Root shape area */}

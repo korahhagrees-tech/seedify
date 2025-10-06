@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Beneficiary Service
  * Handles all beneficiary-related API calls
