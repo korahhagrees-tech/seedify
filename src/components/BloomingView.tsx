@@ -37,7 +37,7 @@ export default function BloomingView({
   const [isLoading, setIsLoading] = useState(true);
 
   // Get the final image URL (snapshot or seed as fallback)
-  const finalImageUrl = snapshotImageUrl || seedImageUrl || seedEmblemUrl;
+  const finalImageUrl = snapshotImageUrl || seedImageUrl || assets.testPink;
 
   useEffect(() => {
     // After 30 seconds, trigger the reveal animation

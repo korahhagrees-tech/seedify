@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import SeedDetailPage from "@/components/seeds/SeedDetailPage";
+import SeedStewardStats from "@/components/SeedStewardStats";
 import { Seed } from "@/types/seed";
 import { fetchSeedById } from "@/lib/api/seeds";
 import Image from "next/image";
+import { assets } from "@/lib/assets";
 
 export default function SeedDetailsRoute() {
   const params = useParams();
@@ -53,10 +55,42 @@ export default function SeedDetailsRoute() {
   }
 
   return (
-    <div className="-mt-4">
-      <SeedDetailPage 
+    <div className="mt-4">
+      {/* New Steward Explore/Stats view. Replace/augment old detail page as needed. */}
+      <SeedStewardStats
         seed={seed}
-        onBack={() => router.push("/garden")}
+        links={{ openseaUrl: "https://opensea.io/" }}
+        metrics={{
+          core: [
+            { label: "SEED NUMBER", value: seed.label },
+            { label: "SNAPSHOTS", value: String(seed.snapshotCount), sublabel: `SNAPSHOT PRICE ${seed.snapshotPrice} ETH` },
+            { label: "SNAPSHOT SHARE", value: "12,5%", sublabel: "20% SHARE VALUE 2.023 ETH" },
+            { label: "MINTED ON", value: "04/09/2025" },
+            { label: "NUTRIENT RESERVE TOTAL", value: "1.826 ETH" },
+            { label: "YOUR CONTRIBUTIONS", value: seed.depositAmount + " ETH" },
+            { label: "ABSOLUTE NUTRIENT YIELD", value: "0.176 ETH" },
+            { label: "HARVESTABLE", value: "0.126 ETH", sublabel: "MATURATION DATE 02/09/2029" },
+          ],
+          regenerativeImpact: {
+            immediateImpactEth: "0.270",
+            immediateDistributedDate: "04/06/2027",
+            longtermImpactEth: "0.070",
+            longtermDistributedDate: "01/01/2027",
+            overallAccumulatedEth: "0.399",
+          },
+          beneficiaries: (seed.beneficiaries || []).map((b: any, i: number) => ({
+            id: b.id || String(i),
+            name: b.name || "Beneficiary",
+            emblemUrl: b.image || assets.glowers,
+            benefitShare: b.benefitShare || "12.45%",
+            snapshots: b.snapshots || 127,
+            gainEth: b.gainEth || "0.112",
+            gardenEth: b.gardenEth || "1.911",
+            yieldShareEth: b.yieldShareEth || "0.211",
+            unclaimedEth: b.unclaimedEth || "0.162",
+            claimedEth: b.claimedEth || "0.222",
+          })),
+        }}
       />
     </div>
   );

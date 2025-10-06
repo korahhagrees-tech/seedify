@@ -72,7 +72,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
             className="w-auto h-auto max-w-[300px] sm:max-w-[354px]"
             priority
             />
-            <div className="bg-transparent peridia-display text-white text-xl item-center justify-center mx-auto">
+            <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-10">
               <p>by  CROSSLUCID.</p>
             </div>
         </motion.div>

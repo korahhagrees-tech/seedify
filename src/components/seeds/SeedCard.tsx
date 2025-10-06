@@ -73,7 +73,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
         >
           <div className="text-xs font-medium text-black mb-1">RAISED</div>
           <div className="font-medium text-black text-sm lg:text-base scale-[1.1]">
-            {seed.depositAmount} ETH
+            {parseFloat(seed.depositAmount).toFixed(4)} ETH
           </div>
         </motion.div>
         
@@ -85,8 +85,8 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
           transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
         >
           <div className="text-xs font-medium text-black mb-1">SNAP PRICE</div>
-          <div className="font-medium text-black text-sm lg:text-base scale-[1.0] text-nowrap lg:scale-[1.1]">
-            {seed.snapshotPrice} ETH
+          <div className="font-medium text-black text-sm lg:text-base scale-[1.2] text-nowrap lg:scale-[1.1]">
+            {parseFloat(seed.snapshotPrice).toFixed(4)} ETH
           </div>
         </motion.div>
         
