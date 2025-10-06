@@ -3,6 +3,7 @@ export const assets = {
   subtract: "/Subtract.svg",
   subtracts: "/assets/SeedbedText.svg",
   seedRoot: "/seed-root.svg",
+  seedRootWhite: "/seed-root-1.svg",
   seedTransparent: "/seed-transparent.svg",
   arrowLeft: "/arrow-left.svg",
   arrowUp: "/arrow-up.svg",

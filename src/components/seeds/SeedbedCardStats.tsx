@@ -33,6 +33,7 @@ export default function SeedbedCardStats({
           top: 'bottom-20',
           left: '-right-8',
           transform: 'rotate-6',
+          borderStyle: 'border-dashed', // Alternating dashes and dots
           labelPosition: { top: 'right-20', left: 'top-1/2', transform: '-rotate-90' },
           radius: 80,
           angle: Math.PI * 0.5,
@@ -47,6 +48,7 @@ export default function SeedbedCardStats({
           top: '-top-16',
           left: 'left-4',
           transform: '-rotate-4',
+          borderStyle: 'border-dashed', // Short thick dashes
           labelPosition: { top: '-left-20', left: '-top-8', transform: '-rotate-90' },
           radius: 75,
           angle: Math.PI * 0.45,
@@ -61,6 +63,7 @@ export default function SeedbedCardStats({
           top: '-top-8',
           left: 'right-4',
           transform: 'rotate-8',
+          borderStyle: 'border-dotted', // Fine dots
           labelPosition: { top: '-right-16', left: '-top-2', transform: 'rotate-45' },
           radius: 70,
           angle: Math.PI * 0.4,
@@ -75,6 +78,7 @@ export default function SeedbedCardStats({
           top: 'bottom-16',
           left: '-left-4',
           transform: '-rotate-6',
+          borderStyle: 'border-dotted', // Fine dots
           labelPosition: { top: 'left-12', left: 'bottom-32', transform: 'rotate-60' },
           radius: 50,
           angle: Math.PI * 0.3,
@@ -94,6 +98,7 @@ export default function SeedbedCardStats({
           top: 'bottom-20',
           left: '-right-8',
           transform: 'rotate-6',
+          borderStyle: 'border-dashed', // Alternating dashes and dots
           labelPosition: { top: 'right-20', left: 'top-1/2', transform: '-rotate-90' },
           radius: 80,
           angle: Math.PI * 0.5,
@@ -108,6 +113,7 @@ export default function SeedbedCardStats({
           top: 'bottom-18',
           left: '-left-6',
           transform: '-rotate-6',
+          borderStyle: 'border-dotted', // Dense fine dots
           labelPosition: { top: 'left-16', left: 'bottom-36', transform: 'rotate-60' },
           radius: 78,
           angle: Math.PI * 0.48,
@@ -122,6 +128,7 @@ export default function SeedbedCardStats({
           top: '-top-16',
           left: 'left-4',
           transform: '-rotate-4',
+          borderStyle: 'border-dashed', // Short thick dashes
           labelPosition: { top: '-left-20', left: '-top-8', transform: '-rotate-90' },
           radius: 75,
           angle: Math.PI * 0.45,
@@ -136,6 +143,7 @@ export default function SeedbedCardStats({
           top: '-top-8',
           left: 'right-4',
           transform: 'rotate-8',
+          borderStyle: 'border-dotted', // Fine dots
           labelPosition: { top: '-right-16', left: '-top-2', transform: 'rotate-45' },
           radius: 70,
           angle: Math.PI * 0.4,
@@ -151,8 +159,8 @@ export default function SeedbedCardStats({
     <div className={`relative ${className}`}>
       {/* Outer gray layer */}
       <div className="bg-[#D9D9D9] rounded-3xl p-3">
-        {/* Inner white layer */}
-        <div className="bg-white rounded-3xl p-6 relative">
+        {/* Inner gradient layer (not white) */}
+        <div className="bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300 rounded-3xl p-6 relative">
           {/* Title */}
           <div className="text-center text-black font-medium text-lg -mt-4 mb-36">
             THE SEEDBED
@@ -167,14 +175,14 @@ export default function SeedbedCardStats({
                 {/* Background organic shape */}
                 <div className="absolute inset-0 bg-white rounded-full opacity-50"></div>
                 
-                {/* Individual circles with dynamic sizing */}
+                {/* Individual circles with dynamic sizing and proper intersections */}
                 {config.circles.map((circle, index) => (
                   <div
                     key={circle.id}
                     className={`absolute ${circle.top} ${circle.left} ${circle.size} ${circle.transform} z-10`}
                   >
-                    {/* Circle with border */}
-                    <div className="w-full h-full rounded-full border-2 border-black bg-white relative overflow-hidden">
+                    {/* Circle with specific border style */}
+                    <div className={`w-full h-full rounded-full border-2 ${circle.borderStyle} border-black bg-white relative overflow-hidden`}>
                       {/* Percentage display */}
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-lg font-bold text-black">{circle.percentage}</span>
@@ -232,8 +240,8 @@ export function SeedbedCardStats2({ className = "" }: SeedbedCardStatsProps) {
           Pull up to explore the seedbed
         </div>
         
-        {/* Inner white layer */}
-        <div className="bg-white rounded-3xl p-6 relative">
+        {/* Inner gradient layer */}
+        <div className="bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300 rounded-3xl p-6 relative">
           {/* Title */}
           <div className="text-center text-black font-medium text-lg -mt-4 mb-36">
             THE SEEDBED
@@ -260,7 +268,7 @@ export function SeedbedCardStats2({ className = "" }: SeedbedCardStatsProps) {
               </div>
               
                 {/* Grgich - bottom right */}
-                <div className="absolute bottom-20 -right-8 w-40 h-40 rounded-full border-2 border-dotted border-black bg-white flex items-center justify-center transform rotate-6">
+                <div className="absolute bottom-20 -right-8 w-40 h-40 rounded-full border-2 border-dashed border-black bg-white flex items-center justify-center transform rotate-6">
                   <span className="text-lg font-bold text-black">63%</span>
               </div>
               </div>

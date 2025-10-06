@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { assets } from "@/lib/assets";
+import Image from "next/image";
 
 interface StoryPanelProps {
   text: string;
@@ -24,12 +26,12 @@ export default function StoryPanel({ text, onBack, title, author }: StoryPanelPr
           onClick={onBack}
           className="absolute left-4 top-4 w-10 h-10 rounded-full border border-black flex items-center justify-center"
         >
-          <span className="text-xl">←</span>
+          <Image src={assets.arrowLeft} alt="Back" width={20} height={20} />
         </button>
 
         {/* Title block */}
         <div className="text-center mt-6 mb-4">
-          <div className="text-2xl">{title || "We are the Soil"}</div>
+          <div className="text-2xl">{title || "We are the Soil for What Comes Next"}</div>
           <div className="text-2xl -mt-1">{title ? "" : "for What Comes Next"}</div>
           <div className="text-xs text-black/70 mt-2">{author ? `by ${author}` : "by Stanley Qiufan Chen"}</div>
         </div>

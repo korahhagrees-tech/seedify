@@ -124,12 +124,12 @@ export default function WalletPage() {
       </div>
 
       {/* Fixed Root Shape Area */}
-      <div className="fixed -bottom-18 left-0 right-0 z-30 pt-4 scale-[1.1]">
+      <div className="fixed -bottom-1 left-0 right-0 z-30 pt-4 scale-[1.1]">
         <div className="max-w-md mx-auto px-4">
           <RootShapeArea
             onWallet={() => setIsWalletModalOpen(true)}
-            onSubstrate={() => {}}
-            onExploreGarden={() => router.push("/garden")}
+            showGlassEffect={false}
+            showStoryButton={false}
           />
         </div>
       </div>

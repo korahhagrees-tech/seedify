@@ -72,7 +72,7 @@ export const seedStories: Record<string, {
   story: string;
 }> = {
   "1": {
-    title: "We are the Soil",
+    title: "We are the Soil for What Comes Next",
     author: "Stanley Qiufan Chen",
     story: `As a kid, I fever-dreamed too often. I wasn't in my bed but underground, dark, warm, damp, my limbs unraveling into a long, tangle of strings growing through a tunnel made of humming light. I could taste the hum of the cartoons with my fingers; it tasted like putting your tongue on a sour battery.
 

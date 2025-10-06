@@ -17,6 +17,17 @@ const ABOUT_TEXT = [
 ].join("\n\n");
 
 const DISCLAIMER_TEXT = [
+  "1. DEFINITIONS AND GLOSSARY",
+  "The following terms and definitions apply to this Agreement:",
+  "1.1 Core Concepts",
+  '"Way of Flowers" means an artistic project focused on ecological stewardship that explores the relationship between biodiversity, conservation, and digital art through a generative art system.',
+  '"CROSSLUCID" means the creator and owner of the Way of Flowers project, partially licensed by W\'A\'Y\'S, a Swiss association registered at c/o Dan Stein & Impact Hub, Rue Fendt 1, 1201 Geneva, Switzerland.',
+  '"Seed" / "Dynamic NFT" means a living, evolving digital botanical artwork that responds to collective community activity and environmental data. Each Seed is owned by a Seed Steward and transforms based on community contributions to verified regenerative projects. The artwork\'s morphology evolves as participants engage with its associated ecosystem projects, creating a unique visual narrative of collective environmental impact.',
+  '"Snapshot" / "Static NFT" means a permanent capture of a specific evolutionary moment in a Seed\'s development. This represents an individual conservation contribution by Community Member.',
+  '"Seedbed Ecosystem" means the curated collection of verified regenerative initiatives that form a Seed\'s "DNA." Initially comprising 4 projects selected by the Seed Steward from a curated pool of 8 verified regenerative initiatives, this ecosystem expands over time as the art project progresses.'
+].join("\n");
+
+const CREDITS_TEXT = [
   "CROSSLUCID is an artist collective (est. 2018) that engages in highly collaborative cross-disciplinary projects in co-evolution with technology. Their work and research converges around the exploration of the self as a network; speculative post-humanism; intimacy and the potential for pleasurable actualisation through the digital sphere, and the re-imagination of our alliances with technology seen as part of a sympoietic biosphere and universal post-material consciousness. Through explorations spanning filmmaking, poetic Artificial Intelligence, multi-layered techniques of collage, assemblage and experience-led interventions they create scenarios and build experiential formats that instigate prototyping and rehearsing potential futures and progressing 'metamodern' values. Their practice is process-driven with a set of enquiries and intuitive leaps of knowledge becoming long-term projects that materialise through ongoing iteration and experimentation to share findings with a deepening understanding.",
   "",
   "croslucid.zone",
@@ -24,11 +35,11 @@ const DISCLAIMER_TEXT = [
 ].join("\n");
 
 export default function InfoModal({ open, onClose }: InfoModalProps) {
-  const [tab, setTab] = useState<"about" | "credits" | "tnc">("about");
+  const [tab, setTab] = useState<"substrate" | "credits" | "tnc">("substrate");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (open) setTab("about");
+    if (open) setTab("substrate");
   }, [open]);
 
   return (
@@ -49,7 +60,7 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
             <div className="relative rounded-[50px] border-2 border-dotted border-black bg-white p-4">
               <div className="flex gap-14 mt-2 mb-6 mx-auto justify-center">
                 {[
-                  { k: "about", label: "About" },
+                  { k: "substrate", label: "Substrate" },
                   { k: "credits", label: "Credits" },
                   { k: "tnc", label: "T&C" },
                 ].map(({ k, label }) => (
@@ -63,9 +74,9 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
                 ))}
               </div>
 
-              {tab === "about" && (
+              {tab === "substrate" && (
                 <div className="text-center mb-3">
-                  <div className="text-2xl">About</div>
+                  <div className="text-2xl">Substrate</div>
                   <div className="mx-auto my-2 w-10 h-10 rounded-full border border-black flex items-center justify-center">
                     <Image src="/audio-play.svg" alt="Audio" width={20} height={20} />
                   </div>
@@ -85,19 +96,12 @@ export default function InfoModal({ open, onClose }: InfoModalProps) {
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                   <p className="whitespace-pre-line mb-12">
-                    {tab === "about" ? ABOUT_TEXT : tab === "tnc" ? DISCLAIMER_TEXT : "Credits coming soon."}
+                    {tab === "substrate" ? ABOUT_TEXT : tab === "tnc" ? DISCLAIMER_TEXT : CREDITS_TEXT}
                   </p>
                 </div>
                 <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent" />
               </div>
             </div>
-            
-            <button
-              onClick={onClose}
-              className="mx-auto mt-4 w-full h-20 rounded-full border border-black bg-white flex items-center justify-center text-2xl tracking-widest"
-            >
-              <p className="scale-[0.9]">Explore the Garden</p>
-            </button>
           </motion.div>
         </motion.div>
       )}

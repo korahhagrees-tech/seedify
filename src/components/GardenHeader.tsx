@@ -31,7 +31,7 @@ export default function GardenHeader({ onHomeClick, onProfileClick, logo }: Gard
       </div>
 
       <button 
-        onClick={onProfileClick ?? (() => router.push('/profile'))}
+        onClick={onProfileClick ?? (() => router.push('/wallet'))}
         className="w-14 h-14 flex-shrink-0 hover:opacity-80 transition-opacity"
       >
         <Image src="/Profile Button.svg" alt="Profile" width={56} height={56} className="w-full h-full" />
