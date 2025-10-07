@@ -143,7 +143,7 @@ export default function WalletPage() {
                 seed={seed}
                 index={index}
                 onTendSeed={() => router.push(`/way-of-flowers/${seed.id}/blooming`)}
-                onExplore={() => router.push(`/seed/${seed.id}/${encodeURIComponent(seed.label)}`)}
+                onExplore={() => router.push(`/wallet/steward/${seed.id}`)}
               />
             ))}
           </div>
