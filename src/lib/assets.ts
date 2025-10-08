@@ -1,5 +1,9 @@
 export const assets = {
   // SVGs
+  copy: "/copy.svg",
+  email: "/mail.svg",
+  key: "/key-round.svg",
+  logout: "/logout.svg",
   subtract: "/Subtract.svg",
   subtracts: "/assets/SeedbedText.svg",
   seedRoot: "/seed-root.svg",

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { assets } from "@/lib/assets";
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -49,7 +50,7 @@ export default function WalletModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 z-40"
+            className="fixed inset-0 bg-black/10 z-40 backdrop-blur-xs"
             onClick={onClose}
           />
           
@@ -59,78 +60,88 @@ export default function WalletModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-x-4 top-1/2 -translate-y-1/2 z-50"
+            className="fixed inset-x-6 top-1/2 -translate-y-1/2 z-50 max-w-sm mx-auto"
           >
-            {/* Outer rounded card with dotted border style */}
-            <div className="bg-gray-100 rounded-[36px] p-5 border-3 border-dotted border-gray-400 shadow-xl">
-              {/* Inner panel with asymmetric rounding (top-left/bottom-right more rounded) */}
-              <div className="bg-white rounded-[28px] p-4 md:p-6 border-1 border-gray-200 shadow-sm">
-                {/* Header */}
-                <div className="text-left mb-4">
-                  <h2 className="text-sm tracking-wide text-gray-700">YOUR WALLET</h2>
-                </div>
+            {/* Single card with asymmetric rounding and dotted border */}
+            <div className="bg-[#D9D9D9] rounded-tl-[120px] rounded-tr-[40px] rounded-bl-[40px] rounded-br-[120px] p-6 border-3 border-dotted border-gray-600 shadow-xl scale-[1.05]">
+              {/* Header */}
+              <div className="text-center mb-6 -mt-4">
+                <h2 className="text-2xl text-right font-light peridia-display-light text-black tracking-wider">Rooted Wallet</h2>
+              </div>
 
-                {/* Wallet Address Row */}
-                <div className="bg-white rounded-[20px] border-1 border-gray-200 p-3 mb-5 shadow-sm">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <span className="text-base font-mono text-gray-900">
-                        {formatAddress(walletAddress || '')}
-                      </span>
-                      <button
-                        onClick={copyToClipboard}
-                        className="w-7 h-7 rounded-md bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
-                      >
-                        <Image src="/file.svg" alt="Copy" width={12} height={12} className="w-3 h-3" />
-                      </button>
-                      {copied && <span className="text-xs text-green-600">Copied!</span>}
-                    </div>
-                    <div className="bg-gray-100 px-3 py-1 rounded-full">
-                      <span className="text-sm font-semibold text-gray-700">{balance || '0.000'} ETH</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Email and action buttons */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <Image src="/file.svg" alt="Email" width={16} height={16} className="w-4 h-4" />
-                    <span className="text-sm text-gray-800">{user?.email || 'bilbo.bagz@shire.io'}</span>
-                  </div>
-                  <button
-                    onClick={onSwitchWallet}
-                    className="px-4 py-2 border-1 border-gray-300 rounded-full text-sm text-gray-800 hover:bg-gray-50 transition-colors"
-                  >
-                    Change Address
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2">
-                    <Image src="/file.svg" alt="Key" width={16} height={16} className="w-4 h-4" />
-                    <button onClick={onExportKey} className="text-sm text-gray-800">Export private key</button>
-                  </div>
-                  <button
-                    onClick={onPrivyHome}
-                    className="px-4 py-2 border-3 border-dotted border-gray-400 rounded-full text-sm text-gray-800 hover:bg-gray-50 transition-colors"
-                  >
-                    Wallet Connect
-                  </button>
-                </div>
-
-                {/* Footer actions */}
+              {/* Wallet Address and Balance Bar */}
+              <div className="bg-white rounded-[40px] h-13 p-4 mb-6 border-1 border-black/60">
+                <p className="text-sm scale-[0.7] -ml-13 mb-1 -mt-4 font-light text-black">YOUR WALLET</p>
                 <div className="flex items-center justify-between">
-                  <button onClick={onLogout} className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900 transition-colors">
-                    <span>↪</span>
-                    <span>Log out</span>
-                  </button>
-                  <button
-                    onClick={onAddFunds}
-                    className="px-8 py-3 border-3 border-dotted border-gray-500 rounded-full text-base text-gray-900 hover:bg-gray-50 transition-colors"
-                  >
-                    Add Funds
+                  <div className="flex items-center gap-3 -mt-2">
+                    <span className="text-base font-mono text-black">
+                      {formatAddress(walletAddress || '')}
+                    </span>
+                    <button
+                      onClick={copyToClipboard}
+                      className="flex items-center justify-center transition-colors"
+                    >
+                      <Image src={assets.copy} alt="Copy" width={12} height={12} className="w-4 h-4" />
+                    </button>
+                    {copied && <span className="text-xs text-green-600">Copied!</span>}
+                  </div>
+                  <div className="bg-gray-100 px-3 scale-[0.8] -mt-3 py-1 rounded-lg">
+                    <span className="text-base scale-[1.3] font-light text-[#64668B] -mt-4">{balance} ETH</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Email and Private Key Section */}
+              <div className="space-y-4 mb-6 bg-white/60 p-4 rounded-[40px] -mt-14 h-32">
+                <div className="flex items-center gap-2 mt-4">
+                  <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
+                  <span className="text-sm text-black">{user?.email || 'bilbo.bagz@shire.io'}</span>
+                <button
+                  onClick={onSwitchWallet}
+                  className="w-full px-4 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3"
+                >
+                  <span className="text-base scale-[1.05] font-light -mt-2">Change</span>
+                  <span className="text-base scale-[1.05] font-light -mt-2 -mb-1">Address</span>
+                </button>
+                </div>
+                <div className="flex items-center gap-2 -mt-5">
+                  <Image src={assets.key} alt="Key" width={16} height={16} className="w-4 h-4" />
+                  <button onClick={onExportKey} className="text-sm text-black hover:text-gray-900 transition-colors">
+                    Export private key
                   </button>
                 </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3 mb-6 -mt-9">
+                <button
+                  onClick={onPrivyHome}
+                  className="w-[32%] px-4 py-1 border-1 border-black rounded-full text-sm text-black hover:bg-gray-50 transition-colors -mt-14  h-6 peridia-display-light bg-[#E2E3F0]"
+                >
+                  <p className="-mt-1 text-nowrap">  
+                    P<span className="favorit-mono">rivy</span> H<span className="favorit-mono">ome</span>
+                  </p>
+                </button>
+                <button
+                  onClick={onPrivyHome}
+                  className="w-[50%] ml-14 px-4 py-2 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors"
+                >
+                  Wallet Connect
+                </button>
+              </div>
+
+              {/* Log out */}
+              <div className="flex items-center gap-2">
+                <button onClick={onLogout} className="flex items-center gap-2 text-sm text-black hover:text-gray-800 transition-colors -mb-12">
+                  <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
+                  <span className="text-sm font-light text-nowrap">Log out</span>
+                </button>
+                <button
+                  onClick={onAddFunds}
+                  className="w-48 px-4 py-2 ml-4 -mb-2 border-3 border-dotted border-gray-500 rounded-full text-2xl text-black peridia-display-light bg-white hover:bg-gray-50 transition-colors"
+                >
+                  A<span className="favorit-mono font-light text-nowrap">dd</span> F<span className="favorit-mono font-light text-nowrap">unds</span>
+                </button>
               </div>
             </div>
           </motion.div>

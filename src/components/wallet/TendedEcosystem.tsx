@@ -37,12 +37,12 @@ export default function TendedEcosystem({
       className="mb-6"
       >
       {/* Date */}
-      <div className="text-sm text-gray-600 -mb-1 ml-12">{date}</div>
+      <div className="text-sm text-gray-600 -mb-1 ml-14">{date}</div>
       
       {/* Emblem + Gradient Bar (conjoined) */}
       <div className="relative mb-4">
         {/* Gradient bar */}
-        <div className="w-[460px] rounded-full py-1 pl-16 pr-4 -ml-8 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.8]">
+        <div className="w-[495px] rounded-full py-1 pl-16 pr-4 -ml-8 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.8]">
           <span className="text-sm text-gray-700 text-nowrap -ml-4">{beneficiaryName}</span>
         </div>
         {/* Emblem overlapping on the bar */}

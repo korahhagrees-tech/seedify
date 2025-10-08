@@ -25,12 +25,12 @@ export default function StewardSeedCard({ seed, onTendSeed, onExplore, index = 0
       {/* Gradient bar with emblem and steward message */}
         <div className="text-xs text-gray-800 text-center -mb-1 -mt-2">YOUR TENDED ECOSYSTEM</div>
       <div className="relative mb-4">
-        <div className="w-[640px] rounded-full py-3 pl-20 pr-6 -ml-26 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.6]">
+        <div className="w-[665px] rounded-full py-3 pl-20 pr-6 -ml-28 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.6]">
           <span className="text-lg text-center text-gray-800 text-nowrap">
             {`Thank You for Being the Steward of ${seed.label?.toUpperCase()}`}
           </span>
         </div>
-        <div className="absolute left-4 top-6 -translate-y-1/2 w-12 h-12 rounded-full border-3 border-dotted border-black bg-gray-200 flex items-center justify-center shadow">
+        <div className="absolute -left-1 top-6 -translate-y-1/2 w-12 h-12 rounded-full border-3 border-dotted border-black bg-gray-200 flex items-center justify-center shadow">
           <Image src={tendedEcosystems[index].seedEmblemUrl} alt="Steward emblem" width={22} height={22} className="w-8 h-8" />
         </div>
       </div>

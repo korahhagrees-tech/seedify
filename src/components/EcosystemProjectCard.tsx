@@ -72,7 +72,7 @@ export default function EcosystemProjectCard({
 
         {/* Card with cutout header */}
         <motion.div
-          className="relative max-w-md mx-auto mt-12 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden"
+          className="relative max-w-md mx-auto mt-12 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[730px]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -146,7 +146,7 @@ export default function EcosystemProjectCard({
               </div>
             )}
 
-            <div className="relative mt-4 text-[13px] leading-relaxed text-black/90 h-56 overflow-y-auto pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="relative mt-4 text-[13px] leading-relaxed text-black/90 h-86 overflow-y-auto pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {/* Short text - always visible */}
               <div className="mb-4 whitespace-pre-line">
                 {shortText}
@@ -168,11 +168,11 @@ export default function EcosystemProjectCard({
               </AnimatePresence>
             </div>
             {/* Bottom blur fade */}
-            <div className="pointer-events-none absolute -bottom-8 left-0 right-0 h-40 bg-gradient-to-b from-white to-transparent" />
+            <div className="pointer-events-none absolute bottom-18 left-0 right-0 h-10 bg-white backdrop-blur-xs opacity-70" />
           </div>
 
           {/* Footer with centered CTA and inverted switch next to it */}
-          <div className="relative px-4 py-4 flex items-center justify-center gap-4">
+          <div className="relative -px-6 py-4 flex items-center bg-transparent justify-center gap-4 -mt-2">
             <Button
               variant="ghost"
               className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col"
@@ -193,7 +193,7 @@ export default function EcosystemProjectCard({
         </motion.div>
 
         {/* Navigation circles - positioned on the card border */}
-        <div className="relative max-w-md mx-auto -mt-[640px] z-20 flex justify-center items-center gap-8">
+        <div className="relative max-w-md mx-auto -mt-[750px] z-20 flex justify-center items-center gap-8">
           {/* Back Arrow - left side */}
           <button onClick={() => router.back()}>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">

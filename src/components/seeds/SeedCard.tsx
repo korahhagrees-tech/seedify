@@ -32,7 +32,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
             transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
           >
             <div className="font-medium text-black text-lg scale-[1.3]">
-              <span className="">STEWARD</span> {formatAddress(seed.owner)}
+              <span className="-ml-2">STEWARD</span> <span className="ml-10">{formatAddress(seed.owner)}</span>
             </div>
           </motion.div>
       </div>
@@ -63,42 +63,42 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
       </div>
       
       {/* Info Buttons - Separate from the image card */}
-      <div className="grid grid-cols-3 gap-3 mb-6 scale-[0.9]">
+      <div className="grid grid-cols-3 gap-3 mb-6 scale-[1.0]">
         {/* Price Button */}
         <motion.div 
-          className="bg-white border-1 border-black rounded-full p-3 text-center"
+          className="bg-white border-1 border-black h-10 rounded-full p-3 text-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
         >
-          <div className="text-xs font-medium text-black mb-1">RAISED</div>
-          <div className="font-medium text-black text-sm lg:text-base scale-[1.1]">
-            {parseFloat(seed.depositAmount).toFixed(4)} ETH
+          <div className="text-[10px] font-light text-black -mt-3 -mb-4">RAISED</div>
+          <div className="font-light text-black mt-5 -mb-4 text-xs text-nowrap lg:text-xs scale-[1.25]">
+            {parseFloat(seed.depositAmount).toFixed(4)} <span className="text-xs">ETH</span>
           </div>
         </motion.div>
         
         {/* Seeder Button - Owner's wallet address */}
         <motion.div 
-          className="bg-white border-1 border-black rounded-full p-3 text-center"
+          className="bg-white border-1 border-black h-10 rounded-full p-3 text-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
         >
-          <div className="text-xs font-medium text-black mb-1">SNAP PRICE</div>
-          <div className="font-medium text-black text-sm lg:text-base scale-[1.2] text-nowrap lg:scale-[1.1]">
-            {parseFloat(seed.snapshotPrice).toFixed(4)} ETH
+          <div className="text-[10px] font-light text-black -mt-3 -mb-4">SNAP PRICE</div>
+          <div className="font-light text-black mt-5 -mb-4 text-xs text-nowrap lg:text-xs scale-[1.25]">
+            {parseFloat(seed.snapshotPrice).toFixed(4)} <span className="text-xs">ETH</span>
           </div>
         </motion.div>
         
         {/* Flowers Count Button */}
         <motion.div 
-          className="bg-white border-1 border-black rounded-full p-3 text-center"
+          className="bg-white border-1 border-black h-10 rounded-full p-3 text-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.3 }}
         >
-          <div className="text-xs font-medium text-black mb-1 scale-[0.95]">EVOLUTIONS</div>
-          <div className="font-medium text-black text-sm lg:text-base scale-[1.4]">
+          <div className="text-[10px] font-light text-black -mt-3 -mb-4">EVOLUTIONS</div>
+          <div className="font-light text-black mt-5 -mb-4 text-xs text-nowrap lg:text-xs scale-[1.3]">
             {seed.snapshotCount}
           </div>
         </motion.div>

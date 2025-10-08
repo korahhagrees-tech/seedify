@@ -25,14 +25,14 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.25 }}
           >
-            <div className="font-medium text-black text-lg scale-[1.3]">
-              <span className="">STEWARD</span> {formatAddress(seed.owner)}
+            <div className="font-light text-black text-lg scale-[1.3]">
+              <span className="-ml-2">STEWARD</span> <span className="ml-10">{formatAddress(seed.owner)}</span>
             </div>
           </motion.div>
       </div>
       {/* Seed Label Badge - completely outside motion containers */}
-      <div className="fixed top-39 md:left-58 lg:left-145 left-14 -translate-x-1/2 z-[10]">
-        <span className="bg-white border-1 border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
+      <div className="fixed top-39 md:left-64 lg:left-145 left-14 -translate-x-1/2 z-[10]">
+        <span className="bg-white border-1 border-black text-black px-3 py-1 rounded-full text-sm font-light shadow">
           {seed.label.toUpperCase()}
         </span>
       </div>
@@ -67,37 +67,37 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
         
         {/* Metrics pills */}
         <div className="px-6 pb-6">
-          <div className="grid grid-cols-3 gap-3 scale-[0.9]">
+          <div className="grid grid-cols-3 gap-3 scale-[1.05]">
             <motion.div 
-              className="bg-white border-1 border-black rounded-full -px-3 py-2 text-center"
+              className="bg-white border-1 border-black h-10 rounded-full -px-3 py-1 text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.4 }}
             >
-              <div className="text-xs font-medium text-black mb-1">RAISED</div>
-              <div className="font-medium text-black text-xs text-nowrap lg:text-xs scale-[1.25]">
-                {seed.depositAmount} ETH
+              <div className="text-[10px] font-light text-black -mt-1 mb-2">RAISED</div>
+              <div className="font-light text-black -mt-1 -mb-4 text-xs text-nowrap lg:text-xs scale-[1.25]">
+                {parseFloat(seed.depositAmount).toFixed(4)} <span className="text-xs">ETH</span>
               </div>
             </motion.div>
             <motion.div 
-              className="bg-white border-1 border-black rounded-full px-3 py-2 text-center"
+              className="bg-white border-1 border-black h-10 rounded-full px-3 py-1 text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.45 }}
             >
-              <div className="text-xs font-medium text-black mb-1 scale-[0.9]"> SNAP PRICE</div>
-              <div className="font-medium text-black text-xs text-nowrap lg:text-xs scale-[1.2]">
-                {seed.snapshotPrice} ETH
+              <div className="text-[10px] font-light text-black -mt-1 -mb-4"> SNAP PRICE</div>
+              <div className="font-light text-black mt-5 -mb-4 text-xs text-nowrap lg:text-xs scale-[1.25]">
+                {parseFloat(seed.snapshotPrice).toFixed(4)} <span className="text-xs">ETH</span>
                 </div>
             </motion.div>
             <motion.div 
-              className="bg-white border-1 border-black rounded-full px-3 py-2 text-center"
+              className="bg-white border-1 border-black h-10 rounded-full px-3 py-1 text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 }}
             >
-              <div className="text-xs font-medium text-black mb-1 scale-[0.95]">EVOLUTIONS</div>
-              <div className="font-medium text-black text-base scale-[1.1]">
+              <div className="text-[10px] font-light text-black -mt-1 -mb-4">EVOLUTIONS</div>
+              <div className="font-light text-black mt-5 -mb-4 text-xs text-nowrap lg:text-xs scale-[1.3]">
                 {seed.snapshotCount}
                 </div>
             </motion.div>
