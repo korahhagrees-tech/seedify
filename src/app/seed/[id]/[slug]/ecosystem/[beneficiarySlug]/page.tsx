@@ -100,6 +100,8 @@ export default function EcosystemPage() {
         extendedText={ecosystemData.extendedText}
         seedEmblemUrl={ecosystemData.seedEmblemUrl}
         seedId={ecosystemData.seedId}
+        beneficiaryCode={ecosystemData.beneficiaryCode}
+        beneficiaryIndex={ecosystemData.beneficiaryIndex}
       />
     </div>
   );

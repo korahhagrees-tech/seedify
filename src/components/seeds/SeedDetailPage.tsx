@@ -110,7 +110,7 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
         </div>
 
         {/* Way of Flowers Card Link */}
-        <div className="px-6 pb-6 mt-6">
+        {/* <div className="px-6 pb-6 mt-6">
           <Link href={`/way-of-flowers/${seed.id}`}>
             <motion.div
               className="bg-white border-2 border-dashed border-black/30 rounded-2xl p-6 text-center cursor-pointer hover:bg-gray-50 transition-colors"
@@ -121,7 +121,7 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
               <p className="text-sm text-gray-600">Explore the philosophical journey of this seed</p>
             </motion.div>
           </Link>
-        </div>
+        </div> */}
       </motion.div>
     </div>
   );

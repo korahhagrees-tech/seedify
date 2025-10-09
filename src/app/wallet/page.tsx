@@ -128,15 +128,17 @@ export default function WalletPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen w-screen scale-[0.9] -ml-2 -mt-14 max-w-md mx-auto">
       {/* Header */}
-      <GardenHeader />
+      <div className="ml-4 -px-1 scale-[1.1]">
+        <GardenHeader />
+      </div>
 
       {/* Content Area - Tended Ecosystems List */}
       <div className="px-4 pb-32">
         {/* Steward Seeds Section (always show; defaults to mock if backend empty) */}
         {stewardSeeds.length > 0 && (
-          <div className="space-y-8 mb-10">
+          <div className="space-y-8 mb-10 scale-[0.95]">
             {stewardSeeds.map((seed, index) => (
               <StewardSeedCard
                 key={seed.id}
@@ -184,7 +186,7 @@ export default function WalletPage() {
 
       {/* Fixed Root Shape Area */}
       <div className="fixed -bottom-1 left-0 right-0 z-30 pt-4 scale-[1.1]">
-        <div className="max-w-md mx-auto px-4">
+        <div className="max-w-md mx-auto px-4 w-full">
           <RootShapeArea
             onWallet={() => setIsWalletModalOpen(true)}
             showGlassEffect={false}

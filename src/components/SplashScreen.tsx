@@ -75,6 +75,13 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
             <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-10">
               <p>by  CROSSLUCID.</p>
             </div>
+            <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-24 -mb-36 scale-[0.8]">
+              <p>a regenerative art project</p>
+              <p>reimagining environmental art</p>
+              <p>through living digital botanicals </p>
+              <p>directly connected</p>
+              <p>to real-world conservation</p>
+            </div>
         </motion.div>
         
         {/* Wallet Connect Button with animation */}

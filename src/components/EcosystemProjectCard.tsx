@@ -11,6 +11,15 @@ import { assets } from "@/lib/assets";
 import { useRouter } from "next/navigation";
 import { formatArea } from "@/lib/utils";
 import PaymentModal from "@/components/PaymentModal";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { toast } from 'sonner';
+import { 
+  SnapshotMintResponse, 
+  WebhookData, 
+  retryWebhook,
+  checkPendingRetries 
+} from "@/lib/utils/snapshotMinting";
+import { useWriteTransaction } from "@/lib/api/hooks/useWriteTransaction";
 
 interface EcosystemProjectCardProps {
   backgroundImageUrl: string;
@@ -23,6 +32,8 @@ interface EcosystemProjectCardProps {
   ctaText?: string;
   seedEmblemUrl?: string;
   seedId?: string;
+  beneficiaryCode?: string; // Add beneficiary code for snapshot minting
+  beneficiaryIndex?: number; // Add beneficiary index for contract call
 }
 
 /**
@@ -41,16 +52,129 @@ export default function EcosystemProjectCard({
   ctaText = "Tend Ecosystem",
   seedEmblemUrl,
   seedId,
+  beneficiaryCode,
+  beneficiaryIndex,
 }: EcosystemProjectCardProps) {
   // Switch controls whether to show extended text (additive to short text)
   const [showExtended, setShowExtended] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
+  const [paymentAmount, setPaymentAmount] = useState<string>(''); // Amount user entered in modal
   const router = useRouter();
+  const { walletAddress } = useAuth();
+  const { execute: executeTransaction } = useWriteTransaction();
   
   // Create display subtitle with location and area
   const displaySubtitle = location && area 
     ? `${location}\n${formatArea(area)}`
     : location || subtitle;
+
+  // Check for pending webhook retries on component mount
+  useState(() => {
+    checkPendingRetries();
+  });
+
+  // Handle payment confirmation from modal
+  const handlePaymentConfirm = async (amount: string) => {
+    setPaymentAmount(amount);
+    setShowPaymentModal(false);
+    
+    // Start minting after payment modal closes
+    await handleMintSnapshot(amount);
+  };
+
+  // Handle snapshot minting
+  const handleMintSnapshot = async (amountInEth: string) => {
+    if (!seedId || beneficiaryIndex === undefined || !walletAddress) {
+      toast.error('Cannot mint snapshot', { description: 'Missing required data. Please try again.' });
+      return;
+    }
+
+    setIsMinting(true);
+
+    try {
+      // Step 1: Get transaction data from backend with beneficiary index
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+      const response = await fetch(`${apiBaseUrl}/write/snapshots/mint/${seedId}?beneficiaryIndex=${beneficiaryIndex}`);
+      const mintData: SnapshotMintResponse = await response.json();
+
+      if (!mintData.success) {
+        toast.error('Failed to prepare snapshot', { description: 'Please try again.' });
+        setIsMinting(false);
+        return;
+      }
+      
+      toast.success('Transaction prepared', { description: 'Confirm the transaction in your wallet...' });
+
+      // Convert user's ETH amount to wei
+      const amountInWei = (parseFloat(amountInEth) * 1e18).toString();
+
+      // Step 2: Execute contract transaction using wagmi writeContract with USER'S AMOUNT
+      const txHash = await executeTransaction({
+        contractAddress: mintData.data.contractAddress,
+        functionName: 'mintSnapshot',
+        args: [
+          mintData.data.args.seedId,
+          beneficiaryIndex,
+          mintData.data.processId,
+          walletAddress,
+          mintData.data.args.royaltyRecipient
+        ],
+        value: amountInWei, // USE USER'S AMOUNT, NOT BACKEND VALUE
+        description: mintData.data.description,
+        abi: [
+          {
+            type: 'function',
+            name: 'mintSnapshot',
+            stateMutability: 'payable',
+            inputs: [
+              { name: 'seedId', type: 'uint256' },
+              { name: 'beneficiaryIndex', type: 'uint256' },
+              { name: 'process', type: 'string' },
+              { name: 'to', type: 'address' },
+              { name: 'royaltyRecipient', type: 'address' }
+            ],
+            outputs: [{ name: '', type: 'uint256' }]
+          }
+        ]
+      } as any);
+
+      // Step 4: Prepare webhook data using backend-provided data
+      const webhookData: WebhookData = {
+        contractAddress: mintData.data.contractAddress,
+        seedId: mintData.data.args.seedId,
+        snapshotId: mintData.data.snapshotId,
+        beneficiaryCode: mintData.data.beneficiaryCode || beneficiaryCode || '',
+        beneficiaryDistribution: mintData.data.beneficiaryDistribution || 0,
+        creator: walletAddress,
+        txHash: txHash,
+        timestamp: Math.floor(Date.now() / 1000),
+        blockNumber: mintData.data.blockNumber,
+        processId: mintData.data.processId
+      };
+
+      toast.success('Transaction submitted', { description: 'Processing snapshot...' });
+
+      // Step 5: Call webhook with retry logic
+      retryWebhook(
+        webhookData,
+        0,
+        () => {
+          setIsMinting(false);
+          toast.success('Snapshot minted successfully!', { description: 'Your ecosystem has been tended.' });
+        },
+        () => {
+          setIsMinting(false);
+          toast.error('Snapshot processing failed', { description: 'Please try again.' });
+        }
+      );
+
+    } catch (error) {
+      setIsMinting(false);
+      toast.error('Snapshot minting failed', { description: 'Please try again.' });
+      console.error('Minting error:', error);
+    }
+  };
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
@@ -175,11 +299,21 @@ export default function EcosystemProjectCard({
           <div className="relative -px-6 py-4 flex items-center bg-transparent justify-center gap-4 -mt-2">
             <Button
               variant="ghost"
-              className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col"
+              className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col disabled:opacity-50"
               onClick={() => setShowPaymentModal(true)}
+              disabled={isMinting}
             >
-              <span className="text-2xl -mt-1">Tend </span>
-              <span className="text-2xl -mt-4">Ecosystem</span>
+              {isMinting ? (
+                <>
+                  <span className="text-2xl -mt-1">Minting</span>
+                  <span className="text-2xl -mt-4">Snapshot...</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-2xl -mt-1">Tend </span>
+                  <span className="text-2xl -mt-4">Ecosystem</span>
+                </>
+              )}
             </Button>
             {/* Inverted switch - toggles extended text visibility */}
             <div className="-rotate-90 scale-[1.8]">
@@ -210,12 +344,14 @@ export default function EcosystemProjectCard({
         </div>
       </div>
 
-      {/* Payment Modal */}
+      {/* Payment Modal - Now used for snapshot minting */}
       <PaymentModal
         isOpen={showPaymentModal}
         onClose={() => setShowPaymentModal(false)}
         seedId={seedId}
         amount={50}
+        onConfirm={handlePaymentConfirm}
+        isSnapshotMint={true}
       />
     </div>
   );

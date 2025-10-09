@@ -14,8 +14,8 @@ interface MobileViewProviderProps {
  */
 export default function MobileViewProvider({ children }: MobileViewProviderProps) {
   return (
-    <div className="min-h-screen w-full bg-gray-100 flex justify-center">
-      <div className="relative min-h-screen w-full max-w-md bg-white shadow-xl">
+    <div className="min-h-screen w-full bg-white lg:bg-gray-100 mx-auto flex justify-center">
+      <div className="relative min-h-screen w-full bg-none max-w-md">
         {children}
       </div>
     </div>

@@ -86,7 +86,7 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
   }
 
   return (
-    <div className="min-h-screen w-full bg-gray-50">
+    <div className="min-h-screen w-full bg-none">
       {/* Header - No background, just on the page */}
       <motion.div 
         className=""

@@ -49,6 +49,9 @@ export const API_ENDPOINTS = {
   writeDepositToSeed: (id: string) => `/write/seeds/${id}/deposit`,
   writeWithdrawFromSeed: (id: string) => `/write/seeds/${id}/withdraw`,
   writeClaimProfits: (id: string) => `/write/seeds/${id}/claim-profits`,
-  writeMintSnapshot: '/write/snapshots/mint',
+  writeMintSnapshot: (seedId: string, beneficiaryIndex?: number) => 
+    beneficiaryIndex !== undefined 
+      ? `/write/snapshots/mint/${seedId}?beneficiaryIndex=${beneficiaryIndex}`
+      : `/write/snapshots/mint/${seedId}`,
 } as const;
 

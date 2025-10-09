@@ -45,7 +45,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
         </div>
 
         <motion.div
-          className="relative w-full h-[380px] rounded-[60px] overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow"
+          className="relative w-[420px] -ml-3 h-[380px] rounded-[60px] overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow"
           onClick={onClick}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
@@ -63,7 +63,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
       </div>
       
       {/* Info Buttons - Separate from the image card */}
-      <div className="grid grid-cols-3 gap-3 mb-6 scale-[1.0]">
+      <div className="grid grid-cols-3 gap-3 -mb-6 mt-6 scale-[1.0]">
         {/* Price Button */}
         <motion.div 
           className="bg-white border-1 border-black h-10 rounded-full p-3 text-center"

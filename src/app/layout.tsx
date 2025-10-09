@@ -30,6 +30,7 @@ export default function RootLayout({
       <body
         className={"antialiased"}
       >
+        <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no" />
         <AuthProvider>
           <MobileViewProvider>
             {children}

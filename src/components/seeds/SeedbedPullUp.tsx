@@ -71,7 +71,7 @@ export default function SeedbedPullUp({ selectedSeed }: SeedbedPullUpProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
-               className="-mt-88"
+            className="-mt-72  lg:-mt-92 h-[30px] scale-[0.9] lg:w-[460px] md:w-[440px] w-[430px] -ml-4"
           >
             <SeedbedCard beneficiaries={seedbedBeneficiaries} />
           </motion.div>

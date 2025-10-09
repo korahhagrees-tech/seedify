@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { assets } from "@/lib/assets";
+import { useParams } from "next/navigation";
+import { getEcosystemUrlFromParams } from "@/lib/utils/ecosystemUrl";
 
 interface TendedEcosystemProps {
   date: string;
@@ -15,6 +17,7 @@ interface TendedEcosystemProps {
   onTendAgain: () => void;
   onShare: () => void;
   index?: number;
+  beneficiarySlug?: string; // Add beneficiary slug for routing
 }
 
 export default function TendedEcosystem({
@@ -27,8 +30,16 @@ export default function TendedEcosystem({
   onReadMore,
   onTendAgain,
   onShare,
-  index = 0
+  index = 0,
+  beneficiarySlug
 }: TendedEcosystemProps) {
+  const params = useParams();
+  
+  // Use shared utility to get ecosystem URL for Tend Again button
+  const getEcosystemUrl = (beneficiarySlug: string) => {
+    return getEcosystemUrlFromParams(params, beneficiarySlug);
+  };
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -106,7 +117,15 @@ export default function TendedEcosystem({
                 Read More
               </button>
               <button
-                onClick={onTendAgain}
+                onClick={() => {
+                  if (beneficiarySlug) {
+                    // Route to ecosystem page using shared URL logic
+                    window.location.href = getEcosystemUrl(beneficiarySlug);
+                  } else {
+                    // Fallback to original handler
+                    onTendAgain();
+                  }
+                }}
                 className="w-full px-4 py-1 text-base border-3 border-gray-400 rounded-full hover:bg-gray-50 transition-colors border-dotted peridia-display leading-relaxed text-nowrap"
               >
                 Tend Again

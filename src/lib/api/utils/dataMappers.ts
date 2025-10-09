@@ -57,6 +57,7 @@ export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData, seed
     area: projectData.area,
     benefits: projectData.benefits,
     beneficiaryCode: beneficiary.code,
+    beneficiaryIndex: beneficiary.index,
     beneficiarySlug: beneficiary.slug || '',
     seedEmblemUrl,
     seedId: seedData?.id,

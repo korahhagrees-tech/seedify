@@ -7,6 +7,7 @@ import { assets } from "@/lib/assets";
 import { Beneficiary, shortenBeneficiaryName } from "@/lib/utils";
 import { defaultBeneficiaries } from "@/lib/api/seeds";
 import CurvedText from "@/components/ui/CurvedText";
+import { getEcosystemUrlFromParams } from "@/lib/utils/ecosystemUrl";
 
 interface SeedbedCardProps {
   className?: string;
@@ -15,15 +16,10 @@ interface SeedbedCardProps {
 
 export default function SeedbedCard({ className = "", beneficiaries = defaultBeneficiaries }: SeedbedCardProps) {
   const params = useParams();
-  const seedId = params?.id as string;
-  const seedSlug = params?.slug as string;
   
-  // Build ecosystem URL with seed context
+  // Build ecosystem URL with seed context using shared utility
   const getEcosystemUrl = (beneficiarySlug: string) => {
-    if (seedId && seedSlug) {
-      return `/seed/${seedId}/${seedSlug}/ecosystem/${beneficiarySlug}`;
-    }
-    return `/ecosystem/${beneficiarySlug}`;
+    return getEcosystemUrlFromParams(params, beneficiarySlug);
   };
 
   // Sort beneficiaries by percentage (highest first) and map to static images
@@ -104,13 +100,13 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
     });
   
   return (
-    <div className={`relative scale-[1.1] ${className}`}>
+    <div className={`relative scale-[1.05] ${className}`}>
       {/* Outer gray layer */}
       <div className="bg-[#D9D9D9] rounded-3xl p-3">
         {/* Inner white layer */}
         <div className="bg-white rounded-3xl p-6 relative">
           {/* Title */}
-          <div className="text-center text-black font-medium text-lg -mt-4 mb-36">
+          <div className="text-center text-black font-medium text-lg -mt-4 mb-26">
             THE SEEDBED
           </div>
           
@@ -232,15 +228,10 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
 
 export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiaries }: SeedbedCardProps) {
   const params = useParams();
-  const seedId = params?.id as string;
-  const seedSlug = params?.slug as string;
   
-  // Build ecosystem URL with seed context
+  // Build ecosystem URL with seed context using shared utility
   const getEcosystemUrl = (beneficiarySlug: string) => {
-    if (seedId && seedSlug) {
-      return `/seed/${seedId}/${seedSlug}/ecosystem/${beneficiarySlug}`;
-    }
-    return `/ecosystem/${beneficiarySlug}`;
+    return getEcosystemUrlFromParams(params, beneficiarySlug);
   };
 
   // Sort beneficiaries by percentage (highest first) and map to static images
