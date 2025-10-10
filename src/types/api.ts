@@ -1,8 +1,3 @@
-/**
- * API Response Types
- * Matching the backend schema from BACKEND_API_SCHEMA.md
- */
-
 import { SeedMetadata, SeedStory } from './seed';
 
 // ============================================
