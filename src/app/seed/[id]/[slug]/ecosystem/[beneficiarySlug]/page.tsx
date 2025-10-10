@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import EcosystemProjectCard from "@/components/EcosystemProjectCard";
 import { fetchSeedById, beneficiaryToEcosystemProject } from "@/lib/api";
+import Image from "next/image";
 
 export default function EcosystemPage() {
   const router = useRouter();
@@ -66,6 +67,15 @@ export default function EcosystemPage() {
     return (
       <div className="min-h-screen w-full max-w-md mx-auto bg-white flex items-center justify-center">
         <div className="text-center">
+        <div className="animate-pulse mx-auto mb-4">
+            <Image
+              src="/assets/WOF_Logo-black.png"
+              alt="Loading"
+              width={100}
+              height={100}
+              className="w-full h-full max-w-[420px] scale-[1.2]"
+              />
+            </div>
           <div className="text-gray-600">Loading ecosystem...</div>
         </div>
       </div>

@@ -196,7 +196,7 @@ export default function EcosystemProjectCard({
 
         {/* Card with cutout header */}
         <motion.div
-          className="relative max-w-md mx-auto mt-12 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[730px]"
+          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-12 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[730px] lg:h-[730px] md:h-[730px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -327,7 +327,7 @@ export default function EcosystemProjectCard({
         </motion.div>
 
         {/* Navigation circles - positioned on the card border */}
-        <div className="relative max-w-md mx-auto -mt-[750px] z-20 flex justify-center items-center gap-8">
+        <div className="relative max-w-md mx-auto -mt-[750px] md:-mt-[680px] lg:-mt-[680px] z-20 flex justify-center items-center gap-8">
           {/* Back Arrow - left side */}
           <button onClick={() => router.back()}>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">

@@ -36,7 +36,7 @@ export default function PaymentModal({
   const [amountInput, setAmountInput] = useState("0.011"); // Default ETH amount
   const [isProcessing, setIsProcessing] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { authenticated, login } = usePrivy();
+  const { authenticated, login, logout } = usePrivy();
   const { execute } = useWriteTransaction();
   const { user, walletAddress } = useAuth();
   const router = useRouter();
@@ -101,23 +101,23 @@ export default function PaymentModal({
           >
             {/* State 1: Disconnected Wallet */}
             {!authenticated ? (
-              <div className="bg-gray-200 rounded-[40px] p-8 max-w-sm w-full mx-auto relative">
+              <div className="bg-gray-200 rounded-[40px] border-2 border-black border-dotted p-8 max-w-sm w-full mx-auto relative">
                 {/* Close Button */}
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors"
+                  className="absolute -top-12 right-4 w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors"
                 >
                   <span className="text-black text-lg font-bold">×</span>
                 </button>
                 
                 {/* Header */}
-                <h2 className="text-2xl text-black text-center mb-6 peridia-display-light">
+                <h2 className="text-2xl text-black text-center -mt-6 peridia-display-light">
                   Your Contribution
                 </h2>
 
                 {/* Informational Banner */}
-                <div className="bg-white rounded-[20px] px-6 py-2 mb-6">
-                  <p className="text-black text-center text-sm font-medium uppercase favorit-mono text-nowrap scale-[0.8] -ml-8">
+                <div className="bg-white rounded-[20px] px-6 py-0 border-1 border-black/40 mb-6 mt-4">
+                  <p className="text-black text-center text-sm font-medium uppercase favorit-mono text-nowrap scale-[0.7] -ml-8">
                     YOU ARE ABOUT TO SPRING FORTH A NEW GROWTH
                   </p>
                 </div>
@@ -125,20 +125,20 @@ export default function PaymentModal({
                 {/* Price and Allocation */}
                 <div className="flex items-start gap-4 mb-6">
                   {/* Price */}
-                  <div className="bg-white rounded-full px-4 py-2 border-1 border-black/40 flex-none scale-[0.8] -ml-4 -mt-6 w-[100px]">
-                    <div className="text-black text-[10px] font-medium uppercase mb-1">PRICE</div>
-                    <div className="text-black text-2xl font-bold break-all whitespace-normal leading-tight">{amountInput} ETH</div>
+                  <div className="bg-white rounded-full px-4 py-4 border-1 border-black/40 flex-none scale-[0.6] -ml-8 -mt-8 w-[165px]">
+                    <div className="text-black text-[12px] font-light text-center items-center uppercase -mt-4 mb-1">PRICE</div>
+                    <div className="text-black text-2xl font-light break-all whitespace-normal leading-tight">{amountInput} ETH</div>
                   </div>
 
                   {/* Allocation Breakdown */}
-                  <div className="flex-1 -ml-16 scale-[0.7] -mt-6">
-                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase mb-2">
-                      50% SENT TO YOUR SELECTED ECOSYSTEM
+                  <div className="flex-1 -ml-22 scale-[0.6] -mt-6">
+                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-1">
+                      50% SENT TO SELECTED ECOSYSTEM
                     </div>
-                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase mb-2">
+                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-1">
                       20% ACCUMULATES AS SEED COMPOST
                     </div>
-                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase">
+                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-1">
                       30% NURTURES THIS FLOURISHING
                     </div>
                   </div>
@@ -151,10 +151,10 @@ export default function PaymentModal({
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-white rounded-[20px] px-4 py-5 text-black text-sm border-1 border-black/30 outline-none placeholder:text-black/50"
+                      className="w-full bg-white rounded-full px-4 py-3 text-black text-sm border-1 border-black/30 outline-none placeholder:text-black/50"
                       placeholder="user@mail.com"
                     />
-                    <span className="absolute left-4 top-2 text-black text-[10px] favorit-mono uppercase">ENTER YOUR EMAIL ADDRESS</span>
+                    <span className="absolute left-4 top-0 text-black text-[10px] favorit-mono uppercase">STAY IN TOUCH</span>
                   </div>
                 </div>
 
@@ -174,20 +174,20 @@ export default function PaymentModal({
                       console.error('Wallet connection error:', error);
                     }
                   }}
-                  className="w-full bg-gray-300 text-black text-sm font-medium py-4 rounded-[20px] hover:bg-gray-400 transition-colors"
+                  className="w-full bg-gray-300 text-white text-xl font-medium py-8 rounded-[20px] hover:bg-gray-400 transition-colors"
                 >
                   WALLET CONNECT
                 </Button>
               </div>
             ) : (
               /* State 2: Connected Wallet */
-              <div className="bg-[#D9D9D9] rounded-tl-[120px] rounded-tr-[40px] rounded-bl-[40px] rounded-br-[120px] p-6 border-3 border-dotted border-gray-600 shadow-xl max-w-sm w-full mx-auto relative">
+              <div className="bg-[#f4e9e9] rounded-tl-[120px] rounded-tr-[40px] rounded-bl-[40px] rounded-br-[120px] p-6 border-3 border-dotted border-gray-600 shadow-xl max-w-sm w-full mx-auto relative">
                 {/* Close Button */}
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors z-10"
                 >
-                  <span className="text-black text-lg font-bold">×</span>
+                  <span className="text-black text-xl font-bold">×</span>
                 </button>
                 
                 {/* Header */}
@@ -218,23 +218,34 @@ export default function PaymentModal({
                 </div>
 
                 {/* Email and Actions Section */}
-                <div className="space-y-4 mb-6 bg-white/60 p-4 rounded-[40px] -mt-14 h-32">
+                <div className="space-y-4 mb-6 bg-white/60 p-4 rounded-[40px] -mt-14 h-26">
                   <div className="flex items-center gap-2 mt-4">
                     <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
                     <span className="text-sm text-black">{user?.email || 'bilbo.bagz@shire.io'}</span>
-                  </div>
-                  <button className="w-full px-4 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3">
-                    <span className="text-base scale-[1.05] font-light -mt-2">Add</span>
-                    <span className="text-base scale-[1.05] font-light -mt-2 -mb-1">Funds</span>
+                  <button
+                    onClick={() => {
+                      router.push('/wallet');
+                    }}
+                    className="w-48 px-8 py-0 -ml-4 mb-6 -mt-4 border-3 border-dotted border-gray-500 rounded-full text-xl text-black peridia-display-light bg-[#E2E3F0] hover:bg-gray-50 transition-colors scale-[0.7] text-nowrap"
+                  >
+                    A<span className="favorit-mono font-light text-nowrap">dd</span> F<span className="favorit-mono font-light text-nowrap">unds</span>
                   </button>
-                  <button className="w-full px-4 py-1 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors">
-                    Wallet Connect
+                  </div>
+                    <button onClick={() => {
+                      logout();
+                      onClose();
+                    }} className="flex items-center gap-2 text-sm text-black hover:text-gray-800 transition-colors -mt-6 -mb-3">
+                      <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
+                      <span className="text-sm font-light text-nowrap">Log out</span>
+                    </button>
+                  <button className="w-[50%] px-4 py-1 text-nowrap border-2 border-dotted border-black rounded-full text-sm ml-40 -mt-34 text-black bg-white hover:bg-gray-50 transition-colors scale-[0.8]">
+                    W<span className="favorit-mono font-light text-nowrap">allet</span> C<span className="favorit-mono font-light text-nowrap">onnect</span>
                   </button>
                 </div>
 
                 {/* Informational Banner - Different background */}
-                <div className="bg-purple-200 rounded-[20px] px-6 py-2 mb-6">
-                  <p className="text-black text-center text-sm font-medium uppercase favorit-mono text-nowrap scale-[0.8] -ml-8">
+                <div className="bg-purple-200 rounded-[20px] px-6 py-0 mb-6 border-1 border-black/40">
+                  <p className="text-black text-center text-sm font-medium uppercase favorit-mono text-nowrap scale-[0.7] -ml-8">
                     YOU ARE ABOUT TO SPRING FORTH A NEW GROWTH
                   </p>
                 </div>
@@ -242,29 +253,29 @@ export default function PaymentModal({
                 {/* Price Input and Allocation */}
                 <div className="flex items-start gap-4 mb-6">
                   {/* Price Input */}
-                  <div className="bg-white rounded-full px-4 py-2 border-1 border-black/40 flex-none scale-[0.8] -ml-4 -mt-6 w-[100px]">
-                    <div className="text-black text-[10px] font-medium uppercase mb-1">PRICE</div>
+                  <div className="bg-white rounded-full px-4 py-2 border-1 border-black/40 flex-none scale-[0.7] -ml-4 -mt-6 w-[165px]">
+                    <div className="text-black text-[12px] font-medium uppercase mb-1 text-center">PRICE</div>
                     <input
                       type="number"
                       min="0"
                       step="0.001"
                       value={amountInput}
                       onChange={(e) => setAmountInput(e.target.value)}
-                      className="text-black text-xl font-bold bg-transparent border-none outline-none w-full"
+                      className="text-black text-2xl font-light bg-transparent border-none outline-none w-full"
                       placeholder="0.011"
                     />
-                    <div className="text-black text-xs font-medium uppercase">ETH</div>
+                    <div className="text-black text-2xl mr-2 text-right -mt-8 font-light uppercase">ETH</div>
                   </div>
 
                   {/* Allocation Breakdown */}
-                  <div className="flex-1 -ml-16 scale-[0.7] -mt-6">
-                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase mb-2">
-                      50% SENT TO YOUR SELECTED ECOSYSTEM
+                  <div className="flex-1 -ml-20 scale-[0.65] -mt-4">
+                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase mb-2 -mt-2">
+                      50% SENT TO SELECTED ECOSYSTEM
                     </div>
-                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase mb-2">
+                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase mb-2 -mt-2">
                       20% ACCUMULATES AS SEED COMPOST
                     </div>
-                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase">
+                    <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-2">
                       30% NURTURES THIS FLOURISHING
                     </div>
                   </div>
@@ -277,10 +288,10 @@ export default function PaymentModal({
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-white rounded-[20px] px-4 py-5 text-black text-sm border-1 border-black/30 outline-none placeholder:text-black/50"
+                      className="w-full bg-white rounded-full px-4 py-3 text-black text-sm border-1 border-black/30 outline-none mt-2 placeholder:text-black/50"
                       placeholder="user@mail.com"
                     />
-                    <span className="absolute left-4 top-2 text-black text-[10px] favorit-mono uppercase">ENTER YOUR EMAIL ADDRESS</span>
+                    <span className="absolute left-4 top-2 text-black text-[10px] favorit-mono uppercase">STAY IN TOUCH</span>
                   </div>
                 </div>
 
@@ -288,7 +299,7 @@ export default function PaymentModal({
                 <Button
                   onClick={handleTransaction}
                   disabled={isProcessing}
-                  className="w-full bg-gray-300 text-black text-sm font-medium py-4 rounded-[20px] hover:bg-gray-400 transition-colors disabled:opacity-50"
+                  className="w-2/3 text-wrap bg-white border-2 border-dotted border-black ml-10 text-black text-sm font-medium py-6 rounded-full hover:bg-gray-100 transition-colors peridia-display-light disabled:opacity-50"
                 >
                   {isProcessing ? (
                     <div className="flex items-center justify-center gap-2">
@@ -296,7 +307,7 @@ export default function PaymentModal({
                       PROCESSING...
                     </div>
                   ) : (
-                    "CONFIRM CONTRIBUTION"
+                    <span className="text-nowrap text-base -mt-1 -mb-2">C<span className="favorit-mono font-light text-nowrap">onfrim</span><br /> C<span className="favorit-mono font-light text-nowrap -mt-2">ontribution</span></span>
                   )}
                 </Button>
 
