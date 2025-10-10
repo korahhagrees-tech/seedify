@@ -79,6 +79,7 @@ export const mockUserData = {
 };
 
 // Mock tended ecosystems data (derived from snapshots)
+// Each represents a snapshot mint: user tended a beneficiary from a seed
 export const mockTendedEcosystems = [
   {
     id: "1",
@@ -87,7 +88,10 @@ export const mockTendedEcosystems = [
     beneficiaryName: "Grgich Hills Estate Regenerative Sheep Grazing",
     seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed1/seed.png",
     userContribution: "0.011 ETH",
-    ecosystemCompost: "1.03 ETH"
+    ecosystemCompost: "1.03 ETH",
+    seedId: "3", // The seed that was tended
+    seedSlug: "seed-003", // The seed's label/slug
+    beneficiarySlug: "grgich-hills-estate" // The beneficiary from that seed
   },
   {
     id: "2",
@@ -96,7 +100,10 @@ export const mockTendedEcosystems = [
     beneficiaryName: "Urban Garden Network Community Initiative",
     seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed2/seed.png",
     userContribution: "0.025 ETH",
-    ecosystemCompost: "3.44 ETH"
+    ecosystemCompost: "3.44 ETH",
+    seedId: "3", // The seed that was tended
+    seedSlug: "seed-003", // The seed's label/slug
+    beneficiarySlug: "el-globo" // Another beneficiary from the same seed
   }
 ];
 

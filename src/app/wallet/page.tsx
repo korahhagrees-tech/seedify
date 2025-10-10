@@ -15,6 +15,7 @@ import GardenHeader from "@/components/GardenHeader";
 import { fetchUserSeeds } from "@/lib/api";
 
 // Mock data for tended ecosystems
+// Each tended ecosystem represents a snapshot mint of a beneficiary from a seed
 const mockTendedEcosystems = [
   {
     id: "1",
@@ -23,7 +24,10 @@ const mockTendedEcosystems = [
     beneficiaryName: "Grgich Hills Estate Regenerative Sheep Grazing",
     seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed1/seed.png",
     userContribution: "0.011 ETH",
-    ecosystemCompost: "1.03 ETH"
+    ecosystemCompost: "1.03 ETH",
+    seedId: "3", // The seed ID that was tended
+    seedSlug: "seed-003", // The seed's label/slug
+    beneficiarySlug: "grgich-hills-estate" // The beneficiary slug from that seed
   },
   {
     id: "2", 
@@ -32,7 +36,10 @@ const mockTendedEcosystems = [
     beneficiaryName: "Urban Garden Network Community Initiative",
     seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed2/seed.png",
     userContribution: "0.025 ETH",
-    ecosystemCompost: "3.44 ETH"
+    ecosystemCompost: "3.44 ETH",
+    seedId: "3", // The seed ID that was tended
+    seedSlug: "seed-003", // The seed's label/slug
+    beneficiarySlug: "el-globo" // Another beneficiary from the same seed
   }
 ];
 
@@ -178,6 +185,9 @@ export default function WalletPage() {
                 onTendAgain={() => handleTendAgain(ecosystem.id)}
                 onShare={handleShare}
                 index={index}
+                beneficiarySlug={ecosystem.beneficiarySlug}
+                seedId={ecosystem.seedId}
+                seedSlug={ecosystem.seedSlug}
               />
             ))}
           </div>

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { assets } from "@/lib/assets";
+import { getRandomReadMoreLink, getReadMoreLinkByIndex } from "@/lib/read-more-links";
 
 interface RootShapeAreaProps {
   onStory?: () => void;
@@ -24,6 +25,59 @@ export default function RootShapeArea({
   showStoryButton = true
 }: RootShapeAreaProps) {
   const router = useRouter();
+
+  // Cookie utility functions
+  const setCookie = (name: string, value: string, days: number) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+  };
+
+  const getCookie = (name: string): string | null => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
+
+  // Cookie-based link rotation system
+  const getCurrentLinkIndex = (): number => {
+    const lastVisitTimeKey = 'readMoreLastVisit';
+    const linkIndexKey = 'readMoreCurrentIndex';
+    
+    const lastVisit = getCookie(lastVisitTimeKey);
+    const currentIndex = getCookie(linkIndexKey);
+    
+    const now = Date.now();
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    
+    // If no previous visit or more than 24 hours have passed, get a new link
+    if (!lastVisit || (now - parseInt(lastVisit)) > twentyFourHours) {
+      // Get a new random index
+      const newIndex = Math.floor(Math.random() * 30); // We have 30 links
+      
+      // Update cookies with 1 day expiration
+      setCookie(lastVisitTimeKey, now.toString(), 1);
+      setCookie(linkIndexKey, newIndex.toString(), 1);
+      
+      return newIndex;
+    }
+    
+    // Return the existing index if within 24 hours
+    return currentIndex ? parseInt(currentIndex) : 0;
+  };
+
+  const handleDashedCircleClick = () => {
+    const linkIndex = getCurrentLinkIndex();
+    const url = getReadMoreLinkByIndex(linkIndex);
+    
+    // Open in new tab
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   const handleSubstrate = () => {
     if (onSubstrate) {
@@ -76,15 +130,18 @@ export default function RootShapeArea({
             <span className="text-lg">Story</span>
           </button>
         ) : (
-          <div className="absolute left-1/2 -translate-x-1/2 top-[18%]">
+          <button 
+            onClick={handleDashedCircleClick}
+            className="absolute left-1/2 -translate-x-1/2 top-[18%] hover:scale-110 transition-transform cursor-pointer"
+          >
             <Image
               src="/dashed-circle.svg"
-              alt="Dashed circle"
+              alt="Dashed circle - Click for external link"
               width={40}
               height={40}
               className="w-10 h-10"
             />
-          </div>
+          </button>
         )}
         
         {/* Substrate - mid bridge */}

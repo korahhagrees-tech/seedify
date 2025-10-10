@@ -3,8 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { assets } from "@/lib/assets";
-import { useParams } from "next/navigation";
-import { getEcosystemUrlFromParams } from "@/lib/utils/ecosystemUrl";
+import { useRouter } from "next/navigation";
 
 interface TendedEcosystemProps {
   date: string;
@@ -17,7 +16,9 @@ interface TendedEcosystemProps {
   onTendAgain: () => void;
   onShare: () => void;
   index?: number;
-  beneficiarySlug?: string; // Add beneficiary slug for routing
+  beneficiarySlug?: string;
+  seedId?: string;
+  seedSlug?: string;
 }
 
 export default function TendedEcosystem({
@@ -31,13 +32,22 @@ export default function TendedEcosystem({
   onTendAgain,
   onShare,
   index = 0,
-  beneficiarySlug
+  beneficiarySlug,
+  seedId,
+  seedSlug
 }: TendedEcosystemProps) {
-  const params = useParams();
-  
-  // Use shared utility to get ecosystem URL for Tend Again button
-  const getEcosystemUrl = (beneficiarySlug: string) => {
-    return getEcosystemUrlFromParams(params, beneficiarySlug);
+  const router = useRouter();
+
+  // Handle Tend Again button click - routes to ecosystem page
+  const handleTendAgain = () => {
+    if (seedId && seedSlug && beneficiarySlug) {
+      const url = `/seed/${seedId}/${seedSlug}/ecosystem/${beneficiarySlug}`;
+      console.log('Routing to:', url); // Debug log
+      router.push(url);
+    } else {
+      console.error('Missing routing data:', { seedId, seedSlug, beneficiarySlug });
+      onTendAgain(); // Fallback to original handler
+    }
   };
   
   return (
@@ -117,15 +127,7 @@ export default function TendedEcosystem({
                 Read More
               </button>
               <button
-                onClick={() => {
-                  if (beneficiarySlug) {
-                    // Route to ecosystem page using shared URL logic
-                    window.location.href = getEcosystemUrl(beneficiarySlug);
-                  } else {
-                    // Fallback to original handler
-                    onTendAgain();
-                  }
-                }}
+                onClick={handleTendAgain}
                 className="w-full px-4 py-1 text-base border-3 border-gray-400 rounded-full hover:bg-gray-50 transition-colors border-dotted peridia-display leading-relaxed text-nowrap"
               >
                 Tend Again

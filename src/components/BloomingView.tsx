@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import { assets } from "@/lib/assets";
 import RootShapeArea from "@/components/wallet/RootShapeArea";
 import GardenHeader from "./GardenHeader";
+import WalletModal from "@/components/wallet/WalletModal";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface BloomingViewProps {
   backgroundImageUrl: string;
@@ -35,9 +37,45 @@ export default function BloomingView({
 }: BloomingViewProps) {
   const [showReveal, setShowReveal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const { logout } = useAuth();
 
   // Get the final image URL (snapshot or seed as fallback)
   const finalImageUrl = snapshotImageUrl || seedImageUrl || assets.testPink;
+
+  // Handle wallet modal
+  const handleWallet = () => {
+    setIsWalletModalOpen(true);
+  };
+
+  const handleWalletModalClose = () => {
+    setIsWalletModalOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsWalletModalOpen(false);
+  };
+
+  const handleAddFunds = () => {
+    // Add funds logic here
+    console.log('Add funds clicked');
+  };
+
+  const handleExportKey = () => {
+    // Export key logic here
+    console.log('Export key clicked');
+  };
+
+  const handleSwitchWallet = () => {
+    // Switch wallet logic here
+    console.log('Switch wallet clicked');
+  };
+
+  const handlePrivyHome = () => {
+    // Privy home logic here
+    console.log('Privy home clicked');
+  };
 
   useEffect(() => {
     // After 30 seconds, trigger the reveal animation
@@ -120,12 +158,23 @@ export default function BloomingView({
           <RootShapeArea
             onStory={onStory}
             onSubstrate={() => {}}
-            onWallet={onWallet}
+            onWallet={handleWallet}
             onExploreGarden={onExploreGarden}
           />
         </div>
         {/* Story panel is routed, not inline */}
       </div>
+
+      {/* Wallet Modal */}
+      <WalletModal
+        isOpen={isWalletModalOpen}
+        onClose={handleWalletModalClose}
+        onLogout={handleLogout}
+        onAddFunds={handleAddFunds}
+        onExportKey={handleExportKey}
+        onSwitchWallet={handleSwitchWallet}
+        onPrivyHome={handlePrivyHome}
+      />
     </div>
   );
 }
