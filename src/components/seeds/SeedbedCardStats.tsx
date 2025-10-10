@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Beneficiary, shortenBeneficiaryName } from "@/lib/utils";
 import { defaultBeneficiaries } from "@/lib/api/seeds";
 import CurvedText from "@/components/ui/CurvedText";
+import Image from "next/image";
 
 interface SeedbedCardStatsProps {
   className?: string;
@@ -179,10 +179,12 @@ export default function SeedbedCardStats({
           <div className="relative w-full h-96">
             {/* Background seedbed-2.svg shape */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <img
+              <Image
                 src="/seedbed-2.svg"
                 alt="Seedbed shape"
                 className="w-80 h-80 object-contain"
+                width={320}
+                height={320}
               />
             </div>
             
@@ -202,10 +204,12 @@ export default function SeedbedCardStats({
                     >
                       {/* Circle SVG */}
                       <div className="relative w-full h-full">
-                        <img
+                        <Image
                           src={circleSvg}
                           alt={`${circle.name} circle`}
                           className="w-full h-full object-contain"
+                          width={320}
+                          height={320}
                         />
                         
                         {/* Percentage display */}
@@ -303,10 +307,12 @@ export function SeedbedCardStats2({ className = "", beneficiaries = defaultBenef
           <div className="relative w-full h-96">
             {/* Background seedbed-2.svg shape */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <img
+              <Image
                 src="/seedbed-2.svg"
                 alt="Seedbed shape"
                 className="w-80 h-80 object-contain"
+                width={320}
+                height={320}
               />
             </div>
             
@@ -324,10 +330,12 @@ export function SeedbedCardStats2({ className = "", beneficiaries = defaultBenef
                     >
                       {/* Circle SVG */}
                       <div className="relative w-full h-full">
-                        <img
+                        <Image
                           src={circleSvg}
                           alt={`${beneficiary?.name || 'Beneficiary'} circle`}
                           className="w-full h-full object-contain"
+                          width={320}
+                          height={320}
                         />
                         
                         {/* Percentage display */}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Shared utility for generating ecosystem URLs
  * Used by both SeedbedCard and TendedEcosystem components

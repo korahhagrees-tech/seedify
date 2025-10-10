@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Snapshot minting utilities
  * Handles the new snapshot minting flow with webhook retries

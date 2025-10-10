@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { assets } from "@/lib/assets";
-import { getRandomReadMoreLink, getReadMoreLinkByIndex } from "@/lib/read-more-links";
+import { getReadMoreLinkByIndex } from "@/lib/read-more-links";
 
 interface RootShapeAreaProps {
   onStory?: () => void;

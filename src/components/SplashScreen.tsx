@@ -33,7 +33,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
           autoPlay
           playsInline
           muted
-          className="object-cover opacity-80"
+          className="object-cover opacity-120"
           loop
           style={{ 
             width: "100%", 

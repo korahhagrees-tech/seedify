@@ -108,7 +108,7 @@ export async function prepareMintSnapshot(
   console.log('✍️ [WRITE-SERVICE] Preparing mint snapshot transaction:', request);
 
   const response = await apiClient.post<WriteTransactionResponse>(
-    API_ENDPOINTS.writeMintSnapshot,
+    `${API_ENDPOINTS.writeMintSnapshot}`,
     request
   );
 
