@@ -90,9 +90,10 @@ export default function WalletPage() {
     };
   }, [walletAddress]);
 
-  const handleReadMore = (ecosystemId: string) => {
+  const handleReadMore = () => {
     // Route to seed detail page
-    router.push(`/seed/${ecosystemId}/ecosystem-detail`);
+    router.push("https://docs.google.com/document/d/1iBUlTwKO1mCOiDqXqED3iQfNhyCCgSHmCfQ_M_qay4w/edit?tab=t.dxyiwoh1525s#heading=h.qepq5hiqw5yx");
+    // router.push(`/seed/${ecosystemId}/ecosystem-detail`);
   };
 
   const handleTendAgain = (ecosystemId: string) => {
@@ -135,26 +136,28 @@ export default function WalletPage() {
   };
 
   return (
-    <div className="min-h-screen w-screen scale-[0.9] -ml-2 -mt-14 max-w-md mx-auto">
+    <div className="min-h-screen w-full max-w-md mx-auto">
       {/* Header */}
-      <div className="ml-4 -px-1 scale-[1.1]">
-        <GardenHeader />
-      </div>
+      <GardenHeader />
 
       {/* Content Area - Tended Ecosystems List */}
-      <div className="px-4 pb-32">
+      <div className="px-4 pb-40">
         {/* Steward Seeds Section (always show; defaults to mock if backend empty) */}
         {stewardSeeds.length > 0 && (
           <div className="space-y-8 mb-10 scale-[0.95]">
-            {stewardSeeds.map((seed, index) => (
-              <StewardSeedCard
-                key={seed.id}
-                seed={seed}
-                index={index}
-                onTendSeed={() => router.push(`/way-of-flowers/${seed.id}/blooming`)}
-                onExplore={() => router.push(`/wallet/steward/${seed.id}`)}
-              />
-            ))}
+            {stewardSeeds.map((seed, index) => {
+              // Generate slug from seed label for routing
+              const seedSlug = seed.label?.replace(/\s+/g, "-").toLowerCase() || `seed-${seed.id}`;
+              return (
+                <StewardSeedCard
+                  key={seed.id}
+                  seed={seed}
+                  index={index}
+                  onTendSeed={() => router.push(`/seed/${seed.id}/${seedSlug}`)}
+                  onExplore={() => router.push(`/wallet/steward/${seed.id}`)}
+                />
+              );
+            })}
           </div>
         )}
         {tendedEcosystems.length === 0 ? (
@@ -181,7 +184,7 @@ export default function WalletPage() {
                 seedImageUrl={ecosystem.seedImageUrl}
                 userContribution={ecosystem.userContribution}
                 ecosystemCompost={ecosystem.ecosystemCompost}
-                onReadMore={() => handleReadMore(ecosystem.id)}
+                onReadMore={() => handleReadMore()}
                 onTendAgain={() => handleTendAgain(ecosystem.id)}
                 onShare={handleShare}
                 index={index}
@@ -195,8 +198,8 @@ export default function WalletPage() {
       </div>
 
       {/* Fixed Root Shape Area */}
-      <div className="fixed -bottom-1 left-0 right-0 z-30 pt-4 scale-[1.1]">
-        <div className="max-w-md mx-auto px-4 w-full">
+      <div className="fixed bottom-0 left-0 right-0 z-30">
+        <div className="max-w-md mx-auto w-full">
           <RootShapeArea
             onWallet={() => setIsWalletModalOpen(true)}
             showGlassEffect={false}

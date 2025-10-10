@@ -156,48 +156,75 @@ export default function SeedbedCardStats({
 
   const config = circleConfigs[state];
 
+  // Map beneficiaries to circle SVGs based on percentage ranking
+  const circleSvgs = [
+    '/circle-small.svg',    // Smallest percentage (4th)
+    '/circle-big.svg',      // 3rd largest
+    '/dotted-dashed.svg',   // 2nd largest  
+    '/mid-dashed.svg'       // Largest percentage (1st)
+  ];
+
   return (
     <div className={`relative ${className}`}>
       {/* Outer gray layer */}
       <div className="bg-[#D9D9D9] rounded-3xl p-3">
-        {/* Inner gradient layer (not white) */}
+        {/* Inner gradient layer */}
         <div className="bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300 rounded-3xl p-6 relative">
           {/* Title */}
           <div className="text-center text-black font-medium text-lg -mt-4 mb-36">
             THE SEEDBED
           </div>
           
-          {/* Four conjoined circles container */}
+          {/* Main seedbed container */}
           <div className="relative w-full h-96">
-            {/* Conjoined circles */}
+            {/* Background seedbed-2.svg shape */}
             <div className="absolute inset-0 flex items-center justify-center">
-              {/* Main organic shape formed by four conjoined circles */}
-              <div className="relative w-80 h-80">
-                {/* Background organic shape */}
-                <div className="absolute inset-0 bg-white rounded-full opacity-50"></div>
-                
-                {/* Individual circles with dynamic sizing and proper intersections */}
-                {config.circles.map((circle, index) => (
-                  <div
-                    key={circle.id}
-                    className={`absolute ${circle.top} ${circle.left} ${circle.size} ${circle.transform} z-10`}
-                  >
-                    {/* Circle with specific border style */}
-                    <div className={`w-full h-full rounded-full border-2 ${circle.borderStyle} border-black bg-white relative overflow-hidden`}>
-                      {/* Percentage display */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-lg font-bold text-black">{circle.percentage}</span>
-                      </div>
+              <img
+                src="/seedbed-2.svg"
+                alt="Seedbed shape"
+                className="w-80 h-80 object-contain"
+              />
             </div>
-                </div>
-              ))}
+            
+            {/* Four circles positioned on the seedbed shape */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative w-80 h-80">
+                {/* Map beneficiaries to circles based on percentage ranking */}
+                {config.circles.map((circle, index) => {
+                  // Get the beneficiary data for this position
+                  const beneficiary = sortedBeneficiaries[index];
+                  const circleSvg = circleSvgs[index];
+                  
+                  return (
+                    <div
+                      key={circle.id}
+                      className={`absolute ${circle.top} ${circle.left} ${circle.size} ${circle.transform} z-10`}
+                    >
+                      {/* Circle SVG */}
+                      <div className="relative w-full h-full">
+                        <img
+                          src={circleSvg}
+                          alt={`${circle.name} circle`}
+                          className="w-full h-full object-contain"
+                        />
+                        
+                        {/* Percentage display */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-lg font-bold text-black">{beneficiary?.percentage || circle.percentage}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             
             {/* Curved text labels */}
             <div className="absolute inset-0 z-0">
               {config.circles.map((circle, index) => {
-                const shortName = shortenBeneficiaryName(circle.name);
+                const beneficiary = sortedBeneficiaries[index];
+                const shortName = shortenBeneficiaryName(beneficiary?.name || circle.name);
+                
                 return (
                   <div
                     key={`${circle.id}-label`}
@@ -224,7 +251,31 @@ export default function SeedbedCardStats({
   );
 }
 
-export function SeedbedCardStats2({ className = "" }: SeedbedCardStatsProps) {
+export function SeedbedCardStats2({ className = "", beneficiaries = defaultBeneficiaries }: SeedbedCardStatsProps) {
+  // Sort beneficiaries by percentage (highest first)
+  const sortedBeneficiaries = [...beneficiaries]
+    .sort((a, b) => parseFloat(b.percentage || "0") - parseFloat(a.percentage || "0"));
+
+  // Map beneficiaries to circle SVGs based on percentage ranking
+  const circleSvgs = [
+    '/circle-small.svg',    // Smallest percentage (4th)
+    '/circle-big.svg',      // 3rd largest
+    '/dotted-dashed.svg',   // 2nd largest  
+    '/mid-dashed.svg'       // Largest percentage (1st)
+  ];
+
+  // Circle positions and sizes
+  const circlePositions = [
+    // Top left - mid-dashed (largest percentage)
+    { top: '-top-16', left: 'left-4', size: 'w-36 h-36', transform: '-rotate-4' },
+    // Top right - dotted-dashed (2nd largest)
+    { top: '-top-8', left: 'right-4', size: 'w-32 h-32', transform: 'rotate-8' },
+    // Bottom left - circle-big (3rd largest)
+    { top: 'bottom-16', left: '-left-4', size: 'w-20 h-20', transform: '-rotate-6' },
+    // Bottom right - circle-small (smallest percentage)
+    { top: 'bottom-20', left: '-right-8', size: 'w-40 h-40', transform: 'rotate-6' }
+  ];
+
   return (
     <div className={`relative ${className}`}>
       {/* Outer gray layer */}
@@ -248,47 +299,72 @@ export function SeedbedCardStats2({ className = "" }: SeedbedCardStatsProps) {
             THE SEEDBED
           </div>
           
-          {/* Simplified conjoined circles for default state */}
+          {/* Main seedbed container */}
           <div className="relative w-full h-96">
+            {/* Background seedbed-2.svg shape */}
             <div className="absolute inset-0 flex items-center justify-center">
-              {/* Four simple conjoined circles */}
-              <div className="relative w-80 h-80">
-                {/* El Globo - top left */}
-                <div className="absolute -top-16 left-4 w-36 h-36 rounded-full border-2 border-dashed border-black bg-white flex items-center justify-center transform -rotate-4">
-                  <span className="text-lg font-bold text-black">45%</span>
+              <img
+                src="/seedbed-2.svg"
+                alt="Seedbed shape"
+                className="w-80 h-80 object-contain"
+              />
             </div>
             
-                {/* Pantanal - top right */}
-                <div className="absolute -top-8 right-4 w-32 h-32 rounded-full border-2 border-dotted border-black bg-white flex items-center justify-center transform rotate-8">
-                  <span className="text-lg font-bold text-black">42%</span>
-              </div>
-              
-                {/* Walkers - bottom left */}
-                <div className="absolute bottom-16 -left-4 w-20 h-20 rounded-full border-2 border-dotted border-black bg-white flex items-center justify-center transform -rotate-6">
-                  <span className="text-lg font-bold text-black">12%</span>
-              </div>
-              
-                {/* Grgich - bottom right */}
-                <div className="absolute bottom-20 -right-8 w-40 h-40 rounded-full border-2 border-dashed border-black bg-white flex items-center justify-center transform rotate-6">
-                  <span className="text-lg font-bold text-black">63%</span>
-              </div>
+            {/* Four circles positioned on the seedbed shape */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative w-80 h-80">
+                {circlePositions.map((position, index) => {
+                  const beneficiary = sortedBeneficiaries[index];
+                  const circleSvg = circleSvgs[index];
+                  
+                  return (
+                    <div
+                      key={index}
+                      className={`absolute ${position.top} ${position.left} ${position.size} transform ${position.transform} z-10`}
+                    >
+                      {/* Circle SVG */}
+                      <div className="relative w-full h-full">
+                        <img
+                          src={circleSvg}
+                          alt={`${beneficiary?.name || 'Beneficiary'} circle`}
+                          className="w-full h-full object-contain"
+                        />
+                        
+                        {/* Percentage display */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-lg font-bold text-black">{beneficiary?.percentage || '0%'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             
             {/* Simple text labels */}
             <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute -left-20 -top-8 transform -rotate-90 text-xs font-medium text-black whitespace-nowrap">
-                El Globo Habitat Bank
-              </div>
-              <div className="absolute -right-16 -top-2 transform rotate-45 text-xs font-medium text-black whitespace-nowrap">
-                Pantanal biome
-              </div>
-              <div className="absolute left-12 bottom-32 transform rotate-60 text-xs font-medium text-black whitespace-nowrap">
-                Walkers Reserve
-              </div>
-              <div className="absolute right-20 top-1/2 transform -rotate-90 text-xs font-medium text-black whitespace-nowrap">
-                Grgich Hills Estate
-              </div>
+              {circlePositions.map((position, index) => {
+                const beneficiary = sortedBeneficiaries[index];
+                const shortName = shortenBeneficiaryName(beneficiary?.name || '');
+                
+                const labelPositions = [
+                  { top: '-left-20', left: '-top-8', transform: '-rotate-90' },
+                  { top: '-right-16', left: '-top-2', transform: 'rotate-45' },
+                  { top: 'left-12', left: 'bottom-32', transform: 'rotate-60' },
+                  { top: 'right-20', left: 'top-1/2', transform: '-rotate-90' }
+                ];
+                
+                const labelPos = labelPositions[index];
+                
+                return (
+                  <div
+                    key={`label-${index}`}
+                    className={`absolute ${labelPos.top} ${labelPos.left} transform ${labelPos.transform} text-xs font-medium text-black whitespace-nowrap`}
+                  >
+                    {shortName}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

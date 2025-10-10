@@ -7,15 +7,19 @@ import GardenHeader from "@/components/GardenHeader";
 import RootShapeArea from "@/components/wallet/RootShapeArea";
 import InfoModal from "@/components/InfoModal";
 import StoryPanel from "@/components/StoryPanel"; 
+import WalletModal from "@/components/wallet/WalletModal";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSeedStory } from "@/lib/data/componentData";
+import { usePrivy } from "@privy-io/react-auth";
 
 export default function About() {
   const router = useRouter();
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"substrate" | "credits" | "tnc">("substrate");
   const [showStoryPanel, setShowStoryPanel] = useState(false);
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const { logout } = usePrivy();
   
   // Use seed 1 data for the about page
 
@@ -43,15 +47,50 @@ export default function About() {
     setShowStoryPanel(false);
   };
 
+  const handleWallet = () => {
+    setIsWalletModalOpen(true);
+  };
+
+  const handleWalletModalClose = () => {
+    setIsWalletModalOpen(false);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+  };
+
+  const handleAddFunds = () => {
+    // Handle add funds logic
+    console.log("Add funds clicked");
+  };
+
+  const handleExportKey = () => {
+    // Handle export key logic
+    console.log("Export key clicked");
+  };
+
+  const handleSwitchWallet = () => {
+    // Handle switch wallet logic
+    console.log("Switch wallet clicked");
+  };
+
+  const handlePrivyHome = () => {
+    // Handle privy home logic
+    console.log("Privy home clicked");
+  };
+
   return (
-    <div className="min-h-screen w-full max-w-md mx-auto bg-white relative">
-      <GardenHeader />
+    <div className="min-h-screen lg:ml-2 md:ml-2 items-center justify-center ml-6 w-full max-w-md mx-auto bg-none relative">
+      <div className="mt-4 mb-4">
+        <GardenHeader />
+      </div>
       
       {/* Main content with dotted border */}
-      <div className="px-4 pb-38">
-        <div className="border-2 border-dotted border-black rounded-3xl p-6 mb-8">
+      <div className="px-4 pb-38 w-full">
+        <div className="border-2 border-dotted border-black rounded-[70px] p-6 mb-8">
           {/* Tab buttons */}
-          <div className="flex gap-2 mb-8 scale-[1.6] peridia-display-light justify-center">
+          <div className="flex gap-2 mb-8 scale-[1.5] peridia-display-light justify-center">
             <button
               onClick={() => handleTabClick("substrate")}
               className={`px-2 py-2 rounded-full border border-black text-sm ${activeTab === "substrate" ? "bg-gray-200" : "bg-white"}`}
@@ -175,6 +214,7 @@ export default function About() {
           <RootShapeArea
             onSubstrate={handleSubstrateClick}
             onStory={handleStoryClick}
+            onWallet={handleWallet}
             showGlassEffect={true}
             showStoryButton={true}
           />
@@ -185,6 +225,17 @@ export default function About() {
       <InfoModal
         open={isInfoModalOpen}
         onClose={handleInfoModalClose}
+      />
+
+      {/* Wallet Modal */}
+      <WalletModal
+        isOpen={isWalletModalOpen}
+        onClose={handleWalletModalClose}
+        onLogout={handleLogout}
+        onAddFunds={handleAddFunds}
+        onExportKey={handleExportKey}
+        onSwitchWallet={handleSwitchWallet}
+        onPrivyHome={handlePrivyHome}
       />
     </div>
   );
