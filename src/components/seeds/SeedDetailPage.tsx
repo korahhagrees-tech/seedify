@@ -19,7 +19,7 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
   return (
     <div className="min-h-screen w-full max-w-md mx-auto bg-white relative scale-[0.95]">
       {/* Steward Label - positioned above the main content */}
-      <div className="relative pt-4 pb-2">
+      <div className="relative pt-4 pb-2 ml-4">
         <motion.div 
           className="absolute top-38 left-1/2 -translate-x-1/2 z-10"
           initial={{ opacity: 0, y: 10 }}
@@ -48,7 +48,7 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
         
         {/* Seed Label Badge */}
         <div className="relative mb-4">
-          <div className="absolute top-8 -left-4 z-10">
+          <div className="absolute top-10 -left-4 z-10">
             <span className="bg-white border border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
               {seed.label.toUpperCase()}
             </span>
@@ -77,35 +77,35 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
         <div className="mb-6">
           <div className="grid grid-cols-3 gap-2">
             <motion.div 
-              className="bg-white border border-black rounded-full p-3 text-center min-h-[60px] flex flex-col justify-center"
+              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.4 }}
             >
-              <div className="text-xs font-light text-black mb-1">RAISED</div>
-              <div className="text-sm font-light text-black">
-                {parseFloat(seed.depositAmount).toFixed(4)} <span className="text-xs">ETH</span>
+              <div className="text-[10px] font-light text-black mb-2 mt-1">RAISED</div>
+              <div className="text-xl text-nowrap scale-[0.9] -ml-2 -mt-3 font-light text-black">
+                {parseFloat(seed.depositAmount).toFixed(4)} <span className="text-xl">ETH</span>
               </div>
             </motion.div>
             <motion.div 
-              className="bg-white border border-black rounded-full p-3 text-center min-h-[60px] flex flex-col justify-center"
+              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.45 }}
             >
-              <div className="text-xs font-light text-black mb-1">SNAP PRICE</div>
-              <div className="text-sm font-light text-black">
-                {parseFloat(seed.snapshotPrice).toFixed(4)} <span className="text-xs">ETH</span>
+              <div className="text-[10px] font-light text-black mb-2 mt-1">SNAP PRICE</div>
+              <div className="text-xl text-nowrap scale-[0.9] -ml-2 -mt-3 font-light text-black">
+                {parseFloat(seed.snapshotPrice).toFixed(4)} <span className="text-xl">ETH</span>
               </div>
             </motion.div>
             <motion.div 
-              className="bg-white border border-black rounded-full p-3 text-center min-h-[60px] flex flex-col justify-center"
+              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 }}
             >
-              <div className="text-xs font-light text-black mb-1">EVOLUTIONS</div>
-              <div className="text-sm font-light text-black">
+              <div className="text-[10px] font-light text-black mb-2 mt-1">EVOLUTIONS</div>
+              <div className="text-xl text-nowrap scale-[0.9] -ml-2 -mt-3 font-light text-black">
                 {seed.snapshotCount}
               </div>
             </motion.div>
