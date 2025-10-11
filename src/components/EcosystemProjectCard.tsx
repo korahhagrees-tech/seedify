@@ -197,7 +197,7 @@ export default function EcosystemProjectCard({
 
         {/* Card with cutout header */}
         <motion.div
-          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-12 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[700px] lg:h-[700px] md:h-[700px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
+          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-12 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[650px] lg:h-[650px] md:h-[650px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -261,7 +261,7 @@ export default function EcosystemProjectCard({
           </div>
 
           {/* Text content - fixed-height card body */}
-          <div className="px-5 pb-4 mt-10">
+          <div className="px-5 pb-  4 mt-10">
             <h2 className="text-2xl text-black text-center leading-tight peridia-display-light">
               {title}
             </h2>
@@ -273,7 +273,7 @@ export default function EcosystemProjectCard({
 
             <div className="relative mt-4 text-[13px] leading-relaxed text-black/90 h-86 overflow-y-auto pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {/* Short text - always visible */}
-              <div className="mb-4 whitespace-pre-line">
+              <div className="mb-26 whitespace-pre-line">
                 {shortText}
               </div>
               
@@ -285,7 +285,7 @@ export default function EcosystemProjectCard({
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="overflow-hidden whitespace-pre-line"
+                    className="overflow-hidden whitespace-pre-line -mt-18 mb-26"
                   >
                     {extendedText}
                   </motion.div>
@@ -293,11 +293,11 @@ export default function EcosystemProjectCard({
               </AnimatePresence>
             </div>
             {/* Bottom blur fade */}
-            <div className="pointer-events-none absolute bottom-18 left-0 right-0 h-10 bg-white backdrop-blur-xs opacity-70" />
+            <div className="pointer-events-none absolute bottom-20 left-0 right-0 h-10 bg-white/50 backdrop-blur-xs opacity-70" />
           </div>
 
           {/* Footer with centered CTA and inverted switch next to it */}
-          <div className="relative -px-6 py-4 flex items-center bg-transparent justify-center gap-4 -mt-10">
+          <div className="relative -px-6 py-4 flex items-center bg-white justify-center gap-4 -mt-20">
             <Button
               variant="ghost"
               className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col disabled:opacity-50"
