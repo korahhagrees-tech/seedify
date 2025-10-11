@@ -83,7 +83,7 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
               transition={{ duration: 0.3, delay: 0.4 }}
             >
               <div className="text-[10px] font-light text-black mb-2 mt-1">RAISED</div>
-              <div className="text-xl text-nowrap scale-[0.9] -ml-2 -mt-3 font-light text-black">
+              <div className="text-xl text-nowrap scale-[0.8] -ml-2 -mt-3 font-light text-black">
                 {parseFloat(seed.depositAmount).toFixed(4)} <span className="text-xl">ETH</span>
               </div>
             </motion.div>
@@ -94,7 +94,7 @@ export default function SeedDetailPage({ seed, onBack, onProfileClick, onPlantSe
               transition={{ duration: 0.3, delay: 0.45 }}
             >
               <div className="text-[10px] font-light text-black mb-2 mt-1">SNAP PRICE</div>
-              <div className="text-xl text-nowrap scale-[0.9] -ml-2 -mt-3 font-light text-black">
+              <div className="text-xl text-nowrap scale-[0.8] -ml-2 -mt-3 font-light text-black">
                 {parseFloat(seed.snapshotPrice).toFixed(4)} <span className="text-xl">ETH</span>
               </div>
             </motion.div>
