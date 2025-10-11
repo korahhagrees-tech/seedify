@@ -56,7 +56,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
       <div className="absolute inset-0 bg-black/40 z-5"></div>
       
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center -mt-4 lg:top-64 md:top-70 top-50 justify-center min-h-screen px-8">
+      <div className="relative z-10 flex flex-col items-center -mt-4 lg:top-60 md:top-68 top-50 justify-center min-h-screen px-8">
         {/* Logo with animation - perfectly centered on screen */}
         <motion.div 
           className="absolute top-4 left-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -87,7 +87,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
         {/* Wallet Connect Button with animation */}
         <WalletConnectButton
           onSuccess={handleSuccess}
-          className="text-white text-lg hover:text-white lg:mt-[230px] md:mt-[200px] mt-[230px] animate-bounce font-light px-8 py-4 hover:bg-white/20 transition-colors bg-transparent"
+          className="text-white text-lg hover:text-white lg:mt-[230px] md:mt-[180px] mt-[200px] animate-bounce font-light px-8 py-4 hover:bg-white/20 transition-colors bg-transparent"
         >
           Tap to Start
         </WalletConnectButton>
