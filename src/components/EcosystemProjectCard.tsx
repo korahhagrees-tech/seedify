@@ -197,7 +197,7 @@ export default function EcosystemProjectCard({
 
         {/* Card with cutout header */}
         <motion.div
-          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-12 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[730px] lg:h-[730px] md:h-[730px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
+          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-12 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[700px] lg:h-[700px] md:h-[700px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -297,7 +297,7 @@ export default function EcosystemProjectCard({
           </div>
 
           {/* Footer with centered CTA and inverted switch next to it */}
-          <div className="relative -px-6 py-4 flex items-center bg-transparent justify-center gap-4 -mt-2">
+          <div className="relative -px-6 py-4 flex items-center bg-transparent justify-center gap-4 -mt-10">
             <Button
               variant="ghost"
               className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col disabled:opacity-50"
