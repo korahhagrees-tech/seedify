@@ -56,7 +56,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
       <div className="absolute inset-0 bg-black/40 z-5"></div>
       
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center -mt-4 lg:top-60 md:top-68 top-50 justify-center min-h-screen px-8">
+      <div className="relative z-10 flex flex-col items-center -mt-4 lg:top-58 md:top-66 top-50 justify-center min-h-screen px-8">
         {/* Logo with animation - perfectly centered on screen */}
         <motion.div 
           className="absolute top-4 left-1/2 -translate-x-1/2 -translate-y-1/2"
