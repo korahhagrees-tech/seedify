@@ -56,7 +56,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
       <div className="absolute inset-0 bg-black/30 z-5"></div>
       
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-8">
+      <div className="relative z-10 flex flex-col items-center -mt-22 justify-center min-h-screen px-8">
         {/* Logo with animation - perfectly centered on screen */}
         <motion.div 
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -75,7 +75,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
             <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-10">
               <p>by  CROSSLUCID.</p>
             </div>
-            <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-24 -mb-36 scale-[0.8]">
+            <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-24 -mb-70 scale-[0.8]">
               <p>a regenerative art project</p>
               <p>reimagining environmental art</p>
               <p>through living digital botanicals </p>

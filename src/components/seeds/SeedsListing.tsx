@@ -87,9 +87,9 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
 
   return (
     <div className="min-h-screen w-full bg-none">
-      {/* Header - No background, just on the page */}
+      {/* Header */}
       <motion.div 
-        className=""
+        className="pt-4 pb-2"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -99,17 +99,17 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
       
       {/* Page Title */}
       <motion.div 
-        className="px-6 py-4 -mb-15 -mt-4 scale-[1.1]"
+        className="px-4 py-2"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <h1 className="text-xs font-light text-gray-900 text-center">WELCOME TO THE GARDEN</h1>
+        <h1 className="text-sm font-light text-gray-900 text-center -mt-4">WELCOME TO THE GARDEN</h1>
       </motion.div>
       
       {/* Seeds Grid */}
       <motion.div 
-        className="px-6 pb-6 -space-y-4 items-center"
+        className="px-4 pb-20 space-y-8 -mt-2 scale-[0.95]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.4 }}
@@ -134,7 +134,7 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
       
       {/* Disconnect Button at Bottom */}
       <motion.div 
-        className="px-6 pb-6"
+        className="px-4 pb-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.6 }}

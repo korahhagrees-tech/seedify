@@ -244,25 +244,25 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
         // El Globo (largest)
         {
           position: {
-            top: "-top-14",
-            left: "left-6 lg:left-8",
-            width: "w-[155px]",
-            height: "h-[155px]",
+            top: "-top-20",
+            left: "left-7 lg:left-8",
+            width: "w-[158px]",
+            height: "h-[158px]",
             transform: "transform -rotate-4"
           },
           labelPosition: {
-            top: "-left-18",
-            left: "-top-10",
-            transform: "transform -rotate-90"
+            top: "-left-8",
+            left: "-top-26",
+            transform: "transform -rotate-70"
           }
         },
         // Grgich Hills (second largest)
         {
           position: {
-            top: "lg:bottom-27 bottom-28",
-            left: "lg:-right-3 -right-6",
-            width: "w-34",
-            height: "h-34",
+            top: "lg:bottom-27 bottom-30",
+            left: "lg:-right-3 -right-7",
+            width: "w-36",
+            height: "h-36",
             transform: "transform rotate-6"
           },
           labelPosition: {
@@ -274,7 +274,7 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
         // Buena Vista (third largest)
         {
           position: {
-            top: "lg:bottom-24 bottom-24",
+            top: "lg:bottom-24 bottom-26",
             left: "-left-5 lg:-left-3",
             width: "w-28",
             height: "h-28",
@@ -289,15 +289,15 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
         // Walkers Reserve (smallest)
         {
           position: {
-            top: "top-1",
+            top: "-top-3",
             left: "right-2 lg:right-6",
             width: "w-14",
             height: "h-14",
             transform: "transform rotate-12"
           },
           labelPosition: {
-            top: "-right-10",
-            left: "-top-4",
+            top: "-right-8",
+            left: "-top-14",
             transform: "transform rotate-45"
           }
         }
@@ -379,11 +379,11 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
                 const textConfigs = [
                   // El Globo (largest)
                   {
-                    radius: 60,
-                    angle: Math.PI * 0.4,
-                    fontSize: 10,
-                    width: 120,
-                    height: 120,
+                    radius: 70,
+                    angle: Math.PI * 0.6,
+                    fontSize: 20,
+                    width: 180,
+                    height: 180,
                     offsetX: 0,
                     offsetY: 0,
                     rotationOffset: 0
@@ -412,11 +412,11 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
                   },
                   // Walkers Reserve (smallest)
                   {
-                    radius: 40,
-                    angle: Math.PI * 0.25,
-                    fontSize: 7,
-                    width: 80,
-                    height: 80,
+                    radius: 60,
+                    angle: Math.PI * 0.6,
+                    fontSize: 20,
+                    width: 160,
+                    height: 180,
                     offsetX: 0,
                     offsetY: 0,
                     rotationOffset: 0

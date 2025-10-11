@@ -158,10 +158,10 @@ export default function SeedbedCardStats({
 
   // Map beneficiaries to circle SVGs based on percentage ranking
   const circleSvgs = [
-    '/circle-small.svg',    // Smallest percentage (4th)
     '/circle-big.svg',      // 3rd largest
+    '/mid-dashed.svg',       // Largest percentage (1st)
+    '/circle-small.svg',    // Smallest percentage (4th)
     '/dotted-dashed.svg',   // 2nd largest  
-    '/mid-dashed.svg'       // Largest percentage (1st)
   ];
 
   return (
@@ -176,13 +176,13 @@ export default function SeedbedCardStats({
           </div>
           
           {/* Main seedbed container */}
-          <div className="relative w-full h-96">
+          <div className="relative w-full h-84">
             {/* Background seedbed-2.svg shape */}
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 -top-30 flex items-center justify-center">
               <Image
                 src="/seedbed-2.svg"
                 alt="Seedbed shape"
-                className="w-80 h-80 object-contain"
+                className="w-96 h-96 object-contain scale-[1.2]"
                 width={320}
                 height={320}
               />

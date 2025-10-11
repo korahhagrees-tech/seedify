@@ -21,31 +21,34 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="space-y-4"
+      className="w-full space-y-6"
     >
       {/* Main Seed Image Card - with external label */}
-      <div className="relative -bottom-10 z-10">
-          <motion.div 
-            className="bg-white border-1 border-black rounded-full p-3 text-center scale-[0.5] bottom-14"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
-          >
-            <div className="font-medium text-black text-lg scale-[1.3]">
-              <span className="-ml-2">STEWARD</span> <span className="ml-10">{formatAddress(seed.owner)}</span>
+      <div className="relative mb-6">
+        {/* Steward Label - positioned above the card */}
+        <motion.div 
+          className="absolute -top-8 left-1/2 -translate-x-1/2 z-10"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
+        >
+          <div className="bg-white border mt-4 text-nowrap border-black rounded-full px-4 py-1 text-center">
+            <div className="text-sm font-medium text-black">
+              STEWARD <span className="ml-2">{formatAddress(seed.owner)}</span>
             </div>
-          </motion.div>
-      </div>
-      <div className="relative">
-        {/* Seed Label Badge - placed outside to avoid clipping */}
-        <div className="absolute top-3 left-8 -translate-x-1/2 z-[5]">
-          <span className="bg-white border-1 border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
+          </div>
+        </motion.div>
+
+        {/* Seed Label Badge - positioned on the card */}
+        <div className="absolute top-3 -left-4 z-[5]">
+          <span className="bg-white border border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
             {seed.label.toUpperCase()}
           </span>
         </div>
 
+        {/* Main Image Card */}
         <motion.div
-          className="relative w-[420px] -ml-3 h-[380px] rounded-[60px] overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow"
+          className="relative w-full h-92 rounded-[40px] overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow"
           onClick={onClick}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
@@ -62,43 +65,43 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
         </motion.div>
       </div>
       
-      {/* Info Buttons - Separate from the image card */}
-      <div className="grid grid-cols-3 gap-3 -mb-6 mt-6 scale-[1.0]">
-        {/* Price Button */}
+      {/* Info Buttons - Responsive grid */}
+      <div className="grid grid-cols-3 gap-2 mt-6 mb-6">
+        {/* Raised Button */}
         <motion.div 
-          className="bg-white border-1 border-black h-10 rounded-full p-3 text-center"
+          className="bg-white border border-black rounded-full p-3 text-center min-h-[30px] flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
         >
-          <div className="text-[10px] font-light text-black -mt-3 -mb-4">RAISED</div>
-          <div className="font-light text-black mt-5 -mb-4 text-xs text-nowrap lg:text-xs scale-[1.25]">
+          <div className="text-xs font-light text-black mb-1">RAISED</div>
+          <div className="text-sm font-light text-black">
             {parseFloat(seed.depositAmount).toFixed(4)} <span className="text-xs">ETH</span>
           </div>
         </motion.div>
         
-        {/* Seeder Button - Owner's wallet address */}
+        {/* Snap Price Button */}
         <motion.div 
-          className="bg-white border-1 border-black h-10 rounded-full p-3 text-center"
+          className="bg-white border border-black rounded-full p-3 text-center min-h-[60px] flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
         >
-          <div className="text-[10px] font-light text-black -mt-3 -mb-4">SNAP PRICE</div>
-          <div className="font-light text-black mt-5 -mb-4 text-xs text-nowrap lg:text-xs scale-[1.25]">
+          <div className="text-xs font-light text-black mb-1">SNAP PRICE</div>
+          <div className="text-sm font-light text-black">
             {parseFloat(seed.snapshotPrice).toFixed(4)} <span className="text-xs">ETH</span>
           </div>
         </motion.div>
         
-        {/* Flowers Count Button */}
+        {/* Evolutions Button */}
         <motion.div 
-          className="bg-white border-1 border-black h-10 rounded-full p-3 text-center"
+          className="bg-white border border-black rounded-full p-3 text-center min-h-[60px] flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.3 }}
         >
-          <div className="text-[10px] font-light text-black -mt-3 -mb-4">EVOLUTIONS</div>
-          <div className="font-light text-black mt-5 -mb-4 text-xs text-nowrap lg:text-xs scale-[1.3]">
+          <div className="text-xs font-light text-black mb-1">EVOLUTIONS</div>
+          <div className="text-sm font-light text-black">
             {seed.snapshotCount}
           </div>
         </motion.div>

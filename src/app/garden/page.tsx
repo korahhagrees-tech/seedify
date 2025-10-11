@@ -13,7 +13,7 @@ export default function GardenPage() {
   };
 
   return (
-    <div className="min-h-screen w-screen mx-auto scale-[0.9] -ml-2 -mt-18 max-w-md bg-none">
+    <div className="min-h-screen w-full max-w-md mx-auto bg-none relative">
       <SeedsListing onSeedClick={handleSeedClick} />
     </div>
   );

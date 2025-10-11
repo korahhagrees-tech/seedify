@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Seed } from "@/types/seed";
 import SeedbedCard,  { SeedbedCard2 } from "./SeedbedCard";
 import { convertBeneficiariesToSeedbedFormat } from "@/lib/api";
+import SeedbedCardStats, { SeedbedCardStats2 } from "./SeedbedCardStats";
 
 interface SeedbedPullUpProps {
   selectedSeed?: Seed | null;
@@ -71,9 +72,10 @@ export default function SeedbedPullUp({ selectedSeed }: SeedbedPullUpProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="-mt-72  lg:-mt-92 h-[30px] scale-[0.9] lg:w-[460px] md:w-[440px] w-[430px] -ml-4"
+            className="w-full -mt-90"
           >
             <SeedbedCard beneficiaries={seedbedBeneficiaries} />
+            {/* <SeedbedCardStats beneficiaries={seedbedBeneficiaries} /> */}
           </motion.div>
         )}
       </AnimatePresence>
