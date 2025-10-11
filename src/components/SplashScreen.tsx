@@ -25,7 +25,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
           priority
         />
       </div>
-      
+
       {/* Flowers background */}
       <div className="absolute inset-0">
         <video
@@ -35,13 +35,13 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
           muted
           className="object-cover opacity-120"
           loop
-          style={{ 
-            width: "100%", 
-            height: "100%", 
-            objectFit: "cover", 
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
             display: "block",
           }}
-      />
+        />
         {/* <Image
           src="/flowers-bg.png"
           alt="Flowers background"
@@ -51,15 +51,18 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
           priority
         /> */}
       </div>
-      
+
       {/* Dark backdrop overlay for better text visibility */}
       <div className="absolute inset-0 bg-black/40 z-5"></div>
-      
+
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center -mt-4 lg:top-58 md:top-66 top-60 justify-center min-h-screen px-8">
-        {/* Logo with animation - perfectly centered on screen */}
-        <motion.div 
-          className="absolute top-4 left-1/2 -translate-x-1/2 -translate-y-1/2"
+      <div className="relative z-10 flex flex-col items-center justify-between min-h-screen px-8 py-8">
+        {/* Spacer for top */}
+        <div className="flex-1"></div>
+
+        {/* Logo with animation - centered */}
+        <motion.div
+          className="flex flex-col items-center text-center"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
@@ -71,26 +74,36 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
             height={84}
             className="w-auto h-auto max-w-[200px] lg:max-w-[250px] md:max-w-[300px]"
             priority
-            />
-            <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-6">
-              <p>by  CROSSLUCID.</p>
-            </div>
-            <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full lg:mt-40 md:mt-40 mt-3 -mb-[60px] scale-[0.8] lg:scale-[0.6] md:scale-[0.6]">
-              <p>a regenerative art project</p>
-              <p>reimagining environmental art</p>
-              <p>through living digital botanicals </p>
-              <p>directly connected</p>
-              <p>to real-world conservation</p>
-            </div>
+          />
+          <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-6">
+            <p>by CROSSLUCID.</p>
+          </div>
+          <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-8 lg:mt-16 md:mt-12 scale-[0.8] lg:scale-[1] md:scale-[0.9]">
+            <p>a regenerative art project</p>
+            <p>reimagining environmental art</p>
+            <p>through living digital botanicals </p>
+            <p>directly connected</p>
+            <p>to real-world conservation</p>
+          </div>
         </motion.div>
-        
-        {/* Wallet Connect Button with animation */}
-        <WalletConnectButton
-          onSuccess={handleSuccess}
-          className="text-white text-lg hover:text-white lg:mt-[280px] md:mt-[180px] mt-[100px] animate-bounce font-light px-8 py-4 hover:bg-white/20 transition-colors bg-transparent"
+
+        {/* Spacer for middle */}
+        <div className="flex-1"></div>
+
+        {/* Wallet Connect Button with animation - always at bottom */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1 }}
+          className="pb-8"
         >
-          Tap to Start
-        </WalletConnectButton>
+          <WalletConnectButton
+            onSuccess={handleSuccess}
+            className="text-white text-lg hover:text-white animate-bounce font-light px-8 py-4 hover:bg-white/20 transition-colors bg-transparent"
+          >
+            Tap to Start
+          </WalletConnectButton>
+        </motion.div>
       </div>
     </div>
   );
