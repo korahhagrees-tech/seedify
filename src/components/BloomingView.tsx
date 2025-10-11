@@ -9,6 +9,7 @@ import RootShapeArea from "@/components/wallet/RootShapeArea";
 import GardenHeader from "./GardenHeader";
 import WalletModal from "@/components/wallet/WalletModal";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useRouter } from "next/navigation";
 
 interface BloomingViewProps {
   backgroundImageUrl: string;
@@ -39,6 +40,7 @@ export default function BloomingView({
   const [isLoading, setIsLoading] = useState(true);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const { logout } = useAuth();
+  const router = useRouter();
 
   // Get the final image URL (snapshot or seed as fallback)
   const finalImageUrl = snapshotImageUrl || seedImageUrl || assets.testPink;
@@ -74,7 +76,7 @@ export default function BloomingView({
 
   const handlePrivyHome = () => {
     // Privy home logic here
-    console.log('Privy home clicked');
+    router.push("/garden");
   };
 
   useEffect(() => {

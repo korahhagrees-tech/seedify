@@ -77,47 +77,38 @@ export default function About() {
 
   const handlePrivyHome = () => {
     // Handle privy home logic
-    console.log("Privy home clicked");
+    router.push("/garden");
   };
 
   return (
-    <div className="min-h-screen lg:ml-2 md:ml-2 items-center justify-center ml-6 w-full max-w-md mx-auto bg-none relative">
-      <div className="mt-4 mb-4">
+    <div className="min-h-screen w-full max-w-sm mx-auto bg-none relative px-3">
+      <div className="pt-2 pb-2">
         <GardenHeader />
       </div>
       
       {/* Main content with dotted border */}
-      <div className="px-4 pb-38 w-full">
-        <div className="border-2 border-dotted border-black rounded-[70px] p-6 mb-8">
+      <div className="pb-32 w-full">
+        <div className="border-2 border-dotted border-black rounded-[50px] p-4 mb-6">
           {/* Tab buttons */}
-          <div className="flex gap-2 mb-8 scale-[1.5] peridia-display-light justify-center">
+          <div className="flex gap-6 mb-6 peridia-display-light justify-center">
             <button
               onClick={() => handleTabClick("substrate")}
-              className={`px-2 py-2 rounded-full border border-black text-sm ${activeTab === "substrate" ? "bg-gray-200" : "bg-white"}`}
+              className={`px-5 py-1 scale-[1.2] rounded-full border border-black text-xs ${activeTab === "substrate" ? "bg-gray-200" : "bg-white"}`}
             >
               Substrate
             </button>
             <button
               onClick={() => handleTabClick("credits")}
-              className={`px-4 py-2 rounded-full border border-black text-sm ${activeTab === "credits" ? "bg-gray-200" : "bg-white"}`}
+              className={`px-5 py-1 scale-[1.2] rounded-full border border-black text-xs ${activeTab === "credits" ? "bg-gray-200" : "bg-white"}`}
             >
               Credits
             </button>
             <button
               onClick={() => handleTabClick("tnc")}
-              className={`px-4 py-2 rounded-full border border-black text-sm ${activeTab === "tnc" ? "bg-gray-200" : "bg-white"}`}
+              className={`px-5 py-1 scale-[1.2] rounded-full border border-black text-xs ${activeTab === "tnc" ? "bg-gray-200" : "bg-white"}`}
             >
               T<span className="text-xs">&</span>C
             </button>
-          </div>
-
-          {/* Hamburger icon */}
-          <div className="flex justify-center mb-6">
-            {/* <div className="w-8 h-8 rounded-full border border-black flex items-center justify-center">
-              <div className="space-y-1">
-                <Image src={assets.audioPlay} alt="Hamburger Icon" width={24} height={24} />
-              </div>
-            </div> */}
           </div>
 
           <AnimatePresence mode="wait">
@@ -128,7 +119,7 @@ export default function About() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -300 }}
                 transition={{ duration: 0.3 }}
-                className="scale-[1.05]"
+                className="scale-[1.0]"
               >
                 <StoryPanel
                   text={getSeedStory("1").story}
@@ -144,23 +135,22 @@ export default function About() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 300 }}
                 transition={{ duration: 0.3 }}
-                className="text-sm leading-relaxed space-y-4"
+                className="text-xs leading-relaxed space-y-3"
               >
             {activeTab === "substrate" && (
               <>
-                <div className="text-center mb-3 -mt-8">
-                  {/* <div className="text-2xl">Substrate</div> */}
-                  <div className="mx-auto my-2 w-10 h-10 rounded-full border border-black flex items-center justify-center">
-                    <Image src="/audio-play.svg" alt="Audio" width={20} height={20} />
+                <div className="text-center mb-2">
+                  <div className="mx-auto my-1 w-8 h-8 rounded-full border border-black flex items-center justify-center">
+                    <Image src="/audio-play.svg" alt="Audio" width={14} height={14} />
                   </div>
                 </div>
-                <p>
+                <p className="text-xs leading-relaxed">
                   <span className="peridia-display-light">The Way of Flowers</span> represents a fundamental reimagining of environmental art through dynamic digital botanical compositions that maintain living connections to real-world conservation efforts. Collectors become original seeders, acquiring seeds that are collectively nurtured through their community and its engagement with specific ecosystem projects, creating uniquely evolving artworks that form a digital permaculture garden cultivated through ecosystem nurturing and grown by community stewardship.
                 </p>
-                <p>
+                <p className="text-xs leading-relaxed">
                   {`When participants engage with verified biodiversity projects, their botanical compositions evolve in response, incorporating traits specific to those initiatives. Through the unique forking mechanism, each contribution creates individual snapshot artworks—morphological plant representations of participants' unique conservation actions—while simultaneously shaping the collective evolving digital botanical that continues its growth, creating a fascinating tension between permanence and change where individual journeys crystallize into permanent beauty.`}
                 </p>
-                <p>
+                <p className="text-xs leading-relaxed">
                   The aesthetic language emerges from a generative morphological art engine trained on botanical datasets and responsive to verified conservation data, establishing direct connections between artistic evolution and ecological action.
                 </p>
               </>
@@ -168,17 +158,17 @@ export default function About() {
             
             {activeTab === "credits" && (
               <>
-                <div className="text-center mb-3 -mt-8 peridia-display-light">
-                  <div className="text-3xl leading-relaxed tracking-wider">Credits</div>
+                <div className="text-center mb-2 peridia-display-light">
+                  <div className="text-xl leading-relaxed tracking-wider">Credits</div>
                 </div>
-                <p>
+                <p className="text-xs leading-relaxed">
                   <span className="peridia-display-light">CROSSLUCID</span> {`is an artist collective (est. 2018) that engages in highly collaborative cross-disciplinary projects in co-evolution with technology. Their work and research converges around the exploration of the self as a network; speculative post-humanism; intimacy and the potential for pleasurable actualisation through the digital sphere, and the re-imagination of our alliances with technology seen as part of a sympoietic biosphere and universal post-material consciousness. Through explorations spanning filmmaking, poetic Artificial Intelligence, multi-layered techniques of collage, assemblage and experience-led interventions they create scenarios and build experiential formats that instigate prototyping and rehearsing potential futures and progressing 'metamodern' values. Their practice is process-driven with a set of enquiries and intuitive leaps of knowledge becoming long-term projects that materialise through ongoing iteration and experimentation to share findings with a deepening understanding.`}
                 </p>
-                <p className="text-left">
+                <p className="text-left text-xs leading-relaxed">
                   croslucid.zone<br />
                   create@crosslucid.zone
                 </p>
-                <p className="text-left">
+                <p className="text-left text-xs leading-relaxed">
                   ~~~<br />
                   <span className="peridia-display-light">The Way of Flowers</span> is a collaborative creation that brings together artists, technologists, environmental scientists, and conservationists from around the world.
                 </p>
@@ -187,10 +177,10 @@ export default function About() {
             
             {activeTab === "tnc" && (
               <>
-                <div className="text-center mb-3 -mt-8">
-                  <div className="text-3xl peridia-display-light tracking-wider">Disclaimer</div>
+                <div className="text-center mb-2">
+                  <div className="text-xl peridia-display-light tracking-wider">Disclaimer</div>
                 </div>
-                <p>
+                <p className="text-xs leading-relaxed">
                   1. DEFINITIONS AND GLOSSARY<br />
                   The following terms and definitions apply to this Agreement:<br />
                   1.1 Core Concepts<br />
@@ -209,8 +199,8 @@ export default function About() {
       </div>
 
       {/* Fixed Root Shape Area with glass effect */}
-      <div className="fixed -bottom-1 left-0 right-0 z-30 pt-4 scale-[1.0]">
-        <div className="max-w-md mx-auto px-4">
+      <div className="fixed -bottom-1 left-0 right-0 z-30 pt-2 scale-[1.1]">
+        <div className="max-w-sm mx-auto px-3">
           <RootShapeArea
             onSubstrate={handleSubstrateClick}
             onStory={handleStoryClick}

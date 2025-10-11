@@ -56,7 +56,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
       <div className="absolute inset-0 bg-black/40 z-5"></div>
       
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center -mt-4 lg:top-58 md:top-66 top-50 justify-center min-h-screen px-8">
+      <div className="relative z-10 flex flex-col items-center -mt-4 lg:top-58 md:top-66 top-60 justify-center min-h-screen px-8">
         {/* Logo with animation - perfectly centered on screen */}
         <motion.div 
           className="absolute top-4 left-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -69,13 +69,13 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
             alt="THE WAY OF FLOWERS"
             width={354}
             height={84}
-            className="w-auto h-auto max-w-[300px] sm:max-w-[354px]"
+            className="w-auto h-auto max-w-[200px] lg:max-w-[250px] md:max-w-[300px]"
             priority
             />
-            <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-10">
+            <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-6">
               <p>by  CROSSLUCID.</p>
             </div>
-            <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-40 -mb-80 scale-[0.8]">
+            <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full lg:mt-40 md:mt-40 mt-3 -mb-[60px] scale-[0.8] lg:scale-[0.6] md:scale-[0.6]">
               <p>a regenerative art project</p>
               <p>reimagining environmental art</p>
               <p>through living digital botanicals </p>
@@ -87,7 +87,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
         {/* Wallet Connect Button with animation */}
         <WalletConnectButton
           onSuccess={handleSuccess}
-          className="text-white text-lg hover:text-white lg:mt-[230px] md:mt-[180px] mt-[200px] animate-bounce font-light px-8 py-4 hover:bg-white/20 transition-colors bg-transparent"
+          className="text-white text-lg hover:text-white lg:mt-[280px] md:mt-[180px] mt-[100px] animate-bounce font-light px-8 py-4 hover:bg-white/20 transition-colors bg-transparent"
         >
           Tap to Start
         </WalletConnectButton>

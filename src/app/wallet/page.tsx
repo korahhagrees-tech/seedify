@@ -113,6 +113,7 @@ export default function WalletPage() {
   const handleLogout = () => {
     logout();
     setIsWalletModalOpen(false);
+    router.push("/");
   };
 
   const handleAddFunds = () => {
@@ -132,7 +133,7 @@ export default function WalletPage() {
 
   const handlePrivyHome = () => {
     // Handle privy home
-    console.log("Privy home");
+    router.push("/garden");
   };
 
   return (

@@ -197,7 +197,7 @@ export default function EcosystemProjectCard({
 
         {/* Card with cutout header */}
         <motion.div
-          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-12 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[540px] lg:h-[620px] md:h-[620px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
+          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-4 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[540px] lg:h-[620px] md:h-[620px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -250,6 +250,24 @@ export default function EcosystemProjectCard({
 
             {/* Oval mask container */}
             <div className="absolute left-1/2 top-16 -translate-x-1/2 -translate-y-1/2 w-[80%] h-34 rounded-[100px] overflow-hidden">
+              <Image
+                src={backgroundImageUrl}
+                alt="Header window"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+            <div className="absolute left-70 -top-4 -translate-x-1/2 -translate-y-1/2 w-[10%] h-10 rounded-[10px] overflow-hidden z-0">
+              <Image
+                src={backgroundImageUrl}
+                alt="Header window"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+            <div className="absolute left-34 -top-3 -translate-x-1/2 -translate-y-1/2 w-[10%] h-6 rounded-[10px] overflow-hidden z-0">
               <Image
                 src={backgroundImageUrl}
                 alt="Header window"

@@ -12,7 +12,7 @@ interface GardenHeaderProps {
 export default function GardenHeader({ onHomeClick, onProfileClick, logo }: GardenHeaderProps) {
   const router = useRouter();
   return (
-    <div className="flex items-center justify-between px-4 py-4">
+    <div className="flex items-center justify-between px-1 py-4">
       <button 
         onClick={onHomeClick ?? (() => router.push('/garden'))}
         className="w-14 h-14 flex-shrink-0 hover:opacity-80 transition-opacity"
@@ -26,7 +26,7 @@ export default function GardenHeader({ onHomeClick, onProfileClick, logo }: Gard
           alt="THE WAY OF FLOWERS"
           width={220}
           height={48}
-          className="w-full h-auto max-w-[220px]"
+          className="w-full h-auto max-w-[220px] scale-[0.9]"
         />
       </div>
 

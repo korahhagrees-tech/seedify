@@ -114,7 +114,7 @@ export default function RootShapeArea({
     <div className={`relative ${className}`}>
       {/* Translucent glass effect behind root shape */}
       {showGlassEffect && (
-        <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-t-3xl -top-8 z-0 scale-[0.9] mt-16" />
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-xs backdrop-opacity-70 rounded-t-3xl -top-8 z-0 scale-[1.0] mt-12" />
       )}
       
       <Image src={assets.seedRootWhite} alt="Root shape" width={344} height={250} className="w-full h-auto max-w-sm mx-auto relative z-10" />
@@ -125,7 +125,7 @@ export default function RootShapeArea({
         {showStoryButton ? (
           <button
             onClick={handleStory}
-            className="absolute left-1/2 -translate-x-1/2 top-[18%] px-4 py-1 rounded-full bg-gray-200 shadow peridia-display border-3 border-black/70 border-dotted"
+            className="absolute left-1/2 -translate-x-1/2 top-[18%] px-6 py-0 h-8 rounded-full bg-gray-200 shadow peridia-display border-3 border-black/70 border-dotted"
           >
             <span className="text-lg">Story</span>
           </button>
@@ -155,17 +155,18 @@ export default function RootShapeArea({
         {/* Wallet - left lobe */}
         <button
           onClick={handleWallet}
-          className="absolute left-[12%] bottom-[18%] px-4 py-1 text-xs rounded-full bg-gray-200 border-2 border-dotted scale-[1.3] border-black/70 shadow"
+          className="absolute left-[12%] bottom-[18%] px-4 py-1 h-6 text-xs rounded-full bg-gray-200 border-2 border-dotted scale-[1.3] border-black/70 shadow"
         >
-          Wallet
+          <span className="-mt-2">Wallet</span>
         </button>
         
         {/* Explore - base pod (bigger pill) */}
         <button
           onClick={handleExploreGarden}
-          className="absolute right-[8%] bottom-[16%] px-6 w-[35%] py-2 rounded-full bg-white/75 border-1 border-black/70 shadow scale-[1.0] peridia-display"
+          className="absolute right-[2%] bottom-[12%] px-6 w-[45%] h-14 py-1 rounded-full bg-white/75 border-1 border-black/70 shadow scale-[0.8] peridia-display"
         >
-          <span className="text-lg">Explore the Garden</span>
+          <span className="text-lg">Explore </span>
+          <p className="text-lg -mt-2">the Garden</p>
         </button>
       </div>
     </div>

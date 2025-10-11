@@ -5,6 +5,10 @@ import { useState } from "react";
 import Image from "next/image";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { assets } from "@/lib/assets";
+import WalletSelector from "./WalletSelector";
+import WalletConnectionModal from "./WalletConnectionModal";
+import AddFundsModal from "./AddFundsModal";
+import { getUserWallets, getWalletBalance, exportWalletPrivateKey, Wallet, formatWalletAddress } from "@/lib/wallet/walletUtils";
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -14,6 +18,7 @@ interface WalletModalProps {
   onExportKey: () => void;
   onSwitchWallet: () => void;
   onPrivyHome: () => void;
+  onWalletConnect?: () => void;
 }
 
 export default function WalletModal({
@@ -23,10 +28,15 @@ export default function WalletModal({
   onAddFunds,
   onExportKey,
   onSwitchWallet,
-  onPrivyHome
+  onPrivyHome,
+  onWalletConnect
 }: WalletModalProps) {
   const { user, walletAddress, balance } = useAuth();
   const [copied, setCopied] = useState(false);
+  const [showWalletSelector, setShowWalletSelector] = useState(false);
+  const [showWalletConnection, setShowWalletConnection] = useState(false);
+  const [showAddFunds, setShowAddFunds] = useState(false);
+  const [currentWallet, setCurrentWallet] = useState<Wallet | null>(null);
 
   const copyToClipboard = async () => {
     if (walletAddress) {
@@ -36,9 +46,49 @@ export default function WalletModal({
     }
   };
 
+  const handleSwitchWallet = () => {
+    setShowWalletSelector(true);
+  };
+
+  const handleWalletSelect = (wallet: Wallet) => {
+    setCurrentWallet(wallet);
+    // Update app state with selected wallet
+    // This would typically update your global state management
+    console.log('Selected wallet:', wallet);
+  };
+
+  const handleWalletConnect = () => {
+    setShowWalletConnection(true);
+  };
+
+  const handleAddFunds = () => {
+    setShowAddFunds(true);
+  };
+
+  const handleExportKey = async () => {
+    if (!currentWallet?.id) {
+      console.error('No wallet selected for export');
+      return;
+    }
+
+    try {
+      // For demo purposes, using a dummy public key
+      // In a real app, you'd generate or get the recipient's public key
+      const dummyPublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE..."; // This should be the actual recipient's public key
+      
+      const exportResult = await exportWalletPrivateKey(currentWallet.id, dummyPublicKey);
+      console.log('Wallet export result:', exportResult);
+      
+      // Handle the export result (show modal with encrypted key, etc.)
+      alert('Private key exported successfully. Check console for details.');
+    } catch (error) {
+      console.error('Failed to export wallet:', error);
+      alert('Failed to export private key. Please try again.');
+    }
+  };
+
   const formatAddress = (address: string) => {
-    if (!address) return '';
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+    return formatWalletAddress(address);
   };
 
   return (
@@ -97,7 +147,7 @@ export default function WalletModal({
                   <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
                   <span className="text-sm text-black">{user?.email || 'bilbo.bagz@shire.io'}</span>
                 <button
-                  onClick={onSwitchWallet}
+                  onClick={handleSwitchWallet}
                   className="w-full px-4 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3"
                 >
                   <span className="text-base scale-[1.05] font-light -mt-2">Change</span>
@@ -106,7 +156,7 @@ export default function WalletModal({
                 </div>
                 <div className="flex items-center gap-2 -mt-5">
                   <Image src={assets.key} alt="Key" width={16} height={16} className="w-4 h-4" />
-                  <button onClick={onExportKey} className="text-sm text-black hover:text-gray-900 transition-colors">
+                  <button onClick={handleExportKey} className="text-sm text-black hover:text-gray-900 transition-colors">
                     Export private key
                   </button>
                 </div>
@@ -123,7 +173,7 @@ export default function WalletModal({
                   </p>
                 </button>
                 <button
-                  onClick={onPrivyHome}
+                  onClick={handleWalletConnect}
                   className="w-[50%] ml-14 px-4 py-2 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors"
                 >
                   Wallet Connect
@@ -137,7 +187,7 @@ export default function WalletModal({
                   <span className="text-sm font-light text-nowrap">Log out</span>
                 </button>
                 <button
-                  onClick={onAddFunds}
+                  onClick={handleAddFunds}
                   className="w-48 px-4 py-2 ml-4 -mb-2 border-3 border-dotted border-gray-500 rounded-full text-2xl text-black peridia-display-light bg-white hover:bg-gray-50 transition-colors"
                 >
                   A<span className="favorit-mono font-light text-nowrap">dd</span> F<span className="favorit-mono font-light text-nowrap">unds</span>
@@ -147,6 +197,31 @@ export default function WalletModal({
           </motion.div>
         </>
       )}
+      
+      {/* Wallet Selector Modal */}
+      <WalletSelector
+        isOpen={showWalletSelector}
+        onClose={() => setShowWalletSelector(false)}
+        onWalletSelect={handleWalletSelect}
+        currentWalletId={currentWallet?.id}
+      />
+      
+      {/* Wallet Connection Modal */}
+      <WalletConnectionModal
+        isOpen={showWalletConnection}
+        onClose={() => setShowWalletConnection(false)}
+        onSuccess={() => {
+          // Handle successful connection
+          console.log('Wallet connected successfully');
+        }}
+      />
+      
+      {/* Add Funds Modal */}
+      <AddFundsModal
+        isOpen={showAddFunds}
+        onClose={() => setShowAddFunds(false)}
+        walletAddress={walletAddress || undefined}
+      />
     </AnimatePresence>
   );
 }
