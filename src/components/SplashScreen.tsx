@@ -87,7 +87,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
         {/* Wallet Connect Button with animation */}
         <WalletConnectButton
           onSuccess={handleSuccess}
-          className="text-white text-lg hover:text-white lg:mt-[230px] md:mt-[160px] mt-[30px] animate-bounce font-light px-8 py-4 hover:bg-white/20 transition-colors bg-transparent"
+          className="text-white text-lg hover:text-white lg:mt-[230px] md:mt-[200px] mt-[230px] animate-bounce font-light px-8 py-4 hover:bg-white/20 transition-colors bg-transparent"
         >
           Tap to Start
         </WalletConnectButton>
