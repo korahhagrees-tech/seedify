@@ -97,7 +97,7 @@ export default function PaymentModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 scale-[1.1]"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[1.05] md:scale-[1.05] scale-[0.98]"
           >
             {/* State 1: Disconnected Wallet */}
             {!authenticated ? (
@@ -197,7 +197,7 @@ export default function PaymentModal({
 
                 {/* Wallet Details Section */}
                 <div className="bg-white rounded-[40px] h-13 p-4 mb-6 border-1 border-black/60">
-                  <p className="text-sm scale-[0.7] -ml-13 mb-1 -mt-4 font-light text-black">YOUR WALLET</p>
+                  <p className="text-sm scale-[0.7] -ml-13 lg:mb-1 md:mb-1 mb-1 -mt-4 font-light text-black">YOUR WALLET</p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 -mt-2">
                       <span className="text-base font-mono text-black">
@@ -212,7 +212,7 @@ export default function PaymentModal({
                       {copied && <span className="text-xs text-green-600">Copied!</span>}
                     </div>
                     <div className="bg-gray-100 px-3 scale-[0.8] -mt-3 py-1 rounded-lg">
-                      <span className="text-base scale-[1.3] font-light text-[#64668B] -mt-4">{balance} ETH</span>
+                      <span className="text-base text-nowrap scale-[1.3] font-light text-[#64668B] -mt-4">{balance} ETH</span>
                     </div>
                   </div>
                 </div>
@@ -226,7 +226,7 @@ export default function PaymentModal({
                     onClick={() => {
                       router.push('/wallet');
                     }}
-                    className="w-48 px-8 py-0 -ml-4 mb-6 -mt-4 border-3 border-dotted border-gray-500 rounded-full text-xl text-black peridia-display-light bg-[#E2E3F0] hover:bg-gray-50 transition-colors scale-[0.7] text-nowrap"
+                    className="w-48 px-8 py-0 lg:-ml-1 md:-ml-1 -ml-6 mb-6 -mt-4 border-3 border-dotted border-gray-500 rounded-full text-xl text-black peridia-display-light bg-[#E2E3F0] hover:bg-gray-50 transition-colors scale-[0.7] text-nowrap"
                   >
                     A<span className="favorit-mono font-light text-nowrap">dd</span> F<span className="favorit-mono font-light text-nowrap">unds</span>
                   </button>
@@ -238,8 +238,8 @@ export default function PaymentModal({
                       <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
                       <span className="text-sm font-light text-nowrap">Log out</span>
                     </button>
-                  <button className="w-[50%] px-4 py-1 text-nowrap border-2 border-dotted border-black rounded-full text-sm ml-40 -mt-34 text-black bg-white hover:bg-gray-50 transition-colors scale-[0.8]">
-                    W<span className="favorit-mono font-light text-nowrap">allet</span> C<span className="favorit-mono font-light text-nowrap">onnect</span>
+                  <button className="w-[50%] px-4 py-1 text-nowrap border-2 border-dotted border-black rounded-full text-sm lg:ml-40 md:ml-40 ml-36 -mt-34 text-black bg-white hover:bg-gray-50 transition-colors scale-[0.8]">
+                    <span className="lg:ml-0 md:ml-0 -ml-2">W</span><span className="favorit-mono font-light text-nowrap">allet</span> C<span className="favorit-mono font-light text-nowrap">onnect</span>
                   </button>
                 </div>
 

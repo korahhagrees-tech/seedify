@@ -328,7 +328,7 @@ export default function EcosystemProjectCard({
         </motion.div>
 
         {/* Navigation circles - positioned on the card border */}
-        <div className="relative max-w-md mx-auto -mt-[640px] md:-mt-[580px] lg:-mt-[580px] z-20 flex justify-center items-center gap-8">
+        <div className="relative max-w-md mx-auto -mt-[560px] md:-mt-[580px] lg:-mt-[580px] z-20 flex justify-center items-center gap-8">
           {/* Back Arrow - left side */}
           <button onClick={() => router.back()}>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
