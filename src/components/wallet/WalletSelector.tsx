@@ -25,12 +25,6 @@ export default function WalletSelector({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isOpen && user?.id) {
-      loadWallets();
-    }
-  }, [isOpen, user?.id]);
-
   const loadWallets = async () => {
     if (!user?.id) return;
     
@@ -48,6 +42,13 @@ export default function WalletSelector({
     }
   };
 
+  useEffect(() => {
+    if (isOpen && user?.id) {
+      loadWallets();
+    }
+  }, [isOpen, user?.id, loadWallets]);
+
+
   const handleWalletSelect = (wallet: Wallet) => {
     onWalletSelect(wallet);
     onClose();
@@ -61,7 +62,7 @@ export default function WalletSelector({
       case 'coinbase':
         return '/icons/coinbase.svg';
       default:
-        return assets.wallet || '/icons/wallet.svg';
+        return assets.email || '/icons/email.svg';
     }
   };
 

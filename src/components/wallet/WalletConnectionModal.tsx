@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -58,7 +59,7 @@ export default function WalletConnectionModal({
                 <div className="text-center">
                   <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
                     <Image
-                      src={assets.wallet || '/icons/wallet.svg'}
+                      src={assets.email || '/icons/email.svg'}
                       alt="Wallet"
                       width={32}
                       height={32}

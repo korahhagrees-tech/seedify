@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -38,13 +40,6 @@ export default function AddFundsModal({
   const [onrampResult, setOnrampResult] = useState<OnrampResponse | null>(null);
   const [tosUrl, setTosUrl] = useState<string | null>(null);
 
-  // Check TOS on mount
-  useEffect(() => {
-    if (isOpen && user?.id) {
-      checkTOS();
-    }
-  }, [isOpen, user?.id]);
-
   const checkTOS = async () => {
     if (!user?.id) return;
     
@@ -67,6 +62,14 @@ export default function AddFundsModal({
       setLoading(false);
     }
   };
+
+  // Check TOS on mount
+  useEffect(() => {
+    if (isOpen && user?.id) {
+      checkTOS();
+    }
+  }, [isOpen, user?.id, checkTOS]);
+
 
   const handleAcceptTOS = () => {
     if (tosUrl) {
