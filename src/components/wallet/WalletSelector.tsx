@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { getUserWallets, getWalletDisplayName, formatWalletAddress, Wallet } from "@/lib/wallet/walletUtils";
@@ -25,7 +25,7 @@ export default function WalletSelector({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadWallets = async () => {
+  const loadWallets = useCallback(async () => {
     if (!user?.id) return;
     
     setLoading(true);
@@ -40,7 +40,7 @@ export default function WalletSelector({
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
 
   useEffect(() => {
     if (isOpen && user?.id) {

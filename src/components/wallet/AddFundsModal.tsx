@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { 
@@ -40,7 +40,7 @@ export default function AddFundsModal({
   const [onrampResult, setOnrampResult] = useState<OnrampResponse | null>(null);
   const [tosUrl, setTosUrl] = useState<string | null>(null);
 
-  const checkTOS = async () => {
+  const checkTOS = useCallback(async () => {
     if (!user?.id) return;
     
     setLoading(true);
@@ -61,7 +61,7 @@ export default function AddFundsModal({
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
 
   // Check TOS on mount
   useEffect(() => {
