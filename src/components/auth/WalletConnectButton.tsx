@@ -54,7 +54,7 @@ export default function WalletConnectButton({
         size="lg"
         onClick={handleClick}
         disabled={disableLogin}
-        className={`text-white text-lg font-medium px-8 py-4 hover:bg-white/20 transition-colors peridia-display ${className}`}
+        className={`text-white text-lg font-light px-8 py-4 hover:bg-white/20 transition-colors peridia-display ${className}`}
       >
         {children || (authenticated ? 'Connected' : 'Tap to Start')}
       </Button>
