@@ -13,7 +13,7 @@ interface SeedCardProps {
 
 export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
   const handleImageLoad = () => {
-    console.log('🌸 [IMAGE] Successfully loaded:', seed.seedImageUrl);
+    console.log("🌸 [IMAGE] Successfully loaded:", seed.seedImageUrl);
   };
 
   return (
@@ -26,7 +26,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
       {/* Main Seed Image Card - with external label */}
       <div className="relative mb-6">
         {/* Steward Label - positioned above the card */}
-        <motion.div 
+        <motion.div
           className="absolute -top-8 left-1/2 -translate-x-1/2 z-10"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -55,52 +55,75 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
         >
           {/* Seed Image - fills the entire rounded container */}
           <Image
-            src={seed.seedImageUrl}
-            alt={seed.name}
+            src={
+              seed.seedImageUrl && seed.seedImageUrl.length > 0
+                ? seed.seedImageUrl
+                : "/seeds/01__GRG.png"
+            }
+            alt=""
             fill
             className="object-cover"
             onLoad={handleImageLoad}
+            onError={(e) => {
+              console.log(
+                "🌸 [IMAGE] Error loading seed image, using placeholder"
+              );
+              const target = e.target as HTMLImageElement;
+              if (
+                target.src !== `${window.location.origin}/seeds/01__GRG.png`
+              ) {
+                target.src = "/seeds/01__GRG.png";
+              }
+            }}
             priority={index < 2}
           />
         </motion.div>
       </div>
-      
+
       {/* Info Buttons - Responsive grid */}
       <div className="grid grid-cols-3 gap-2 mt-6 mb-6">
         {/* Raised Button */}
-        <motion.div 
+        <motion.div
           className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
         >
-          <div className="text-[10px] font-light text-black mb-2 mt-1">RAISED</div>
+          <div className="text-[10px] font-light text-black mb-2 mt-1">
+            RAISED
+          </div>
           <div className="text-xl text-nowrap scale-[0.7] -ml-2 -mt-3 font-light text-black">
-            {parseFloat(seed.depositAmount).toFixed(4)} <span className="text-xl">ETH</span>
+            {parseFloat(seed.depositAmount).toFixed(4)}{" "}
+            <span className="text-xl">ETH</span>
           </div>
         </motion.div>
-        
+
         {/* Snap Price Button */}
-        <motion.div 
+        <motion.div
           className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
         >
-          <div className="text-[10px] font-light text-black mb-2 mt-1">SNAP PRICE</div>
+          <div className="text-[10px] font-light text-black mb-2 mt-1">
+            SNAP PRICE
+          </div>
           <div className="text-2xl text-nowrap scale-[0.7] -ml-2 -mt-3 font-light text-black">
-            {parseFloat(seed.snapshotPrice).toFixed(4)} <span className="text-xl">ETH</span>
+            {parseFloat(seed.snapshotPrice).toFixed(4)}{" "}
+            <span className="text-xl">ETH</span>
           </div>
         </motion.div>
-        
+
         {/* Evolutions Button */}
-        <motion.div 
+        <motion.div
           className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.3 }}
         >
-          <div className="text-[10px] font-light text-black mb-2 mt-1">EVOLUTIONS</div>
+          <div className="text-[10px] font-light text-black mb-2 mt-1">
+            EVOLUTIONS
+          </div>
           <div className="text-2xl text-nowrap scale-[0.9] -mt-3 font-light text-black">
             {seed.snapshotCount}
           </div>

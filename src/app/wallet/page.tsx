@@ -22,25 +22,27 @@ const mockTendedEcosystems = [
     date: "07/09/2025",
     seedEmblemUrl: assets.glowers,
     beneficiaryName: "Grgich Hills Estate Regenerative Sheep Grazing",
-    seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed1/seed.png",
+    seedImageUrl:
+      "https://wof-flourishing-backup.s3.amazonaws.com/seed1/seed.png",
     userContribution: "0.011 ETH",
     ecosystemCompost: "1.03 ETH",
     seedId: "3", // The seed ID that was tended
     seedSlug: "seed-003", // The seed's label/slug
-    beneficiarySlug: "grgich-hills-estate" // The beneficiary slug from that seed
+    beneficiarySlug: "grgich-hills-estate", // The beneficiary slug from that seed
   },
   {
-    id: "2", 
+    id: "2",
     date: "05/09/2025",
     seedEmblemUrl: assets.glowers,
     beneficiaryName: "Urban Garden Network Community Initiative",
-    seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed2/seed.png",
+    seedImageUrl:
+      "https://wof-flourishing-backup.s3.amazonaws.com/seed2/seed.png",
     userContribution: "0.025 ETH",
     ecosystemCompost: "3.44 ETH",
     seedId: "3", // The seed ID that was tended
     seedSlug: "seed-003", // The seed's label/slug
-    beneficiarySlug: "el-globo" // Another beneficiary from the same seed
-  }
+    beneficiarySlug: "el-globo", // Another beneficiary from the same seed
+  },
 ];
 
 // Mock data for steward seeds (displayed above tended ecosystems when user is a steward)
@@ -50,7 +52,8 @@ const mockStewardSeeds = [
     label: "SEED 001",
     name: "Way Of Flowers Seed 001",
     description: "Mock steward seed",
-    seedImageUrl: "https://wof-flourishing-backup.s3.amazonaws.com/seed1/seed.png",
+    seedImageUrl:
+      "https://wof-flourishing-backup.s3.amazonaws.com/seed1/seed.png",
     latestSnapshotUrl: null,
     snapshotCount: 43,
     owner: "0x1234567890abcdef1234567890abcdef12345678",
@@ -92,7 +95,9 @@ export default function WalletPage() {
 
   const handleReadMore = () => {
     // Route to seed detail page
-    router.push("https://docs.google.com/document/d/1iBUlTwKO1mCOiDqXqED3iQfNhyCCgSHmCfQ_M_qay4w/edit?tab=t.dxyiwoh1525s#heading=h.qepq5hiqw5yx");
+    router.push(
+      "https://docs.google.com/document/d/1iBUlTwKO1mCOiDqXqED3iQfNhyCCgSHmCfQ_M_qay4w/edit?tab=t.dxyiwoh1525s#heading=h.qepq5hiqw5yx"
+    );
     // router.push(`/seed/${ecosystemId}/ecosystem-detail`);
   };
 
@@ -137,18 +142,20 @@ export default function WalletPage() {
   };
 
   return (
-    <div className="min-h-screen w-full max-w-md mx-auto">
+    <div className="min-h-screen w-full max-w-md mx-auto overflow-x-hidden">
       {/* Header */}
       <GardenHeader />
 
       {/* Content Area - Tended Ecosystems List */}
-      <div className="px-4 pb-40">
+      <div className="px-4 pb-40 overflow-x-hidden">
         {/* Steward Seeds Section (always show; defaults to mock if backend empty) */}
         {stewardSeeds.length > 0 && (
           <div className="space-y-8 mb-10 scale-[0.95]">
             {stewardSeeds.map((seed, index) => {
               // Generate slug from seed label for routing
-              const seedSlug = seed.label?.replace(/\s+/g, "-").toLowerCase() || `seed-${seed.id}`;
+              const seedSlug =
+                seed.label?.replace(/\s+/g, "-").toLowerCase() ||
+                `seed-${seed.id}`;
               return (
                 <StewardSeedCard
                   key={seed.id}
@@ -200,7 +207,7 @@ export default function WalletPage() {
 
       {/* Fixed Root Shape Area */}
       <div className="fixed bottom-0 left-0 right-0 z-30">
-        <div className="max-w-md mx-auto w-full">
+        <div className="max-w-md mx-auto w-full px-4">
           <RootShapeArea
             onWallet={() => setIsWalletModalOpen(true)}
             showGlassEffect={false}

@@ -13,12 +13,12 @@ import { useRouter } from "next/navigation";
 import { formatArea } from "@/lib/utils";
 import PaymentModal from "@/components/PaymentModal";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { toast } from 'sonner';
-import { 
-  SnapshotMintResponse, 
-  WebhookData, 
+import { toast } from "sonner";
+import {
+  SnapshotMintResponse,
+  WebhookData,
   retryWebhook,
-  checkPendingRetries 
+  checkPendingRetries,
 } from "@/lib/utils/snapshotMinting";
 import { useWriteTransaction } from "@/lib/api/hooks/useWriteTransaction";
 
@@ -60,15 +60,16 @@ export default function EcosystemProjectCard({
   const [showExtended, setShowExtended] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
-  const [paymentAmount, setPaymentAmount] = useState<string>(''); // Amount user entered in modal
+  const [paymentAmount, setPaymentAmount] = useState<string>(""); // Amount user entered in modal
   const router = useRouter();
   const { walletAddress } = useAuth();
   const { execute: executeTransaction } = useWriteTransaction();
-  
+
   // Create display subtitle with location and area
-  const displaySubtitle = location && area 
-    ? `${location}\n${formatArea(area)}`
-    : location || subtitle;
+  const displaySubtitle =
+    location && area
+      ? `${location}\n${formatArea(area)}`
+      : location || subtitle;
 
   // Check for pending webhook retries on component mount
   useState(() => {
@@ -79,7 +80,7 @@ export default function EcosystemProjectCard({
   const handlePaymentConfirm = async (amount: string) => {
     setPaymentAmount(amount);
     setShowPaymentModal(false);
-    
+
     // Start minting after payment modal closes
     await handleMintSnapshot(amount);
   };
@@ -87,7 +88,9 @@ export default function EcosystemProjectCard({
   // Handle snapshot minting
   const handleMintSnapshot = async (amountInEth: string) => {
     if (!seedId || beneficiaryIndex === undefined || !walletAddress) {
-      toast.error('Cannot mint snapshot', { description: 'Missing required data. Please try again.' });
+      toast.error("Cannot mint snapshot", {
+        description: "Missing required data. Please try again.",
+      });
       return;
     }
 
@@ -95,17 +98,24 @@ export default function EcosystemProjectCard({
 
     try {
       // Step 1: Get transaction data from backend with beneficiary index
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
-      const response = await fetch(`${apiBaseUrl}/write/snapshots/mint/${seedId}?beneficiaryIndex=${beneficiaryIndex}`);
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api";
+      const response = await fetch(
+        `${apiBaseUrl}/write/snapshots/mint/${seedId}?beneficiaryIndex=${beneficiaryIndex}`
+      );
       const mintData: SnapshotMintResponse = await response.json();
 
       if (!mintData.success) {
-        toast.error('Failed to prepare snapshot', { description: 'Please try again.' });
+        toast.error("Failed to prepare snapshot", {
+          description: "Please try again.",
+        });
         setIsMinting(false);
         return;
       }
-      
-      toast.success('Transaction prepared', { description: 'Confirm the transaction in your wallet...' });
+
+      toast.success("Transaction prepared", {
+        description: "Confirm the transaction in your wallet...",
+      });
 
       // Convert user's ETH amount to wei
       const amountInWei = (parseFloat(amountInEth) * 1e18).toString();
@@ -113,31 +123,31 @@ export default function EcosystemProjectCard({
       // Step 2: Execute contract transaction using wagmi writeContract with USER'S AMOUNT
       const txHash = await executeTransaction({
         contractAddress: mintData.data.contractAddress,
-        functionName: 'mintSnapshot',
+        functionName: "mintSnapshot",
         args: [
           mintData.data.args.seedId,
           beneficiaryIndex,
           mintData.data.processId,
           walletAddress,
-          mintData.data.args.royaltyRecipient
+          mintData.data.args.royaltyRecipient,
         ],
         value: amountInWei, // USE USER'S AMOUNT, NOT BACKEND VALUE
         description: mintData.data.description,
         abi: [
           {
-            type: 'function',
-            name: 'mintSnapshot',
-            stateMutability: 'payable',
+            type: "function",
+            name: "mintSnapshot",
+            stateMutability: "payable",
             inputs: [
-              { name: 'seedId', type: 'uint256' },
-              { name: 'beneficiaryIndex', type: 'uint256' },
-              { name: 'process', type: 'string' },
-              { name: 'to', type: 'address' },
-              { name: 'royaltyRecipient', type: 'address' }
+              { name: "seedId", type: "uint256" },
+              { name: "beneficiaryIndex", type: "uint256" },
+              { name: "process", type: "string" },
+              { name: "to", type: "address" },
+              { name: "royaltyRecipient", type: "address" },
             ],
-            outputs: [{ name: '', type: 'uint256' }]
-          }
-        ]
+            outputs: [{ name: "", type: "uint256" }],
+          },
+        ],
       } as any);
 
       // Step 4: Prepare webhook data using backend-provided data
@@ -145,16 +155,18 @@ export default function EcosystemProjectCard({
         contractAddress: mintData.data.contractAddress,
         seedId: mintData.data.args.seedId,
         snapshotId: mintData.data.snapshotId,
-        beneficiaryCode: mintData.data.beneficiaryCode || beneficiaryCode || '',
+        beneficiaryCode: mintData.data.beneficiaryCode || beneficiaryCode || "",
         beneficiaryDistribution: mintData.data.beneficiaryDistribution || 0,
         creator: walletAddress,
         txHash: txHash,
         timestamp: Math.floor(Date.now() / 1000),
         blockNumber: mintData.data.blockNumber,
-        processId: mintData.data.processId
+        processId: mintData.data.processId,
       };
 
-      toast.success('Transaction submitted', { description: 'Processing snapshot...' });
+      toast.success("Transaction submitted", {
+        description: "Processing snapshot...",
+      });
 
       // Step 5: Call webhook with retry logic
       retryWebhook(
@@ -162,18 +174,23 @@ export default function EcosystemProjectCard({
         0,
         () => {
           setIsMinting(false);
-          toast.success('Snapshot minted successfully!', { description: 'Your ecosystem has been tended.' });
+          toast.success("Snapshot minted successfully!", {
+            description: "Your ecosystem has been tended.",
+          });
         },
         () => {
           setIsMinting(false);
-          toast.error('Snapshot processing failed', { description: 'Please try again.' });
+          toast.error("Snapshot processing failed", {
+            description: "Please try again.",
+          });
         }
       );
-
     } catch (error) {
       setIsMinting(false);
-      toast.error('Snapshot minting failed', { description: 'Please try again.' });
-      console.error('Minting error:', error);
+      toast.error("Snapshot minting failed", {
+        description: "Please try again.",
+      });
+      console.error("Minting error:", error);
     }
   };
 
@@ -181,11 +198,24 @@ export default function EcosystemProjectCard({
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Background image */}
       <Image
-        src={backgroundImageUrl}
-        alt="Background"
+        src={
+          backgroundImageUrl && backgroundImageUrl.length > 0
+            ? backgroundImageUrl
+            : "/seeds/01__GRG.png"
+        }
+        alt=""
         fill
         className="object-cover"
         priority
+        onError={(e) => {
+          console.log(
+            "🌸 [IMAGE] Error loading background image, using placeholder"
+          );
+          const target = e.target as HTMLImageElement;
+          if (target.src !== `${window.location.origin}/seeds/01__GRG.png`) {
+            target.src = "/seeds/01__GRG.png";
+          }
+        }}
       />
 
       {/* Foreground content */}
@@ -201,14 +231,25 @@ export default function EcosystemProjectCard({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-
           {/* Division bar with background image */}
           <div className="relative h-4 -bottom-18 bg-white">
             <Image
-              src={backgroundImageUrl}
-              alt="Division bar"
+              src={
+                backgroundImageUrl && backgroundImageUrl.length > 0
+                  ? backgroundImageUrl
+                  : "/seeds/01__GRG.png"
+              }
+              alt=""
               fill
               className="object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                if (
+                  target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                ) {
+                  target.src = "/seeds/01__GRG.png";
+                }
+              }}
             />
           </div>
 
@@ -217,63 +258,147 @@ export default function EcosystemProjectCard({
             {/* Four small circles around the oval */}
             <div className="absolute top-8 left-6 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full overflow-hidden">
               <Image
-                src={backgroundImageUrl}
-                alt="Circle 1"
+                src={
+                  backgroundImageUrl && backgroundImageUrl.length > 0
+                    ? backgroundImageUrl
+                    : "/seeds/01__GRG.png"
+                }
+                alt=""
                 fill
                 className="object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (
+                    target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                  ) {
+                    target.src = "/seeds/01__GRG.png";
+                  }
+                }}
               />
             </div>
             <div className="absolute top-24 left-3 -translate-y-1/2 w-6 h-6 rounded-full overflow-hidden">
               <Image
-                src={backgroundImageUrl}
-                alt="Circle 2"
+                src={
+                  backgroundImageUrl && backgroundImageUrl.length > 0
+                    ? backgroundImageUrl
+                    : "/seeds/01__GRG.png"
+                }
+                alt=""
                 fill
                 className="object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (
+                    target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                  ) {
+                    target.src = "/seeds/01__GRG.png";
+                  }
+                }}
               />
             </div>
             <div className="absolute top-8 right-3 -translate-y-1/2 w-6 h-6 rounded-full overflow-hidden">
               <Image
-                src={backgroundImageUrl}
-                alt="Circle 3"
+                src={
+                  backgroundImageUrl && backgroundImageUrl.length > 0
+                    ? backgroundImageUrl
+                    : "/seeds/01__GRG.png"
+                }
+                alt=""
                 fill
                 className="object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (
+                    target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                  ) {
+                    target.src = "/seeds/01__GRG.png";
+                  }
+                }}
               />
             </div>
             <div className="absolute bottom-4 right-0 -translate-x-1/2 translate-y-1/2 w-6 h-6 rounded-full overflow-hidden">
               <Image
-                src={backgroundImageUrl}
-                alt="Circle 4"
+                src={
+                  backgroundImageUrl && backgroundImageUrl.length > 0
+                    ? backgroundImageUrl
+                    : "/seeds/01__GRG.png"
+                }
+                alt=""
                 fill
                 className="object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (
+                    target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                  ) {
+                    target.src = "/seeds/01__GRG.png";
+                  }
+                }}
               />
             </div>
 
             {/* Oval mask container */}
             <div className="absolute left-1/2 top-16 -translate-x-1/2 -translate-y-1/2 w-[80%] h-34 rounded-[100px] overflow-hidden">
               <Image
-                src={backgroundImageUrl}
-                alt="Header window"
+                src={
+                  backgroundImageUrl && backgroundImageUrl.length > 0
+                    ? backgroundImageUrl
+                    : "/seeds/01__GRG.png"
+                }
+                alt=""
                 fill
                 className="object-cover"
                 priority
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (
+                    target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                  ) {
+                    target.src = "/seeds/01__GRG.png";
+                  }
+                }}
               />
             </div>
             <div className="absolute left-70 -top-4 -translate-x-1/2 -translate-y-1/2 w-[10%] h-10 rounded-[10px] overflow-hidden z-0">
               <Image
-                src={backgroundImageUrl}
-                alt="Header window"
+                src={
+                  backgroundImageUrl && backgroundImageUrl.length > 0
+                    ? backgroundImageUrl
+                    : "/seeds/01__GRG.png"
+                }
+                alt=""
                 fill
                 className="object-cover"
                 priority
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (
+                    target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                  ) {
+                    target.src = "/seeds/01__GRG.png";
+                  }
+                }}
               />
             </div>
             <div className="absolute left-34 -top-3 -translate-x-1/2 -translate-y-1/2 w-[10%] h-6 rounded-[10px] overflow-hidden z-0">
               <Image
-                src={backgroundImageUrl}
-                alt="Header window"
+                src={
+                  backgroundImageUrl && backgroundImageUrl.length > 0
+                    ? backgroundImageUrl
+                    : "/seeds/01__GRG.png"
+                }
+                alt=""
                 fill
                 className="object-cover"
                 priority
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (
+                    target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                  ) {
+                    target.src = "/seeds/01__GRG.png";
+                  }
+                }}
               />
             </div>
           </div>
@@ -289,21 +414,23 @@ export default function EcosystemProjectCard({
               </div>
             )}
 
-            <div className="relative mt-4 text-[13px] leading-relaxed text-black/90 h-86 overflow-y-auto pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div
+              className="relative mt-4 text-[13px] leading-relaxed text-black/90 h-86 overflow-y-auto pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              data-main-content
+            >
               {/* Short text - always visible */}
-              <div className="mb-54 whitespace-pre-line">
-                {shortText}
-              </div>
-              
+              <div className="mb-54 whitespace-pre-line">{shortText}</div>
+
               {/* Extended text - toggles on/off */}
               <AnimatePresence>
                 {showExtended && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
+                    animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden whitespace-pre-line -mt-18 mb-54"
+                    data-expanded-content
                   >
                     {extendedText}
                   </motion.div>
@@ -338,8 +465,50 @@ export default function EcosystemProjectCard({
             <div className="-rotate-90 scale-[1.8]">
               <Switch
                 checked={!showExtended}
-                onCheckedChange={(checked) => setShowExtended(!checked)}
-                className="border-1 border-black/40 data-[state=checked]:bg-white data-[state=unchecked]:bg-gray-400 [&>span]:border-1 [&>span]:scale-[0.9] [&>span]:data-[state=checked]:bg-gray-400 [&>span]:data-[state=unchecked]:bg-white"
+                onCheckedChange={(checked) => {
+                  setShowExtended(!checked);
+                  // Scroll animation to show the expanded content
+                  setTimeout(() => {
+                    if (!checked) {
+                      // Content is expanding - scroll to show the new content
+                      const expandedContent = document.querySelector(
+                        "[data-expanded-content]"
+                      );
+                      if (expandedContent) {
+                        expandedContent.scrollIntoView({
+                          behavior: "smooth",
+                          block: "center",
+                          inline: "nearest",
+                        });
+                      } else {
+                        // Fallback: scroll down to show more content
+                        window.scrollBy({
+                          top: 300,
+                          behavior: "smooth",
+                        });
+                      }
+                    } else {
+                      // Content is collapsing - scroll back up to the main content
+                      const mainContent = document.querySelector(
+                        "[data-main-content]"
+                      );
+                      if (mainContent) {
+                        mainContent.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
+                          inline: "nearest",
+                        });
+                      } else {
+                        // Fallback: scroll up
+                        window.scrollBy({
+                          top: -200,
+                          behavior: "smooth",
+                        });
+                      }
+                    }
+                  }, 200); // Slightly longer delay to let content fully expand
+                }}
+                className="border-1 border-black/40 data-[state=checked]:bg-white data-[state=unchecked]:bg-[#D3C9DE] [&>span]:border-1 [&>span]:scale-[0.9] [&>span]:data-[state=checked]:bg-[#D3C9DE] [&>span]:data-[state=unchecked]:bg-white"
               />
             </div>
           </div>
@@ -357,7 +526,21 @@ export default function EcosystemProjectCard({
           {/* Seed emblem - right side */}
           <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-md">
             {seedEmblemUrl && (
-              <Image src={seedEmblemUrl || assets.glowers} alt="Seed emblem" width={60} height={60} className="rounded-full" />
+              <Image
+                src={
+                  seedEmblemUrl && seedEmblemUrl.length > 0
+                    ? seedEmblemUrl
+                    : assets.glowers
+                }
+                alt=""
+                width={60}
+                height={60}
+                className="rounded-full"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = assets.glowers;
+                }}
+              />
             )}
           </div>
         </div>

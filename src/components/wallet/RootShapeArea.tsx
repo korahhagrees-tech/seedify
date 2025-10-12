@@ -22,7 +22,7 @@ export default function RootShapeArea({
   onExploreGarden,
   className = "",
   showGlassEffect = false,
-  showStoryButton = true
+  showStoryButton = true,
 }: RootShapeAreaProps) {
   const router = useRouter();
 
@@ -35,10 +35,10 @@ export default function RootShapeArea({
 
   const getCookie = (name: string): string | null => {
     const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
+    const ca = document.cookie.split(";");
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      while (c.charAt(0) === " ") c = c.substring(1, c.length);
       if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
@@ -46,27 +46,27 @@ export default function RootShapeArea({
 
   // Cookie-based link rotation system
   const getCurrentLinkIndex = (): number => {
-    const lastVisitTimeKey = 'readMoreLastVisit';
-    const linkIndexKey = 'readMoreCurrentIndex';
-    
+    const lastVisitTimeKey = "readMoreLastVisit";
+    const linkIndexKey = "readMoreCurrentIndex";
+
     const lastVisit = getCookie(lastVisitTimeKey);
     const currentIndex = getCookie(linkIndexKey);
-    
+
     const now = Date.now();
     const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-    
+
     // If no previous visit or more than 24 hours have passed, get a new link
-    if (!lastVisit || (now - parseInt(lastVisit)) > twentyFourHours) {
+    if (!lastVisit || now - parseInt(lastVisit) > twentyFourHours) {
       // Get a new random index
       const newIndex = Math.floor(Math.random() * 30); // We have 30 links
-      
+
       // Update cookies with 1 day expiration
       setCookie(lastVisitTimeKey, now.toString(), 1);
       setCookie(linkIndexKey, newIndex.toString(), 1);
-      
+
       return newIndex;
     }
-    
+
     // Return the existing index if within 24 hours
     return currentIndex ? parseInt(currentIndex) : 0;
   };
@@ -74,9 +74,9 @@ export default function RootShapeArea({
   const handleDashedCircleClick = () => {
     const linkIndex = getCurrentLinkIndex();
     const url = getReadMoreLinkByIndex(linkIndex);
-    
+
     // Open in new tab
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   const handleSubstrate = () => {
@@ -116,8 +116,14 @@ export default function RootShapeArea({
       {showGlassEffect && (
         <div className="absolute inset-0 bg-white/80 backdrop-blur-xs backdrop-opacity-70 rounded-t-3xl -top-8 z-0 scale-[1.0] mt-12" />
       )}
-      
-      <Image src={assets.seedRootWhite} alt="Root shape" width={344} height={250} className="w-full h-auto max-w-sm mx-auto relative z-10" />
+
+      <Image
+        src={assets.seedRootWhite}
+        alt="Root shape"
+        width={344}
+        height={250}
+        className="w-full h-auto max-w-sm mx-auto relative z-10"
+      />
 
       {/* Precisely positioned buttons over root shape */}
       <div className="absolute inset-0 z-20">
@@ -130,7 +136,7 @@ export default function RootShapeArea({
             <span className="text-lg">Story</span>
           </button>
         ) : (
-          <button 
+          <button
             onClick={handleDashedCircleClick}
             className="absolute left-1/2 -translate-x-1/2 top-[18%] hover:scale-110 transition-transform cursor-pointer"
           >
@@ -143,7 +149,7 @@ export default function RootShapeArea({
             />
           </button>
         )}
-        
+
         {/* Substrate - mid bridge */}
         <button
           onClick={handleSubstrate}
@@ -151,7 +157,7 @@ export default function RootShapeArea({
         >
           <span className="text-lg">Substrate</span>
         </button>
-        
+
         {/* Wallet - left lobe */}
         <button
           onClick={handleWallet}
@@ -159,11 +165,11 @@ export default function RootShapeArea({
         >
           <span className="-mt-2">Wallet</span>
         </button>
-        
+
         {/* Explore - base pod (bigger pill) */}
         <button
           onClick={handleExploreGarden}
-          className="absolute right-[2%] bottom-[12%] px-6 w-[45%] h-14 py-1 rounded-full bg-white/75 border-1 border-black/70 shadow scale-[0.8] peridia-display"
+          className="absolute right-[8%] bottom-[12%] px-4 w-[42%] h-14 py-1 rounded-full bg-white/75 border-1 border-black/70 shadow scale-[0.8] peridia-display"
         >
           <span className="text-lg">Explore </span>
           <p className="text-lg -mt-2">the Garden</p>

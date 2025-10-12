@@ -32,40 +32,46 @@ export default function WayOfFlowersCard({
   onTryAgainClick,
 }: WayOfFlowersCardProps) {
   const [showButtons, setShowButtons] = useState(false);
-  const [transactionStatus, setTransactionStatus] = useState<'pending' | 'success' | 'failed'>('pending');
+  const [transactionStatus, setTransactionStatus] = useState<
+    "pending" | "success" | "failed"
+  >("pending");
   const [txHash, setTxHash] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   // Get transaction hash from URL params
   useEffect(() => {
-    const hash = searchParams.get('txHash');
+    const hash = searchParams.get("txHash");
     if (hash) {
       setTxHash(hash);
     }
   }, [searchParams]);
 
   // Use wagmi to wait for transaction
-  const { data: receipt, isLoading, isError } = useWaitForTransactionReceipt({
+  const {
+    data: receipt,
+    isLoading,
+    isError,
+  } = useWaitForTransactionReceipt({
     hash: txHash as `0x${string}`,
     query: {
       enabled: !!txHash,
       retry: 10,
       retryDelay: 4000, // 4 seconds between retries
-    }
+    },
   });
 
   // Handle transaction status changes
   useEffect(() => {
     if (receipt) {
-      setTransactionStatus('success');
+      setTransactionStatus("success");
       setShowButtons(true);
     } else if (isError) {
-      setTransactionStatus('failed');
+      setTransactionStatus("failed");
       setShowButtons(true);
     } else if (!isLoading && txHash) {
       // If we have a hash but no receipt and not loading, wait for timeout
       const timer = setTimeout(() => {
-        setTransactionStatus('failed');
+        setTransactionStatus("failed");
         setShowButtons(true);
       }, 40000);
 
@@ -78,7 +84,7 @@ export default function WayOfFlowersCard({
     if (!txHash) {
       const timer = setTimeout(() => {
         setShowButtons(true);
-        setTransactionStatus('success');
+        setTransactionStatus("success");
       }, 40000);
 
       return () => clearTimeout(timer);
@@ -89,13 +95,26 @@ export default function WayOfFlowersCard({
     <div className="relative min-h-screen w-full overflow-hidden bg-black/50 backdrop-blur-lg">
       {/* Background image with light glass transparency (no heavy blur) */}
       <Image
-        src={backgroundImageUrl}
-        alt="Background"
+        src={
+          backgroundImageUrl && backgroundImageUrl.length > 0
+            ? backgroundImageUrl
+            : "/seeds/01__GRG.png"
+        }
+        alt=""
         fill
         className="object-cover"
         priority
+        onError={(e) => {
+          console.log(
+            "🌸 [IMAGE] Error loading WayOfFlowers background image, using placeholder"
+          );
+          const target = e.target as HTMLImageElement;
+          if (target.src !== `${window.location.origin}/seeds/01__GRG.png`) {
+            target.src = "/seeds/01__GRG.png";
+          }
+        }}
       />
-      
+
       {/* Transparent glass overlay (subtle tint) */}
       <div className="absolute inset-0 bg-white/70" />
 
@@ -114,7 +133,7 @@ export default function WayOfFlowersCard({
           </div>
 
           {/* Main card */}
-          <motion.div 
+          <motion.div
             className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-4 border-dotted border-white/70 h-[750px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -146,11 +165,27 @@ export default function WayOfFlowersCard({
                 {/* Seed emblem */}
                 <div className="mb-6 flex justify-center -mt-12">
                   <Image
-                    src={seedEmblemUrl}
-                    alt="Seed emblem"
+                    src={
+                      seedEmblemUrl && seedEmblemUrl.length > 0
+                        ? seedEmblemUrl
+                        : "/seeds/01__GRG.png"
+                    }
+                    alt=""
                     width={60}
                     height={60}
                     className="w-37 h-37 -mt-14 mb-6"
+                    onError={(e) => {
+                      console.log(
+                        "🌸 [IMAGE] Error loading seed emblem, using placeholder"
+                      );
+                      const target = e.target as HTMLImageElement;
+                      if (
+                        target.src !==
+                        `${window.location.origin}/seeds/01__GRG.png`
+                      ) {
+                        target.src = "/seeds/01__GRG.png";
+                      }
+                    }}
                   />
                 </div>
 
@@ -165,7 +200,10 @@ export default function WayOfFlowersCard({
               {/* Main quote section (no background, over SVG shape) */}
               <div className="mb-8 -px-12 lg:scale-[0.98] md:scale-[0.95] scale-[0.98] lg:mt-1 -mt-2">
                 <p className="text-black text-left lg:text-[17px] md:text-[17px] text-[16px] leading-tight peridia-display-light">
-                  {`"${mainQuote}"`} <span className="text-black/70 mt-3 text-xs favorit-mono font-bold text-center">{author}</span>
+                  {`"${mainQuote}"`}{" "}
+                  <span className="text-black/70 mt-3 text-xs favorit-mono font-bold text-center">
+                    {author}
+                  </span>
                 </p>
               </div>
 
@@ -184,7 +222,12 @@ export default function WayOfFlowersCard({
                     ease: "easeInOut",
                   }}
                 >
-                  <p className="mt-26 mb-9 peridia-display">B<span className="mt-3 favorit-mono font-bold text-center">looming</span></p>
+                  <p className="mt-26 mb-9 peridia-display">
+                    B
+                    <span className="mt-3 favorit-mono font-bold text-center">
+                      looming
+                    </span>
+                  </p>
                 </motion.div>
 
                 {/* Buttons based on transaction status */}
@@ -199,21 +242,23 @@ export default function WayOfFlowersCard({
                       }}
                       className="flex flex-col items-center gap-3"
                     >
-                      {transactionStatus === 'success' && (
+                      {transactionStatus === "success" && (
                         <>
                           <Button
                             onClick={onExploreClick}
                             className="w-[160px] rounded-full border border-white/70 text-black text-xl scale-[0.85] ml-4 py-2 bg-white hover:bg-white/20 transition-all duration-300"
                           >
-                            <span className="peridia-display">E<span className="favorit-mono">xplore</span></span>
+                            <span className="peridia-display">
+                              E<span className="favorit-mono">xplore</span>
+                            </span>
                           </Button>
                         </>
                       )}
-                      
-                      {transactionStatus === 'failed' && (
+
+                      {transactionStatus === "failed" && (
                         <Button
-                        onClick={onTryAgainClick}
-                        className="w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
+                          onClick={onTryAgainClick}
+                          className="w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
                         >
                           Try Again
                         </Button>
@@ -224,15 +269,17 @@ export default function WayOfFlowersCard({
               </div>
             </div>
           </motion.div>
-            {txHash && (
-              <Button
-                variant="ghost"
-                onClick={() => window.open(`https://basescan.org/tx/${txHash}`, '_blank')}
-                className="text-white justify-center items-center mt-2 ml-24 underline hover:text-white/80 transition-colors text-sm"
-              >
-                View on Explorer
-              </Button>
-            )}
+          {txHash && (
+            <Button
+              variant="ghost"
+              onClick={() =>
+                window.open(`https://basescan.org/tx/${txHash}`, "_blank")
+              }
+              className="text-white justify-center items-center mt-2 ml-24 underline hover:text-white/80 transition-colors text-sm"
+            >
+              View on Explorer
+            </Button>
+          )}
         </div>
       </div>
     </div>

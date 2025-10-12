@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/ban-types */
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { assets } from "@/lib/assets";
@@ -34,7 +35,7 @@ export default function TendedEcosystem({
   index = 0,
   beneficiarySlug,
   seedId,
-  seedSlug
+  seedSlug,
 }: TendedEcosystemProps) {
   const router = useRouter();
 
@@ -42,29 +43,35 @@ export default function TendedEcosystem({
   const handleTendAgain = () => {
     if (seedId && seedSlug && beneficiarySlug) {
       const url = `/seed/${seedId}/${seedSlug}/ecosystem/${beneficiarySlug}`;
-      console.log('Routing to:', url); // Debug log
+      console.log("Routing to:", url); // Debug log
       router.push(url);
     } else {
-      console.error('Missing routing data:', { seedId, seedSlug, beneficiarySlug });
+      console.error("Missing routing data:", {
+        seedId,
+        seedSlug,
+        beneficiarySlug,
+      });
       onTendAgain(); // Fallback to original handler
     }
   };
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="mb-6"
-      >
+    >
       {/* Date */}
       <div className="text-sm text-gray-600 -mb-1 ml-14">{date}</div>
-      
+
       {/* Emblem + Gradient Bar (conjoined) */}
-      <div className="relative mb-4">
+      <div className="relative mb-4 overflow-hidden">
         {/* Gradient bar */}
-        <div className="w-[495px] rounded-full py-1 pl-16 pr-4 -ml-8 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.8]">
-          <span className="text-sm text-gray-700 text-nowrap -ml-4">{beneficiaryName}</span>
+        <div className="w-full max-w-[320px] rounded-full py-1 pl-16 pr-4 ml-2 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.8]">
+          <span className="text-sm text-gray-700 truncate block">
+            {beneficiaryName}
+          </span>
         </div>
         {/* Emblem overlapping on the bar */}
         <div className="absolute left-0 top-2 -translate-y-1/2 w-12 h-12 rounded-full border-3 border-dotted border-gray-500 bg-white flex items-center justify-center shadow">
@@ -78,17 +85,31 @@ export default function TendedEcosystem({
         </div>
       </div>
 
-
       {/* Main Card */}
       <div className="p-6">
         <div className="flex gap-6">
           {/* Left Side - Large Image */}
           <div className="relative w-54 h-54 rounded-[50px] overflow-hidden flex-shrink-0">
             <Image
-              src={seedImageUrl}
-              alt="Seed image"
+              src={
+                seedImageUrl && seedImageUrl.length > 0
+                  ? seedImageUrl
+                  : "/seeds/01__GRG.png"
+              }
+              alt=""
               fill
               className="object-cover"
+              onError={(e) => {
+                console.log(
+                  "🌸 [IMAGE] Error loading tended ecosystem image, using placeholder"
+                );
+                const target = e.target as HTMLImageElement;
+                if (
+                  target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                ) {
+                  target.src = "/seeds/01__GRG.png";
+                }
+              }}
             />
             {/* Share Icon */}
             <button
@@ -109,13 +130,21 @@ export default function TendedEcosystem({
           <div className="flex-1 space-y-4">
             {/* Contribution Details */}
             <div className="space-y-1">
-              <div className="text-xs text-gray-500 uppercase">YOUR CONTRIBUTION</div>
-              <div className="text-lg text-center text-gray-900">{userContribution}</div>
+              <div className="text-xs text-gray-500 uppercase">
+                YOUR CONTRIBUTION
+              </div>
+              <div className="text-lg text-center text-gray-900">
+                {userContribution}
+              </div>
             </div>
 
             <div className="space-y-1">
-              <div className="text-xs text-gray-500 uppercase">ECOSYSTEM COMPOST</div>
-              <div className="text-lg text-center text-gray-900">{ecosystemCompost}</div>
+              <div className="text-xs text-gray-500 uppercase">
+                ECOSYSTEM COMPOST
+              </div>
+              <div className="text-lg text-center text-gray-900">
+                {ecosystemCompost}
+              </div>
             </div>
 
             {/* Action Buttons - Stacked vertically */}

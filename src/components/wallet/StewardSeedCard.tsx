@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/ban-types */
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Seed } from "@/types/seed";
@@ -13,7 +14,12 @@ interface StewardSeedCardProps {
   index?: number;
 }
 
-export default function StewardSeedCard({ seed, onTendSeed, onExplore, index = 0 }: StewardSeedCardProps) {
+export default function StewardSeedCard({
+  seed,
+  onTendSeed,
+  onExplore,
+  index = 0,
+}: StewardSeedCardProps) {
   const [tendedEcosystems] = useState(mockTendedEcosystems);
   return (
     <motion.div
@@ -23,15 +29,23 @@ export default function StewardSeedCard({ seed, onTendSeed, onExplore, index = 0
       className="mb-6"
     >
       {/* Gradient bar with emblem and steward message */}
-        <div className="text-xs text-gray-800 text-center -mb-1 -mt-2">YOUR TENDED ECOSYSTEM</div>
-      <div className="relative mb-4">
-        <div className="w-[665px] rounded-full py-3 pl-20 pr-6 -ml-28 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.6]">
-          <span className="text-lg text-center text-gray-800 text-nowrap">
+      <div className="text-xs text-gray-800 text-center -mb-1 -mt-2">
+        YOUR TENDED ECOSYSTEM
+      </div>
+      <div className="relative mb-4 overflow-hidden">
+        <div className="w-full max-w-[350px] rounded-full py-3 pl-16 pr-4 ml-4 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.8]">
+          <span className="text-sm text-center text-gray-800 block truncate">
             {`Thank You for Being the Steward of ${seed.label?.toUpperCase()}`}
           </span>
         </div>
-        <div className="absolute -left-1 top-6 -translate-y-1/2 w-12 h-12 rounded-full border-3 border-dotted border-black bg-gray-200 flex items-center justify-center shadow">
-          <Image src={tendedEcosystems[index].seedEmblemUrl} alt="Steward emblem" width={22} height={22} className="w-8 h-8" />
+        <div className="absolute left-0 top-6 -translate-y-1/2 w-12 h-12 rounded-full border-3 border-dotted border-black bg-gray-200 flex items-center justify-center shadow">
+          <Image
+            src={tendedEcosystems[index].seedEmblemUrl}
+            alt="Steward emblem"
+            width={22}
+            height={22}
+            className="w-8 h-8"
+          />
         </div>
       </div>
 
@@ -40,19 +54,47 @@ export default function StewardSeedCard({ seed, onTendSeed, onExplore, index = 0
         <div className="flex gap-8 items-start -ml-4">
           {/* Large image on the left */}
           <div className="relative w-[230px] h-[230px] rounded-[60px] overflow-hidden flex-shrink-0">
-            <Image src={seed.seedImageUrl} alt={seed.name} fill className="object-cover" />
+            <Image
+              src={
+                seed.seedImageUrl && seed.seedImageUrl.length > 0
+                  ? seed.seedImageUrl
+                  : "/seeds/01__GRG.png"
+              }
+              alt=""
+              fill
+              className="object-cover"
+              onError={(e) => {
+                console.log(
+                  "🌸 [IMAGE] Error loading steward seed image, using placeholder"
+                );
+                const target = e.target as HTMLImageElement;
+                if (
+                  target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                ) {
+                  target.src = "/seeds/01__GRG.png";
+                }
+              }}
+            />
           </div>
 
           {/* Metrics and actions on the right */}
           <div className="flex-1 space-y-1 pt-4 -ml-4">
             <div className="grid grid-cols-1 gap-3 max-w-xs">
               <div className="text-center">
-                <div className="text-xs text-gray-600 tracking-wide">TOTAL RAISED</div>
-                <div className="text-xl text-gray-900">{seed.depositAmount} ETH</div>
+                <div className="text-xs text-gray-600 tracking-wide">
+                  TOTAL RAISED
+                </div>
+                <div className="text-xl text-gray-900">
+                  {seed.depositAmount} ETH
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-xs text-gray-600 tracking-wide">EVOLUTIONS</div>
-                <div className="text-xl text-gray-900">{seed.snapshotCount}</div>
+                <div className="text-xs text-gray-600 tracking-wide">
+                  EVOLUTIONS
+                </div>
+                <div className="text-xl text-gray-900">
+                  {seed.snapshotCount}
+                </div>
               </div>
             </div>
 
@@ -61,7 +103,8 @@ export default function StewardSeedCard({ seed, onTendSeed, onExplore, index = 0
                 onClick={onTendSeed}
                 className="w-full px-10 py-1 text-2xl border-1 border-black rounded-full hover:bg-gray-50 transition-colors peridia-display leading-relaxed text-nowrap"
               >
-                T<span className="text-nowrap favorit-mono">end </span>S<span className="text-nowrap favorit-mono">eed</span>
+                T<span className="text-nowrap favorit-mono">end </span>S
+                <span className="text-nowrap favorit-mono">eed</span>
               </button>
               <button
                 onClick={onExplore}
@@ -76,5 +119,3 @@ export default function StewardSeedCard({ seed, onTendSeed, onExplore, index = 0
     </motion.div>
   );
 }
-
- 

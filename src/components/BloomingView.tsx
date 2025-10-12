@@ -61,17 +61,17 @@ export default function BloomingView({
 
   const handleAddFunds = () => {
     // Add funds logic here
-    console.log('Add funds clicked');
+    console.log("Add funds clicked");
   };
 
   const handleExportKey = () => {
     // Export key logic here
-    console.log('Export key clicked');
+    console.log("Export key clicked");
   };
 
   const handleSwitchWallet = () => {
     // Switch wallet logic here
-    console.log('Switch wallet clicked');
+    console.log("Switch wallet clicked");
   };
 
   const handlePrivyHome = () => {
@@ -109,13 +109,28 @@ export default function BloomingView({
         {/* Large rounded image card with loading state and reveal animation */}
         <div className="relative w-full h-98 rounded-[50px] overflow-hidden border-2 border-dashed border-black/70 bg-white mb-8 mt-4 scale-[1.0]">
           {/* Base image - always visible */}
-          <Image 
-            src={finalImageUrl} 
-            alt="Seed emblem" 
-            fill 
-            className="object-contain scale-[0.9]" 
+          <Image
+            src={
+              finalImageUrl && finalImageUrl.length > 0
+                ? finalImageUrl
+                : "/seeds/01__GRG.png"
+            }
+            alt=""
+            fill
+            className="object-contain scale-[0.9]"
+            onError={(e) => {
+              console.log(
+                "🌸 [IMAGE] Error loading blooming image, using placeholder"
+              );
+              const target = e.target as HTMLImageElement;
+              if (
+                target.src !== `${window.location.origin}/seeds/01__GRG.png`
+              ) {
+                target.src = "/seeds/01__GRG.png";
+              }
+            }}
           />
-          
+
           {/* Loading overlay with text - pulls down to reveal */}
           <AnimatePresence>
             {isLoading && (
@@ -126,12 +141,28 @@ export default function BloomingView({
                 transition={{ duration: 1.2, ease: "easeInOut" }}
                 className="absolute inset-0 bg-gray-200 flex flex-col items-center justify-center p-8"
               >
-                <Image 
-                  src={seedEmblemUrl} 
-                  alt="Seed emblem" 
+                <Image
+                  src={
+                    seedEmblemUrl && seedEmblemUrl.length > 0
+                      ? seedEmblemUrl
+                      : "/seeds/01__GRG.png"
+                  }
+                  alt=""
                   width={300}
                   height={300}
-                  className="mb-12 -mt-18 opacity-20 scale-[1.1] backdrop-blur-sm" 
+                  className="mb-12 -mt-18 opacity-20 scale-[1.1] backdrop-blur-sm"
+                  onError={(e) => {
+                    console.log(
+                      "🌸 [IMAGE] Error loading blooming emblem, using placeholder"
+                    );
+                    const target = e.target as HTMLImageElement;
+                    if (
+                      target.src !==
+                      `${window.location.origin}/seeds/01__GRG.png`
+                    ) {
+                      target.src = "/seeds/01__GRG.png";
+                    }
+                  }}
                 />
                 <div className="text-center text-gray-600 text-sm text-nowrap scale-[0.95] font-medium -mt-62 leading-relaxed">
                   <div>your stewardship is becoming visible form</div>
@@ -142,15 +173,26 @@ export default function BloomingView({
             )}
           </AnimatePresence>
         </div>
-        
+
         {/* Share button bottom-right */}
-        <button onClick={onShare} className="absolute top-132 right-4 w-12 h-12 rounded-full bg-white/95 opacity-70 shadow flex items-center justify-center">
-          <Image src={assets.share} alt="Share" width={18} height={18} className="opacity-100" />
+        <button
+          onClick={onShare}
+          className="absolute top-132 right-4 w-12 h-12 rounded-full bg-white/95 opacity-70 shadow flex items-center justify-center"
+        >
+          <Image
+            src={assets.share}
+            alt="Share"
+            width={18}
+            height={18}
+            className="opacity-100"
+          />
         </button>
 
         {/* You funded text - moved below the image */}
         <div className="text-center text-[12px] leading-5 text-black/95 mb-4">
-          <div>You funded <span className="peridia-display">{beneficiary}</span></div>
+          <div>
+            You funded <span className="peridia-display">{beneficiary}</span>
+          </div>
           <div>Regenerative Sheep Grazing and here is how the</div>
           <div>{`plant's morphology carries this as memory`}</div>
         </div>
@@ -180,5 +222,3 @@ export default function BloomingView({
     </div>
   );
 }
-
-
