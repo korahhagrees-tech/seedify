@@ -227,7 +227,7 @@ export default function EcosystemProjectCard({
 
         {/* Card with cutout header */}
         <motion.div
-          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-4 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[540px] lg:h-[620px] md:h-[620px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
+          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-4 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[480px] lg:h-[600px] md:h-[600px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -359,48 +359,6 @@ export default function EcosystemProjectCard({
                 }}
               />
             </div>
-            <div className="absolute left-70 -top-4 -translate-x-1/2 -translate-y-1/2 w-[10%] h-10 rounded-[10px] overflow-hidden z-0">
-              <Image
-                src={
-                  backgroundImageUrl && backgroundImageUrl.length > 0
-                    ? backgroundImageUrl
-                    : "/seeds/01__GRG.png"
-                }
-                alt=""
-                fill
-                className="object-cover"
-                priority
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  if (
-                    target.src !== `${window.location.origin}/seeds/01__GRG.png`
-                  ) {
-                    target.src = "/seeds/01__GRG.png";
-                  }
-                }}
-              />
-            </div>
-            <div className="absolute left-34 -top-3 -translate-x-1/2 -translate-y-1/2 w-[10%] h-6 rounded-[10px] overflow-hidden z-0">
-              <Image
-                src={
-                  backgroundImageUrl && backgroundImageUrl.length > 0
-                    ? backgroundImageUrl
-                    : "/seeds/01__GRG.png"
-                }
-                alt=""
-                fill
-                className="object-cover"
-                priority
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  if (
-                    target.src !== `${window.location.origin}/seeds/01__GRG.png`
-                  ) {
-                    target.src = "/seeds/01__GRG.png";
-                  }
-                }}
-              />
-            </div>
           </div>
 
           {/* Text content - fixed-height card body */}
@@ -419,30 +377,24 @@ export default function EcosystemProjectCard({
               data-main-content
             >
               {/* Short text - always visible */}
-              <div className="mb-54 whitespace-pre-line">{shortText}</div>
+              <div className="mb-34 whitespace-pre-line">{shortText}</div>
 
-              {/* Extended text - toggles on/off */}
-              <AnimatePresence>
-                {showExtended && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden whitespace-pre-line -mt-18 mb-54"
-                    data-expanded-content
-                  >
-                    {extendedText}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {/* Extended text - completely hidden/shown like old code */}
+              {showExtended && (
+                <div
+                  className="overflow-hidden whitespace-pre-line -mt-24 mb-34"
+                  data-expanded-content
+                >
+                  {extendedText}
+                </div>
+              )}
             </div>
             {/* Bottom blur fade */}
             <div className="pointer-events-none absolute bottom-20 left-0 right-0 h-12 bg-white/40 backdrop-blur-xs opacity-70" />
           </div>
 
           {/* Footer with centered CTA and inverted switch next to it */}
-          <div className="relative -px-6 py-4 flex items-center bg-white justify-center gap-4 lg:-mt-24 md:-mt-24 -mt-42">
+          <div className="relative -px-6 py-4 flex items-center bg-white justify-center gap-4 lg:-mt-36 md:-mt-26 -mt-56">
             <Button
               variant="ghost"
               className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col disabled:opacity-50"
@@ -467,46 +419,16 @@ export default function EcosystemProjectCard({
                 checked={!showExtended}
                 onCheckedChange={(checked) => {
                   setShowExtended(!checked);
-                  // Scroll animation to show the expanded content
+                  // Smooth scroll animation within the text container
                   setTimeout(() => {
-                    if (!checked) {
-                      // Content is expanding - scroll to show the new content
-                      const expandedContent = document.querySelector(
-                        "[data-expanded-content]"
-                      );
-                      if (expandedContent) {
-                        expandedContent.scrollIntoView({
-                          behavior: "smooth",
-                          block: "center",
-                          inline: "nearest",
-                        });
-                      } else {
-                        // Fallback: scroll down to show more content
-                        window.scrollBy({
-                          top: 300,
-                          behavior: "smooth",
-                        });
-                      }
-                    } else {
-                      // Content is collapsing - scroll back up to the main content
-                      const mainContent = document.querySelector(
-                        "[data-main-content]"
-                      );
-                      if (mainContent) {
-                        mainContent.scrollIntoView({
-                          behavior: "smooth",
-                          block: "start",
-                          inline: "nearest",
-                        });
-                      } else {
-                        // Fallback: scroll up
-                        window.scrollBy({
-                          top: -200,
-                          behavior: "smooth",
-                        });
-                      }
+                    const textContainer = document.querySelector("[data-main-content]");
+                    if (textContainer) {
+                      textContainer.scrollTo({
+                        top: !checked ? textContainer.scrollHeight : 0,
+                        behavior: "smooth"
+                      });
                     }
-                  }, 200); // Slightly longer delay to let content fully expand
+                  }, 100);
                 }}
                 className="border-1 border-black/40 data-[state=checked]:bg-white data-[state=unchecked]:bg-[#D3C9DE] [&>span]:border-1 [&>span]:scale-[0.9] [&>span]:data-[state=checked]:bg-[#D3C9DE] [&>span]:data-[state=unchecked]:bg-white"
               />
@@ -515,7 +437,7 @@ export default function EcosystemProjectCard({
         </motion.div>
 
         {/* Navigation circles - positioned on the card border */}
-        <div className="relative max-w-md mx-auto -mt-[560px] md:-mt-[580px] lg:-mt-[580px] z-20 flex justify-center items-center gap-8">
+        <div className="relative max-w-md mx-auto -mt-[500px] md:-mt-[560px] lg:-mt-[560px] z-20 flex justify-center items-center gap-8">
           {/* Back Arrow - left side */}
           <button onClick={() => router.back()}>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">

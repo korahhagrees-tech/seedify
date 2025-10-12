@@ -74,7 +74,7 @@ export default function SeedbedPullUp({ selectedSeed }: SeedbedPullUpProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="w-full -mt-90"
+            className="w-full -mt-90 scale-[0.95]"
           >
             <SeedbedCard beneficiaries={seedbedBeneficiaries} />
             {/* <SeedbedCardStats beneficiaries={seedbedBeneficiaries} /> */}

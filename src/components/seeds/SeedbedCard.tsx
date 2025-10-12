@@ -32,61 +32,61 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
         // El Globo (largest)
         {
           position: {
-            top: "-top-10",
-            left: "left-10 lg:left-8",
-            width: "w-[150px]",
-            height: "h-[150px]",
-            transform: "transform -rotate-4"
+            top: "top-3 lg:-top-6 md:-top-6",
+            left: "left-8 lg:left-11 md:left-10",
+            width: "w-[132px] lg:w-[148px] md:w-[148px]",
+            height: "h-[130px] lg:h-[148px] md:h-[148px]",
+            transform: "transform -rotate-4 lg:-rotate-4 md:-rotate-4"
           },
           labelPosition: {
-            top: "-left-18",
-            left: "-top-10",
-            transform: "transform -rotate-90"
+            top: "-left-32 lg:-left-30 md:-left-30",
+            left: "-top-9 lg:-top-16 md:-top-14",
+            transform: "transform -rotate-54 lg:-rotate-66 md:-rotate-68 scale-[1.3] lg:scale-[1.2] md:scale-[1.2]"
           }
         },
         // Grgich Hills (second largest)
         {
           position: {
-            top: "lg:bottom-27 bottom-28",
-            left: "lg:-right-3 -right-1",
-            width: "w-32",
-            height: "h-32",
-            transform: "transform rotate-6"
+            top: "lg:bottom-27 bottom-26 md:bottom-28",
+            left: "lg:right-1 -right-2 md:right-1",
+            width: "w-24 lg:w-28 md:w-28",
+            height: "h-24 lg:h-28 md:h-28",
+            transform: "transform rotate-6 lg:-rotate-6 md:-rotate-6 scale-[1.2] lg:scale-[1.2] md:scale-[1.2]"
           },
           labelPosition: {
-            top: "right-18",
-            left: "top-1/2",
-            transform: "transform -rotate-90"
+            top: "right-8 lg:right-18 md:right-18",
+            left: "top-56 lg:top-1/2 md:top-1/2",
+            transform: "transform -rotate-90 lg:-rotate-90 md:-rotate-90 scale-[1.2] lg:scale-[1.2] md:scale-[1.2]"
           }
         },
         // Buena Vista (third largest)
         {
           position: {
-            top: "lg:bottom-24 bottom-24",
-            left: "-left-2 lg:-left-3",
-            width: "w-26",
-            height: "h-26",
-            transform: "transform -rotate-6"
+            top: "lg:bottom-25 bottom-22 md:bottom-24",
+            left: "-left-0 lg:left-4 md:left-3",
+            width: "w-18 lg:w-20 md:w-22",
+            height: "h-18 lg:h-20 md:h-22",
+            transform: "transform -rotate-6 lg:-rotate-6 md:-rotate-6 scale-[1.2] lg:scale-[1.2] md:scale-[1.2]"
           },
           labelPosition: {
-            top: "left-16",
-            left: "bottom-42",
-            transform: "transform rotate-66"
+            top: "left-8 lg:left-24 md:left-18",
+            left: "bottom-48 lg:bottom-60 md:bottom-56",
+            transform: "transform rotate-74 lg:-rotate-275 md:-rotate-282 scale-[1.2] lg:scale-[1.2] md:scale-[1.2]"
           }
         },
         // Walkers Reserve (smallest)
         {
           position: {
-            top: "top-6",
-            left: "right-6 lg:right-6",
-            width: "w-12",
-            height: "h-12",
-            transform: "transform rotate-12"
+            top: "top-19 lg:top-10 md:top-10",
+            left: "right-5 lg:right-9 md:right-8",
+            width: "w-8 lg:w-10 md:w-10",
+            height: "h-8 lg:h-10 md:h-10",
+            transform: "transform rotate-12 lg:-rotate-12 md:-rotate-12 scale-[1.2] lg:scale-[1.2] md:scale-[1.2]"
           },
           labelPosition: {
-            top: "-right-10",
-            left: "-top-4",
-            transform: "transform rotate-45"
+            top: "-right-12 lg:-right-10 md:-right-10",
+            left: "top-8 lg:top-2 md:top-1",
+            transform: "transform rotate-45 lg:rotate-45 md:rotate-35 scale-[1.2] lg:scale-[1.2] md:scale-[1.2]"
           }
         }
       ];
@@ -106,14 +106,14 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
         {/* Inner white layer */}
         <div className="bg-white rounded-3xl p-6 relative">
           {/* Title */}
-          <div className="text-center text-black font-medium text-lg -mt-4 mb-26">
+          <div className="text-center text-black font-medium text-lg -mt-4 mb-20">
             THE SEEDBED
           </div>
           
           {/* Main subtract shape container */}
           <div className="relative w-full h-96">
             {/* Subtract.svg as the main outline */}
-            <div className="absolute inset-0 scale-[1.1] -mb-5">
+            <div className="absolute inset-0 scale-[1.1] lg:scale-[1.0] md:scale-[1.0] -mb-59 lg:-mb-48 md:-mb-48 -mt-38 lg:-mt-38 md:-mt-38">
               <Image
                 // src={assets.subtracts}
                 src={assets.subtract}
@@ -154,8 +154,8 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
                     radius: 70,
                     angle: Math.PI * 0.8,
                     fontSize: 14,
-                    width: 140,
-                    height: 180,
+                    width: 230,
+                    height: 230,
                     offsetX: 45, // Move right
                     offsetY: 62,
                     rotationOffset: 0.1 // Slight rotation adjustment
@@ -244,61 +244,61 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
         // El Globo (largest)
         {
           position: {
-            top: "-top-20",
-            left: "left-7 lg:left-8",
-            width: "w-[158px]",
-            height: "h-[158px]",
+            top: "-top-8 md:-top-17 lg:-top-18",
+            left: "left-6 md:left-9 lg:left-9",
+            width: "w-[136px] md:w-[147px] lg:w-[148px]",
+            height: "h-[136px] md:h-[147px] lg:h-[148px]",
             transform: "transform -rotate-4"
           },
           labelPosition: {
-            top: "-left-8",
-            left: "-top-26",
-            transform: "transform -rotate-70"
+            top: "-left-8 md:-left-8 lg:-left-6",
+            left: "-top-20 md:-top-32 lg:-top-34",
+            transform: "transform -rotate-52 md:-rotate-50 lg:-rotate-38 scale-[1.3]"
           }
         },
         // Grgich Hills (second largest)
         {
           position: {
-            top: "lg:bottom-27 bottom-30",
-            left: "lg:-right-3 -right-7",
-            width: "w-36",
-            height: "h-36",
+            top: "lg:bottom-30 bottom-32 md:bottom-30",
+            left: "lg:-right-6 -right-6 md:-right-6",
+            width: "w-31 md:w-35 lg:w-35",
+            height: "h-31 md:h-35 lg:h-35",
             transform: "transform rotate-6"
           },
           labelPosition: {
-            top: "right-18",
-            left: "top-1/2",
-            transform: "transform -rotate-90"
+            top: "right-48 md:right-58 lg:right-57",
+            left: "top-28 md:top-32 lg:top-32",
+            transform: "transform -rotate-280 md:-rotate-280 lg:-rotate-280 scale-[1.3]"
           }
         },
         // Buena Vista (third largest)
         {
           position: {
-            top: "lg:bottom-24 bottom-26",
-            left: "-left-5 lg:-left-3",
-            width: "w-28",
-            height: "h-28",
+            top: "lg:bottom-24 bottom-30 md:bottom-26",
+            left: "-left-3 lg:-left-3 md:-left-3",
+            width: "w-24 md:w-28 lg:w-28",
+            height: "h-24 md:h-28 lg:h-28",
             transform: "transform -rotate-6"
           },
           labelPosition: {
-            top: "left-16",
-            left: "bottom-42",
-            transform: "transform rotate-66"
+            top: "left-46 md:left-58 lg:left-55",
+            left: "bottom-4 md:bottom-8 lg:bottom-5",
+            transform: "transform -rotate-74 md:-rotate-84 lg:-rotate-84 scale-[1.3]"
           }
         },
         // Walkers Reserve (smallest)
         {
           position: {
-            top: "-top-3",
-            left: "right-2 lg:right-6",
-            width: "w-14",
-            height: "h-14",
+            top: "top-7 md:-top-2 lg:-top-3",
+            left: "right-3 lg:right-4 md:right-4",
+            width: "w-11 md:w-12 lg:w-14",
+            height: "h-11 md:h-12 lg:h-14",
             transform: "transform rotate-12"
           },
           labelPosition: {
-            top: "-right-8",
-            left: "-top-14",
-            transform: "transform rotate-45"
+            top: "-right-4 md:-right-6 lg:-right-9",
+            left: "-top-6 md:-top-24 lg:-top-10",
+            transform: "transform rotate-52 md:rotate-80 lg:rotate-36 scale-[1.2] lg:scale-[1.2] md:scale-[1.1]"
           }
         }
       ];
@@ -341,7 +341,7 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
           {/* Main subtract shape container */}
           <div className="relative w-full h-96">
             {/* Subtract.svg as the main outline */}
-            <div className="absolute inset-0 scale-[1.33]">
+            <div className="absolute inset-0 lg:scale-[1.3] md:scale-[1.3] scale-[1.1]">
               <Image
                 src={assets.subtract}
                 // src={assets.subtracts}
@@ -382,41 +382,41 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
                     radius: 70,
                     angle: Math.PI * 0.6,
                     fontSize: 20,
-                    width: 180,
-                    height: 180,
+                    width: 240,
+                    height: 240,
                     offsetX: 0,
                     offsetY: 0,
                     rotationOffset: 0
                   },
                   // Grgich Hills (second largest)
                   {
-                    radius: 55,
+                    radius: 82,
                     angle: Math.PI * 0.35,
                     fontSize: 9,
-                    width: 110,
-                    height: 110,
+                    width: 200,
+                    height: 200,
                     offsetX: 0,
                     offsetY: 0,
                     rotationOffset: 0
                   },
                   // Buena Vista (third largest)
                   {
-                    radius: 50,
+                    radius: 126,
                     angle: Math.PI * 0.3,
                     fontSize: 8,
-                    width: 100,
-                    height: 100,
+                    width: 300,
+                    height: 300,
                     offsetX: 0,
                     offsetY: 0,
                     rotationOffset: 0
                   },
                   // Walkers Reserve (smallest)
                   {
-                    radius: 60,
+                    radius: 84,
                     angle: Math.PI * 0.6,
                     fontSize: 20,
-                    width: 160,
-                    height: 180,
+                    width: 220,
+                    height: 220,
                     offsetX: 0,
                     offsetY: 0,
                     rotationOffset: 0

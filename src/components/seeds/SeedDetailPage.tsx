@@ -22,7 +22,7 @@ export default function SeedDetailPage({
   onPlantSeed,
 }: SeedDetailPageProps) {
   return (
-    <div className="min-h-screen w-full max-w-md mx-auto bg-white relative scale-[0.95]">
+    <div className="min-h-screen w-full max-w-md mx-auto lg:-mt-30 md:-mt-30 -mt-2 relative lg:scale-[0.8] md:scale-[0.8] scale-[0.95]">
       {/* Steward Label - positioned above the main content */}
       <div className="relative pt-4 pb-2 ml-4">
         <motion.div
@@ -105,7 +105,7 @@ export default function SeedDetailPage({
               <div className="text-[10px] font-light text-black mb-2 mt-1">
                 RAISED
               </div>
-              <div className="text-xl text-nowrap scale-[0.8] -ml-2 -mt-3 font-light text-black">
+              <div className="text-xl text-nowrap scale-[0.75] lg:scale-[0.9] md:scale-[0.8] -ml-3 lg:-ml-2 md:-ml-2 -mt-3 font-light text-black">
                 {parseFloat(seed.depositAmount).toFixed(4)}{" "}
                 <span className="text-xl">ETH</span>
               </div>
@@ -119,7 +119,7 @@ export default function SeedDetailPage({
               <div className="text-[10px] font-light text-black mb-2 mt-1">
                 SNAP PRICE
               </div>
-              <div className="text-xl text-nowrap scale-[0.8] -ml-2 -mt-3 font-light text-black">
+              <div className="text-xl text-nowrap scale-[0.75] lg:scale-[0.9] md:scale-[0.8] -ml-3 lg:-ml-2 md:-ml-2 -mt-3 font-light text-black">
                 {parseFloat(seed.snapshotPrice).toFixed(4)}{" "}
                 <span className="text-xl">ETH</span>
               </div>
