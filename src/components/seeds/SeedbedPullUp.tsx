@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useRef, useMemo } from "react";
@@ -63,8 +64,8 @@ export default function SeedbedPullUp({ selectedSeed }: SeedbedPullUpProps) {
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
           >
-            {/* <SeedbedCard2 beneficiaries={seedbedBeneficiaries} /> */}
-            <SeedbedCardStats beneficiaries={seedbedBeneficiaries} />
+            <SeedbedCard2 beneficiaries={seedbedBeneficiaries} />
+            {/* <SeedbedCardStats beneficiaries={seedbedBeneficiaries} /> */}
           </motion.div>
         ) : (
           <motion.div
@@ -75,8 +76,8 @@ export default function SeedbedPullUp({ selectedSeed }: SeedbedPullUpProps) {
             transition={{ duration: 0.3 }}
             className="w-full -mt-90"
           >
-            {/* <SeedbedCard beneficiaries={seedbedBeneficiaries} /> */}
-            <SeedbedCardStats beneficiaries={seedbedBeneficiaries} />
+            <SeedbedCard beneficiaries={seedbedBeneficiaries} />
+            {/* <SeedbedCardStats beneficiaries={seedbedBeneficiaries} /> */}
           </motion.div>
         )}
       </AnimatePresence>

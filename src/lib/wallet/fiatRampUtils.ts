@@ -1,5 +1,4 @@
-// Fiat onramp and offramp utilities for Privy API
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface OnrampRequest {
   amount: string;
   provider: 'bridge' | 'bridge-sandbox';

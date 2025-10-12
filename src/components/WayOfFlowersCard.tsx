@@ -116,7 +116,7 @@ export default function WayOfFlowersCard({
       />
 
       {/* Transparent glass overlay (subtle tint) */}
-      <div className="absolute inset-0 bg-white/70" />
+      <div className="absolute inset-0 bg-black/10 backdrop-blur-lg backdrop-brightness-75" />
 
       {/* Foreground content */}
       <div className="relative z-10 px-4 pt-8 pb-8">
@@ -145,7 +145,7 @@ export default function WayOfFlowersCard({
                 src="/Blooming.svg"
                 alt="Blooming frame"
                 fill
-                className="object-contain scale-[1.0] lg:mt-4 md:-mt-1 -mt-1"
+                className="object-contain scale-[1.0] lg:mt-0 md:-mt-2 -mt-2"
                 priority
               />
             </div>
@@ -190,10 +190,10 @@ export default function WayOfFlowersCard({
                 </div>
 
                 {/* Three text lines */}
-                <div className="-space-y-1 -mt-3 text-black font-medium text-base scale-[0.85]">
+                <div className="-space-y-1 lg:-mt-5 md:-mt-3 -mt-8 text-black font-medium text-base lg:scale-[0.85] md:scale-[0.80] scale-[0.75]">
                   <div>{firstText}</div>
                   <div>{secondText}</div>
-                  <div>{thirdText}</div>
+                  <div className="text-nowrap">{thirdText}</div>
                 </div>
               </div>
 
@@ -211,7 +211,7 @@ export default function WayOfFlowersCard({
               <div className="text-center">
                 {/* Blooming text with pulse animation */}
                 <motion.div
-                  className="text-white font-medium mb-4 text-2xl"
+                  className="text-white font-medium text-2xl lg:mt-6 md:-mt-2 -mt-5"
                   animate={{
                     scale: [1, 1.05, 1],
                     opacity: [0.8, 1, 0.8],
@@ -246,7 +246,7 @@ export default function WayOfFlowersCard({
                         <>
                           <Button
                             onClick={onExploreClick}
-                            className="w-[160px] rounded-full border border-white/70 text-black text-xl scale-[0.85] ml-4 py-2 bg-white hover:bg-white/20 transition-all duration-300"
+                            className="w-[160px] rounded-full border border-white/70 text-black text-xl scale-[0.85] ml-3 py-2 bg-white hover:bg-white/20 transition-all duration-300"
                           >
                             <span className="peridia-display">
                               E<span className="favorit-mono">xplore</span>

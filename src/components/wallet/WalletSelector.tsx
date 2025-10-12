@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { getUserWallets, getWalletDisplayName, formatWalletAddress, Wallet } from "@/lib/wallet/walletUtils";
@@ -25,13 +25,7 @@ export default function WalletSelector({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isOpen && user?.id) {
-      loadWallets();
-    }
-  }, [isOpen, user?.id]);
-
-  const loadWallets = async () => {
+  const loadWallets = useCallback(async () => {
     if (!user?.id) return;
     
     setLoading(true);
@@ -46,7 +40,14 @@ export default function WalletSelector({
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (isOpen && user?.id) {
+      loadWallets();
+    }
+  }, [isOpen, user?.id, loadWallets]);
+
 
   const handleWalletSelect = (wallet: Wallet) => {
     onWalletSelect(wallet);
@@ -61,7 +62,7 @@ export default function WalletSelector({
       case 'coinbase':
         return '/icons/coinbase.svg';
       default:
-        return assets.wallet || '/icons/wallet.svg';
+        return assets.email || '/icons/email.svg';
     }
   };
 
