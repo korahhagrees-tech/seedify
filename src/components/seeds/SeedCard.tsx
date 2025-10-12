@@ -58,7 +58,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
             src={
               seed.seedImageUrl && seed.seedImageUrl.length > 0
                 ? seed.seedImageUrl
-                : "/seeds/01__GRG.png"
+                : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
             }
             alt=""
             fill
@@ -72,7 +72,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
               if (
                 target.src !== `${window.location.origin}/seeds/01__GRG.png`
               ) {
-                target.src = "/seeds/01__GRG.png";
+                target.src = "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
               }
             }}
             priority={index < 2}

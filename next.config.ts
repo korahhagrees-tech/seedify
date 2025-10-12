@@ -17,6 +17,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.iconscout.com",
+      },
+      {
+        protocol: "https",
+        hostname: "1000logos.net",
+      },
     ],
   },
 };

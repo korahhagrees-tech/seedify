@@ -28,16 +28,16 @@ export default function StewardSeedCard({
       className="mb-6"
     >
       {/* Gradient bar with emblem and steward message */}
-      <div className="text-xs text-gray-800 text-center -mb-1 -mt-2">
+      <div className="text-xs text-gray-800 text-center -mb-1 -mt-8 lg:mt-2 md:mt-2">
         YOUR TENDED ECOSYSTEM
       </div>
-      <div className="relative mb-4 overflow-hidden">
-        <div className="w-full max-w-[350px] rounded-full py-3 pl-16 pr-4 ml-4 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.8]">
-          <span className="text-sm text-center text-gray-800 block truncate">
+      <div className="relative mb-6 -mt-5 overflow-hidden scale-[0.75] lg:scale-[1.0] pt-6 pb-2 md:scale-[1.0]">
+        <div className="w-[460px] rounded-full py-3 pl-16 pr-14 ml-4 lg:-ml-8 md:ml-0 -mt-1 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.75] lg:scale-[0.8] md:scale-[0.8]">
+          <span className="text-sm text-center text-gray-800 -ml-3">
             {`Thank You for Being the Steward of ${seed.label?.toUpperCase()}`}
           </span>
         </div>
-        <div className="absolute left-0 top-6 -translate-y-1/2 w-12 h-12 rounded-full border-3 border-dotted border-black bg-gray-200 flex items-center justify-center shadow">
+        <div className="absolute left-0 top-11 -translate-y-1/2 w-12 h-12 z-10 rounded-full border-3 border-dotted border-black bg-gray-200 flex items-center justify-center shadow">
           <Image
             src={tendedEcosystems[index].seedEmblemUrl}
             alt="Steward emblem"

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -13,7 +14,9 @@ import { useWriteTransaction } from "@/lib/api/hooks/useWriteTransaction";
 import { useAuth } from "@/components/auth/AuthProvider";
 import Image from "next/image";
 import { assets } from "@/lib/assets";
-import { useBalance } from 'wagmi';
+import { useBalance, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useSendTransaction, useWallets } from "@privy-io/react-auth";
+import { encodeFunctionData } from "viem";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -22,6 +25,7 @@ interface PaymentModalProps {
   amount?: number;
   onConfirm?: (amount: string) => void; // Callback for snapshot minting
   isSnapshotMint?: boolean; // Flag to indicate snapshot minting mode
+  beneficiaryIndex?: number; // For snapshot minting
 }
 
 export default function PaymentModal({ 
@@ -30,7 +34,8 @@ export default function PaymentModal({
   seedId = "1", 
   amount = 50,
   onConfirm,
-  isSnapshotMint = false
+  isSnapshotMint = false,
+  beneficiaryIndex
 }: PaymentModalProps) {
   const [email, setEmail] = useState("");
   const [amountInput, setAmountInput] = useState("0.011"); // Default ETH amount
@@ -40,6 +45,9 @@ export default function PaymentModal({
   const { execute } = useWriteTransaction();
   const { user, walletAddress } = useAuth();
   const router = useRouter();
+  const { sendTransaction } = useSendTransaction();
+  const { wallets } = useWallets();
+  const { writeContractAsync } = useWriteContract();
   
   // Get ETH balance from wagmi
   const { data: balanceData } = useBalance({
@@ -62,19 +70,158 @@ export default function PaymentModal({
   };
 
   const handleTransaction = async () => {
-    // If this is snapshot mint mode, just pass the amount to the callback
-    if (isSnapshotMint && onConfirm) {
-      onConfirm(amountInput);
-      return;
-    }
+      setIsProcessing(true);
+      
+    try {
+      // Check if we have an active wallet
+      const activeWallet = wallets[0];
+      if (!activeWallet) {
+        toast.error("No active wallet found. Please connect your wallet.");
+        setIsProcessing(false);
+        return;
+      }
 
-    // For snapshot minting: "Confirm Contribution" button executes mintSnapshot logic
-    // This is the NEW flow - the button triggers snapshot minting, not depositForSeed
-    console.log('Confirm Contribution clicked - executing snapshot minting logic with amount:', amountInput);
-    
-    // Pass the user's entered amount to the callback for snapshot minting
-    if (onConfirm) {
-      onConfirm(amountInput);
+      // If this is snapshot mint mode, trigger the appropriate transaction method
+      if (isSnapshotMint && beneficiaryIndex !== undefined && seedId) {
+        // Step 1: Get transaction data from backend
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+        const response = await fetch(`${apiBaseUrl}/write/snapshots/mint/${seedId}?beneficiaryIndex=${beneficiaryIndex}`);
+        const mintData = await response.json();
+
+        if (!mintData.success) {
+          toast.error('Failed to prepare snapshot transaction');
+          setIsProcessing(false);
+          return;
+        }
+
+        // Convert user's ETH amount to wei
+        const amountInWei = (parseFloat(amountInput) * 1e18).toString();
+
+        // Detect wallet type and use appropriate transaction method
+        const isEmbeddedWallet = activeWallet.walletClientType === 'privy' || activeWallet.connectorType === 'embedded';
+        const isSolanaWallet = activeWallet.walletClientType === 'solana';
+
+        if (isSolanaWallet) {
+          // For Solana wallets, use useSignAndSendTransaction
+          toast.error('Solana wallets not supported for this transaction');
+          setIsProcessing(false);
+          return;
+        } else if (isEmbeddedWallet) {
+          // For embedded wallets, use useSendTransaction
+          await sendTransaction(
+            {
+              to: mintData.data.contractAddress,
+              value: amountInWei, // USER'S INPUT AMOUNT
+              data: encodeFunctionData({
+                abi: [
+                  {
+                    type: "function",
+                    name: "mintSnapshot",
+                    stateMutability: "payable",
+                    inputs: [
+                      { name: "seedId", type: "uint256" },
+                      { name: "beneficiaryIndex", type: "uint256" },
+                      { name: "process", type: "string" },
+                      { name: "to", type: "address" },
+                      { name: "royaltyRecipient", type: "address" },
+                    ],
+                    outputs: [{ name: "", type: "uint256" }],
+                  },
+                ],
+                functionName: "mintSnapshot",
+                args: [
+                  BigInt(mintData.data.args.seedId),
+                  BigInt(beneficiaryIndex),
+                  mintData.data.processId,
+                  activeWallet.address as `0x${string}`,
+                  mintData.data.args.royaltyRecipient as `0x${string}`,
+                ],
+              })
+            },
+            {
+              sponsor: true, // Enable gas sponsorship
+              uiOptions: {
+                description: `Mint a snapshot for ${amountInput} ETH to support ecosystem regeneration`,
+                buttonText: "Mint Snapshot",
+                transactionInfo: {
+                  title: "Transaction Details",
+                  action: "Mint Snapshot",
+                  contractInfo: {
+                    name: "Way of Flowers",
+                    url: "https://wayofflowers.com",
+                  }
+                },
+                successHeader: "Snapshot Minted!",
+                successDescription: "Your contribution has been recorded and will help regenerate the ecosystem.",
+              }
+            }
+          );
+        } else {
+          // For external EVM wallets (MetaMask, Coinbase, etc.), use wagmi's writeContract
+          // This will trigger the wallet's native transaction modal
+          toast.info('Please confirm the transaction in your wallet...');
+          
+          try {
+            const txHash = await writeContractAsync({
+              address: mintData.data.contractAddress as `0x${string}`,
+              abi: [
+                {
+                  type: "function",
+                  name: "mintSnapshot",
+                  stateMutability: "payable",
+                  inputs: [
+                    { name: "seedId", type: "uint256" },
+                    { name: "beneficiaryIndex", type: "uint256" },
+                    { name: "process", type: "string" },
+                    { name: "to", type: "address" },
+                    { name: "royaltyRecipient", type: "address" },
+                  ],
+                  outputs: [{ name: "", type: "uint256" }],
+                },
+              ],
+              functionName: "mintSnapshot",
+              args: [
+                BigInt(mintData.data.args.seedId),
+                BigInt(beneficiaryIndex),
+                mintData.data.processId,
+                activeWallet.address as `0x${string}`,
+                mintData.data.args.royaltyRecipient as `0x${string}`,
+              ],
+              value: BigInt(amountInWei),
+            });
+
+            toast.success('Transaction submitted! Waiting for confirmation...');
+            console.log('Transaction hash:', txHash);
+          } catch (error: any) {
+            if (error?.code === 4001 || error?.message?.includes('User rejected')) {
+              toast.error('Transaction rejected');
+            } else {
+              toast.error('Transaction failed. Please try again.');
+            }
+            setIsProcessing(false);
+            return;
+          }
+        }
+
+        // Transaction completed successfully
+        toast.success('Snapshot minted successfully!');
+        
+        // Close payment modal and call callback
+        onClose();
+        if (onConfirm) {
+          onConfirm(amountInput);
+        }
+      } else {
+        // For non-snapshot minting, just call the callback
+        if (onConfirm) {
+          onConfirm(amountInput);
+        }
+      }
+    } catch (error) {
+      console.error('Transaction failed:', error);
+      toast.error('Transaction failed. Please try again.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -110,43 +257,43 @@ export default function PaymentModal({
                   <span className="text-black text-lg font-bold">×</span>
                 </button>
                 
-                {/* Header */}
+              {/* Header */}
                 <h2 className="text-2xl text-black text-center -mt-6 peridia-display-light">
-                  Your Contribution
-                </h2>
+                Your Contribution
+              </h2>
 
-                {/* Informational Banner */}
+              {/* Informational Banner */}
                 <div className="bg-white rounded-[20px] px-6 py-0 border-1 border-black/40 mb-6 mt-4">
                   <p className="text-black text-center text-sm font-medium uppercase favorit-mono text-nowrap scale-[0.7] -ml-8">
-                    YOU ARE ABOUT TO SPRING FORTH A NEW GROWTH
-                  </p>
-                </div>
+                  YOU ARE ABOUT TO SPRING FORTH A NEW GROWTH
+                </p>
+              </div>
 
-                {/* Price and Allocation */}
-                <div className="flex items-start gap-4 mb-6">
-                  {/* Price */}
+              {/* Price and Allocation */}
+              <div className="flex items-start gap-4 mb-6">
+                {/* Price */}
                   <div className="bg-white rounded-full px-4 py-4 border-1 border-black/40 flex-none scale-[0.6] -ml-8 -mt-8 w-[165px]">
                     <div className="text-black text-[12px] font-light text-center items-center uppercase -mt-4 mb-1">PRICE</div>
                     <div className="text-black text-2xl font-light break-all whitespace-normal leading-tight">{amountInput} ETH</div>
-                  </div>
+                </div>
 
-                  {/* Allocation Breakdown */}
+                {/* Allocation Breakdown */}
                   <div className="flex-1 -ml-22 scale-[0.6] -mt-6">
                     <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-1">
                       50% SENT TO SELECTED ECOSYSTEM
-                    </div>
+                  </div>
                     <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-1">
-                      20% ACCUMULATES AS SEED COMPOST
-                    </div>
+                    20% ACCUMULATES AS SEED COMPOST
+                  </div>
                     <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-1">
-                      30% NURTURES THIS FLOURISHING
-                    </div>
+                    30% NURTURES THIS FLOURISHING
                   </div>
                 </div>
+              </div>
 
                 {/* Email Input with inside label */}
                 <div className="mb-6">
-                  <div className="relative">
+                <div className="relative">
                     <input
                       type="email"
                       value={email}
@@ -231,9 +378,9 @@ export default function PaymentModal({
                     A<span className="favorit-mono font-light text-nowrap">dd</span> F<span className="favorit-mono font-light text-nowrap">unds</span>
                   </button>
                   </div>
-                    <button onClick={() => {
-                      logout();
+                    <button onClick={async () => {
                       onClose();
+                      await logout();
                     }} className="flex items-center gap-2 text-sm text-black hover:text-gray-800 transition-colors -mt-6 -mb-3">
                       <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
                       <span className="text-sm font-light text-nowrap">Log out</span>
@@ -255,13 +402,13 @@ export default function PaymentModal({
                   {/* Price Input */}
                   <div className="bg-white rounded-full px-4 py-2 border-1 border-black/40 flex-none scale-[0.7] -ml-4 -mt-6 w-[165px]">
                     <div className="text-black text-[12px] font-medium uppercase mb-1 text-center">PRICE</div>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.001"
-                      value={amountInput}
-                      onChange={(e) => setAmountInput(e.target.value)}
-                      className="text-black text-2xl font-light bg-transparent border-none outline-none w-full"
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.001"
+                    value={amountInput}
+                    onChange={(e) => setAmountInput(e.target.value)}
+                      className="text-black text-xl font-light bg-transparent border-none outline-none w-full"
                       placeholder="0.011"
                     />
                     <div className="text-black text-2xl mr-2 text-right -mt-8 font-light uppercase">ETH</div>
@@ -278,44 +425,44 @@ export default function PaymentModal({
                     <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-2">
                       30% NURTURES THIS FLOURISHING
                     </div>
-                  </div>
                 </div>
+              </div>
 
-                {/* Email Input with inside label */}
-                <div className="mb-6">
-                  <div className="relative">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+              {/* Email Input with inside label */}
+              <div className="mb-6">
+                <div className="relative">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                       className="w-full bg-white rounded-full px-4 py-3 text-black text-sm border-1 border-black/30 outline-none mt-2 placeholder:text-black/50"
-                      placeholder="user@mail.com"
-                    />
+                    placeholder="user@mail.com"
+                  />
                     <span className="absolute left-4 top-2 text-black text-[10px] favorit-mono uppercase">STAY IN TOUCH</span>
-                  </div>
                 </div>
+              </div>
 
                 {/* Confirm Contribution Button */}
-                <Button
-                  onClick={handleTransaction}
-                  disabled={isProcessing}
+               <Button
+                 onClick={handleTransaction}
+                 disabled={isProcessing}
                   className="w-2/3 text-wrap bg-white border-2 border-dotted border-black ml-10 text-black text-sm font-medium py-6 rounded-full hover:bg-gray-100 transition-colors peridia-display-light disabled:opacity-50"
-                >
-                  {isProcessing ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                      PROCESSING...
-                    </div>
-                  ) : (
+               >
+                 {isProcessing ? (
+                   <div className="flex items-center justify-center gap-2">
+                     <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                     PROCESSING...
+                   </div>
+                 ) : (
                     <span className="text-nowrap text-base -mt-1 -mb-2">C<span className="favorit-mono font-light text-nowrap">onfrim</span><br /> C<span className="favorit-mono font-light text-nowrap -mt-2">ontribution</span></span>
-                  )}
-                </Button>
+                 )}
+               </Button>
 
                 {/* Mint Your Own Artwork text */}
                 <p className="text-center text-xs text-black/70 mt-2">
                   MINT YOUR OWN ARTWORK
                 </p>
-              </div>
+            </div>
             )}
           </motion.div>
         </>

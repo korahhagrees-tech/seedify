@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use client";
 
@@ -10,7 +11,8 @@ import { assets } from "@/lib/assets";
 import WalletSelector from "./WalletSelector";
 import WalletConnectionModal from "./WalletConnectionModal";
 import AddFundsModal from "./AddFundsModal";
-import { getUserWallets, getWalletBalance, exportWalletPrivateKey, Wallet, formatWalletAddress } from "@/lib/wallet/walletUtils";
+import { useWalletUtils, formatWalletAddress } from "@/lib/wallet/walletUtils";
+import { useFundWallet } from "@privy-io/react-auth";
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -38,7 +40,10 @@ export default function WalletModal({
   const [showWalletSelector, setShowWalletSelector] = useState(false);
   const [showWalletConnection, setShowWalletConnection] = useState(false);
   const [showAddFunds, setShowAddFunds] = useState(false);
-  const [currentWallet, setCurrentWallet] = useState<Wallet | null>(null);
+  
+  // Use Privy hooks
+  const { wallets, setActiveWallet } = useWalletUtils();
+  const { fundWallet } = useFundWallet();
 
   const copyToClipboard = async () => {
     if (walletAddress) {
@@ -52,10 +57,9 @@ export default function WalletModal({
     setShowWalletSelector(true);
   };
 
-  const handleWalletSelect = (wallet: Wallet) => {
-    setCurrentWallet(wallet);
-    // Update app state with selected wallet
-    // This would typically update your global state management
+  const handleWalletSelect = (wallet: any) => {
+    setActiveWallet(wallet);
+    setShowWalletSelector(false);
     console.log('Selected wallet:', wallet);
   };
 
@@ -63,30 +67,22 @@ export default function WalletModal({
     setShowWalletConnection(true);
   };
 
-  const handleAddFunds = () => {
-    setShowAddFunds(true);
+  const handleAddFunds = async () => {
+    if (walletAddress) {
+      try {
+        // Use Privy's fundWallet directly
+        await fundWallet({ address: walletAddress });
+      } catch (error) {
+        console.error('Failed to fund wallet:', error);
+        // Fallback to modal if needed
+        setShowAddFunds(true);
+      }
+    }
   };
 
   const handleExportKey = async () => {
-    if (!currentWallet?.id) {
-      console.error('No wallet selected for export');
-      return;
-    }
-
-    try {
-      // For demo purposes, using a dummy public key
-      // In a real app, you'd generate or get the recipient's public key
-      const dummyPublicKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE..."; // This should be the actual recipient's public key
-      
-      const exportResult = await exportWalletPrivateKey(currentWallet.id, dummyPublicKey);
-      console.log('Wallet export result:', exportResult);
-      
-      // Handle the export result (show modal with encrypted key, etc.)
-      alert('Private key exported successfully. Check console for details.');
-    } catch (error) {
-      console.error('Failed to export wallet:', error);
-      alert('Failed to export private key. Please try again.');
-    }
+    // For now, just call the parent handler
+    onExportKey();
   };
 
   const formatAddress = (address: string) => {
@@ -123,22 +119,22 @@ export default function WalletModal({
 
               {/* Wallet Address and Balance Bar */}
               <div className="bg-white rounded-[40px] h-13 p-4 mb-6 border-1 border-black/60">
-                <p className="text-sm scale-[0.7] -ml-13 mb-1 -mt-4 font-light text-black">YOUR WALLET</p>
+                <p className="text-sm mb-1 -mt-4 font-light text-black -ml-6 lg:ml-0 md:-ml-2 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]">YOUR WALLET</p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3 -mt-2">
+                    <button
+                      onClick={copyToClipboard}
+                      className="flex items-center justify-center transition-colors scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
+                    >
                     <span className="text-base font-mono text-black">
                       {formatAddress(walletAddress || '')}
                     </span>
-                    <button
-                      onClick={copyToClipboard}
-                      className="flex items-center justify-center transition-colors"
-                    >
                       <Image src={assets.copy} alt="Copy" width={12} height={12} className="w-4 h-4" />
                     </button>
                     {copied && <span className="text-xs text-green-600">Copied!</span>}
                   </div>
                   <div className="bg-gray-100 px-3 scale-[0.8] -mt-3 py-1 rounded-lg">
-                    <span className="text-base scale-[1.3] font-light text-[#64668B] -mt-4">{balance} ETH</span>
+                    <span className="text-base scale-[1.3] font-light text-nowrap text-[#64668B] -mt-4">{balance} ETH</span>
                   </div>
                 </div>
               </div>
@@ -150,7 +146,7 @@ export default function WalletModal({
                   <span className="text-sm text-black">{user?.email || 'bilbo.bagz@shire.io'}</span>
                 <button
                   onClick={handleSwitchWallet}
-                  className="w-full px-4 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3"
+                  className="w-full px-4 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
                 >
                   <span className="text-base scale-[1.05] font-light -mt-2">Change</span>
                   <span className="text-base scale-[1.05] font-light -mt-2 -mb-1">Address</span>
@@ -170,15 +166,15 @@ export default function WalletModal({
                   onClick={onPrivyHome}
                   className="w-[32%] px-4 py-1 border-1 border-black rounded-full text-sm text-black hover:bg-gray-50 transition-colors -mt-14  h-6 peridia-display-light bg-[#E2E3F0]"
                 >
-                  <p className="-mt-1 text-nowrap">  
+                  <p className="-mt-1 text-nowrap -ml-2 lg:ml-0 md:-ml-2 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]">  
                     P<span className="favorit-mono">rivy</span> H<span className="favorit-mono">ome</span>
                   </p>
                 </button>
                 <button
                   onClick={handleWalletConnect}
-                  className="w-[50%] ml-14 px-4 py-2 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors"
+                  className="w-[50%] ml-14 px-4 py-2 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors scale-[0.75] lg:scale-[1.0] md:scale-[0.8] text-nowrap"
                 >
-                  Wallet Connect
+                  <span className="-ml-2 lg:ml-0 md:-ml-2">Wallet Connect</span>
                 </button>
               </div>
 
@@ -190,7 +186,7 @@ export default function WalletModal({
                 </button>
                 <button
                   onClick={handleAddFunds}
-                  className="w-48 px-4 py-2 ml-4 -mb-2 border-3 border-dotted border-gray-500 rounded-full text-2xl text-black peridia-display-light bg-white hover:bg-gray-50 transition-colors"
+                  className="w-48 px-4 py-2 ml-4 -mb-2 border-3 border-dotted border-gray-500 rounded-full text-2xl text-black peridia-display-light bg-white hover:bg-gray-50 transition-colors scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
                 >
                   A<span className="favorit-mono font-light text-nowrap">dd</span> F<span className="favorit-mono font-light text-nowrap">unds</span>
                 </button>
@@ -205,7 +201,7 @@ export default function WalletModal({
         isOpen={showWalletSelector}
         onClose={() => setShowWalletSelector(false)}
         onWalletSelect={handleWalletSelect}
-        currentWalletId={currentWallet?.id}
+        currentWalletId={wallets[0]?.address}
       />
       
       {/* Wallet Connection Modal */}

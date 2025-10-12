@@ -12,7 +12,7 @@ import StewardSeedCard from "@/components/wallet/StewardSeedCard";
 import WalletModal from "@/components/wallet/WalletModal";
 import { useAuth } from "@/components/auth/AuthProvider";
 import GardenHeader from "@/components/GardenHeader";
-import { fetchUserSeeds } from "@/lib/api";
+import { fetchUserSeeds, fetchBeneficiaryByIndex } from "@/lib/api";
 
 // Mock data for tended ecosystems
 // Each tended ecosystem represents a snapshot mint of a beneficiary from a seed
@@ -70,21 +70,54 @@ export default function WalletPage() {
   const router = useRouter();
   const { logout, walletAddress } = useAuth();
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
-  const [tendedEcosystems] = useState(mockTendedEcosystems);
-  const [stewardSeeds, setStewardSeeds] = useState<any[]>(mockStewardSeeds);
+  const [tendedEcosystems, setTendedEcosystems] = useState<any[]>([]);
+  const [stewardSeeds, setStewardSeeds] = useState<any[]>([]);
+  const [beneficiaryLinks, setBeneficiaryLinks] = useState<Map<number, string>>(new Map());
 
-  // Backend check using connected wallet; default to steward with mock if none/error
+  // Fetch user's seeds (steward check) and snapshots (tended ecosystems)
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
       if (!walletAddress) return;
+      
       try {
+        // Fetch user's seeds to check if they are a steward
         const { seeds } = await fetchUserSeeds(walletAddress);
         if (!cancelled) {
-          setStewardSeeds(seeds && seeds.length > 0 ? seeds : mockStewardSeeds);
+          setStewardSeeds(seeds && seeds.length > 0 ? seeds : []);
+        }
+
+        // Fetch user's snapshots to show tended ecosystems
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+        const snapshotsResponse = await fetch(`${apiBaseUrl}/users/${walletAddress}/snapshots`);
+        const snapshotsData = await snapshotsResponse.json();
+        
+        if (snapshotsData.success && snapshotsData.snapshots.length > 0) {
+          // Fetch beneficiary data for each snapshot to get readMoreLink
+          const linksMap = new Map<number, string>();
+          
+          for (const snapshot of snapshotsData.snapshots) {
+            try {
+              const beneficiary = await fetchBeneficiaryByIndex(snapshot.beneficiaryIndex);
+              if (beneficiary?.projectData?.readMoreLink) {
+                linksMap.set(snapshot.beneficiaryIndex, beneficiary.projectData.readMoreLink);
+              }
+            } catch (e) {
+              console.error('Failed to fetch beneficiary:', e);
+            }
+          }
+          
+          if (!cancelled) {
+            setBeneficiaryLinks(linksMap);
+            setTendedEcosystems(snapshotsData.snapshots);
+          }
         }
       } catch (_e) {
-        if (!cancelled) setStewardSeeds(mockStewardSeeds);
+        console.error('Failed to load wallet data:', _e);
+        if (!cancelled) {
+          setStewardSeeds([]);
+          setTendedEcosystems([]);
+        }
       }
     };
     load();
@@ -93,12 +126,12 @@ export default function WalletPage() {
     };
   }, [walletAddress]);
 
-  const handleReadMore = () => {
-    // Route to seed detail page
-    router.push(
-      "https://docs.google.com/document/d/1iBUlTwKO1mCOiDqXqED3iQfNhyCCgSHmCfQ_M_qay4w/edit?tab=t.dxyiwoh1525s#heading=h.qepq5hiqw5yx"
-    );
-    // router.push(`/seed/${ecosystemId}/ecosystem-detail`);
+  const handleReadMore = (beneficiaryIndex: number) => {
+    // Get beneficiary's readMoreLink from the map
+    const link = beneficiaryLinks.get(beneficiaryIndex);
+    if (link) {
+      window.open(link, '_blank');
+    }
   };
 
   const handleTendAgain = (ecosystemId: string) => {
@@ -115,9 +148,9 @@ export default function WalletPage() {
     setIsWalletModalOpen(false);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
     setIsWalletModalOpen(false);
+    await logout();
     router.push("/");
   };
 
@@ -150,7 +183,7 @@ export default function WalletPage() {
       <div className="px-4 pb-40 overflow-x-hidden">
         {/* Steward Seeds Section (always show; defaults to mock if backend empty) */}
         {stewardSeeds.length > 0 && (
-          <div className="space-y-8 mb-10 scale-[0.95]">
+          <div className="space-y-8 mb-10 scale-[0.8] lg:scale-[1.0] md:scale-[1.0] -ml-10">
             {stewardSeeds.map((seed, index) => {
               // Generate slug from seed label for routing
               const seedSlug =
@@ -173,7 +206,7 @@ export default function WalletPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20"
+            className="text-center py-20 mt-18"
           >
             <div className="text-gray-400 text-lg mb-2">{`You haven't tended`}</div>
             <div className="text-gray-400 text-lg mb-8">an Ecosystem yet</div>
@@ -183,22 +216,22 @@ export default function WalletPage() {
         ) : (
           /* Tended Ecosystems List */
           <div className="space-y-4 mb-24">
-            {tendedEcosystems.map((ecosystem, index) => (
+            {tendedEcosystems.map((snapshot, index) => (
               <TendedEcosystem
-                key={ecosystem.id}
-                date={ecosystem.date}
-                seedEmblemUrl={ecosystem.seedEmblemUrl}
-                beneficiaryName={ecosystem.beneficiaryName}
-                seedImageUrl={ecosystem.seedImageUrl}
-                userContribution={ecosystem.userContribution}
-                ecosystemCompost={ecosystem.ecosystemCompost}
-                onReadMore={() => handleReadMore()}
-                onTendAgain={() => handleTendAgain(ecosystem.id)}
+                key={snapshot.id}
+                date={new Date(snapshot.timestamp * 1000).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
+                seedEmblemUrl={assets.glowers}
+                beneficiaryName={`Beneficiary #${snapshot.beneficiaryIndex}`}
+                seedImageUrl={snapshot.imageUrl || ''}
+                userContribution={`${snapshot.valueEth} ETH`}
+                ecosystemCompost="0.00 ETH"
+                onReadMore={() => handleReadMore(snapshot.beneficiaryIndex)}
+                onTendAgain={() => handleTendAgain(snapshot.id)}
                 onShare={handleShare}
                 index={index}
-                beneficiarySlug={ecosystem.beneficiarySlug}
-                seedId={ecosystem.seedId}
-                seedSlug={ecosystem.seedSlug}
+                beneficiarySlug={`beneficiary-${snapshot.beneficiaryIndex}`}
+                seedId={snapshot.seedId.toString()}
+                seedSlug={`seed-${snapshot.seedId}`}
               />
             ))}
           </div>

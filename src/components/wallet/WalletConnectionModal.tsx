@@ -81,7 +81,7 @@ export default function WalletConnectionModal({
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                         <Image
-                          src="/icons/metamask.svg"
+                          src="https://cdn.iconscout.com/icon/free/png-512/free-metamask-logo-icon-svg-download-png-2261817.png?f=webp&w=512"
                           alt="MetaMask"
                           width={20}
                           height={20}
@@ -103,7 +103,7 @@ export default function WalletConnectionModal({
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                         <Image
-                          src="/icons/coinbase.svg"
+                          src="https://cdn.iconscout.com/icon/free/png-512/free-coinbase-logo-icon-svg-download-png-7651204.png?f=webp&w=512"
                           alt="Coinbase"
                           width={20}
                           height={20}
@@ -125,7 +125,7 @@ export default function WalletConnectionModal({
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                         <Image
-                          src="/icons/walletconnect.svg"
+                          src="https://1000logos.net/wp-content/uploads/2022/05/WalletConnect-Logo-768x432.png"
                           alt="WalletConnect"
                           width={20}
                           height={20}

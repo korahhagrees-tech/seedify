@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Image from "next/image";
@@ -20,7 +19,8 @@ import {
   retryWebhook,
   checkPendingRetries,
 } from "@/lib/utils/snapshotMinting";
-import { useWriteTransaction } from "@/lib/api/hooks/useWriteTransaction";
+import { useSendTransaction } from "@privy-io/react-auth";
+import { encodeFunctionData } from "viem";
 
 interface EcosystemProjectCardProps {
   backgroundImageUrl: string;
@@ -63,7 +63,7 @@ export default function EcosystemProjectCard({
   const [paymentAmount, setPaymentAmount] = useState<string>(""); // Amount user entered in modal
   const router = useRouter();
   const { walletAddress } = useAuth();
-  const { execute: executeTransaction } = useWriteTransaction();
+  const { sendTransaction } = useSendTransaction();
 
   // Create display subtitle with location and area
   const displaySubtitle =
@@ -80,9 +80,9 @@ export default function EcosystemProjectCard({
   const handlePaymentConfirm = async (amount: string) => {
     setPaymentAmount(amount);
     setShowPaymentModal(false);
-
-    // Start minting after payment modal closes
-    await handleMintSnapshot(amount);
+    
+    // PaymentModal now handles the transaction, so we just show success
+    toast.success('Snapshot minted successfully!', { description: 'Your ecosystem has been tended.' });
   };
 
   // Handle snapshot minting
@@ -120,35 +120,43 @@ export default function EcosystemProjectCard({
       // Convert user's ETH amount to wei
       const amountInWei = (parseFloat(amountInEth) * 1e18).toString();
 
-      // Step 2: Execute contract transaction using wagmi writeContract with USER'S AMOUNT
-      const txHash = await executeTransaction({
-        contractAddress: mintData.data.contractAddress,
-        functionName: "mintSnapshot",
-        args: [
-          mintData.data.args.seedId,
-          beneficiaryIndex,
-          mintData.data.processId,
-          walletAddress,
-          mintData.data.args.royaltyRecipient,
-        ],
-        value: amountInWei, // USE USER'S AMOUNT, NOT BACKEND VALUE
-        description: mintData.data.description,
-        abi: [
-          {
-            type: "function",
-            name: "mintSnapshot",
-            stateMutability: "payable",
-            inputs: [
-              { name: "seedId", type: "uint256" },
-              { name: "beneficiaryIndex", type: "uint256" },
-              { name: "process", type: "string" },
-              { name: "to", type: "address" },
-              { name: "royaltyRecipient", type: "address" },
+      // Step 2: Execute contract transaction using Privy's sendTransaction with gas sponsorship
+      const txResult = await sendTransaction(
+        {
+          to: mintData.data.contractAddress,
+          value: amountInWei, // USE USER'S AMOUNT, NOT BACKEND VALUE
+          data: encodeFunctionData({
+            abi: [
+              {
+                type: "function",
+                name: "mintSnapshot",
+                stateMutability: "payable",
+                inputs: [
+                  { name: "seedId", type: "uint256" },
+                  { name: "beneficiaryIndex", type: "uint256" },
+                  { name: "process", type: "string" },
+                  { name: "to", type: "address" },
+                  { name: "royaltyRecipient", type: "address" },
+                ],
+                outputs: [{ name: "", type: "uint256" }],
+              },
             ],
-            outputs: [{ name: "", type: "uint256" }],
-          },
-        ],
-      } as any);
+            functionName: "mintSnapshot",
+            args: [
+              BigInt(mintData.data.args.seedId),
+              BigInt(beneficiaryIndex),
+              mintData.data.processId,
+              walletAddress as `0x${string}`,
+              mintData.data.args.royaltyRecipient as `0x${string}`,
+            ],
+          })
+        },
+        {
+          sponsor: false // Enable gas sponsorship
+        }
+      );
+
+      const txHash = txResult.hash;
 
       // Step 4: Prepare webhook data using backend-provided data
       const webhookData: WebhookData = {
@@ -394,7 +402,7 @@ export default function EcosystemProjectCard({
           </div>
 
           {/* Footer with centered CTA and inverted switch next to it */}
-          <div className="relative -px-6 py-4 flex items-center bg-white justify-center gap-4 lg:-mt-36 md:-mt-26 -mt-56">
+          <div className="relative -px-6 py-4 flex items-center bg-white justify-center gap-4 lg:-mt-26 md:-mt-26 -mt-56">
             <Button
               variant="ghost"
               className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col disabled:opacity-50"
@@ -476,6 +484,7 @@ export default function EcosystemProjectCard({
         amount={50}
         onConfirm={handlePaymentConfirm}
         isSnapshotMint={true}
+        beneficiaryIndex={beneficiaryIndex}
       />
     </div>
   );

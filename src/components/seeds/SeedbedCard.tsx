@@ -266,9 +266,9 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
             transform: "transform rotate-6"
           },
           labelPosition: {
-            top: "right-48 md:right-58 lg:right-57",
-            left: "top-28 md:top-32 lg:top-32",
-            transform: "transform -rotate-280 md:-rotate-280 lg:-rotate-280 scale-[1.3]"
+            top: "-right-25 md:-right-18 lg:-right-20",
+            left: "top-28 md:top-26 lg:top-26",
+            transform: "transform rotate-280 md:rotate-270 lg:rotate-270 scale-[1.3]"
           }
         },
         // Buena Vista (third largest)
@@ -281,9 +281,9 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
             transform: "transform -rotate-6"
           },
           labelPosition: {
-            top: "left-46 md:left-58 lg:left-55",
-            left: "bottom-4 md:bottom-8 lg:bottom-5",
-            transform: "transform -rotate-74 md:-rotate-84 lg:-rotate-84 scale-[1.3]"
+            top: "-left-52 md:-left-48 lg:-left-48",
+            left: "-bottom-2 md:bottom-2 lg:bottom-5",
+            transform: "transform rotate-76 md:rotate-84 lg:rotate-84 scale-[1.3]"
           }
         },
         // Walkers Reserve (smallest)

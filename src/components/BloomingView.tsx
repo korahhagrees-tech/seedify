@@ -54,9 +54,9 @@ export default function BloomingView({
     setIsWalletModalOpen(false);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
     setIsWalletModalOpen(false);
+    await logout();
   };
 
   const handleAddFunds = () => {

@@ -35,10 +35,12 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
-  const logout = () => {
-    privyLogout();
+  const logout = async () => {
+    // Clear local state first
     setWalletAddress(null);
     setBalance(null);
+    // Then logout from Privy
+    await privyLogout();
   };
 
   return (

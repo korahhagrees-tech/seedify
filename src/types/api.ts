@@ -25,6 +25,7 @@ export interface BeneficiaryProjectData {
   benefits: string[];
   moreDetails: string;
   backgroundImage: string;
+  readMoreLink?: string;
 }
 
 export interface BeneficiaryData {

@@ -34,11 +34,11 @@ export default function WalletConnectButton({
     }
   });
 
-  // Disable login when Privy is not ready or the user is already authenticated
-  const disableLogin = !ready || (ready && authenticated);
+  // Only disable login when Privy is not ready
+  const disableLogin = !ready;
 
   const handleClick = () => {
-    if (!disableLogin) {
+    if (ready && !authenticated) {
       login();
     }
   };
@@ -56,7 +56,7 @@ export default function WalletConnectButton({
         disabled={disableLogin}
         className={`text-white text-lg font-light px-8 py-4 hover:bg-white/20 transition-colors peridia-display ${className}`}
       >
-        {children || (authenticated ? 'Connected' : 'Tap to Start')}
+        {!ready ? 'Loading...' : children || (authenticated ? 'Connected' : 'Tap to Start')}
       </Button>
     </motion.div>
   );

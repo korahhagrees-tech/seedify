@@ -8,6 +8,7 @@ import RootShapeArea from "@/components/wallet/RootShapeArea";
 import InfoModal from "@/components/InfoModal";
 import StoryPanel from "@/components/StoryPanel"; 
 import WalletModal from "@/components/wallet/WalletModal";
+import AudioPlayerModal from "@/components/AudioPlayerModal";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSeedStory } from "@/lib/data/componentData";
@@ -19,6 +20,7 @@ export default function About() {
   const [activeTab, setActiveTab] = useState<"substrate" | "credits" | "tnc">("substrate");
   const [showStoryPanel, setShowStoryPanel] = useState(false);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [isAudioPlayerOpen, setIsAudioPlayerOpen] = useState(false);
   const { logout } = usePrivy();
   
   // Use seed 1 data for the about page
@@ -27,12 +29,21 @@ export default function About() {
     router.push("/");
   };
 
-  const handleSubstrateClick = () => {
-    setIsInfoModalOpen(true);
+  // Commented out - Info modal logic (redundant with about page content)
+  // const handleSubstrateClick = () => {
+  //   setIsInfoModalOpen(true);
+  // };
+
+  // const handleInfoModalClose = () => {
+  //   setIsInfoModalOpen(false);
+  // };
+
+  const handleAudioClick = () => {
+    setIsAudioPlayerOpen(true);
   };
 
-  const handleInfoModalClose = () => {
-    setIsInfoModalOpen(false);
+  const handleAudioPlayerClose = () => {
+    setIsAudioPlayerOpen(false);
   };
 
   const handleTabClick = (tab: "substrate" | "credits" | "tnc") => {
@@ -87,7 +98,7 @@ export default function About() {
       </div>
       
       {/* Main content with dotted border */}
-      <div className="pb-32 w-full">
+      <div className="pb-46 w-full">
         <div className="border-2 border-dotted border-black rounded-[50px] p-4 mb-6">
           {/* Tab buttons */}
           <div className="flex gap-6 mb-6 peridia-display-light justify-center">
@@ -140,9 +151,12 @@ export default function About() {
             {activeTab === "substrate" && (
               <>
                 <div className="text-center mb-2">
-                  <div className="mx-auto my-1 w-8 h-8 rounded-full border border-black flex items-center justify-center">
+                  <button 
+                    onClick={handleAudioClick}
+                    className="mx-auto my-1 w-8 h-8 rounded-full border border-black flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer"
+                  >
                     <Image src="/audio-play.svg" alt="Audio" width={14} height={14} />
-                  </div>
+                  </button>
                 </div>
                 <p className="text-xs leading-relaxed">
                   <span className="peridia-display-light">The Way of Flowers</span> represents a fundamental reimagining of environmental art through dynamic digital botanical compositions that maintain living connections to real-world conservation efforts. Collectors become original seeders, acquiring seeds that are collectively nurtured through their community and its engagement with specific ecosystem projects, creating uniquely evolving artworks that form a digital permaculture garden cultivated through ecosystem nurturing and grown by community stewardship.
@@ -202,7 +216,7 @@ export default function About() {
       <div className="fixed -bottom-1 left-0 right-0 z-30 pt-2 scale-[1.1]">
         <div className="max-w-sm mx-auto px-3">
           <RootShapeArea
-            onSubstrate={handleSubstrateClick}
+            onSubstrate={() => {}} // Commented out - onSubstrate={handleSubstrateClick}
             onStory={handleStoryClick}
             onWallet={handleWallet}
             showGlassEffect={true}
@@ -211,11 +225,11 @@ export default function About() {
         </div>
       </div>
 
-      {/* Info Modal */}
-      <InfoModal
+      {/* Info Modal - Commented out (redundant with about page content) */}
+      {/* <InfoModal
         open={isInfoModalOpen}
         onClose={handleInfoModalClose}
-      />
+      /> */}
 
       {/* Wallet Modal */}
       <WalletModal
@@ -226,6 +240,15 @@ export default function About() {
         onExportKey={handleExportKey}
         onSwitchWallet={handleSwitchWallet}
         onPrivyHome={handlePrivyHome}
+      />
+
+      {/* Audio Player Modal */}
+      <AudioPlayerModal
+        isOpen={isAudioPlayerOpen}
+        onClose={handleAudioPlayerClose}
+        // audioUrl="https://on.soundcloud.com/wu5rxiArRRIs51iCcG"
+        audioUrl="https://soundcloud.com/crosslucid/we-are-the-soil-for-what-comes-next-by-stanley-qiufan-chen?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+        title="The Way of Flowers"
       />
     </div>
   );

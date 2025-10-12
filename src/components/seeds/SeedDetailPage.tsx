@@ -22,7 +22,7 @@ export default function SeedDetailPage({
   onPlantSeed,
 }: SeedDetailPageProps) {
   return (
-    <div className="min-h-screen w-full max-w-md mx-auto lg:-mt-30 md:-mt-30 -mt-2 relative lg:scale-[0.8] md:scale-[0.8] scale-[0.95]">
+    <div className="min-h-screen w-full max-w-md mx-auto lg:-mt-38 md:-mt-38 -mt-2 relative lg:scale-[0.8] md:scale-[0.8] scale-[0.95]">
       {/* Steward Label - positioned above the main content */}
       <div className="relative pt-4 pb-2 ml-4">
         <motion.div
@@ -41,7 +41,7 @@ export default function SeedDetailPage({
 
       {/* Main Content Container */}
       <motion.div
-        className="px-4 pb-20"
+        className="px-4 -pb-[180px] -mb-77"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -73,7 +73,7 @@ export default function SeedDetailPage({
               src={
                 seed.seedImageUrl && seed.seedImageUrl.length > 0
                   ? seed.seedImageUrl
-                  : "/seeds/01__GRG.png"
+                  : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
               }
               alt=""
               fill

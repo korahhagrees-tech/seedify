@@ -53,7 +53,7 @@ export default function SeedDetailsRoute() {
   }
 
   return (
-    <div className="-mt-16">
+    <div className="-mt-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pb-44">
       <SeedDetailPage 
         seed={seed}
         onBack={() => router.push("/garden")}
