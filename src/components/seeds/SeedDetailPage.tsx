@@ -10,11 +10,8 @@ import GardenHeader from "../GardenHeader";
 
 interface SeedDetailPageProps {
   seed: Seed;
-  // eslint-disable-next-line @typescript-eslint/ban-types
   onBack?: () => void;
-  // eslint-disable-next-line @typescript-eslint/ban-types
   onProfileClick?: () => void;
-  // eslint-disable-next-line @typescript-eslint/ban-types
   onPlantSeed?: () => void;
 }
 

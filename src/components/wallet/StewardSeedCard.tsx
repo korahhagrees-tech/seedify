@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/ban-types */
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Seed } from "@/types/seed";
