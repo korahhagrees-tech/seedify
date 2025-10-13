@@ -27,6 +27,10 @@ export default function UserProfile({ className }: UserProfileProps) {
 
   const handleLogout = async () => {
     await globalLogout();
+    // Force refresh to clear all state
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 100);
   };
 
   // Get user's wallet address if available

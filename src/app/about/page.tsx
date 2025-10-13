@@ -69,6 +69,10 @@ export default function About() {
   const handleLogout = async () => {
     await logout();
     router.push("/");
+    // Force refresh to clear all state
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 100);
   };
 
   const handleAddFunds = () => {
@@ -88,7 +92,7 @@ export default function About() {
 
   const handlePrivyHome = () => {
     // Handle privy home logic
-    router.push("/garden");
+    router.push("https://home.privy.io/login");
   };
 
   return (

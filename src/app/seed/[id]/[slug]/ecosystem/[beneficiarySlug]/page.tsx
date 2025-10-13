@@ -112,6 +112,7 @@ export default function EcosystemPage() {
         seedId={ecosystemData.seedId}
         beneficiaryCode={ecosystemData.beneficiaryCode}
         beneficiaryIndex={ecosystemData.beneficiaryIndex}
+        snapshotPrice={ecosystemData.snapshotPrice}
       />
     </div>
   );

@@ -6,7 +6,7 @@
  */
 
 export const API_CONFIG = {
-  baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api',
+  baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://seedify-backend.up.railway.app/api',
   timeout: 10000, // 10 seconds
   retries: 3,
 } as const;

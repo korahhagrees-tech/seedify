@@ -32,10 +32,10 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
         // El Globo (largest)
         {
           position: {
-            top: "top-3 lg:-top-6 md:-top-6",
-            left: "left-8 lg:left-11 md:left-10",
-            width: "w-[132px] lg:w-[148px] md:w-[148px]",
-            height: "h-[130px] lg:h-[148px] md:h-[148px]",
+            top: "top-3 lg:top-4 md:-top-6",
+            left: "left-8 lg:left-8 md:left-10",
+            width: "w-[132px] lg:w-[128px] md:w-[148px]",
+            height: "h-[130px] lg:h-[128px] md:h-[148px]",
             transform: "transform -rotate-4 lg:-rotate-4 md:-rotate-4"
           },
           labelPosition: {
@@ -77,10 +77,10 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
         // Walkers Reserve (smallest)
         {
           position: {
-            top: "top-19 lg:top-10 md:top-10",
-            left: "right-5 lg:right-9 md:right-8",
-            width: "w-8 lg:w-10 md:w-10",
-            height: "h-8 lg:h-10 md:h-10",
+            top: "top-19 lg:top-17 md:top-10",
+            left: "right-5 lg:right-7 md:right-8",
+            width: "w-8 lg:w-8 md:w-10",
+            height: "h-8 lg:h-8 md:h-10",
             transform: "transform rotate-12 lg:-rotate-12 md:-rotate-12 scale-[1.2] lg:scale-[1.2] md:scale-[1.2]"
           },
           labelPosition: {
@@ -244,25 +244,25 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
         // El Globo (largest)
         {
           position: {
-            top: "-top-8 md:-top-17 lg:-top-18",
-            left: "left-6 md:left-9 lg:left-9",
-            width: "w-[136px] md:w-[147px] lg:w-[148px]",
-            height: "h-[136px] md:h-[147px] lg:h-[148px]",
+            top: "-top-8 md:-top-17 lg:-top-8",
+            left: "left-6 md:left-9 lg:left-8",
+            width: "w-[130px] md:w-[147px] lg:w-[128px]",
+            height: "h-[136px] md:h-[147px] lg:h-[128px]",
             transform: "transform -rotate-4"
           },
           labelPosition: {
             top: "-left-8 md:-left-8 lg:-left-6",
-            left: "-top-20 md:-top-32 lg:-top-34",
+            left: "-top-20 md:-top-32 lg:-top-22",
             transform: "transform -rotate-52 md:-rotate-50 lg:-rotate-38 scale-[1.3]"
           }
         },
         // Grgich Hills (second largest)
         {
           position: {
-            top: "lg:bottom-30 bottom-32 md:bottom-30",
-            left: "lg:-right-6 -right-6 md:-right-6",
-            width: "w-31 md:w-35 lg:w-35",
-            height: "h-31 md:h-35 lg:h-35",
+            top: "lg:bottom-24 bottom-32 md:bottom-30",
+            left: "lg:-right-4 -right-6 md:-right-6",
+            width: "w-31 md:w-35 lg:w-32",
+            height: "h-31 md:h-35 lg:h-32",
             transform: "transform rotate-6"
           },
           labelPosition: {
@@ -281,24 +281,24 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
             transform: "transform -rotate-6"
           },
           labelPosition: {
-            top: "-left-52 md:-left-48 lg:-left-48",
-            left: "-bottom-2 md:bottom-2 lg:bottom-5",
-            transform: "transform rotate-76 md:rotate-84 lg:rotate-84 scale-[1.3]"
+            top: "-left-52 md:-left-48 lg:-left-52",
+            left: "-bottom-2 md:bottom-2 lg:-bottom-2",
+            transform: "transform rotate-76 md:rotate-84 lg:rotate-88 scale-[1.3]"
           }
         },
         // Walkers Reserve (smallest)
         {
           position: {
-            top: "top-7 md:-top-2 lg:-top-3",
-            left: "right-3 lg:right-4 md:right-4",
-            width: "w-11 md:w-12 lg:w-14",
-            height: "h-11 md:h-12 lg:h-14",
+            top: "top-7 md:-top-2 lg:top-4",
+            left: "right-3 lg:right-6 md:right-4",
+            width: "w-11 md:w-12 lg:w-10",
+            height: "h-11 md:h-12 lg:h-10",
             transform: "transform rotate-12"
           },
           labelPosition: {
-            top: "-right-4 md:-right-6 lg:-right-9",
+            top: "-right-4 md:-right-6 lg:-right-4",
             left: "-top-6 md:-top-24 lg:-top-10",
-            transform: "transform rotate-52 md:rotate-80 lg:rotate-36 scale-[1.2] lg:scale-[1.2] md:scale-[1.1]"
+            transform: "transform rotate-52 md:rotate-80 lg:rotate-42 scale-[1.2] lg:scale-[1.2] md:scale-[1.1]"
           }
         }
       ];
@@ -339,9 +339,9 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
           </div>
           
           {/* Main subtract shape container */}
-          <div className="relative w-full h-96">
+          <div className="relative w-full h-86">
             {/* Subtract.svg as the main outline */}
-            <div className="absolute inset-0 lg:scale-[1.3] md:scale-[1.3] scale-[1.1]">
+            <div className="absolute inset-0 lg:scale-[1.1] md:scale-[1.3] scale-[1.1]">
               <Image
                 src={assets.subtract}
                 // src={assets.subtracts}

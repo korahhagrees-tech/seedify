@@ -35,6 +35,7 @@ interface EcosystemProjectCardProps {
   seedId?: string;
   beneficiaryCode?: string; // Add beneficiary code for snapshot minting
   beneficiaryIndex?: number; // Add beneficiary index for contract call
+  snapshotPrice?: string; // Add snapshot price for dynamic payment modal
 }
 
 /**
@@ -55,6 +56,7 @@ export default function EcosystemProjectCard({
   seedId,
   beneficiaryCode,
   beneficiaryIndex,
+  snapshotPrice,
 }: EcosystemProjectCardProps) {
   // Switch controls whether to show extended text (additive to short text)
   const [showExtended, setShowExtended] = useState(false);
@@ -235,7 +237,7 @@ export default function EcosystemProjectCard({
 
         {/* Card with cutout header */}
         <motion.div
-          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-4 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[480px] lg:h-[600px] md:h-[600px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
+          className="relative max-w-md mx-auto lg:-mt-12 md:-mt-14 mt-4 bg-white rounded-[60px] shadow-xl border-none border-black overflow-hidden h-[540px] lg:h-[660px] md:h-[660px] lg:scale-[0.8] md:scale-[0.8] scale-[1.0]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -402,7 +404,7 @@ export default function EcosystemProjectCard({
           </div>
 
           {/* Footer with centered CTA and inverted switch next to it */}
-          <div className="relative -px-6 py-4 flex items-center bg-white justify-center gap-4 lg:-mt-26 md:-mt-26 -mt-56">
+          <div className="relative -px-6 py-4 flex items-center bg-white justify-center gap-4 lg:-mt-12 md:-mt-12 -mt-42">
             <Button
               variant="ghost"
               className="w-[70%] rounded-full border-1 border-black/40 text-black text-lg py-8 peridia-display flex flex-col disabled:opacity-50"
@@ -445,7 +447,7 @@ export default function EcosystemProjectCard({
         </motion.div>
 
         {/* Navigation circles - positioned on the card border */}
-        <div className="relative max-w-md mx-auto -mt-[500px] md:-mt-[560px] lg:-mt-[560px] z-20 flex justify-center items-center gap-8">
+        <div className="relative max-w-md mx-auto -mt-[560px] md:-mt-[620px] lg:-mt-[620px] z-20 flex justify-center items-center gap-8">
           {/* Back Arrow - left side */}
           <button onClick={() => router.back()}>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
@@ -481,7 +483,7 @@ export default function EcosystemProjectCard({
         isOpen={showPaymentModal}
         onClose={() => setShowPaymentModal(false)}
         seedId={seedId}
-        amount={50}
+        amount={snapshotPrice ? parseFloat(snapshotPrice) : 0.011}
         onConfirm={handlePaymentConfirm}
         isSnapshotMint={true}
         beneficiaryIndex={beneficiaryIndex}

@@ -57,6 +57,10 @@ export default function BloomingView({
   const handleLogout = async () => {
     setIsWalletModalOpen(false);
     await logout();
+    // Force refresh to clear all state
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 100);
   };
 
   const handleAddFunds = () => {
@@ -76,7 +80,7 @@ export default function BloomingView({
 
   const handlePrivyHome = () => {
     // Privy home logic here
-    router.push("/garden");
+    router.push("https://home.privy.io/login");
   };
 
   useEffect(() => {

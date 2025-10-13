@@ -12,7 +12,8 @@ import StewardSeedCard from "@/components/wallet/StewardSeedCard";
 import WalletModal from "@/components/wallet/WalletModal";
 import { useAuth } from "@/components/auth/AuthProvider";
 import GardenHeader from "@/components/GardenHeader";
-import { fetchUserSeeds, fetchBeneficiaryByIndex } from "@/lib/api";
+import { fetchUserSeeds, fetchBeneficiaryByIndex, fetchSeedById } from "@/lib/api";
+import { API_CONFIG, API_ENDPOINTS } from "@/lib/api/config";
 
 // Mock data for tended ecosystems
 // Each tended ecosystem represents a snapshot mint of a beneficiary from a seed
@@ -88,28 +89,74 @@ export default function WalletPage() {
         }
 
         // Fetch user's snapshots to show tended ecosystems
-        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
-        const snapshotsResponse = await fetch(`${apiBaseUrl}/users/${walletAddress}/snapshots`);
+        const snapshotsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSnapshots(walletAddress)}`;
+        console.log('🔗 [WALLET] Fetching snapshots from:', snapshotsUrl);
+        
+        const snapshotsResponse = await fetch(snapshotsUrl);
+        
+        console.log('📊 [WALLET] API Response status:', snapshotsResponse.status);
+        
+        if (!snapshotsResponse.ok) {
+          throw new Error(`API request failed with status ${snapshotsResponse.status}`);
+        }
+        
         const snapshotsData = await snapshotsResponse.json();
+        console.log('📊 [WALLET] API Response data:', snapshotsData);
         
         if (snapshotsData.success && snapshotsData.snapshots.length > 0) {
-          // Fetch beneficiary data for each snapshot to get readMoreLink
-          const linksMap = new Map<number, string>();
+          console.log('✅ [WALLET] Loaded snapshots:', snapshotsData.snapshots);
           
-          for (const snapshot of snapshotsData.snapshots) {
-            try {
-              const beneficiary = await fetchBeneficiaryByIndex(snapshot.beneficiaryIndex);
-              if (beneficiary?.projectData?.readMoreLink) {
-                linksMap.set(snapshot.beneficiaryIndex, beneficiary.projectData.readMoreLink);
+          // Enrich snapshots with seed and beneficiary data
+          const enrichedSnapshots = await Promise.all(
+            snapshotsData.snapshots.map(async (snapshot: any) => {
+              try {
+                // Fetch seed data to get seed image and info
+                const seedData = await fetchSeedById(snapshot.seedId.toString());
+                
+                // Fetch beneficiary data to get proper name and readMoreLink
+                const beneficiary = await fetchBeneficiaryByIndex(snapshot.beneficiaryIndex);
+                
+                // Store readMoreLink in the map
+                if (beneficiary?.projectData?.readMoreLink) {
+                  setBeneficiaryLinks(prev => new Map(prev).set(snapshot.beneficiaryIndex, beneficiary.projectData!.readMoreLink!));
+                }
+                
+                // Return enriched snapshot data
+                return {
+                  ...snapshot,
+                  // Add seed data
+                  seedImageUrl: seedData?.seedImageUrl || '',
+                  seedName: seedData?.name || `Seed ${snapshot.seedId}`,
+                  seedLabel: seedData?.label || `SEED ${snapshot.seedId}`,
+                  // Add beneficiary data
+                  beneficiaryName: beneficiary?.name || `Beneficiary #${snapshot.beneficiaryIndex}`,
+                  beneficiaryCode: beneficiary?.code || '',
+                  beneficiarySlug: beneficiary?.slug || `beneficiary-${snapshot.beneficiaryIndex}`,
+                };
+              } catch (e) {
+                console.error(`Failed to enrich snapshot ${snapshot.id}:`, e);
+                // Return original snapshot with fallback data
+                return {
+                  ...snapshot,
+                  seedImageUrl: '',
+                  seedName: `Seed ${snapshot.seedId}`,
+                  seedLabel: `SEED ${snapshot.seedId}`,
+                  beneficiaryName: `Beneficiary #${snapshot.beneficiaryIndex}`,
+                  beneficiaryCode: '',
+                  beneficiarySlug: `beneficiary-${snapshot.beneficiaryIndex}`,
+                };
               }
-            } catch (e) {
-              console.error('Failed to fetch beneficiary:', e);
-            }
-          }
+            })
+          );
           
           if (!cancelled) {
-            setBeneficiaryLinks(linksMap);
-            setTendedEcosystems(snapshotsData.snapshots);
+            setTendedEcosystems(enrichedSnapshots);
+            console.log('✅ [WALLET] Enriched snapshots:', enrichedSnapshots);
+          }
+        } else {
+          console.log('❌ [WALLET] No snapshots found or API failed:', snapshotsData);
+          if (!cancelled) {
+            setTendedEcosystems([]);
           }
         }
       } catch (_e) {
@@ -152,6 +199,10 @@ export default function WalletPage() {
     setIsWalletModalOpen(false);
     await logout();
     router.push("/");
+    // Force refresh to clear all state
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 100);
   };
 
   const handleAddFunds = () => {
@@ -171,7 +222,7 @@ export default function WalletPage() {
 
   const handlePrivyHome = () => {
     // Handle privy home
-    router.push("/garden");
+    router.push("https://home.privy.io/login");
   };
 
   return (
@@ -221,15 +272,15 @@ export default function WalletPage() {
                 key={snapshot.id}
                 date={new Date(snapshot.timestamp * 1000).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
                 seedEmblemUrl={assets.glowers}
-                beneficiaryName={`Beneficiary #${snapshot.beneficiaryIndex}`}
-                seedImageUrl={snapshot.imageUrl || ''}
+                beneficiaryName={snapshot.beneficiaryName} // Now uses actual beneficiary name
+                seedImageUrl={snapshot.seedImageUrl} // Now uses actual seed image
                 userContribution={`${snapshot.valueEth} ETH`}
                 ecosystemCompost="0.00 ETH"
                 onReadMore={() => handleReadMore(snapshot.beneficiaryIndex)}
                 onTendAgain={() => handleTendAgain(snapshot.id)}
                 onShare={handleShare}
                 index={index}
-                beneficiarySlug={`beneficiary-${snapshot.beneficiaryIndex}`}
+                beneficiarySlug={snapshot.beneficiarySlug} // Now uses actual beneficiary slug
                 seedId={snapshot.seedId.toString()}
                 seedSlug={`seed-${snapshot.seedId}`}
               />

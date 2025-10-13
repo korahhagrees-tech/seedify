@@ -4,6 +4,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Seed, weiToEth, formatAddress } from "@/types/seed";
+import { useState } from "react";
 
 interface SeedCardProps {
   seed: Seed;
@@ -12,6 +13,8 @@ interface SeedCardProps {
 }
 
 export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
+  const [imageError, setImageError] = useState(false);
+  
   const handleImageLoad = () => {
     console.log("🌸 [IMAGE] Successfully loaded:", seed.seedImageUrl);
   };
@@ -56,7 +59,9 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
           {/* Seed Image - fills the entire rounded container */}
           <Image
             src={
-              seed.seedImageUrl && seed.seedImageUrl.length > 0
+              imageError
+                ? "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
+                : seed.seedImageUrl && seed.seedImageUrl.length > 0
                 ? seed.seedImageUrl
                 : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
             }
@@ -65,14 +70,11 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
             className="object-cover"
             onLoad={handleImageLoad}
             onError={(e) => {
-              console.log(
-                "🌸 [IMAGE] Error loading seed image, using placeholder"
-              );
-              const target = e.target as HTMLImageElement;
-              if (
-                target.src !== `${window.location.origin}/seeds/01__GRG.png`
-              ) {
-                target.src = "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
+              if (!imageError) {
+                console.log(
+                  "🌸 [IMAGE] Error loading seed image (403 or network issue), using CloudFront fallback"
+                );
+                setImageError(true);
               }
             }}
             priority={index < 2}

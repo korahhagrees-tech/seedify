@@ -61,6 +61,7 @@ export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData, seed
     beneficiarySlug: beneficiary.slug || '',
     seedEmblemUrl,
     seedId: seedData?.id,
+    snapshotPrice: seedData?.snapshotPrice, // Add snapshot price from seed data
   };
 }
 
