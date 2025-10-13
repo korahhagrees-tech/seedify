@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useFundWallet } from "@privy-io/react-auth";
+import { base } from "viem/chains";
 
 
 interface AddFundsModalProps {
@@ -60,7 +61,9 @@ export default function AddFundsModal({
 
     try {
       // Use Privy's fundWallet with configuration
-      await fundWallet({ address: walletAddress });
+      await fundWallet({address: walletAddress, options: {
+        chain: base,
+      }});
     } catch (err) {
       console.error('Failed to initiate funding:', err);
       setError('Failed to start funding process. Please try again.');

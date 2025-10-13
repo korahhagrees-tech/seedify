@@ -5,12 +5,21 @@ import { base, baseSepolia } from '@privy-io/chains';
 export const privyConfig: PrivyClientConfig = {
   embeddedWallets: {
     ethereum: {
-      createOnLogin: 'users-without-wallets'
+      createOnLogin: 'users-without-wallets',
     },
-    showWalletUIs: true
+    solana: {
+      createOnLogin: 'users-without-wallets',
+    },
+    showWalletUIs: true,
+    extendedCalldataDecoding: true,
+    priceDisplay: {
+      primary: 'fiat-currency',
+      secondary: 'native-token',
+    },
   },
-  loginMethods: ['email', 'sms', 'google', 'twitter', 'discord', 'github','wallet'],
+  loginMethods: ['email', 'sms', 'google', 'twitter', 'discord', 'github', 'wallet'],
   supportedChains: [baseSepolia, base],
+  defaultChain: base, // Set Base as the default chain for funding
   appearance: {
     showWalletLoginFirst: true,
     theme: 'light',
@@ -20,7 +29,6 @@ export const privyConfig: PrivyClientConfig = {
     landingHeader: 'Welcome to The Way of Flowers',
     loginMessage: 'Sign in to your account',
   },
-
 };
 
 // Get the Privy App ID and Client ID from environment variables

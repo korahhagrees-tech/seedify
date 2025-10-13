@@ -387,12 +387,12 @@ export default function EcosystemProjectCard({
               data-main-content
             >
               {/* Short text - always visible */}
-              <div className="mb-34 whitespace-pre-line">{shortText}</div>
+              <div className="mb-44 whitespace-pre-line">{shortText}</div>
 
               {/* Extended text - completely hidden/shown like old code */}
               {showExtended && (
                 <div
-                  className="overflow-hidden whitespace-pre-line -mt-24 mb-34"
+                  className="overflow-hidden whitespace-pre-line -mt-44 mb-54"
                   data-expanded-content
                 >
                   {extendedText}

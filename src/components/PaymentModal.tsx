@@ -18,6 +18,8 @@ import { useBalance, useWriteContract, useWaitForTransactionReceipt } from 'wagm
 import { useSendTransaction, useWallets, useFundWallet } from "@privy-io/react-auth";
 import { encodeFunctionData } from "viem";
 import { SNAPSHOT_NFT_ABI } from "@/lib/contracts";
+import { base } from "viem/chains";
+import WalletConnectionModal from "@/components/wallet/WalletConnectionModal";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -27,6 +29,7 @@ interface PaymentModalProps {
   onConfirm?: (amount: string) => void; // Callback for snapshot minting
   isSnapshotMint?: boolean; // Flag to indicate snapshot minting mode
   beneficiaryIndex?: number; // For snapshot minting
+  beneficiaryCode?: string; // Beneficiary code (e.g., "01-GRG", "04-BUE")
 }
 
 export default function PaymentModal({ 
@@ -36,12 +39,14 @@ export default function PaymentModal({
   amount = 50,
   onConfirm,
   isSnapshotMint = false,
-  beneficiaryIndex
+  beneficiaryIndex,
+  beneficiaryCode
 }: PaymentModalProps) {
   const [email, setEmail] = useState("");
   const [amountInput, setAmountInput] = useState(amount ? amount.toString() : "0.011"); // Default ETH amount
   const [isProcessing, setIsProcessing] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showWalletConnection, setShowWalletConnection] = useState(false);
   const { authenticated, login, logout } = usePrivy();
   const { execute } = useWriteTransaction();
   const { user, walletAddress } = useAuth();
@@ -78,6 +83,27 @@ export default function PaymentModal({
     }
   };
 
+  const handleWalletConnect = () => {
+    setShowWalletConnection(true);
+  };
+
+  const handleAddFunds = async () => {
+    if (walletAddress) {
+      try {
+        // Use Privy's fundWallet with Base chain (same logic as WalletModal)
+        await fundWallet({
+          address: walletAddress,
+          options: {
+            chain: base,
+          }
+        });
+      } catch (error) {
+        console.error('Failed to fund wallet:', error);
+        toast.error('Failed to open funding flow');
+      }
+    }
+  };
+
   const handleTransaction = async () => {
       setIsProcessing(true);
       
@@ -106,9 +132,16 @@ export default function PaymentModal({
         // Convert user's ETH amount to wei
         const amountInWei = (parseFloat(amountInput) * 1e18).toString();
 
+        // Debug: Log the backend data we received
+        console.log('🔍 Backend mintData:', JSON.stringify(mintData, null, 2));
+        console.log('🔍 Using beneficiaryIndex:', beneficiaryIndex);
+        console.log('🔍 Using beneficiaryCode:', beneficiaryCode);
+        console.log('🔍 User amount in wei:', amountInWei);
+
         // Detect wallet type and use appropriate transaction method
         const isEmbeddedWallet = activeWallet.walletClientType === 'privy' || activeWallet.connectorType === 'embedded';
         const isSolanaWallet = activeWallet.walletClientType === 'solana';
+        let txHash: string | undefined;
 
         if (isSolanaWallet) {
           // For Solana wallets, use useSignAndSendTransaction
@@ -116,21 +149,39 @@ export default function PaymentModal({
           setIsProcessing(false);
           return;
         } else if (isEmbeddedWallet) {
-          // For embedded wallets, use useSendTransaction with actual ABI
-          await sendTransaction(
+          // Use simplified ABI for better transaction display
+          const simplifiedABI = [
+            {
+              "type": "function",
+              "name": "mintSnapshot",
+              "stateMutability": "nonpayable",
+              "inputs": [
+                { "name": "seedId", "type": "uint256" },
+                { "name": "beneficiaryIndex", "type": "uint256" },
+                { "name": "processId", "type": "string" },
+                { "name": "to", "type": "address" },
+                { "name": "value", "type": "uint256" }
+                // { "name": "projectCode", "type": "string" } // ✅ WIRED: Uncomment to use beneficiary code
+              ],
+              "outputs": [{ "name": "", "type": "uint256" }]
+            }
+          ];
+
+          // For embedded wallets, use useSendTransaction with correct backend data
+          const txResult = await sendTransaction(
             {
               to: mintData.data.contractAddress,
-              value: amountInWei, // USER'S INPUT AMOUNT
+              value: "0",
               data: encodeFunctionData({
-                abi: SNAPSHOT_NFT_ABI,
+                abi: simplifiedABI,
                 functionName: "mintSnapshot",
                 args: [
                   BigInt(mintData.data.args.seedId),
                   BigInt(beneficiaryIndex),
                   mintData.data.processId,
                   activeWallet.address as `0x${string}`,
-                  BigInt(amountInWei), // value parameter (not payable)
-                  mintData.data.args.projectCode || "WAY-OF-FLOWERS", // projectCode parameter
+                  BigInt(amountInWei),
+                  // beneficiaryCode || "DEFAULT",
                 ],
               })
             },
@@ -152,31 +203,66 @@ export default function PaymentModal({
               }
             }
           );
+          
+          txHash = txResult.hash;
+          console.log('✅ Embedded wallet transaction hash:', txHash);
         } else {
           // For external EVM wallets (MetaMask, Coinbase, etc.), use wagmi's writeContract
           // This will trigger the wallet's native transaction modal
           toast.info('Please confirm the transaction in your wallet...');
           
           try {
-            const txHash = await writeContractAsync({
+            // Use a more comprehensive ABI for better MetaMask display
+            const comprehensiveABI = [
+              {
+                "type": "function",
+                "name": "mintSnapshot",
+                "stateMutability": "nonpayable",
+                "inputs": [
+                  { "name": "seedId", "type": "uint256" },
+                  { "name": "beneficiaryIndex", "type": "uint256" },
+                  { "name": "processId", "type": "string" },
+                  { "name": "to", "type": "address" },
+                  { "name": "value", "type": "uint256" }
+                  // { "name": "projectCode", "type": "string" } // ✅ WIRED: Uncomment to use beneficiary code
+                ],
+                "outputs": [{ "name": "", "type": "uint256" }]
+              },
+              {
+                "type": "function",
+                "name": "name",
+                "stateMutability": "view",
+                "inputs": [],
+                "outputs": [{ "name": "", "type": "string" }]
+              },
+              {
+                "type": "function", 
+                "name": "symbol",
+                "stateMutability": "view",
+                "inputs": [],
+                "outputs": [{ "name": "", "type": "string" }]
+              }
+            ];
+
+            txHash = await writeContractAsync({
               address: mintData.data.contractAddress as `0x${string}`,
-              abi: SNAPSHOT_NFT_ABI,
+              abi: comprehensiveABI, // ✅ Use simplified ABI for better MetaMask display
               functionName: "mintSnapshot",
               args: [
-                BigInt(mintData.data.args.seedId),
-                BigInt(beneficiaryIndex),
-                mintData.data.processId,
-                activeWallet.address as `0x${string}`,
-                BigInt(amountInWei), // value parameter (not payable)
-                mintData.data.args.projectCode || "WAY-OF-FLOWERS", // projectCode parameter
+                BigInt(mintData.data.args.seedId), // ✅ From backend
+                BigInt(beneficiaryIndex), // ✅ From component
+                mintData.data.processId, // ✅ From backend
+                activeWallet.address as `0x${string}`, // ✅ User's wallet
+                BigInt(amountInWei), // ✅ User's amount as parameter
+                // beneficiaryCode || "DEFAULT", // ✅ WIRED: Uncomment to use beneficiary code (e.g., "01-GRG", "04-BUE")
               ],
-              value: BigInt(amountInWei),
+              value: BigInt(0), // ✅ Don't send ETH - function is nonpayable
               // Let MetaMask estimate gas for better display
               gas: undefined,
             });
 
             toast.success('Transaction submitted! Waiting for confirmation...');
-            console.log('Transaction hash:', txHash);
+            console.log('✅ External wallet transaction hash:', txHash);
           } catch (error: any) {
             if (error?.code === 4001 || error?.message?.includes('User rejected')) {
               toast.error('Transaction rejected');
@@ -188,11 +274,46 @@ export default function PaymentModal({
           }
         }
 
+        // Step 4: Call webhook with backend data + transaction hash
+        if (txHash) {
+          const webhookData = {
+            contractAddress: mintData.data.contractAddress,
+            seedId: mintData.data.args.seedId,
+            snapshotId: mintData.data.snapshotId,
+            beneficiaryCode: mintData.data.beneficiaryCode || `BENEFICIARY-${beneficiaryIndex}`,
+            beneficiaryDistribution: mintData.data.beneficiaryDistribution || 0,
+            creator: activeWallet.address,
+            txHash: txHash,
+            timestamp: Math.floor(Date.now() / 1000),
+            blockNumber: mintData.data.blockNumber,
+            processId: mintData.data.processId,
+          };
+
+          console.log('🔗 Webhook data:', JSON.stringify(webhookData, null, 2));
+
+          // Call webhook to trigger image generation
+          try {
+            const webhookResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api'}/snapshot-minted`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(webhookData),
+            });
+            
+            if (webhookResponse.ok) {
+              console.log('✅ Webhook called successfully');
+            } else {
+              console.warn('⚠️ Webhook failed:', await webhookResponse.text());
+            }
+          } catch (webhookError) {
+            console.warn('⚠️ Webhook error:', webhookError);
+          }
+        }
+
         // Transaction completed successfully
         toast.success('Snapshot minted successfully!');
         
         // Close payment modal and call callback
-      onClose();
+        onClose();
         if (onConfirm) {
           onConfirm(amountInput);
         }
@@ -355,16 +476,7 @@ export default function PaymentModal({
                     <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
                     <span className="text-sm text-black">{user?.email || 'bilbo.bagz@shire.io'}</span>
                   <button
-                    onClick={async () => {
-                      if (walletAddress) {
-                        try {
-                          await fundWallet({ address: walletAddress });
-                        } catch (error) {
-                          console.error('Failed to fund wallet:', error);
-                          toast.error('Failed to open funding flow');
-                        }
-                      }
-                    }}
+                    onClick={handleAddFunds}
                     className="w-48 px-8 py-0 lg:-ml-1 md:-ml-1 -ml-6 mb-6 -mt-4 border-3 border-dotted border-gray-500 rounded-full text-xl text-black peridia-display-light bg-[#E2E3F0] hover:bg-gray-50 transition-colors scale-[0.7] text-nowrap"
                   >
                     A<span className="favorit-mono font-light text-nowrap">dd</span> F<span className="favorit-mono font-light text-nowrap">unds</span>
@@ -381,7 +493,10 @@ export default function PaymentModal({
                       <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
                       <span className="text-sm font-light text-nowrap">Log out</span>
                     </button>
-                  <button className="w-[50%] px-4 py-1 text-nowrap border-2 border-dotted border-black rounded-full text-sm lg:ml-40 md:ml-40 ml-36 -mt-34 text-black bg-white hover:bg-gray-50 transition-colors scale-[0.8]">
+                  <button 
+                    onClick={handleWalletConnect}
+                    className="w-[50%] px-4 py-1 text-nowrap border-2 border-dotted border-black rounded-full text-sm lg:ml-40 md:ml-40 ml-36 -mt-34 text-black bg-white hover:bg-gray-50 transition-colors scale-[0.8]"
+                  >
                     <span className="lg:ml-0 md:ml-0 -ml-2">W</span><span className="favorit-mono font-light text-nowrap">allet</span> C<span className="favorit-mono font-light text-nowrap">onnect</span>
                   </button>
                 </div>
@@ -463,6 +578,15 @@ export default function PaymentModal({
           </motion.div>
         </>
       )}
+      
+      {/* Wallet Connection Modal */}
+      <WalletConnectionModal
+        isOpen={showWalletConnection}
+        onClose={() => setShowWalletConnection(false)}
+        onSuccess={() => {
+          console.log('Wallet connected successfully from PaymentModal');
+        }}
+      />
     </AnimatePresence>
   );
 }

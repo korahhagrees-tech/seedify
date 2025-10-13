@@ -13,6 +13,8 @@ import WalletConnectionModal from "./WalletConnectionModal";
 import AddFundsModal from "./AddFundsModal";
 import { useWalletUtils, formatWalletAddress } from "@/lib/wallet/walletUtils";
 import { useFundWallet } from "@privy-io/react-auth";
+import { useBalance } from "wagmi";
+import { base } from "viem/chains";
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -35,7 +37,7 @@ export default function WalletModal({
   onPrivyHome,
   onWalletConnect
 }: WalletModalProps) {
-  const { user, walletAddress, balance } = useAuth();
+  const { user, walletAddress } = useAuth();
   const [copied, setCopied] = useState(false);
   const [showWalletSelector, setShowWalletSelector] = useState(false);
   const [showWalletConnection, setShowWalletConnection] = useState(false);
@@ -44,7 +46,13 @@ export default function WalletModal({
   // Use Privy hooks
   const { wallets, setActiveWallet } = useWalletUtils();
   const { fundWallet } = useFundWallet();
-
+  const { data: balanceData } = useBalance({
+    address: walletAddress as `0x${string}`,
+  });
+  
+  const balance = balanceData ? parseFloat(balanceData.formatted).toFixed(4) : '0.0000';
+  
+  
   const copyToClipboard = async () => {
     if (walletAddress) {
       await navigator.clipboard.writeText(walletAddress);
@@ -70,8 +78,10 @@ export default function WalletModal({
   const handleAddFunds = async () => {
     if (walletAddress) {
       try {
-        // Use Privy's fundWallet directly
-        await fundWallet({ address: walletAddress });
+        // Use Privy's fundWallet with Base chain
+        await fundWallet({address: walletAddress, options: {
+          chain: base,
+        }});
       } catch (error) {
         console.error('Failed to fund wallet:', error);
         // Fallback to modal if needed
