@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+// @ts-nocheck
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,67 +8,64 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useFundWallet } from "@privy-io/react-auth";
 import { base } from "viem/chains";
 
-
 interface AddFundsModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onCloseAction: () => void;
   walletAddress?: string;
 }
 
-export default function AddFundsModal({ 
-  isOpen, 
-  onClose,
-  walletAddress 
+export default function AddFundsModal({
+  isOpen,
+  onCloseAction,
+  walletAddress,
 }: AddFundsModalProps) {
   const { user } = useAuth();
-  const [amount, setAmount] = useState('0.01');
-  const [currency, setCurrency] = useState<'usd' | 'eur'>('usd');
-  const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState("0.01");
+  const [currency, setCurrency] = useState<"usd" | "eur">("usd");
   const [error, setError] = useState<string | null>(null);
 
   // Use Privy's fundWallet hook with callback
   const { fundWallet } = useFundWallet({
     onUserExited: () => {
-      console.log('User exited funding flow');
-      setLoading(false);
+      console.log("User exited funding flow");
       // You can add custom logic here based on the result
-      onClose();
-    }
+      onCloseAction();
+    },
   });
 
   // Reset state when modal opens/closes
   useEffect(() => {
     if (isOpen) {
-      setAmount('0.01');
-      setCurrency('usd');
+      setAmount("0.01");
+      setCurrency("usd");
       setError(null);
-      setLoading(false);
     }
   }, [isOpen]);
 
   const handleAddFunds = async () => {
     if (!walletAddress) {
-      setError('Wallet address not found');
+      setError("Wallet address not found");
       return;
     }
 
     if (!amount || parseFloat(amount) <= 0) {
-      setError('Please enter a valid amount');
+      setError("Please enter a valid amount");
       return;
     }
 
-    setLoading(true);
     setError(null);
 
     try {
       // Use Privy's fundWallet with configuration
-      await fundWallet({address: walletAddress, options: {
-        chain: base,
-      }});
+      await fundWallet({
+        address: walletAddress,
+        options: {
+          chain: base,
+        },
+      });
     } catch (err) {
-      console.error('Failed to initiate funding:', err);
-      setError('Failed to start funding process. Please try again.');
-      setLoading(false);
+      console.error("Failed to initiate funding:", err);
+      setError("Failed to start funding process. Please try again.");
     }
   };
 
@@ -80,8 +78,8 @@ export default function AddFundsModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 z-50 backdrop-blur-xs"
-            onClick={onClose}
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={onCloseAction}
           />
 
           {/* Modal */}
@@ -95,10 +93,25 @@ export default function AddFundsModal({
             <div className="bg-[#D9D9D9] rounded-tl-[40px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[40px] p-6 border-3 border-dotted border-gray-600 shadow-xl">
               {/* Header */}
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-light peridia-display-light text-black tracking-wider">Add Funds</h2>
-                <button onClick={onClose} className="text-gray-600 hover:text-gray-900">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <h2 className="text-xl font-light peridia-display-light text-black tracking-wider">
+                  Add Funds
+                </h2>
+                <button
+                  onClick={onCloseAction}
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -107,7 +120,9 @@ export default function AddFundsModal({
               <div className="space-y-4">
                 {/* Amount Input */}
                 <div>
-                  <label className="block text-sm font-medium text-black mb-2">Amount</label>
+                  <label className="block text-sm font-medium text-black mb-2">
+                    Amount
+                  </label>
                   <div className="relative">
                     <input
                       type="number"
@@ -117,13 +132,15 @@ export default function AddFundsModal({
                       placeholder="0.01"
                       step="0.01"
                       min="0"
-                      disabled={loading}
+                      disabled={false}
                     />
                     <select
                       value={currency}
-                      onChange={(e) => setCurrency(e.target.value as 'usd' | 'eur')}
+                      onChange={(e) =>
+                        setCurrency(e.target.value as "usd" | "eur")
+                      }
                       className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent text-black font-medium focus:outline-none"
-                      disabled={loading}
+                      disabled={false}
                     >
                       <option value="usd">USD</option>
                       <option value="eur">EUR</option>
@@ -135,18 +152,24 @@ export default function AddFundsModal({
                 <div className="bg-white/60 rounded-[20px] p-4 space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Network</span>
-                    <span className="text-base font-medium text-black">Base</span>
+                    <span className="text-base font-medium text-black">
+                      Base
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Receive</span>
                     <span className="text-base font-medium text-black">
-                      {currency === 'usd' ? 'USDC' : 'ETH'}
+                      {currency === "usd" ? "USDC" : "ETH"}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Wallet</span>
                     <span className="text-sm font-mono text-black">
-                      {walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : 'Not connected'}
+                      {walletAddress
+                        ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(
+                            -4
+                          )}`
+                        : "Not connected"}
                     </span>
                   </div>
                 </div>
@@ -161,25 +184,26 @@ export default function AddFundsModal({
                 {/* Action Buttons */}
                 <div className="flex gap-3 pt-4">
                   <button
-                    onClick={onClose}
-                    disabled={loading}
+                    onClick={onCloseAction}
+                    disabled={false}
                     className="flex-1 px-4 py-3 bg-gray-200 text-black rounded-[20px] text-sm font-medium hover:bg-gray-300 transition-colors disabled:opacity-50"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleAddFunds}
-                    disabled={loading || !walletAddress}
+                    disabled={!walletAddress}
                     className="flex-1 px-4 py-3 bg-black text-white rounded-[20px] text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
                   >
-                    {loading ? 'Starting...' : 'Add Funds'}
+                    Add Funds
                   </button>
                 </div>
 
                 {/* Info */}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <p className="text-xs text-blue-800">
-                    💡 Privy will handle the payment process and show you funding options including card payments and bank transfers.
+                    💡 Privy will handle the payment process and show you
+                    funding options including card payments and bank transfers.
                   </p>
                 </div>
               </div>

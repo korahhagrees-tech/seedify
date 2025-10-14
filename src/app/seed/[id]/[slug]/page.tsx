@@ -11,54 +11,39 @@ export default function SeedDetailsRoute() {
   const params = useParams();
   const router = useRouter();
   const [seed, setSeed] = useState<Seed | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
     async function load() {
-      const id = Array.isArray(params.id) ? params.id[0] : (params.id as string);
+      const id = Array.isArray(params.id)
+        ? params.id[0]
+        : (params.id as string);
       if (!id) return;
       const s = await fetchSeedById(id);
       setSeed(s || null);
-      setLoading(false);
+      setHasFetched(true);
     }
     load();
   }, [params.id]);
 
-  if (loading) {
+  if (!seed && hasFetched) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-pulse mx-auto mb-4">
-              <Image
-                src="/assets/WOF_Logo-black.png"
-                alt="Loading"
-                width={100}
-                height={100}
-                className="w-full h-full max-w-[420px] scale-[1.2]"
-                />
-              </div>
-            <p className="text-gray-600">Loading seed...</p>
-          </div>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <p>Seed not found.</p>
+        <button onClick={() => router.push("/garden")} className="underline">
+          Back to Garden
+        </button>
       </div>
     );
   }
 
   if (!seed) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p>Seed not found.</p>
-        <button onClick={() => router.push("/garden")} className="underline">Back to Garden</button>
-      </div>
-    );
+    return null; // Still fetching, show nothing
   }
 
   return (
     <div className="-mt-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pb-44">
-      <SeedDetailPage 
-        seed={seed}
-        onBack={() => router.push("/garden")}
-      />
+      <SeedDetailPage seed={seed} onBack={() => router.push("/garden")} />
     </div>
   );
 }
-

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -9,41 +9,44 @@ import PaymentModal from "@/components/PaymentModal";
 import { getWayOfFlowersData } from "@/lib/data/componentData";
 import { fetchSeedById, beneficiaryToEcosystemProject } from "@/lib/api";
 
-export default function WayOfFlowers({ params }: { params: Promise<{ seedId: string }> }) {
+export default function WayOfFlowers({
+  params,
+}: {
+  params: Promise<{ seedId: string }>;
+}) {
   const router = useRouter();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [ecosystemBackgroundUrl, setEcosystemBackgroundUrl] = useState<string>("");
-  const [loading, setLoading] = useState(true);
-  
+  const [ecosystemBackgroundUrl, setEcosystemBackgroundUrl] =
+    useState<string>("");
+
   // Unwrap params using React.use()
   const { seedId } = use(params);
-  
+
   const wayOfFlowersData = getWayOfFlowersData(seedId);
 
   // Fetch ecosystem background image
   useEffect(() => {
     async function loadEcosystemBackground() {
       try {
-        setLoading(true);
-        
         // Fetch the seed by ID to get beneficiaries
         const seed = await fetchSeedById(seedId);
-        
+
         if (seed && seed.beneficiaries && seed.beneficiaries.length > 0) {
           // Use the first beneficiary's background image
           const firstBeneficiary = seed.beneficiaries[0];
-          const ecosystem = beneficiaryToEcosystemProject(firstBeneficiary, seed);
-          
+          const ecosystem = beneficiaryToEcosystemProject(
+            firstBeneficiary,
+            seed
+          );
+
           if (ecosystem.backgroundImageUrl) {
             setEcosystemBackgroundUrl(ecosystem.backgroundImageUrl);
           }
         }
       } catch (err) {
-        console.error('Error loading ecosystem background:', err);
+        console.error("Error loading ecosystem background:", err);
         // Fallback to original background if ecosystem fails
         setEcosystemBackgroundUrl(wayOfFlowersData.backgroundImageUrl);
-      } finally {
-        setLoading(false);
       }
     }
 
@@ -59,11 +62,12 @@ export default function WayOfFlowers({ params }: { params: Promise<{ seedId: str
   };
 
   // Use ecosystem background if available, otherwise fallback to original
-  const backgroundImageUrl = ecosystemBackgroundUrl || wayOfFlowersData.backgroundImageUrl;
+  const backgroundImageUrl =
+    ecosystemBackgroundUrl || wayOfFlowersData.backgroundImageUrl;
 
   return (
     <div className="min-h-screen w-full">
-      <WayOfFlowersCard 
+      <WayOfFlowersCard
         backgroundImageUrl={backgroundImageUrl}
         seedEmblemUrl={wayOfFlowersData.seedEmblemUrl}
         firstText={wayOfFlowersData.firstText}

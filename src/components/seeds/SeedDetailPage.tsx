@@ -23,7 +23,7 @@ export default function SeedDetailPage({
   onPlantSeed,
 }: SeedDetailPageProps) {
   const [imageError, setImageError] = useState(false);
-  
+
   return (
     <div className="min-h-screen w-full max-w-sm mx-auto lg:-mt-6 md:-mt-10 -mt-2 relative lg:scale-[1.0] md:scale-[0.95] scale-[1.0] overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {/* Steward Label - positioned above the main content */}
@@ -36,7 +36,10 @@ export default function SeedDetailPage({
         >
           <div className="bg-white border text-nowrap border-black rounded-full px-4 py-1 text-center">
             <div className="text-sm font-medium text-black">
-              STEWARD <span className="ml-2">{formatAddress(seed.owner)}</span>
+              STEWARD{" "}
+              <span className="ml-2">
+                {seed?.owner ? formatAddress(seed.owner) : "Unknown"}
+              </span>
             </div>
           </div>
         </motion.div>

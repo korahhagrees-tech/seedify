@@ -37,7 +37,6 @@ export default function BloomingView({
   onWallet,
 }: BloomingViewProps) {
   const [showReveal, setShowReveal] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const { logout } = useAuth();
   const router = useRouter();
@@ -87,7 +86,6 @@ export default function BloomingView({
     // After 30 seconds, trigger the reveal animation
     const timer = setTimeout(() => {
       setShowReveal(true);
-      setIsLoading(false);
     }, 40000);
 
     return () => clearTimeout(timer);
@@ -134,48 +132,6 @@ export default function BloomingView({
               }
             }}
           />
-
-          {/* Loading overlay with text - pulls down to reveal */}
-          <AnimatePresence>
-            {isLoading && (
-              <motion.div
-                initial={{ y: 0 }}
-                animate={{ y: showReveal ? "100%" : 0 }}
-                exit={{ y: "100%" }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
-                className="absolute inset-0 bg-gray-200 flex flex-col items-center justify-center p-8"
-              >
-                <Image
-                  src={
-                    seedEmblemUrl && seedEmblemUrl.length > 0
-                      ? seedEmblemUrl
-                      : "/seeds/01__GRG.png"
-                  }
-                  alt=""
-                  width={300}
-                  height={300}
-                  className="mb-12 -mt-18 opacity-20 scale-[1.1] backdrop-blur-sm"
-                  onError={(e) => {
-                    console.log(
-                      "🌸 [IMAGE] Error loading blooming emblem, using placeholder"
-                    );
-                    const target = e.target as HTMLImageElement;
-                    if (
-                      target.src !==
-                      `${window.location.origin}/seeds/01__GRG.png`
-                    ) {
-                      target.src = "/seeds/01__GRG.png";
-                    }
-                  }}
-                />
-                <div className="text-center text-gray-600 text-sm text-nowrap scale-[0.95] font-medium -mt-62 leading-relaxed">
-                  <div>your stewardship is becoming visible form</div>
-                  <div>a morphological evolution accelerating beyond the</div>
-                  <div>limits of Earth...</div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* Share button bottom-right */}

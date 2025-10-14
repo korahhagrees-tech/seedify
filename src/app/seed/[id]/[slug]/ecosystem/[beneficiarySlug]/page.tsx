@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,8 +11,8 @@ export default function EcosystemPage() {
   const router = useRouter();
   const params = useParams();
   const [ecosystemData, setEcosystemData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasFetched, setHasFetched] = useState(false);
 
   const seedId = params?.id as string;
   const beneficiarySlug = params?.beneficiarySlug as string;
@@ -20,10 +20,14 @@ export default function EcosystemPage() {
   useEffect(() => {
     async function loadEcosystemData() {
       try {
-        setLoading(true);
         setError(null);
 
-        console.log('🌱 Loading ecosystem for seed:', seedId, 'beneficiary:', beneficiarySlug);
+        console.log(
+          "🌱 Loading ecosystem for seed:",
+          seedId,
+          "beneficiary:",
+          beneficiarySlug
+        );
 
         // Fetch the seed by ID to get beneficiaries with full project data
         const seed = await fetchSeedById(seedId);
@@ -45,16 +49,18 @@ export default function EcosystemPage() {
           throw new Error(`Beneficiary "${beneficiarySlug}" not found`);
         }
 
-        console.log('🌱 Found beneficiary:', beneficiary.name);
+        console.log("🌱 Found beneficiary:", beneficiary.name);
 
         // Convert beneficiary data to ecosystem project format, passing seed data for seedEmblemUrl
         const ecosystem = beneficiaryToEcosystemProject(beneficiary, seed);
         setEcosystemData(ecosystem);
       } catch (err) {
-        console.error('Error loading ecosystem data:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load ecosystem data');
+        console.error("Error loading ecosystem data:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to load ecosystem data"
+        );
       } finally {
-        setLoading(false);
+        setHasFetched(true);
       }
     }
 
@@ -63,31 +69,14 @@ export default function EcosystemPage() {
     }
   }, [seedId, beneficiarySlug]);
 
-  if (loading) {
+  if (hasFetched && (error || !ecosystemData)) {
     return (
       <div className="min-h-screen w-full max-w-md mx-auto bg-white flex items-center justify-center">
         <div className="text-center">
-        <div className="animate-pulse mx-auto mb-4">
-            <Image
-              src="/assets/WOF_Logo-black.png"
-              alt="Loading"
-              width={100}
-              height={100}
-              className="w-full h-full max-w-[420px] scale-[1.2]"
-              />
-            </div>
-          <div className="text-gray-600">Loading ecosystem...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !ecosystemData) {
-    return (
-      <div className="min-h-screen w-full max-w-md mx-auto bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-600 mb-4">{error || 'Ecosystem not found'}</div>
-          <button 
+          <div className="text-red-600 mb-4">
+            {error || "Ecosystem not found"}
+          </div>
+          <button
             onClick={() => router.back()}
             className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
@@ -98,15 +87,19 @@ export default function EcosystemPage() {
     );
   }
 
+  if (!ecosystemData) {
+    return null; // Still fetching, show nothing
+  }
+
   return (
     <div className="min-h-screen w-full max-w-md mx-auto bg-white">
-      <EcosystemProjectCard 
+      <EcosystemProjectCard
         backgroundImageUrl={ecosystemData.backgroundImageUrl}
-        title={ecosystemData.title} 
+        title={ecosystemData.title}
         subtitle={ecosystemData.subtitle}
         location={ecosystemData.location}
         area={ecosystemData.area}
-        shortText={ecosystemData.shortText} 
+        shortText={ecosystemData.shortText}
         extendedText={ecosystemData.extendedText}
         seedEmblemUrl={ecosystemData.seedEmblemUrl}
         seedId={ecosystemData.seedId}
@@ -117,4 +110,3 @@ export default function EcosystemPage() {
     </div>
   );
 }
-

@@ -32,15 +32,6 @@ export default function MintPage() {
     }
   }, [authenticated, user, address, router]);
 
-  // Show loading while checking authentication
-  if (!authenticated || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-white">Loading...</div>
-      </div>
-    );
-  }
-
   // Check if address matches
   const connectedAddress = user.wallet?.address;
   if (

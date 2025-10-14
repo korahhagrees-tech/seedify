@@ -17,9 +17,11 @@ interface SeedsListingProps {
   onProfileClick?: () => void;
 }
 
-export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListingProps) {
+export default function SeedsListing({
+  onSeedClick,
+  onProfileClick,
+}: SeedsListingProps) {
   const [seeds, setSeeds] = useState<Seed[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { logout } = usePrivy();
   const globalLogout = useGlobalLogout();
@@ -30,15 +32,12 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
 
   const loadSeeds = async () => {
     try {
-      setLoading(true);
       setError(null);
       const gardenData = await fetchGardenData();
       setSeeds(gardenData.seeds);
     } catch (err) {
-      console.error('Error loading seeds:', err);
-      setError('Failed to load seeds. Please try again.');
-    } finally {
-      setLoading(false);
+      console.error("Error loading seeds:", err);
+      setError("Failed to load seeds. Please try again.");
     }
   };
 
@@ -46,35 +45,16 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
     if (onSeedClick) {
       onSeedClick(seed);
     } else {
-      console.log('Seed clicked:', seed);
+      console.log("Seed clicked:", seed);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-pulse mx-auto mb-4">
-            <Image
-              src="/assets/WOF_Logo-black.png"
-              alt="Loading"
-              width={100}
-              height={100}
-              className="w-full h-full max-w-[420px] scale-[1.2]"
-              />
-            </div>
-          <p className="text-gray-600">Loading garden...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
       <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={loadSeeds}
             className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
@@ -88,7 +68,7 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
   return (
     <div className="min-h-screen w-full bg-none">
       {/* Header */}
-      <motion.div 
+      <motion.div
         className="pt-4 pb-2"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -96,19 +76,21 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
       >
         <GardenHeader />
       </motion.div>
-      
+
       {/* Page Title */}
-      <motion.div 
+      <motion.div
         className="px-4 py-2"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <h1 className="text-sm font-light text-gray-900 text-center -mt-4">WELCOME TO THE GARDEN</h1>
+        <h1 className="text-sm font-light text-gray-900 text-center -mt-4">
+          WELCOME TO THE GARDEN
+        </h1>
       </motion.div>
-      
+
       {/* Seeds Grid */}
-      <motion.div 
+      <motion.div
         className="px-4 pb-4 space-y-8 -mt-2 scale-[0.95]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -124,23 +106,23 @@ export default function SeedsListing({ onSeedClick, onProfileClick }: SeedsListi
             />
           ))}
         </AnimatePresence>
-        
+
         {seeds.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500">No seeds found in the garden.</p>
           </div>
         )}
       </motion.div>
-      
+
       {/* Disconnect Button at Bottom */}
-      <motion.div 
+      <motion.div
         className="px-4 pb-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.6 }}
       >
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={globalLogout}
           className="w-full text-gray-600 underline hover:text-gray-800 -mt-12"
         >

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"
+"use client";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,13 +10,12 @@ import { fetchSeedById, beneficiaryToEcosystemProject } from "@/lib/api";
 export default function Ecosystem({ params }: { params: { slug: string } }) {
   const router = useRouter();
   const [ecosystemData, setEcosystemData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
     async function loadEcosystemData() {
       try {
-        setLoading(true);
         setError(null);
 
         // Try fetching seeds 1 and 2 to find beneficiaries
@@ -24,16 +23,16 @@ export default function Ecosystem({ params }: { params: { slug: string } }) {
         let seedWithBeneficiaries = null;
         let beneficiary = null;
 
-        for (const seedId of ['1', '2']) {
+        for (const seedId of ["1", "2"]) {
           try {
             const seed = await fetchSeedById(seedId);
-            
+
             if (seed?.beneficiaries && seed.beneficiaries.length > 0) {
               // Try to find matching beneficiary by slug
               const matchingBen = seed.beneficiaries.find(
                 (ben: any) => ben.slug === params.slug
               );
-              
+
               if (matchingBen) {
                 beneficiary = matchingBen;
                 seedWithBeneficiaries = seed; // Store the seed data for seedEmblemUrl
@@ -50,35 +49,32 @@ export default function Ecosystem({ params }: { params: { slug: string } }) {
         }
 
         // Convert beneficiary data to ecosystem project format, passing seed data for seedEmblemUrl
-        const ecosystem = beneficiaryToEcosystemProject(beneficiary, seedWithBeneficiaries);
+        const ecosystem = beneficiaryToEcosystemProject(
+          beneficiary,
+          seedWithBeneficiaries
+        );
         setEcosystemData(ecosystem);
       } catch (err) {
-        console.error('Error loading ecosystem data:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load ecosystem data');
+        console.error("Error loading ecosystem data:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to load ecosystem data"
+        );
       } finally {
-        setLoading(false);
+        setHasFetched(true);
       }
     }
 
     loadEcosystemData();
   }, [params.slug]);
 
-  if (loading) {
+  if (hasFetched && (error || !ecosystemData)) {
     return (
       <div className="min-h-screen w-full max-w-md mx-auto bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="text-gray-600">Loading ecosystem...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !ecosystemData) {
-    return (
-      <div className="min-h-screen w-full max-w-md mx-auto bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-600 mb-4">{error || 'Ecosystem not found'}</div>
-          <button 
+          <div className="text-red-600 mb-4">
+            {error || "Ecosystem not found"}
+          </div>
+          <button
             onClick={() => router.back()}
             className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
@@ -89,15 +85,19 @@ export default function Ecosystem({ params }: { params: { slug: string } }) {
     );
   }
 
+  if (!ecosystemData) {
+    return null; // Still fetching, show nothing
+  }
+
   return (
     <div className="min-h-screen w-full max-w-md mx-auto bg-white">
-      <EcosystemProjectCard 
+      <EcosystemProjectCard
         backgroundImageUrl={ecosystemData.backgroundImageUrl}
-        title={ecosystemData.title} 
+        title={ecosystemData.title}
         subtitle={ecosystemData.subtitle}
         location={ecosystemData.location}
         area={ecosystemData.area}
-        shortText={ecosystemData.shortText} 
+        shortText={ecosystemData.shortText}
         extendedText={ecosystemData.extendedText}
         seedEmblemUrl={ecosystemData.seedEmblemUrl}
         seedId={ecosystemData.seedId}
