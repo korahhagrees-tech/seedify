@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import SeedDetailPage from "@/components/seeds/SeedDetailPage";
 import { Seed } from "@/types/seed";
 import { fetchSeedById } from "@/lib/api/seeds";
-import Image from "next/image";
 
 export default function SeedDetailsRoute() {
   const params = useParams();

@@ -205,7 +205,7 @@ export default function EcosystemProjectCard({
       retryWebhook(
         webhookData,
         0,
-        () => {
+        (imageData) => {
           setIsMinting(false);
           setMintSuccess(true); // Mark as successful
           toast.success("Snapshot minted successfully!", {
@@ -215,9 +215,23 @@ export default function EcosystemProjectCard({
           // ✅ Route to blooming page after successful mint
           if (BYPASS_SUCCESS_CHECK || mintSuccess) {
             console.log('🌸 Routing to blooming page for seed:', seedId);
-            setTimeout(() => {
-              router.push(`/way-of-flowers/${seedId}/blooming`);
-            }, 1500);
+            
+            // Pass image data through URL params if available
+            if (imageData) {
+              const params = new URLSearchParams({
+                snapshotImageUrl: imageData.imageUrl,
+                backgroundImageUrl: imageData.backgroundImageUrl,
+                beneficiaryCode: imageData.beneficiaryCode
+              });
+              
+              setTimeout(() => {
+                router.push(`/way-of-flowers/${seedId}/blooming?${params.toString()}`);
+              }, 1500);
+            } else {
+              setTimeout(() => {
+                router.push(`/way-of-flowers/${seedId}/blooming`);
+              }, 1500);
+            }
           }
         },
         () => {

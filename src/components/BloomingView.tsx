@@ -46,7 +46,11 @@ export default function BloomingView({
 
   // Handle wallet modal
   const handleWallet = () => {
-    setIsWalletModalOpen(true);
+    if (onWallet) {
+      onWallet();
+    } else {
+      setIsWalletModalOpen(true);
+    }
   };
 
   const handleWalletModalClose = () => {

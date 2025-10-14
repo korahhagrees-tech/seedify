@@ -5,7 +5,6 @@ import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import EcosystemProjectCard from "@/components/EcosystemProjectCard";
 import { fetchSeedById, beneficiaryToEcosystemProject } from "@/lib/api";
-import Image from "next/image";
 
 export default function EcosystemPage() {
   const router = useRouter();

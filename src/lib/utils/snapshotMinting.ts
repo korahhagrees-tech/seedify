@@ -41,6 +41,34 @@ export interface WebhookData {
   processId: string;
 }
 
+export interface WebhookResponse {
+  success: boolean;
+  message: string;
+  data: {
+    seedId: number;
+    snapshotId: number;
+    beneficiaryCode: string;
+    beneficiaryDistribution: number;
+    imageUrl: string;
+    generation: {
+      jobId: string;
+      totalTime: number;
+      status: string;
+    };
+    storage: {
+      status: string;
+      message: string;
+    };
+    blockchain: {
+      contractAddress: string;
+      txHash: string;
+      timestamp: number;
+      blockNumber: number;
+      processId: string;
+    };
+  };
+}
+
 export interface RetryData {
   data: WebhookData;
   count: number;
@@ -97,7 +125,7 @@ export function clearRetryData(processId: string): void {
 export async function retryWebhook(
   webhookData: WebhookData,
   retryCount: number = 0,
-  onSuccess?: () => void,
+  onSuccess?: (imageData?: { imageUrl: string; backgroundImageUrl: string; beneficiaryCode: string }) => void,
   onFailure?: (error: Error) => void
 ): Promise<void> {
   const maxRetries = 18; // 3 minutes with 10s intervals
@@ -117,9 +145,37 @@ export async function retryWebhook(
       throw new Error(`Webhook failed: ${response.status} ${response.statusText}`);
     }
 
+    // Parse the webhook response
+    const webhookResult: WebhookResponse = await response.json();
+    
     // Success - clear retry data
     clearRetryData(webhookData.processId);
-    onSuccess?.();
+    
+    // Extract image data from webhook response
+    let imageData: { imageUrl: string; backgroundImageUrl: string; beneficiaryCode: string } | undefined;
+    
+    if (webhookResult.success && webhookResult.data) {
+      const { imageUrl, beneficiaryCode } = webhookResult.data;
+      
+      // Transform beneficiaryCode format: 02-ELG -> 02__ELG
+      const transformedBeneficiaryCode = beneficiaryCode ? beneficiaryCode.replace('-', '__') : '';
+      const backgroundImageUrl = `/project_images/${transformedBeneficiaryCode}.png`;
+      
+      imageData = {
+        imageUrl,
+        backgroundImageUrl,
+        beneficiaryCode
+      };
+      
+      console.log('🖼️ Image data extracted from webhook:', {
+        imageUrl: imageUrl ? `${imageUrl.substring(0, 50)}...` : 'none',
+        beneficiaryCode,
+        transformedBeneficiaryCode,
+        backgroundImageUrl
+      });
+    }
+    
+    onSuccess?.(imageData);
 
   } catch (error) {
     // Simplified error - don't expose technical details to user
