@@ -145,7 +145,7 @@ export default function PaymentModal({
 
         // Detect wallet type and use appropriate transaction method
         // Embedded wallets include: email/social login wallets, privy embedded wallets
-        let isEmbeddedWallet = activeWallet.walletClientType === 'privy' || 
+        const isEmbeddedWallet = activeWallet.walletClientType === 'privy' || 
                                 activeWallet.connectorType === 'embedded' ||
                                 activeWallet.walletClientType === 'embedded' ||
                                 // Additional checks for email/social login wallets
