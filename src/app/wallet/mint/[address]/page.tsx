@@ -17,14 +17,17 @@ export default function MintPage() {
   // Check if user is authenticated and address matches
   useEffect(() => {
     if (!authenticated || !user) {
-      router.push('/wallet');
+      router.push("/wallet");
       return;
     }
 
     // Get the connected wallet address
     const connectedAddress = user.wallet?.address;
-    if (!connectedAddress || connectedAddress.toLowerCase() !== address.toLowerCase()) {
-      router.push('/wallet');
+    if (
+      !connectedAddress ||
+      connectedAddress.toLowerCase() !== address.toLowerCase()
+    ) {
+      router.push("/wallet");
       return;
     }
   }, [authenticated, user, address, router]);
@@ -40,7 +43,10 @@ export default function MintPage() {
 
   // Check if address matches
   const connectedAddress = user.wallet?.address;
-  if (!connectedAddress || connectedAddress.toLowerCase() !== address.toLowerCase()) {
+  if (
+    !connectedAddress ||
+    connectedAddress.toLowerCase() !== address.toLowerCase()
+  ) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-white">Unauthorized access</div>
@@ -50,12 +56,12 @@ export default function MintPage() {
 
   const handleMintClick = () => {
     // Handle mint action here
-    console.log('Mint clicked');
+    console.log("Mint clicked");
   };
 
   const handleTryAgainClick = () => {
     // Handle try again action here
-    console.log('Try again clicked');
+    console.log("Try again clicked");
   };
 
   return (
