@@ -5,6 +5,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import GardenHeader from "@/components/GardenHeader";
 import RootShapeArea from "@/components/wallet/RootShapeArea";
 import { Seed } from "@/types/seed";
+import { useState } from "react";
+import Link from "next/link";
 
 type BeneficiaryStat = {
   id: string;
@@ -43,51 +45,87 @@ export interface SeedStewardStatsProps {
 
 export default function SeedStewardStats({ seed, links, metrics }: SeedStewardStatsProps) {
   const { scrollYProgress } = useScroll();
+  const [imageError, setImageError] = useState(false);
+  
   // Morph large rounded-square image to smaller circle on scroll
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.6]);
   const radius = useTransform(scrollYProgress, [0, 0.2], [60, 999]);
+  
+  // Button animations - start at top-right of image, drop down to right side
+  const buttonScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+  const buttonTranslateX = useTransform(scrollYProgress, [0, 0.2], [0, 40]);
+  const buttonTranslateY = useTransform(scrollYProgress, [0, 0.2], [0, 80]);
+  const buttonOpacity = useTransform(scrollYProgress, [0, 0.05, 0.15, 0.2], [1, 1, 1, 1]);
+
+  const handleImageLoad = () => {
+    console.log("🌸 [IMAGE] Successfully loaded:", seed.seedImageUrl);
+  };
 
   return (
-    <div className="relative min-h-screen">
-      {/* Background image with translucent overlay */}
-      <div className="absolute inset-0 -z-10">
-        <Image src={seed.seedImageUrl} alt={seed.name} fill className="object-cover" />
-        <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
-      </div>
+    <div className="relative min-h-screen w-full overflow-hidden bg-gray-100">
+      <Image
+        src="/steward-stats.png"
+        alt=""
+        fill
+        className="object-cover"
+        priority
+      />
 
-      {/* Header */}
-      <GardenHeader />
+      {/* Foreground content */}
+      <div className="relative z-10 px-4 pt-2 pb-6">
+        {/* Header */}
+        <GardenHeader />
 
-      {/* Hero with image and actions */}
-      <div className="px-4 pt-2 pb-6">
-        <div className="flex items-start justify-between gap-4">
-          {/* Morphing image */}
-          <motion.div
-            style={{ scale, borderRadius: radius }}
-            className="relative w-[320px] h-[320px] rounded-[60px] overflow-hidden shadow-xl"
-          >
-            <Image src={seed.seedImageUrl} alt={seed.name} fill className="object-cover" />
-          </motion.div>
-
-          {/* Buttons */}
-          <div className="flex flex-col gap-3 pt-2">
-            <a
-              href={links.openseaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 rounded-full border-3 border-dotted border-gray-700 bg-gradient-to-r from-gray-200/80 to-white/70 text-gray-900 peridia-display text-xl text-center"
+        {/* Hero with image and actions */}
+        <div className="pt-4 pb-6">
+          <div className="flex items-start justify-between gap-4 relative max-w-md mx-auto">
+            {/* Morphing image */}
+            <motion.div
+              style={{ scale, borderRadius: radius }}
+              className="relative lg:w-[370px] md:w-[370px] w-[320px] h-[340px] rounded-[60px] overflow-hidden -mb-16 shadow-xl bg-white mx-auto"
             >
-              View Opensea
-            </a>
-            <button className="px-6 py-3 rounded-full border-3 border-dotted border-gray-700 bg-purple-200/70 text-gray-900 peridia-display text-xl">
-              Customise Display
-            </button>
+              <Image
+                src={
+                  imageError
+                    ? "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
+                    : seed.seedImageUrl && seed.seedImageUrl.length > 0
+                    ? seed.seedImageUrl
+                    : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
+                } 
+                alt={""} 
+                fill 
+                className="object-cover" 
+                onLoad={handleImageLoad}
+                onError={() => setImageError(true)}
+              />
+            </motion.div>
+
+            {/* Animated Buttons - positioned absolutely to animate from top-right to right side */}
+            <motion.div 
+              style={{ 
+                scale: buttonScale,
+                translateX: buttonTranslateX,
+                translateY: buttonTranslateY,
+                opacity: buttonOpacity
+              }}
+              className="absolute top-2 right-2 flex flex-col gap-3"
+            >
+              <Link
+                href={links.openseaUrl}
+                className="px-4 py-0 text-nowrap rounded-full border-3 border-dotted border-gray-700 bg-gradient-to-r from-gray-200/90 to-white/90 text-gray-900 peridia-display text-sm text-center shadow-lg"
+              >
+                View Opensea
+              </Link>
+              <button className="px-6 py-2 rounded-full border-3 border-dashed border-white/80 bg-purple-200/90 text-gray-900 peridia-display text-sm shadow-lg">
+                Customise Display
+              </button>
+            </motion.div>
           </div>
         </div>
       </div>
 
       {/* Main dotted container */}
-      <div className="mx-4 mb-36 rounded-[28px] border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
+      <div className="relative z-0 mx-4 mb-36 rounded-[60px] border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
         {/* Section: Core Seed Metrics (open by default) */}
         <SectionHeader title="CORE SEED METRICS" />
         <div className="px-4 pb-6">
@@ -157,7 +195,7 @@ export default function SeedStewardStats({ seed, links, metrics }: SeedStewardSt
                 {/* Title bar */}
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-full border-3 border-dotted border-black bg-white overflow-hidden flex-shrink-0 relative">
-                    <Image src={b.emblemUrl} alt={b.name} fill className="object-contain p-1" />
+                    <Image src={b.emblemUrl} alt={b.name} fill className="object-contain p-1" onLoad={handleImageLoad} onError={() => setImageError(true)} />
                   </div>
                   <div className="flex-1 text-center text-gray-900 peridia-display">{b.name}</div>
                 </div>
@@ -188,7 +226,7 @@ export default function SeedStewardStats({ seed, links, metrics }: SeedStewardSt
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="flex items-center justify-between px-4 py-2">
+    <div className="flex items-center justify-between px-4 py-2 mt-6">
       <div className="flex-1">
         <div className="inline-flex items-center gap-2 bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
           <span className="tracking-wide text-gray-900 favorit-mono">{title}</span>

@@ -12,7 +12,7 @@ import StewardSeedCard from "@/components/wallet/StewardSeedCard";
 import WalletModal from "@/components/wallet/WalletModal";
 import { useAuth } from "@/components/auth/AuthProvider";
 import GardenHeader from "@/components/GardenHeader";
-import { fetchUserSeeds, fetchBeneficiaryByIndex, fetchSeedById } from "@/lib/api";
+import { fetchBeneficiaryByIndex, fetchSeedById } from "@/lib/api";
 import { API_CONFIG, API_ENDPOINTS } from "@/lib/api/config";
 
 // Mock data for tended ecosystems
@@ -82,13 +82,36 @@ export default function WalletPage() {
       if (!walletAddress) return;
       
       try {
-        // Fetch user's seeds to check if they are a steward
-        const { seeds } = await fetchUserSeeds(walletAddress);
-        if (!cancelled) {
-          setStewardSeeds(seeds && seeds.length > 0 ? seeds : []);
+        // Fetch user's seeds from /users/{address}/seeds endpoint for StewardSeedCard
+        const seedsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSeeds(walletAddress)}`;
+        console.log('🔗 [WALLET] Fetching seeds from:', seedsUrl);
+        
+        const seedsResponse = await fetch(seedsUrl);
+        console.log('📊 [WALLET] Seeds API Response status:', seedsResponse.status);
+        
+        if (seedsResponse.ok) {
+          const seedsData = await seedsResponse.json();
+          console.log('📊 [WALLET] Seeds API Response data:', seedsData);
+          
+          if (seedsData.success && seedsData.seeds && seedsData.seeds.length > 0) {
+            console.log('✅ [WALLET] Loaded seeds:', seedsData.seeds);
+            if (!cancelled) {
+              setStewardSeeds(seedsData.seeds);
+            }
+          } else {
+            console.log('❌ [WALLET] No seeds found or API failed:', seedsData);
+            if (!cancelled) {
+              setStewardSeeds([]);
+            }
+          }
+        } else {
+          console.error('❌ [WALLET] Seeds API request failed with status:', seedsResponse.status);
+          if (!cancelled) {
+            setStewardSeeds([]);
+          }
         }
 
-        // Fetch user's snapshots to show tended ecosystems
+        // Fetch user's snapshots from /users/{address}/snapshots endpoint for TendedEcosystem
         const snapshotsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSnapshots(walletAddress)}`;
         console.log('🔗 [WALLET] Fetching snapshots from:', snapshotsUrl);
         

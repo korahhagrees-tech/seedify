@@ -299,7 +299,7 @@ export default function WalletModal({
               </div>
 
               {/* Social Account Linking Options */}
-              <div className="space-y-2 mb-4 -mt-6">
+              <div className="space-y-2 mb-4 -mt-6 scale-[0.6] lg:scale-[0.8] md:scale-[0.8]">
                 <p className="text-xs text-center text-black/70 uppercase favorit-mono">Link Additional Accounts</p>
                 <div className="flex flex-wrap gap-2 justify-center">
                   {/* Social Login Buttons */}
