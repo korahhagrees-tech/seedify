@@ -6,7 +6,7 @@ import { createConfig } from '@privy-io/wagmi';
 export const wagmiConfig = createConfig({
   chains: [base, mainnet, sepolia],
   transports: {
-    [base.id]: http(process.env.NEXT_PUBLIC_RPC_URL),
+    [base.id]: http(process.env.RPC_URL),
     [mainnet.id]: http(),
     [sepolia.id]: http(),
   },

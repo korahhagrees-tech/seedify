@@ -605,7 +605,7 @@ export default function PaymentModal({
                 <div className="space-y-4 mb-6 bg-white/60 p-4 rounded-[40px] -mt-14 h-26">
                   <div className="flex items-center gap-2 mt-4">
                     <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
-                    <span className="text-sm text-black">{user?.email || 'bilbo.bagz@shire.io'}</span>
+                    <span className="text-sm text-black">{user?.email || formatAddress(walletAddress || '')}</span>
                   <button
                     onClick={handleAddFunds}
                     className="w-48 px-8 py-0 lg:-ml-1 md:-ml-1 -ml-6 mb-6 -mt-4 border-3 border-dotted border-gray-500 rounded-full text-xl text-black peridia-display-light bg-[#E2E3F0] hover:bg-gray-50 transition-colors scale-[0.7] text-nowrap"
@@ -624,12 +624,12 @@ export default function PaymentModal({
                       <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
                       <span className="text-sm font-light text-nowrap">Log out</span>
                     </button>
-                  <button 
-                    onClick={handleWalletConnect}
-                    className="w-[50%] px-4 py-1 text-nowrap border-2 border-dotted border-black rounded-full text-sm lg:ml-40 md:ml-40 ml-36 -mt-34 text-black bg-white hover:bg-gray-50 transition-colors scale-[0.8]"
-                  >
-                    <span className="lg:ml-0 md:ml-0 -ml-2">W</span><span className="favorit-mono font-light text-nowrap">allet</span> C<span className="favorit-mono font-light text-nowrap">onnect</span>
-                  </button>
+                <button 
+                  onClick={handleWalletConnect}
+                  className="w-[50%] px-4 py-1 text-nowrap border-2 border-dotted border-black rounded-full text-sm lg:ml-40 md:ml-40 ml-36 -mt-34 text-black bg-white hover:bg-gray-50 transition-colors scale-[0.8]"
+                >
+                  <span className="lg:ml-0 md:ml-0 -ml-2">C</span><span className="favorit-mono font-light text-nowrap">onnect</span> A<span className="favorit-mono font-light text-nowrap">ccount</span>
+                </button>
                 </div>
 
                 {/* Informational Banner - Different background */}

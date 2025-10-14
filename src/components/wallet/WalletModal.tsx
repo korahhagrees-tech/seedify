@@ -9,14 +9,12 @@ import Image from "next/image";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { assets } from "@/lib/assets";
 import WalletSelector from "./WalletSelector";
-import WalletConnectionModal from "./WalletConnectionModal";
 import AddFundsModal from "./AddFundsModal";
 import { useWalletUtils, formatWalletAddress } from "@/lib/wallet/walletUtils";
-import { useFundWallet, useWallets } from "@privy-io/react-auth";
+import { useFundWallet, useWallets, useConnectWallet, useLogin, usePrivy } from "@privy-io/react-auth";
 import { useBalance } from "wagmi";
 import { useSetActiveWallet } from "@privy-io/wagmi";
 import { base } from "viem/chains";
-import WalletConnectButton from "@/components/auth/WalletConnectButton";
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -42,15 +40,40 @@ export default function WalletModal({
   const { user, walletAddress } = useAuth();
   const [copied, setCopied] = useState(false);
   const [showWalletSelector, setShowWalletSelector] = useState(false);
-  const [showWalletConnection, setShowWalletConnection] = useState(false);
   const [showAddFunds, setShowAddFunds] = useState(false);
   
   // Use Privy hooks for wallet management
   const { wallets, ready } = useWallets(); // Get all connected wallets
   const { setActiveWallet } = useSetActiveWallet(); // Set active wallet for wagmi
   const { fundWallet } = useFundWallet();
+  const { connectWallet } = useConnectWallet({
+    onSuccess: ({ wallet }) => {
+      console.log('✅ Wallet connected successfully:', wallet);
+      // The newly connected wallet will automatically be available in the wallets array
+      // User can switch to it via the wallet selector if needed
+    },
+    onError: (error) => {
+      console.error('❌ Wallet connection failed:', error);
+    },
+  });
+  
+  // Get Privy instance for linking social accounts
+  const { linkGoogle, linkTwitter, linkDiscord, linkGithub, linkApple, linkEmail, linkPasskey } = usePrivy();
   const { data: balanceData } = useBalance({
     address: walletAddress as `0x${string}`,
+  });
+
+  const { login } = useLogin({
+    onComplete: ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod, loginAccount }) => {
+      console.log('User logged in successfully', user);
+      console.log('Is new user:', isNewUser);
+      console.log('Was already authenticated:', wasAlreadyAuthenticated);
+      console.log('Login method:', loginMethod);
+      console.log('Login account:', loginAccount);      
+    },
+    onError: (error) => {
+      console.error('Login failed', error);
+    }
   });
   
   const balance = balanceData ? parseFloat(balanceData.formatted).toFixed(4) : '0.0000';
@@ -67,7 +90,84 @@ export default function WalletModal({
   };
 
   const handleSwitchWallet = () => {
-    setShowWalletSelector(true);
+    // If user has multiple wallets, show selector
+    if (wallets.length > 1) {
+      setShowWalletSelector(true);
+    } else {
+      // If user only has one wallet, help them connect additional wallets
+      connectWallet({
+        walletChainType: 'ethereum-and-solana', // Show both Ethereum and Solana wallets
+      });
+    }
+  };
+
+  const handleConnectAccount = () => {
+    // Unified connection flow for both wallets and social accounts
+    // This will open a modal/interface where users can choose to connect:
+    // - Additional wallets (MetaMask, Coinbase, etc.)
+    // - Social accounts (Google, Twitter, Discord, etc.)
+    // - Email/SMS accounts
+    // - Passkeys
+    
+    // For now, let's prioritize wallet connection but also show social options
+    connectWallet({
+      walletChainType: 'ethereum-and-solana',
+    });
+  };
+
+  const handleLinkSocialAccount = async (provider: 'google' | 'twitter' | 'discord' | 'github' | 'apple') => {
+    try {
+      switch (provider) {
+        case 'google':
+          await linkGoogle();
+          break;
+        case 'twitter':
+          await linkTwitter();
+          break;
+        case 'discord':
+          await linkDiscord();
+          break;
+        case 'github':
+          await linkGithub();
+          break;
+        case 'apple':
+          await linkApple();
+          break;
+        default:
+          console.warn('Unknown social provider:', provider);
+      }
+      console.log(`✅ Successfully linked ${provider} account`);
+    } catch (error) {
+      console.error(`❌ Failed to link ${provider} account:`, error);
+    }
+  };
+
+  const handleLinkEmail = async () => {
+    try {
+      await linkEmail();
+      console.log('✅ Successfully linked email account');
+    } catch (error) {
+      console.error('❌ Failed to link email account:', error);
+    }
+  };
+
+  // Note: SMS linking is not available in the current Privy interface
+  // const handleLinkSms = async () => {
+  //   try {
+  //     await linkSms();
+  //     console.log('✅ Successfully linked SMS account');
+  //   } catch (error) {
+  //     console.error('❌ Failed to link SMS account:', error);
+  //   }
+  // };
+
+  const handleLinkPasskey = async () => {
+    try {
+      await linkPasskey();
+      console.log('✅ Successfully linked passkey');
+    } catch (error) {
+      console.error('❌ Failed to link passkey:', error);
+    }
   };
 
   const handleWalletSelect = (wallet: any) => {
@@ -76,9 +176,6 @@ export default function WalletModal({
     console.log('Selected wallet:', wallet);
   };
 
-  const handleWalletConnect = () => {
-    setShowWalletConnection(true);
-  };
 
   const handleAddFunds = async () => {
     if (walletAddress) {
@@ -160,13 +257,17 @@ export default function WalletModal({
               <div className="space-y-4 mb-6 bg-white/60 p-4 rounded-[40px] -mt-14 h-32">
                 <div className="flex items-center gap-2 mt-4">
                   <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
-                  <span className="text-sm text-black">{user?.email || 'bilbo.bagz@shire.io'}</span>
+                  <span className="text-sm text-black">{user?.email || formatAddress(walletAddress || '')}</span>
                 <button
                   onClick={handleSwitchWallet}
-                  className="w-full px-4 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
+                  className="w-[30%] ml-12 px-2 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
                 >
-                  <span className="text-base scale-[1.05] font-light -mt-2">Change</span>
-                  <span className="text-base scale-[1.05] font-light -mt-2 -mb-1">Address</span>
+                  <span className="text-base scale-[1.05] font-light -mt-2">
+                    {wallets.length > 1 ? 'Switch' : 'Change'}
+                  </span>
+                  <span className="text-base scale-[1.05] font-light -mt-2 -mb-1">
+                    {wallets.length > 1 ? 'Wallet' : 'Address'}
+                  </span>
                 </button>
                 </div>
                 <div className="flex items-center gap-2 -mt-5">
@@ -188,14 +289,63 @@ export default function WalletModal({
                   </p>
                 </button>
                 <div className="w-[50%] ml-14 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]">
-                  <WalletConnectButton
-                    onSuccess={() => {
-                      console.log('Additional wallet connected');
-                    }}
+                  <button
+                    onClick={handleConnectAccount}
                     className="w-full px-4 py-2 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors peridia-display text-nowrap"
                   >
-                    <span className="-ml-2 lg:ml-0 md:-ml-2">Wallet Connect</span>
-                  </WalletConnectButton>
+                    <span className="-ml-2 lg:ml-0 md:-ml-2">Connect Account</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Social Account Linking Options */}
+              <div className="space-y-2 mb-4 -mt-6">
+                <p className="text-xs text-center text-black/70 uppercase favorit-mono">Link Additional Accounts</p>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {/* Social Login Buttons */}
+                  <button
+                    onClick={() => handleLinkSocialAccount('google')}
+                    className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
+                  >
+                    Google
+                  </button>
+                  <button
+                    onClick={() => handleLinkSocialAccount('twitter')}
+                    className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
+                  >
+                    Twitter
+                  </button>
+                  <button
+                    onClick={() => handleLinkSocialAccount('discord')}
+                    className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
+                  >
+                    Discord
+                  </button>
+                  <button
+                    onClick={() => handleLinkSocialAccount('github')}
+                    className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
+                  >
+                    GitHub
+                  </button>
+                  <button
+                    onClick={() => handleLinkEmail()}
+                    className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
+                  >
+                    Email
+                  </button>
+                  {/* SMS linking not available in current Privy interface */}
+                  {/* <button
+                    onClick={() => handleLinkSms()}
+                    className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
+                  >
+                    SMS
+                  </button> */}
+                  <button
+                    onClick={() => handleLinkPasskey()}
+                    className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
+                  >
+                    Passkey
+                  </button>
                 </div>
               </div>
 
@@ -225,15 +375,6 @@ export default function WalletModal({
         currentWalletId={walletAddress || ''}
       />
       
-      {/* Wallet Connection Modal */}
-      <WalletConnectionModal
-        isOpen={showWalletConnection}
-        onClose={() => setShowWalletConnection(false)}
-        onSuccess={() => {
-          // Handle successful connection
-          console.log('Wallet connected successfully');
-        }}
-      />
       
       {/* Add Funds Modal */}
       <AddFundsModal

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { PrivyClientConfig, useSyncJwtBasedAuthState } from '@privy-io/react-auth';
 import { base, baseSepolia } from '@privy-io/chains';
+import {toSolanaWalletConnectors} from "@privy-io/react-auth/solana";
 
 export const privyConfig: PrivyClientConfig = {
   embeddedWallets: {
@@ -19,7 +20,11 @@ export const privyConfig: PrivyClientConfig = {
   },
   loginMethods: ['email', 'sms', 'google', 'twitter', 'discord', 'github', 'wallet'],
   supportedChains: [baseSepolia, base],
-  defaultChain: base, // Set Base as the default chain for funding
+  defaultChain: base, // Set Base as the default chain for funding,
+  externalWallets: {
+    disableAllExternalWallets: false,
+    // solana: {connectors: toSolanaWalletConnectors()},
+  },
   appearance: {
     showWalletLoginFirst: true,
     theme: 'light',
