@@ -42,6 +42,10 @@ interface EcosystemProjectCardProps {
  * A mobile-first card with a decorative cutout header and translucent insets,
  * matching the provided reference UI. Includes an inverted switch for
  * toggling short vs extended content and a rounded CTA button.
+ * 
+ * ✅ BYPASS_SUCCESS_CHECK FLAG:
+ * - Set to TRUE: Always route to blooming page (even on failures) - for testing
+ * - Set to FALSE: Only route on actual successful mint - for production
  */
 export default function EcosystemProjectCard({
   backgroundImageUrl,
@@ -63,9 +67,14 @@ export default function EcosystemProjectCard({
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
   const [paymentAmount, setPaymentAmount] = useState<string>(""); // Amount user entered in modal
+  const [mintSuccess, setMintSuccess] = useState(false); // Track successful mint
   const router = useRouter();
   const { walletAddress } = useAuth();
   const { sendTransaction } = useSendTransaction();
+
+  // ✅ BYPASS FLAG: Set to true to skip success check and always route to blooming page
+  // Set to false for normal behavior (only route on actual success)
+  const BYPASS_SUCCESS_CHECK = false;
 
   // Create display subtitle with location and area
   const displaySubtitle =
@@ -83,8 +92,21 @@ export default function EcosystemProjectCard({
     setPaymentAmount(amount);
     setShowPaymentModal(false);
     
+    // Mark as successful mint
+    setMintSuccess(true);
+    
     // PaymentModal now handles the transaction, so we just show success
     toast.success('Snapshot minted successfully!', { description: 'Your ecosystem has been tended.' });
+    
+    // ✅ Route to blooming page after successful mint
+    // If BYPASS_SUCCESS_CHECK is true, route even on failure (for testing)
+    // If false, only route when mintSuccess is true (normal behavior)
+    if (BYPASS_SUCCESS_CHECK || mintSuccess) {
+      console.log('🌸 Routing to blooming page for seed:', seedId);
+      setTimeout(() => {
+        router.push(`/way-of-flowers/${seedId}/blooming`);
+      }, 1500); // Small delay to let user see success toast
+    }
   };
 
   // Handle snapshot minting
@@ -184,15 +206,32 @@ export default function EcosystemProjectCard({
         0,
         () => {
           setIsMinting(false);
+          setMintSuccess(true); // Mark as successful
           toast.success("Snapshot minted successfully!", {
             description: "Your ecosystem has been tended.",
           });
+          
+          // ✅ Route to blooming page after successful mint
+          if (BYPASS_SUCCESS_CHECK || mintSuccess) {
+            console.log('🌸 Routing to blooming page for seed:', seedId);
+            setTimeout(() => {
+              router.push(`/way-of-flowers/${seedId}/blooming`);
+            }, 1500);
+          }
         },
         () => {
           setIsMinting(false);
           toast.error("Snapshot processing failed", {
             description: "Please try again.",
           });
+          
+          // ✅ If BYPASS_SUCCESS_CHECK is true, route even on failure (for testing)
+          if (BYPASS_SUCCESS_CHECK) {
+            console.log('⚠️ BYPASS MODE: Routing to blooming page despite failure');
+            setTimeout(() => {
+              router.push(`/way-of-flowers/${seedId}/blooming`);
+            }, 1500);
+          }
         }
       );
     } catch (error) {
@@ -201,6 +240,14 @@ export default function EcosystemProjectCard({
         description: "Please try again.",
       });
       console.error("Minting error:", error);
+      
+      // ✅ If BYPASS_SUCCESS_CHECK is true, route even on error (for testing)
+      if (BYPASS_SUCCESS_CHECK) {
+        console.log('⚠️ BYPASS MODE: Routing to blooming page despite error');
+        setTimeout(() => {
+          router.push(`/way-of-flowers/${seedId}/blooming`);
+        }, 1500);
+      }
     }
   };
 
@@ -486,7 +533,7 @@ export default function EcosystemProjectCard({
         amount={snapshotPrice ? parseFloat(snapshotPrice) : 0.011}
         onConfirm={handlePaymentConfirm}
         isSnapshotMint={true}
-        beneficiaryIndex={beneficiaryIndex}
+        beneficiaryIndex={typeof beneficiaryIndex === 'object' && beneficiaryIndex !== null ? (beneficiaryIndex as any)?.index || 0 : beneficiaryIndex || 0}
       />
     </div>
   );

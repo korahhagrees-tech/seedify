@@ -17,9 +17,13 @@ import { assets } from "@/lib/assets";
 import { useBalance, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useSendTransaction, useWallets, useFundWallet } from "@privy-io/react-auth";
 import { encodeFunctionData } from "viem";
-import { SNAPSHOT_NFT_ABI } from "@/lib/contracts";
+import { SNAPSHOT_NFT_ABI, SNAP_FACTORY_ABI } from "@/lib/contracts";
 import { base } from "viem/chains";
 import WalletConnectionModal from "@/components/wallet/WalletConnectionModal";
+
+// Contract addresses for conditional ABI logic
+const SNAP_FACTORY_ADDRESS = "0x038cC19fF06F823B2037C7EFF239bE99aD99A01D"; // Uses mintSnapshot with royaltyRecipient
+const SNAPSHOT_NFT_ADDRESS = "0x5203D3C460ba2d0156c97D8766cCE70b69eDd3A6"; // Uses mintSnapshot with projectCode
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -137,11 +141,31 @@ export default function PaymentModal({
         console.log('🔍 Using beneficiaryIndex:', beneficiaryIndex);
         console.log('🔍 Using beneficiaryCode:', beneficiaryCode);
         console.log('🔍 User amount in wei:', amountInWei);
+        console.log('🔍 Using royaltyRecipient from backend:', mintData.data.args.royaltyRecipient);
 
         // Detect wallet type and use appropriate transaction method
-        const isEmbeddedWallet = activeWallet.walletClientType === 'privy' || activeWallet.connectorType === 'embedded';
+        // Embedded wallets include: email/social login wallets, privy embedded wallets
+        let isEmbeddedWallet = activeWallet.walletClientType === 'privy' || 
+                                activeWallet.connectorType === 'embedded' ||
+                                activeWallet.walletClientType === 'embedded' ||
+                                // Additional checks for email/social login wallets
+                                (activeWallet.walletClientType && !['solana', 'metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect'].includes(activeWallet.walletClientType));
         const isSolanaWallet = activeWallet.walletClientType === 'solana';
         let txHash: string | undefined;
+
+        console.log('🔍 Wallet detection:', {
+          walletClientType: activeWallet.walletClientType,
+          connectorType: activeWallet.connectorType,
+          isEmbeddedWallet,
+          isSolanaWallet,
+          address: activeWallet.address,
+          // Additional debugging for embedded wallets
+          allWallets: wallets.map(w => ({
+            walletClientType: w.walletClientType,
+            connectorType: w.connectorType,
+            address: w.address
+          }))
+        });
 
         if (isSolanaWallet) {
           // For Solana wallets, use useSignAndSendTransaction
@@ -149,71 +173,51 @@ export default function PaymentModal({
           setIsProcessing(false);
           return;
         } else if (isEmbeddedWallet) {
-          // Use simplified ABI for better transaction display
-          const simplifiedABI = [
-            {
-              "type": "function",
-              "name": "mintSnapshot",
-              "stateMutability": "nonpayable",
-              "inputs": [
-                { "name": "seedId", "type": "uint256" },
-                { "name": "beneficiaryIndex", "type": "uint256" },
-                { "name": "processId", "type": "string" },
-                { "name": "to", "type": "address" },
-                { "name": "value", "type": "uint256" }
-                // { "name": "projectCode", "type": "string" } // ✅ WIRED: Uncomment to use beneficiary code
-              ],
-              "outputs": [{ "name": "", "type": "uint256" }]
-            }
-          ];
+          console.log('🔄 Using embedded wallet flow for email/social login wallet');
+          
+          // Determine which contract we're interacting with
+          const contractAddress = mintData.data.contractAddress.toLowerCase();
+          const isSnapFactory = contractAddress === SNAP_FACTORY_ADDRESS.toLowerCase();
+          const isSnapshotNFT = contractAddress === SNAPSHOT_NFT_ADDRESS.toLowerCase();
+          
+          console.log('🔍 Contract detection:', {
+            contractAddress,
+            isSnapFactory,
+            isSnapshotNFT
+          });
 
-          // For embedded wallets, use useSendTransaction with correct backend data
-          const txResult = await sendTransaction(
-            {
-              to: mintData.data.contractAddress,
-              value: "0",
-              data: encodeFunctionData({
-                abi: simplifiedABI,
-                functionName: "mintSnapshot",
-                args: [
-                  BigInt(mintData.data.args.seedId),
-                  BigInt(beneficiaryIndex),
-                  mintData.data.processId,
-                  activeWallet.address as `0x${string}`,
-                  BigInt(amountInWei),
-                  // beneficiaryCode || "DEFAULT",
+          // Use appropriate ABI based on contract address
+          let simplifiedABI: any[];
+          let transactionArgs: any[];
+
+          if (isSnapFactory) {
+            // SnapFactory ABI - uses royaltyRecipient instead of projectCode
+            simplifiedABI = [
+              {
+                "type": "function",
+                "name": "mintSnapshot",
+                "stateMutability": "payable",
+                "inputs": [
+                  { "name": "seedId", "type": "uint256" },
+                  { "name": "beneficiaryIndex", "type": "uint256" },
+                  { "name": "process", "type": "string" },
+                  { "name": "to", "type": "address" },
+                  { "name": "royaltyRecipient", "type": "address" }
                 ],
-              })
-            },
-            {
-              sponsor: true, // Enable gas sponsorship
-              uiOptions: {
-                description: `Mint a snapshot for ${amountInput} ETH to support ecosystem regeneration`,
-                buttonText: "Mint Snapshot",
-                transactionInfo: {
-                  title: "Transaction Details",
-                  action: "Mint Snapshot",
-                  contractInfo: {
-                    name: "Way of Flowers",
-                    url: "https://wayofflowers.com",
-                  }
-                },
-                successHeader: "Snapshot Minted!",
-                successDescription: "Your contribution has been recorded and will help regenerate the ecosystem.",
+                "outputs": [{ "name": "", "type": "uint256" }]
               }
-            }
-          );
-          
-          txHash = txResult.hash;
-          console.log('✅ Embedded wallet transaction hash:', txHash);
-        } else {
-          // For external EVM wallets (MetaMask, Coinbase, etc.), use wagmi's writeContract
-          // This will trigger the wallet's native transaction modal
-          toast.info('Please confirm the transaction in your wallet...');
-          
-          try {
-            // Use a more comprehensive ABI for better MetaMask display
-            const comprehensiveABI = [
+            ];
+            
+            transactionArgs = [
+              BigInt(mintData.data.args.seedId),
+              BigInt(beneficiaryIndex),
+              mintData.data.processId,
+              activeWallet.address as `0x${string}`,
+              mintData.data.args.royaltyRecipient as `0x${string}` // ✅ Use actual royaltyRecipient from backend
+            ];
+          } else {
+            // SnapshotNFT ABI - uses value and projectCode
+            simplifiedABI = [
               {
                 "type": "function",
                 "name": "mintSnapshot",
@@ -223,49 +227,176 @@ export default function PaymentModal({
                   { "name": "beneficiaryIndex", "type": "uint256" },
                   { "name": "processId", "type": "string" },
                   { "name": "to", "type": "address" },
-                  { "name": "value", "type": "uint256" }
-                  // { "name": "projectCode", "type": "string" } // ✅ WIRED: Uncomment to use beneficiary code
+                  { "name": "value", "type": "uint256" },
+                  { "name": "projectCode", "type": "string" }
                 ],
                 "outputs": [{ "name": "", "type": "uint256" }]
-              },
-              {
-                "type": "function",
-                "name": "name",
-                "stateMutability": "view",
-                "inputs": [],
-                "outputs": [{ "name": "", "type": "string" }]
-              },
-              {
-                "type": "function", 
-                "name": "symbol",
-                "stateMutability": "view",
-                "inputs": [],
-                "outputs": [{ "name": "", "type": "string" }]
               }
             ];
+            
+            transactionArgs = [
+              BigInt(mintData.data.args.seedId),
+              BigInt(beneficiaryIndex),
+              mintData.data.processId,
+              activeWallet.address as `0x${string}`,
+              BigInt(amountInWei),
+              beneficiaryCode || "DEFAULT"
+            ];
+          }
+
+          // For embedded wallets, use useSendTransaction with correct backend data
+          try {
+            const txResult = await sendTransaction(
+              {
+                to: mintData.data.contractAddress,
+                value: isSnapFactory ? amountInWei : "0", // SnapFactory is payable, SnapshotNFT is not
+                data: encodeFunctionData({
+                  abi: simplifiedABI,
+                  functionName: "mintSnapshot",
+                  args: transactionArgs,
+                })
+              },
+              {
+                sponsor: true, // Enable gas sponsorship
+                uiOptions: {
+                  description: `Mint a snapshot for ${amountInput} ETH to support ecosystem regeneration`,
+                  buttonText: "Mint Snapshot",
+                  transactionInfo: {
+                    title: "Transaction Details",
+                    action: "Mint Snapshot",
+                    contractInfo: {
+                      name: "Way of Flowers",
+                      url: "https://wayofflowers.com",
+                    }
+                  },
+                  successHeader: "Snapshot Minted!",
+                  successDescription: "Your contribution has been recorded and will help regenerate the ecosystem.",
+                }
+              }
+            );
+            
+            txHash = txResult.hash;
+            console.log('✅ Embedded wallet transaction hash:', txHash);
+          } catch (embeddedError) {
+            console.warn('⚠️ Embedded wallet transaction failed, falling back to external wallet flow:', embeddedError);
+            // Fall through to external wallet flow below
+            // Note: We'll use external wallet flow in the next condition
+          }
+        }
+
+        // If embedded wallet failed or this is an external wallet, use external wallet flow
+        if (!txHash) {
+          console.log('🔄 Using external wallet flow (MetaMask, Coinbase, etc.)');
+          // For external EVM wallets (MetaMask, Coinbase, etc.) or fallback for any EVM wallet
+          // This will trigger the wallet's native transaction modal
+          toast.info('Please confirm the transaction in your wallet...');
+          
+          try {
+            // Determine which contract we're interacting with
+            const contractAddress = mintData.data.contractAddress.toLowerCase();
+            const isSnapFactory = contractAddress === SNAP_FACTORY_ADDRESS.toLowerCase();
+            const isSnapshotNFT = contractAddress === SNAPSHOT_NFT_ADDRESS.toLowerCase();
+            
+            console.log('🔍 External wallet contract detection:', {
+              contractAddress,
+              isSnapFactory,
+              isSnapshotNFT
+            });
+
+            // Use appropriate ABI based on contract address
+            let comprehensiveABI: any[];
+            let transactionArgs: any[];
+            let valueToSend: bigint;
+
+            if (isSnapFactory) {
+              // SnapFactory ABI - uses royaltyRecipient
+              comprehensiveABI = [
+                {
+                  "type": "function",
+                  "name": "mintSnapshot",
+                  "stateMutability": "payable",
+                  "inputs": [
+                    { "name": "seedId", "type": "uint256" },
+                    { "name": "beneficiaryIndex", "type": "uint256" },
+                    { "name": "process", "type": "string" },
+                    { "name": "to", "type": "address" },
+                    { "name": "royaltyRecipient", "type": "address" }
+                  ],
+                  "outputs": [{ "name": "", "type": "uint256" }]
+                },
+                {
+                  "type": "function",
+                  "name": "name",
+                  "stateMutability": "view",
+                  "inputs": [],
+                  "outputs": [{ "name": "", "type": "string" }]
+                }
+              ];
+              
+              transactionArgs = [
+                BigInt(mintData.data.args.seedId),
+                BigInt(beneficiaryIndex),
+                mintData.data.processId,
+                activeWallet.address as `0x${string}`,
+                mintData.data.args.royaltyRecipient as `0x${string}` // ✅ Use actual royaltyRecipient from backend
+              ];
+              
+              valueToSend = BigInt(amountInWei); // SnapFactory is payable
+            } else {
+              // SnapshotNFT ABI - uses value and projectCode
+              comprehensiveABI = [
+                {
+                  "type": "function",
+                  "name": "mintSnapshot",
+                  "stateMutability": "nonpayable",
+                  "inputs": [
+                    { "name": "seedId", "type": "uint256" },
+                    { "name": "beneficiaryIndex", "type": "uint256" },
+                    { "name": "processId", "type": "string" },
+                    { "name": "to", "type": "address" },
+                    { "name": "value", "type": "uint256" },
+                    { "name": "projectCode", "type": "string" }
+                  ],
+                  "outputs": [{ "name": "", "type": "uint256" }]
+                },
+                {
+                  "type": "function",
+                  "name": "name",
+                  "stateMutability": "view",
+                  "inputs": [],
+                  "outputs": [{ "name": "", "type": "string" }]
+                }
+              ];
+              
+              transactionArgs = [
+                BigInt(mintData.data.args.seedId),
+                BigInt(beneficiaryIndex),
+                mintData.data.processId,
+                activeWallet.address as `0x${string}`,
+                BigInt(amountInWei),
+                beneficiaryCode || "DEFAULT"
+              ];
+              
+              valueToSend = BigInt(0); // SnapshotNFT is nonpayable
+            }
 
             txHash = await writeContractAsync({
               address: mintData.data.contractAddress as `0x${string}`,
-              abi: comprehensiveABI, // ✅ Use simplified ABI for better MetaMask display
+              abi: comprehensiveABI,
               functionName: "mintSnapshot",
-              args: [
-                BigInt(mintData.data.args.seedId), // ✅ From backend
-                BigInt(beneficiaryIndex), // ✅ From component
-                mintData.data.processId, // ✅ From backend
-                activeWallet.address as `0x${string}`, // ✅ User's wallet
-                BigInt(amountInWei), // ✅ User's amount as parameter
-                // beneficiaryCode || "DEFAULT", // ✅ WIRED: Uncomment to use beneficiary code (e.g., "01-GRG", "04-BUE")
-              ],
-              value: BigInt(0), // ✅ Don't send ETH - function is nonpayable
-              // Let MetaMask estimate gas for better display
-              gas: undefined,
+              args: transactionArgs,
+              value: valueToSend, // Dynamic: SnapFactory is payable, SnapshotNFT is nonpayable
+              gas: undefined, // Let wallet estimate gas
             });
 
             toast.success('Transaction submitted! Waiting for confirmation...');
             console.log('✅ External wallet transaction hash:', txHash);
           } catch (error: any) {
+            console.error('❌ External wallet transaction failed:', error);
             if (error?.code === 4001 || error?.message?.includes('User rejected')) {
               toast.error('Transaction rejected');
+            } else if (error?.message?.includes('No embedded or connected wallet found')) {
+              toast.error('Wallet connection issue. Please reconnect your wallet.');
             } else {
               toast.error('Transaction failed. Please try again.');
             }

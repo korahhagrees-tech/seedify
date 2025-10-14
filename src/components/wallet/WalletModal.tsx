@@ -12,9 +12,11 @@ import WalletSelector from "./WalletSelector";
 import WalletConnectionModal from "./WalletConnectionModal";
 import AddFundsModal from "./AddFundsModal";
 import { useWalletUtils, formatWalletAddress } from "@/lib/wallet/walletUtils";
-import { useFundWallet } from "@privy-io/react-auth";
+import { useFundWallet, useWallets } from "@privy-io/react-auth";
 import { useBalance } from "wagmi";
+import { useSetActiveWallet } from "@privy-io/wagmi";
 import { base } from "viem/chains";
+import WalletConnectButton from "@/components/auth/WalletConnectButton";
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -43,14 +45,17 @@ export default function WalletModal({
   const [showWalletConnection, setShowWalletConnection] = useState(false);
   const [showAddFunds, setShowAddFunds] = useState(false);
   
-  // Use Privy hooks
-  const { wallets, setActiveWallet } = useWalletUtils();
+  // Use Privy hooks for wallet management
+  const { wallets, ready } = useWallets(); // Get all connected wallets
+  const { setActiveWallet } = useSetActiveWallet(); // Set active wallet for wagmi
   const { fundWallet } = useFundWallet();
   const { data: balanceData } = useBalance({
     address: walletAddress as `0x${string}`,
   });
   
   const balance = balanceData ? parseFloat(balanceData.formatted).toFixed(4) : '0.0000';
+  
+  console.log('🔍 Connected wallets:', wallets.length, ready ? '(ready)' : '(loading)');
   
   
   const copyToClipboard = async () => {
@@ -100,11 +105,12 @@ export default function WalletModal({
   };
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isOpen && (
         <>
           {/* Backdrop */}
           <motion.div
+            key="wallet-modal-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -114,6 +120,7 @@ export default function WalletModal({
           
           {/* Modal */}
           <motion.div
+            key="wallet-modal-content"
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -180,12 +187,16 @@ export default function WalletModal({
                     P<span className="favorit-mono">rivy</span> H<span className="favorit-mono">ome</span>
                   </p>
                 </button>
-                <button
-                  onClick={handleWalletConnect}
-                  className="w-[50%] ml-14 px-4 py-2 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors scale-[0.75] lg:scale-[1.0] md:scale-[0.8] text-nowrap"
-                >
-                  <span className="-ml-2 lg:ml-0 md:-ml-2">Wallet Connect</span>
-                </button>
+                <div className="w-[50%] ml-14 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]">
+                  <WalletConnectButton
+                    onSuccess={() => {
+                      console.log('Additional wallet connected');
+                    }}
+                    className="w-full px-4 py-2 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors peridia-display text-nowrap"
+                  >
+                    <span className="-ml-2 lg:ml-0 md:-ml-2">Wallet Connect</span>
+                  </WalletConnectButton>
+                </div>
               </div>
 
               {/* Log out */}
@@ -211,7 +222,7 @@ export default function WalletModal({
         isOpen={showWalletSelector}
         onClose={() => setShowWalletSelector(false)}
         onWalletSelect={handleWalletSelect}
-        currentWalletId={wallets[0]?.address}
+        currentWalletId={walletAddress || ''}
       />
       
       {/* Wallet Connection Modal */}

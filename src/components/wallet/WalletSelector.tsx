@@ -5,7 +5,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { useWalletUtils, getWalletDisplayName, formatWalletAddress } from "@/lib/wallet/walletUtils";
+import { getWalletDisplayName, formatWalletAddress } from "@/lib/wallet/walletUtils";
+import { useWallets } from "@privy-io/react-auth";
 import Image from "next/image";
 import { assets } from "@/lib/assets";
 
@@ -23,8 +24,10 @@ export default function WalletSelector({
   currentWalletId 
 }: WalletSelectorProps) {
   const { user } = useAuth();
-  const { wallets } = useWalletUtils();
+  const { wallets, ready } = useWallets(); // Get all connected wallets
   const [error, setError] = useState<string | null>(null);
+  
+  console.log('🔍 WalletSelector - Total wallets:', wallets.length, 'Ready:', ready);
 
   const handleWalletSelect = (wallet: any) => {
     onWalletSelect(wallet);
@@ -81,56 +84,65 @@ export default function WalletSelector({
                   </div>
                 )}
 
-                {wallets.length === 0 && (
+                {!ready && (
+                  <div className="text-center py-8">
+                    <p className="text-sm text-gray-600 mb-4">Loading wallets...</p>
+                  </div>
+                )}
+
+                {ready && wallets.length === 0 && (
                   <div className="text-center py-8">
                     <p className="text-sm text-gray-600 mb-4">No wallets found</p>
                     <p className="text-xs text-gray-500">Connect a wallet to get started</p>
                   </div>
                 )}
 
-                {wallets.map((wallet) => (
-                  <motion.button
-                    key={wallet.address}
-                    onClick={() => handleWalletSelect(wallet)}
-                    className={`w-full p-4 rounded-[20px] border-2 transition-all [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
-                      currentWalletId === wallet.address
-                        ? 'border-black bg-white'
-                        : 'border-gray-300 bg-white/60 hover:border-gray-400 hover:bg-white'
-                    }`}
-                    whileHover={{ scale: 0.8 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="flex items-center gap-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                        <Image
-                          src={getWalletIcon(wallet)}
-                          alt="Wallet"
-                          width={20}
-                          height={20}
-                          className="w-5 h-5"
-                        />
-                      </div>
-                      <div className="flex-1 text-left">
-                        <p className="text-sm font-medium text-black">
-                          {getWalletDisplayName(wallet)}
-                        </p>
-                        <p className="text-xs text-gray-600 font-mono">
-                          {formatWalletAddress(wallet.address)}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {(wallet as any).chainType?.toUpperCase() || 'EVM'}
-                        </p>
-                      </div>
-                      {currentWalletId === wallet.address && (
-                        <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
+                {wallets.map((wallet, index) => {
+                  const walletAddress = typeof wallet.address === 'string' ? wallet.address : (wallet.address as any)?.toString?.() || `wallet-${index}`;
+                  return (
+                    <motion.button
+                      key={walletAddress}
+                      onClick={() => handleWalletSelect(wallet)}
+                      className={`w-full p-4 rounded-[20px] border-2 transition-all [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+                        currentWalletId === walletAddress
+                          ? 'border-black bg-white'
+                          : 'border-gray-300 bg-white/60 hover:border-gray-400 hover:bg-white'
+                      }`}
+                      whileHover={{ scale: 0.98 }}
+                      whileTap={{ scale: 0.96 }}
+                    >
+                      <div className="flex items-center gap-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                          <Image
+                            src={getWalletIcon(wallet)}
+                            alt="Wallet"
+                            width={20}
+                            height={20}
+                            className="w-5 h-5"
+                          />
                         </div>
-                      )}
-                    </div>
-                  </motion.button>
-                ))}
+                        <div className="flex-1 text-left">
+                          <p className="text-sm font-medium text-black">
+                            {getWalletDisplayName(wallet)}
+                          </p>
+                          <p className="text-xs text-gray-600 font-mono">
+                            {formatWalletAddress(walletAddress)}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {(wallet as any).chainType?.toUpperCase() || 'EVM'}
+                          </p>
+                        </div>
+                        {currentWalletId === walletAddress && (
+                          <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                    </motion.button>
+                  );
+                })}
               </div>
 
               {/* Footer */}
