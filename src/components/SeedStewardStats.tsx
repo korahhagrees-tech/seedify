@@ -87,11 +87,11 @@ export default function SeedStewardStats({
 
           {/* Hero with image and actions */}
           <div className="pt-4 pb-6">
-            <div className="flex items-start justify-between gap-4 relative max-w-md mx-auto">
+            <div className="flex items-start justify-between gap-4 relative max-w-md mx-auto mt-2">
               {/* Morphing image */}
               <motion.div
                 style={{ scale, borderRadius: radius }}
-                className="relative lg:w-[370px] md:w-[370px] w-[320px] h-[340px] rounded-[60px] overflow-hidden -mb-16 shadow-xl bg-white mx-auto"
+                className="relative lg:w-[370px] md:w-[370px] w-[320px] h-[370px] rounded-full overflow-hidden shadow-xl bg-white mx-auto scale-[0.6] -ml-20 -mt-22 -mb-34"
               >
                 <Image
                   src={
@@ -117,7 +117,7 @@ export default function SeedStewardStats({
                   translateY: buttonTranslateY,
                   opacity: buttonOpacity,
                 }}
-                className="absolute top-2 right-2 flex flex-col gap-3"
+                className="absolute top-2 right-12 flex flex-col gap-3"
               >
                 <Link
                   href={links.openseaUrl}
@@ -134,30 +134,108 @@ export default function SeedStewardStats({
         </div>
 
         {/* Main dotted container */}
-        <div className="relative z-0 mx-4 mb-36 rounded-[60px] border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
-          {/* Section: Core Seed Metrics (open by default) */}
-          <SectionHeader title="CORE SEED METRICS" />
-          <div className="px-4 pb-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="relative z-0 mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-30 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
+          {/* Section: Core Seed Metrics - Single section with 3x2 grid */}
+          <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
+                  <span className="tracking-wide text-gray-900 favorit-mono">
+                    CORE SEED METRICS
+                  </span>
+                </div>
+              </div>
+              <div className="pr-2">INFO ▼</div>
+            </div>
+            
+            {/* Core metrics 3x2 grid */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
               {metrics.core.map((m, idx) => (
-                <div key={idx} className="rounded-[28px] bg-gray-400/40 p-4">
-                  <div className="text-xs tracking-wide text-black/90 mb-2">
+                <div key={idx} className="rounded-[28px] bg-gray-400/40 p-3">
+                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
                     {m.label}
                   </div>
-                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                  <div className={`rounded-full px-3 py-2 text-lg text-gray-900 text-center ${
+                    idx < 3 ? 'bg-white/70 border-2 border-dashed border-gray-700' : 'bg-gray-200/80'
+                  }`}>
                     {m.value}
                   </div>
                   {m.sublabel && (
-                    <div className="mt-2 text-xs text-black/70">
+                    <div className="mt-1 text-xs text-black/70 text-center">
                       {m.sublabel}
                     </div>
                   )}
                 </div>
               ))}
             </div>
+          </div>
 
-            {/* Action buttons under core stats */}
-            <div className="flex gap-3 pt-4">
+          {/* Two separate sections below */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mx-4 mb-6">
+            {/* Left Card: NUTRIENT RESERVE TOTAL */}
+            <div className="rounded-[28px] bg-gray-400/40 p-6">
+              <div className="space-y-4">
+                <div className="rounded-[28px] bg-gray-400/40 p-4">
+                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                    NUTRIENT RESERVE TOTAL
+                  </div>
+                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                    1.826 ETH
+                  </div>
+                </div>
+                <div className="rounded-[28px] bg-gray-400/40 p-4">
+                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                    YOUR CONTRIBUTIONS
+                  </div>
+                  <div className="bg-gray-200/80 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                    1.100 ETH
+                  </div>
+                </div>
+                <div className="rounded-[28px] bg-gray-400/40 p-4">
+                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                    ABSOLUTE NUTRIENT YIELD
+                  </div>
+                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                    0.176 ETH
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Card: HARVESTABLE */}
+            <div className="rounded-[28px] bg-gray-400/40 p-6">
+              <div className="space-y-4">
+                <div className="rounded-[28px] bg-gray-400/40 p-4">
+                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                    HARVESTABLE
+                  </div>
+                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                    0.126 ETH
+                  </div>
+                </div>
+                <div className="rounded-[28px] bg-gray-400/40 p-4">
+                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                    MATURATION DATE
+                  </div>
+                  <div className="bg-gray-200/80 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                    02/09/2029
+                  </div>
+                </div>
+                <div className="rounded-[28px] bg-gray-400/40 p-4">
+                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                    EARLY HARVEST FEE
+                  </div>
+                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                    0.126 ETH
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="mx-4 mb-6">
+            <div className="flex gap-3">
               <button className="flex-1 px-6 py-3 rounded-full bg-purple-200/80 border-3 border-dotted border-black text-gray-900 peridia-display text-xl">
                 Amplify Impact
               </button>
@@ -165,11 +243,29 @@ export default function SeedStewardStats({
                 Harvest
               </button>
             </div>
+            <div className="flex gap-3 mt-2 text-xs text-black/70">
+              <div className="flex-1 text-center">
+                Add more funds to your seed to amplify its longterm impact & increase your snapshot share
+              </div>
+              <div className="w-24 text-center">
+                Harvest the nutrient reserve to withdraw available funds
+              </div>
+            </div>
           </div>
 
-          {/* Section: Your Regenerative Impact */}
-          <SectionHeader title="YOUR REGENERATIVE IMPACT" />
-          <div className="px-4 pb-6">
+          {/* Section: Your Regenerative Impact - Full width with background */}
+          <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
+                  <span className="tracking-wide text-gray-900 favorit-mono">
+                    YOUR REGENERATIVE IMPACT
+                  </span>
+                </div>
+              </div>
+              <div className="pr-2">▼</div>
+            </div>
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="rounded-[28px] bg-gray-400/40 p-4">
                 <div className="text-sm text-black/80 mb-2">
@@ -221,9 +317,19 @@ export default function SeedStewardStats({
             </div>
           </div>
 
-          {/* Section: Detailed Data of Your Stewarded Ecosystems */}
-          <SectionHeader title="DETAILED DATA OF YOUR STEWARDED ECOSYSTEMS" />
-          <div className="px-2 pb-6">
+          {/* Section: Detailed Data of Your Stewarded Ecosystems - Full width with background */}
+          <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
+                  <span className="tracking-wide text-gray-900 favorit-mono">
+                    DETAILED DATA OF YOUR STEWARDED ECOSYSTEMS
+                  </span>
+                </div>
+              </div>
+              <div className="pr-2">▼</div>
+            </div>
+            
             <div className="space-y-4">
               {metrics.beneficiaries.map((b) => (
                 <div
@@ -284,20 +390,6 @@ export default function SeedStewardStats({
   );
 }
 
-function SectionHeader({ title }: { title: string }) {
-  return (
-    <div className="flex items-center justify-between px-4 py-2 mt-6">
-      <div className="flex-1">
-        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
-          <span className="tracking-wide text-gray-900 favorit-mono">
-            {title}
-          </span>
-        </div>
-      </div>
-      <div className="pr-2">▼</div>
-    </div>
-  );
-}
 
 function Pill({
   label,

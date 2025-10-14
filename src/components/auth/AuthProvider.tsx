@@ -25,13 +25,19 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
   const [balance, setBalance] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('🔍 [AUTH] User object:', user);
+    console.log('🔍 [AUTH] User wallet:', user?.wallet);
+    console.log('🔍 [AUTH] User wallet address:', user?.wallet?.address);
+    
     if (user?.wallet?.address) {
       setWalletAddress(user.wallet.address);
+      console.log('✅ [AUTH] Set wallet address:', user.wallet.address);
       // Mock balance for now - in real app, fetch from blockchain
       setBalance("0.063");
     } else {
       setWalletAddress(null);
       setBalance(null);
+      console.log('❌ [AUTH] No wallet address found');
     }
   }, [user]);
 

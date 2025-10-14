@@ -75,13 +75,28 @@ export default function WalletPage() {
   const [stewardSeeds, setStewardSeeds] = useState<any[]>([]);
   const [beneficiaryLinks, setBeneficiaryLinks] = useState<Map<number, string>>(new Map());
 
+  // Debug wallet address
+  useEffect(() => {
+    console.log('🔍 [WALLET] Current walletAddress:', walletAddress);
+  }, [walletAddress]);
+
   // Fetch user's seeds (steward check) and snapshots (tended ecosystems)
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
-      if (!walletAddress) return;
+      if (!walletAddress) {
+        console.log('❌ [WALLET] No wallet address available');
+        return;
+      }
+      
+      console.log('🔗 [WALLET] Starting to load wallet data for address:', walletAddress);
       
       try {
+        // Test URL construction with a sample address
+        const testAddress = '0xa8B484814De1CC58F89fce9d4490405DAC1e2cd5';
+        const testSeedsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSeeds(testAddress)}`;
+        console.log('🧪 [WALLET] Test seeds URL:', testSeedsUrl);
+        
         // Fetch user's seeds from /users/{address}/seeds endpoint for StewardSeedCard
         const seedsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSeeds(walletAddress)}`;
         console.log('🔗 [WALLET] Fetching seeds from:', seedsUrl);
@@ -113,7 +128,9 @@ export default function WalletPage() {
 
         // Fetch user's snapshots from /users/{address}/snapshots endpoint for TendedEcosystem
         const snapshotsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSnapshots(walletAddress)}`;
-        console.log('🔗 [WALLET] Fetching snapshots from:', snapshotsUrl);
+        console.log('🔗 [WALLET] API_CONFIG.baseUrl:', API_CONFIG.baseUrl);
+        console.log('🔗 [WALLET] API_ENDPOINTS.userSnapshots(walletAddress):', API_ENDPOINTS.userSnapshots(walletAddress));
+        console.log('🔗 [WALLET] Final snapshots URL:', snapshotsUrl);
         
         const snapshotsResponse = await fetch(snapshotsUrl);
         
