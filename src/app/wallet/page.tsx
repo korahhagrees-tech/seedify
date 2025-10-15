@@ -164,8 +164,8 @@ export default function WalletPage() {
                 // Return enriched snapshot data
                 return {
                   ...snapshot,
-                  // Add seed data
-                  seedImageUrl: seedData?.seedImageUrl || '',
+                  // Use imageUrl from snapshot response as seedImageUrl
+                  seedImageUrl: snapshot.imageUrl || '',
                   seedName: seedData?.name || `Seed ${snapshot.seedId}`,
                   seedLabel: seedData?.label || `SEED ${snapshot.seedId}`,
                   // Add beneficiary data
@@ -178,7 +178,8 @@ export default function WalletPage() {
                 // Return original snapshot with fallback data
                 return {
                   ...snapshot,
-                  seedImageUrl: '',
+                  // Use imageUrl from snapshot response as seedImageUrl
+                  seedImageUrl: snapshot.imageUrl || '',
                   seedName: `Seed ${snapshot.seedId}`,
                   seedLabel: `SEED ${snapshot.seedId}`,
                   beneficiaryName: `Beneficiary #${snapshot.beneficiaryIndex}`,

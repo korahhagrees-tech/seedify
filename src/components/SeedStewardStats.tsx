@@ -8,45 +8,55 @@ import { Seed } from "@/types/seed";
 import { useState } from "react";
 import Link from "next/link";
 
-type BeneficiaryStat = {
+
+type Beneficiary = {
   id: string;
   name: string;
   emblemUrl: string;
   benefitShare: string; // e.g. "12.45%"
   snapshots: number;
-  gainEth: string; // e.g. "0.112"
-  gardenEth: string; // e.g. "1.911"
-  yieldShareEth: string; // e.g. "0.211"
-  unclaimedEth: string; // e.g. "0.162"
-  claimedEth: string; // e.g. "0.222"
-};
-
-type CoreMetric = {
-  label: string;
-  value: string;
-  sublabel?: string;
+  gain: string; // e.g. "0.112 ETH"
+  garden: string; // e.g. "1.911 ETH"
+  yieldShare: string; // e.g. "0.211 ETH"
+  unclaimed: string; // e.g. "0.162 ETH"
+  claimed: string; // e.g. "0.222 ETH"
 };
 
 export interface SeedStewardStatsProps {
   seed: Seed;
   links: { openseaUrl: string };
-  metrics: {
-    core: CoreMetric[]; // sequence shown in the grid
-    regenerativeImpact: {
-      immediateImpactEth: string;
-      immediateDistributedDate?: string;
-      longtermImpactEth: string;
-      longtermDistributedDate?: string;
-      overallAccumulatedEth: string;
+  stats: {
+    seedId: number;
+    seedNumber: string;
+    totalSnapshots: number;
+    snapshotPrice: string;
+    snapshotShare: string;
+    mintedOn: string;
+    lastSnapshotMintDate: string;
+    maturationDate: string;
+    nutrientReserveTotal: string;
+    absoluteNutrientYield: string;
+    harvestable: string;
+    earlyHarvestFee: {
+      percentage: number;
+      amount: string;
+      canWithdrawWithoutFee: boolean;
     };
-    beneficiaries: BeneficiaryStat[];
+    twentyPercentShareValue: string;
+    highestSeedDeposit: string;
+    immediateImpact: string;
+    immediateImpactDate: string;
+    longtermImpact: string;
+    longtermImpactDate: string | null;
+    overallAccumulatedYield: string;
+    beneficiaries?: Beneficiary[];
   };
 }
 
 export default function SeedStewardStats({
   seed,
   links,
-  metrics,
+  stats,
 }: SeedStewardStatsProps) {
   const { scrollYProgress } = useScroll();
   const [imageError, setImageError] = useState(false);
@@ -67,6 +77,28 @@ export default function SeedStewardStats({
 
   const handleImageLoad = () => {
     console.log("🌸 [IMAGE] Successfully loaded:", seed.seedImageUrl);
+  };
+
+  // Helper function to convert wei to ETH
+  const weiToEth = (wei: string) => {
+    const eth = parseFloat(wei) / 1e18;
+    return eth.toFixed(6);
+  };
+
+  // Helper function to format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  // Helper function to format percentage
+  const formatPercentage = (value: string) => {
+    const num = parseFloat(value);
+    return `${num.toFixed(1)}%`;
   };
 
   return (
@@ -135,98 +167,151 @@ export default function SeedStewardStats({
 
         {/* Main dotted container */}
         <div className="relative z-0 mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-30 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
-          {/* Section: Core Seed Metrics - Single section with 3x2 grid */}
+          {/* Section: Core Seed Metrics - Full width with 3x2 grid */}
           <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
+            {/* Full width header with INFO button */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex-1">
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
-                  <span className="tracking-wide text-gray-900 favorit-mono">
-                    CORE SEED METRICS
-                  </span>
+                <div className="text-lg font-bold tracking-wide text-gray-900 peridia-display">
+                  CORE SEED METRICS
                 </div>
               </div>
-              <div className="pr-2">INFO ▼</div>
+              <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 border-2 border-dashed border-gray-700 text-gray-900 text-sm">
+                INFO ▼
+              </div>
             </div>
             
-            {/* Core metrics 3x2 grid */}
+            {/* Core metrics 3x2 grid - single background */}
             <div className="grid grid-cols-3 gap-4 mb-6">
-              {metrics.core.map((m, idx) => (
-                <div key={idx} className="rounded-[28px] bg-gray-400/40 p-3">
-                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
-                    {m.label}
-                  </div>
-                  <div className={`rounded-full px-3 py-2 text-lg text-gray-900 text-center ${
-                    idx < 3 ? 'bg-white/70 border-2 border-dashed border-gray-700' : 'bg-gray-200/80'
-                  }`}>
-                    {m.value}
-                  </div>
-                  {m.sublabel && (
-                    <div className="mt-1 text-xs text-black/70 text-center">
-                      {m.sublabel}
-                    </div>
-                  )}
+              {/* SEED NUMBER */}
+              <div className="text-center">
+                <div className="text-xs tracking-wide text-black/90 mb-2">
+                  SEED NUMBER
                 </div>
-              ))}
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                  {stats.seedNumber}
+                </div>
+              </div>
+              
+              {/* MINTED ON */}
+              <div className="text-center">
+                <div className="text-xs tracking-wide text-black/90 mb-2">
+                  MINTED ON
+                </div>
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                  {formatDate(stats.mintedOn)}
+                </div>
+              </div>
+              
+              {/* SNAPSHOTS */}
+              <div className="text-center">
+                <div className="text-xs tracking-wide text-black/90 mb-2">
+                  SNAPSHOTS
+                </div>
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                  {stats.totalSnapshots}
+                </div>
+              </div>
+              
+              {/* SNAPSHOT PRICE */}
+              <div className="text-center">
+                <div className="text-xs tracking-wide text-black/90 mb-2">
+                  SNAPSHOT PRICE
+                </div>
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                  {parseFloat(stats.snapshotPrice).toFixed(6)} ETH
+                </div>
+              </div>
+              
+              {/* SNAPSHOT SHARE */}
+              <div className="text-center">
+                <div className="text-xs tracking-wide text-black/90 mb-2">
+                  SNAPSHOT SHARE
+                </div>
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                  {formatPercentage(stats.snapshotShare)}
+                </div>
+              </div>
+              
+              {/* 20% SHARE VALUE */}
+              <div className="text-center">
+                <div className="text-xs tracking-wide text-black/90 mb-2">
+                  20% SHARE VALUE
+                </div>
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                  {parseFloat(stats.twentyPercentShareValue).toFixed(3)} ETH
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Two separate sections below */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mx-4 mb-6">
-            {/* Left Card: NUTRIENT RESERVE TOTAL */}
+            {/* Left Card: NUTRIENT RESERVE - Single background with individual value containers */}
             <div className="rounded-[28px] bg-gray-400/40 p-6">
               <div className="space-y-4">
-                <div className="rounded-[28px] bg-gray-400/40 p-4">
-                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                {/* NUTRIENT RESERVE TOTAL */}
+                <div className="text-center">
+                  <div className="text-xs tracking-wide text-black/90 mb-2">
                     NUTRIENT RESERVE TOTAL
                   </div>
                   <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
-                    1.826 ETH
+                    {weiToEth(stats.nutrientReserveTotal)} ETH
                   </div>
                 </div>
-                <div className="rounded-[28px] bg-gray-400/40 p-4">
-                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                
+                {/* YOUR CONTRIBUTIONS */}
+                <div className="text-center">
+                  <div className="text-xs tracking-wide text-black/90 mb-2">
                     YOUR CONTRIBUTIONS
                   </div>
                   <div className="bg-gray-200/80 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
-                    1.100 ETH
+                    {weiToEth(stats.highestSeedDeposit)} ETH
                   </div>
                 </div>
-                <div className="rounded-[28px] bg-gray-400/40 p-4">
-                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                
+                {/* ABSOLUTE NUTRIENT YIELD */}
+                <div className="text-center">
+                  <div className="text-xs tracking-wide text-black/90 mb-2">
                     ABSOLUTE NUTRIENT YIELD
                   </div>
                   <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
-                    0.176 ETH
+                    {parseFloat(stats.absoluteNutrientYield).toFixed(6)} ETH
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Right Card: HARVESTABLE */}
+            {/* Right Card: HARVESTABLE - Single background with individual value containers */}
             <div className="rounded-[28px] bg-gray-400/40 p-6">
               <div className="space-y-4">
-                <div className="rounded-[28px] bg-gray-400/40 p-4">
-                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                {/* HARVESTABLE */}
+                <div className="text-center">
+                  <div className="text-xs tracking-wide text-black/90 mb-2">
                     HARVESTABLE
                   </div>
                   <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
-                    0.126 ETH
+                    {parseFloat(stats.harvestable).toFixed(6)} ETH
                   </div>
                 </div>
-                <div className="rounded-[28px] bg-gray-400/40 p-4">
-                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                
+                {/* MATURATION DATE */}
+                <div className="text-center">
+                  <div className="text-xs tracking-wide text-black/90 mb-2">
                     MATURATION DATE
                   </div>
                   <div className="bg-gray-200/80 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
-                    02/09/2029
+                    {formatDate(stats.maturationDate)}
                   </div>
                 </div>
-                <div className="rounded-[28px] bg-gray-400/40 p-4">
-                  <div className="text-xs tracking-wide text-black/90 mb-2 text-center">
+                
+                {/* EARLY HARVEST FEE */}
+                <div className="text-center">
+                  <div className="text-xs tracking-wide text-black/90 mb-2">
                     EARLY HARVEST FEE
                   </div>
                   <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
-                    0.126 ETH
+                    {parseFloat(stats.earlyHarvestFee.amount).toFixed(6)} ETH
                   </div>
                 </div>
               </div>
@@ -253,7 +338,7 @@ export default function SeedStewardStats({
             </div>
           </div>
 
-          {/* Section: Your Regenerative Impact - Full width with background */}
+          {/* Section: Your Regenerative Impact - Two separate cards side by side */}
           <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex-1">
@@ -267,52 +352,71 @@ export default function SeedStewardStats({
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Left Card: Impact Details */}
               <div className="rounded-[28px] bg-gray-400/40 p-4">
-                <div className="text-sm text-black/80 mb-2">
-                  IMMEDIATE IMPACT
-                </div>
-                <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-6 py-3 text-2xl text-center text-gray-900">
-                  {metrics.regenerativeImpact.immediateImpactEth} ETH
-                </div>
-                {metrics.regenerativeImpact.immediateDistributedDate && (
-                  <div className="text-xs text-black/70 mt-2">
-                    DISTRIBUTED:{" "}
-                    {metrics.regenerativeImpact.immediateDistributedDate}
+                <div className="space-y-4">
+                  {/* IMMEDIATE IMPACT */}
+                  <div>
+                    <div className="text-sm text-black/80 mb-2">
+                      IMMEDIATE IMPACT
+                    </div>
+                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-6 py-3 text-2xl text-center text-gray-900">
+                      {parseFloat(stats.immediateImpact).toFixed(6)} ETH
+                    </div>
+                    {stats.immediateImpactDate && (
+                      <div className="text-xs text-black/70 mt-2">
+                        DISTRIBUTED: {formatDate(stats.immediateImpactDate)}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              <div className="rounded-[28px] bg-gray-400/40 p-4">
-                <div className="text-sm text-black/80 mb-2">
-                  OVERALL ACCUMULATED YIELD
-                </div>
-                <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-6 py-3 text-2xl text-center text-gray-900">
-                  {metrics.regenerativeImpact.overallAccumulatedEth} ETH
-                </div>
-              </div>
-              <div className="rounded-[28px] bg-gray-400/40 p-4">
-                <div className="text-sm text-black/80 mb-2">
-                  LONGTERM IMPACT
-                </div>
-                <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-6 py-3 text-2xl text-center text-gray-900">
-                  {metrics.regenerativeImpact.longtermImpactEth} ETH
-                </div>
-                {metrics.regenerativeImpact.longtermDistributedDate && (
-                  <div className="text-xs text-black/70 mt-2">
-                    DISTRIBUTED:{" "}
-                    {metrics.regenerativeImpact.longtermDistributedDate}
+                  
+                  {/* LONGTERM IMPACT */}
+                  <div>
+                    <div className="text-sm text-black/80 mb-2">
+                      LONGTERM IMPACT
+                    </div>
+                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-6 py-3 text-2xl text-center text-gray-900">
+                      {parseFloat(stats.longtermImpact).toFixed(6)} ETH
+                    </div>
+                    {stats.longtermImpactDate && (
+                      <div className="text-xs text-black/70 mt-2">
+                        DISTRIBUTED: {formatDate(stats.longtermImpactDate)}
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
-              <div className="flex flex-col justify-end gap-3">
-                <button className="w-full px-6 py-3 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-xl">
-                  View Certificates
-                </button>
-                <button className="w-full px-6 py-3 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-xl">
-                  Scan Blockchain
-                </button>
-                <button className="w-full px-6 py-3 rounded-full border-3 border-dotted border-black bg-purple-200/80 text-gray-900 peridia-display text-xl">
-                  Distribute Yield
-                </button>
+              
+              {/* Right Card: Actions & Yield */}
+              <div className="rounded-[28px] bg-gray-400/40 p-4">
+                <div className="flex flex-col justify-between h-full">
+                  {/* Action Buttons */}
+                  <div className="space-y-3 mb-4">
+                    <button className="w-full px-6 py-3 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-xl">
+                      View Certificates
+                    </button>
+                    <button className="w-full px-6 py-3 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-xl">
+                      Scan Blockchain
+                    </button>
+                  </div>
+                  
+                  {/* OVERALL ACCUMULATED YIELD */}
+                  <div>
+                    <div className="text-sm text-black/80 mb-2">
+                      OVERALL ACCUMULATED YIELD
+                    </div>
+                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-6 py-3 text-2xl text-center text-gray-900">
+                      {parseFloat(stats.overallAccumulatedYield).toFixed(6)} ETH
+                    </div>
+                  </div>
+                  
+                  {/* Distribute Yield Button */}
+                  <div className="mt-4">
+                    <button className="w-full px-6 py-3 rounded-full border-3 border-dotted border-black bg-purple-200/80 text-gray-900 peridia-display text-xl">
+                      Distribute Yield
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -331,46 +435,52 @@ export default function SeedStewardStats({
             </div>
             
             <div className="space-y-4">
-              {metrics.beneficiaries.map((b) => (
-                <div
-                  key={b.id}
-                  className="rounded-[24px] bg-gradient-to-r from-white/60 to-white/30 backdrop-blur p-3 border-1 border-black"
-                >
-                  {/* Title bar */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full border-3 border-dotted border-black bg-white overflow-hidden flex-shrink-0 relative">
-                      <Image
-                        src={b.emblemUrl}
-                        alt={b.name}
-                        fill
-                        className="object-contain p-1"
-                        onLoad={handleImageLoad}
-                        onError={() => setImageError(true)}
+              {stats.beneficiaries && stats.beneficiaries.length > 0 ? (
+                stats.beneficiaries.map((beneficiary) => (
+                  <div
+                    key={beneficiary.id}
+                    className="rounded-[24px] bg-gradient-to-r from-white/60 to-white/30 backdrop-blur p-3 border-1 border-black"
+                  >
+                    {/* Title bar */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-full border-3 border-dotted border-black bg-white overflow-hidden flex-shrink-0 relative">
+                        <Image
+                          src={beneficiary.emblemUrl}
+                          alt={beneficiary.name}
+                          fill
+                          className="object-contain p-1"
+                          onLoad={handleImageLoad}
+                          onError={() => setImageError(true)}
+                        />
+                      </div>
+                      <div className="flex-1 text-center text-gray-900 peridia-display">
+                        {beneficiary.name}
+                      </div>
+                    </div>
+
+                    {/* Row of stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                      <Pill label="BENEFIT SHARE" value={beneficiary.benefitShare} />
+                      <Pill
+                        label="#SNAPSHOTS"
+                        value={`${beneficiary.snapshots}`}
+                        trailing={`GAIN ${beneficiary.gain}`}
+                      />
+                      <Pill label="GARDEN" value={beneficiary.garden} />
+                      <Pill label="YIELD SHARE" value={beneficiary.yieldShare} />
+                      <Pill
+                        label="UNCLAIMED"
+                        value={beneficiary.unclaimed}
+                        trailing={`${beneficiary.claimed} CLAIMED`}
                       />
                     </div>
-                    <div className="flex-1 text-center text-gray-900 peridia-display">
-                      {b.name}
-                    </div>
                   </div>
-
-                  {/* Row of stats */}
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                    <Pill label="BENEFIT SHARE" value={b.benefitShare} />
-                    <Pill
-                      label="#SNAPSHOTS"
-                      value={`${b.snapshots}`}
-                      trailing={`GAIN ${b.gainEth}ETH`}
-                    />
-                    <Pill label="GARDEN" value={`${b.gardenEth}ETH`} />
-                    <Pill label="YIELD SHARE" value={`${b.yieldShareEth}ETH`} />
-                    <Pill
-                      label="UNCLAIMED"
-                      value={`${b.unclaimedEth}ETH`}
-                      trailing={`${b.claimedEth}ETH CLAIMED`}
-                    />
-                  </div>
+                ))
+              ) : (
+                <div className="text-center text-gray-600 py-8">
+                  No beneficiaries data available
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -389,7 +499,6 @@ export default function SeedStewardStats({
     </>
   );
 }
-
 
 function Pill({
   label,

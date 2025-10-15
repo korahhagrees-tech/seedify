@@ -6,13 +6,14 @@ import { useParams, useRouter } from "next/navigation";
 import SeedStewardStats from "@/components/SeedStewardStats";
 import { Seed } from "@/types/seed";
 import { fetchSeedById } from "@/lib/api/seeds";
-import { assets } from "@/lib/assets";
 
 export default function StewardStatsRoute() {
   const params = useParams();
   const router = useRouter();
   const [seed, setSeed] = useState<Seed | null>(null);
+  const [stats, setStats] = useState<any>(null);
   const [hasFetched, setHasFetched] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
@@ -20,12 +21,42 @@ export default function StewardStatsRoute() {
         ? params.id[0]
         : (params.id as string);
       if (!id) return;
-      const s = await fetchSeedById(id);
-      setSeed(s || null);
-      setHasFetched(true);
+      
+      try {
+        setLoading(true);
+        
+        // Fetch seed data
+        const s = await fetchSeedById(id);
+        setSeed(s || null);
+        
+        // Fetch stats data
+        const statsResponse = await fetch(`https://seedify-backend.up.railway.app/api/seeds/${id}/stats`);
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json();
+          setStats(statsData.success ? statsData.stats : null);
+        } else {
+          console.error('Failed to fetch stats:', statsResponse.statusText);
+          setStats(null);
+        }
+        
+        setHasFetched(true);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        setHasFetched(true);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, [params.id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (!seed && hasFetched) {
     return (
@@ -38,8 +69,15 @@ export default function StewardStatsRoute() {
     );
   }
 
-  if (!seed) {
-    return null; // Still fetching, show nothing
+  if (!seed || !stats) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <p>Failed to load data.</p>
+        <button onClick={() => router.push("/wallet")} className="underline">
+          Back to Wallet
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -47,51 +85,7 @@ export default function StewardStatsRoute() {
       <SeedStewardStats
         seed={seed}
         links={{ openseaUrl: "https://opensea.io/" }}
-        metrics={{
-          core: [
-            { label: "SEED NUMBER", value: seed.label },
-            {
-              label: "SNAPSHOTS",
-              value: String(seed.snapshotCount),
-              sublabel: `SNAPSHOT PRICE ${seed.snapshotPrice} ETH`,
-            },
-            {
-              label: "SNAPSHOT SHARE",
-              value: "12,5%",
-              sublabel: "20% SHARE VALUE 2.023 ETH",
-            },
-            { label: "MINTED ON", value: "04/09/2025" },
-            { label: "NUTRIENT RESERVE TOTAL", value: "1.826 ETH" },
-            { label: "YOUR CONTRIBUTIONS", value: seed.depositAmount + " ETH" },
-            { label: "ABSOLUTE NUTRIENT YIELD", value: "0.176 ETH" },
-            {
-              label: "HARVESTABLE",
-              value: "0.126 ETH",
-              sublabel: "MATURATION DATE 02/09/2029",
-            },
-          ],
-          regenerativeImpact: {
-            immediateImpactEth: "0.270",
-            immediateDistributedDate: "04/06/2027",
-            longtermImpactEth: "0.070",
-            longtermDistributedDate: "01/01/2027",
-            overallAccumulatedEth: "0.399",
-          },
-          beneficiaries: (seed.beneficiaries || []).map(
-            (b: any, i: number) => ({
-              id: b.id || String(i),
-              name: b.name || "Beneficiary",
-              emblemUrl: b.image || assets.glowers,
-              benefitShare: b.benefitShare || "12.45%",
-              snapshots: b.snapshots || 127,
-              gainEth: b.gainEth || "0.112",
-              gardenEth: b.gardenEth || "1.911",
-              yieldShareEth: b.yieldShareEth || "0.211",
-              unclaimedEth: b.unclaimedEth || "0.162",
-              claimedEth: b.claimedEth || "0.222",
-            })
-          ),
-        }}
+        stats={stats}
       />
     </div>
   );
