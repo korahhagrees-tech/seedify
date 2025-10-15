@@ -53,7 +53,7 @@ export default function PaymentModal({
   const [showWalletConnection, setShowWalletConnection] = useState(false);
   const { authenticated, login, logout } = usePrivy();
   const { execute } = useWriteTransaction();
-  const { user, walletAddress } = useAuth();
+  const { user, walletAddress, wallets: contextWallets, activeWallet, linkedAccounts } = useAuth();
   const router = useRouter();
   const { sendTransaction } = useSendTransaction();
 
@@ -63,9 +63,13 @@ export default function PaymentModal({
       setAmountInput(amount.toString());
     }
   }, [amount]);
-  const { wallets } = useWallets();
+  
+  const { wallets: privyWallets } = useWallets();
   const { writeContractAsync } = useWriteContract();
   const { fundWallet } = useFundWallet();
+  
+  // Use wallets from context (Zustand store) or fallback to Privy wallets
+  const wallets = contextWallets.length > 0 ? contextWallets : privyWallets;
   
   // Get ETH balance from wagmi
   const { data: balanceData } = useBalance({
@@ -112,9 +116,9 @@ export default function PaymentModal({
       setIsProcessing(true);
       
     try {
-      // Check if we have an active wallet
-      const activeWallet = wallets[0];
-      if (!activeWallet) {
+      // Use activeWallet from context (Zustand store), fallback to first wallet
+      const currentActiveWallet = activeWallet || wallets[0];
+      if (!currentActiveWallet) {
         toast.error("No active wallet found. Please connect your wallet.");
         setIsProcessing(false);
         return;
@@ -145,20 +149,21 @@ export default function PaymentModal({
 
         // Detect wallet type and use appropriate transaction method
         // Embedded wallets include: email/social login wallets, privy embedded wallets
-        const isEmbeddedWallet = activeWallet.walletClientType === 'privy' || 
-                                activeWallet.connectorType === 'embedded' ||
-                                activeWallet.walletClientType === 'embedded' ||
+        const isEmbeddedWallet = currentActiveWallet.walletClientType === 'privy' || 
+                                currentActiveWallet.connectorType === 'embedded' ||
+                                currentActiveWallet.walletClientType === 'embedded' ||
                                 // Additional checks for email/social login wallets
-                                (activeWallet.walletClientType && !['solana', 'metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect'].includes(activeWallet.walletClientType));
-        const isSolanaWallet = activeWallet.walletClientType === 'solana';
+                                (currentActiveWallet.walletClientType && !['solana', 'metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect'].includes(currentActiveWallet.walletClientType));
+        const isSolanaWallet = currentActiveWallet.walletClientType === 'solana';
         let txHash: string | undefined;
 
         console.log('🔍 Wallet detection:', {
-          walletClientType: activeWallet.walletClientType,
-          connectorType: activeWallet.connectorType,
+          walletClientType: currentActiveWallet.walletClientType,
+          connectorType: currentActiveWallet.connectorType,
           isEmbeddedWallet,
           isSolanaWallet,
-          address: activeWallet.address,
+          address: currentActiveWallet.address,
+          activeWalletFromContext: activeWallet?.address,
           // Additional debugging for embedded wallets
           allWallets: wallets.map(w => ({
             walletClientType: w.walletClientType,
@@ -212,7 +217,7 @@ export default function PaymentModal({
               BigInt(mintData.data.args.seedId),
               BigInt(beneficiaryIndex),
               mintData.data.processId,
-              activeWallet.address as `0x${string}`,
+              currentActiveWallet.address as `0x${string}`,
               mintData.data.args.royaltyRecipient as `0x${string}` // ✅ Use actual royaltyRecipient from backend
             ];
           } else {
@@ -238,7 +243,7 @@ export default function PaymentModal({
               BigInt(mintData.data.args.seedId),
               BigInt(beneficiaryIndex),
               mintData.data.processId,
-              activeWallet.address as `0x${string}`,
+              currentActiveWallet.address as `0x${string}`,
               BigInt(amountInWei),
               beneficiaryCode || "DEFAULT"
             ];
@@ -337,7 +342,7 @@ export default function PaymentModal({
                 BigInt(mintData.data.args.seedId),
                 BigInt(beneficiaryIndex),
                 mintData.data.processId,
-                activeWallet.address as `0x${string}`,
+                currentActiveWallet.address as `0x${string}`,
                 mintData.data.args.royaltyRecipient as `0x${string}` // ✅ Use actual royaltyRecipient from backend
               ];
               
@@ -372,7 +377,7 @@ export default function PaymentModal({
                 BigInt(mintData.data.args.seedId),
                 BigInt(beneficiaryIndex),
                 mintData.data.processId,
-                activeWallet.address as `0x${string}`,
+                currentActiveWallet.address as `0x${string}`,
                 BigInt(amountInWei),
                 beneficiaryCode || "DEFAULT"
               ];
@@ -413,7 +418,7 @@ export default function PaymentModal({
             snapshotId: mintData.data.snapshotId,
             beneficiaryCode: mintData.data.beneficiaryCode || `BENEFICIARY-${beneficiaryIndex}`,
             beneficiaryDistribution: mintData.data.beneficiaryDistribution || 0,
-            creator: activeWallet.address,
+            creator: currentActiveWallet.address,
             txHash: txHash,
             timestamp: Math.floor(Date.now() / 1000),
             blockNumber: mintData.data.blockNumber,
@@ -468,6 +473,7 @@ export default function PaymentModal({
         <>
           {/* Backdrop */}
           <motion.div
+            key="payment-modal-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -477,6 +483,7 @@ export default function PaymentModal({
 
           {/* Modal */}
           <motion.div
+            key="payment-modal-content"
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}

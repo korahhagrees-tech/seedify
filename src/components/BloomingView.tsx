@@ -132,7 +132,7 @@ export default function BloomingView({
               if (
                 target.src !== `${window.location.origin}/seeds/01__GRG.png`
               ) {
-                target.src = "/seeds/01__GRG.png";
+                target.src = "https://d17wy07434ngk.cloudfront.net/seed1/seed.";
               }
             }}
           />

@@ -93,7 +93,7 @@ export default function TendedEcosystem({
               src={
                 seedImageUrl && seedImageUrl.length > 0
                   ? seedImageUrl
-                  : "/seeds/01__GRG.png"
+                  : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
               }
               alt=""
               fill
@@ -106,7 +106,7 @@ export default function TendedEcosystem({
                 if (
                   target.src !== `${window.location.origin}/seeds/01__GRG.png`
                 ) {
-                  target.src = "/seeds/01__GRG.png";
+                  target.src = "https://d17wy07434ngk.cloudfront.net/seed1/seed.";
                 }
               }}
             />

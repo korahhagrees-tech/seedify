@@ -72,10 +72,36 @@ export function formatWalletAddress(address: string, startChars: number = 6, end
 
 // Get wallet display name based on type
 export function getWalletDisplayName(wallet: any): string {
+  // Check meta.name first (most reliable)
+  if (wallet.meta?.name) {
+    return wallet.meta.name;
+  }
+  
+  // Check walletClientType (camelCase from Privy)
+  if (wallet.walletClientType) {
+    switch (wallet.walletClientType) {
+      case 'privy':
+        return 'Embedded Wallet';
+      case 'metamask':
+        return 'MetaMask';
+      case 'coinbase':
+      case 'coinbase_wallet':
+        return 'Coinbase Wallet';
+      case 'wallet_connect':
+      case 'walletconnect':
+        return 'WalletConnect';
+      case 'rainbow':
+        return 'Rainbow';
+      default:
+        return wallet.walletClientType.charAt(0).toUpperCase() + wallet.walletClientType.slice(1);
+    }
+  }
+  
+  // Fallback to legacy wallet_client_type (snake_case)
   if (wallet.wallet_client_type) {
     switch (wallet.wallet_client_type) {
       case 'privy':
-        return 'Privy Wallet';
+        return 'Embedded Wallet';
       case 'metamask':
         return 'MetaMask';
       case 'coinbase':
@@ -87,6 +113,19 @@ export function getWalletDisplayName(wallet: any): string {
     }
   }
   
+  // Check connectorType
+  if (wallet.connectorType) {
+    switch (wallet.connectorType) {
+      case 'embedded':
+        return 'Embedded Wallet';
+      case 'injected':
+        return 'Browser Wallet';
+      default:
+        return 'Connected Wallet';
+    }
+  }
+  
+  // Fallback to legacy connector_type
   if (wallet.connector_type) {
     switch (wallet.connector_type) {
       case 'embedded':

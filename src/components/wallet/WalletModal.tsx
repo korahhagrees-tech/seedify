@@ -43,15 +43,16 @@ export default function WalletModal({
   onPrivyHome,
   onWalletConnect,
 }: WalletModalProps) {
-  const { user, walletAddress } = useAuth();
+  const { user, walletAddress, wallets: contextWallets, activeWallet, linkedAccounts, setActiveWallet: contextSetActiveWallet } = useAuth();
   const [copied, setCopied] = useState(false);
   const [showWalletSelector, setShowWalletSelector] = useState(false);
   const [showAddFunds, setShowAddFunds] = useState(false);
 
   // Use Privy hooks for wallet management
-  const { wallets, ready } = useWallets(); // Get all connected wallets
-  const { setActiveWallet } = useSetActiveWallet(); // Set active wallet for wagmi
+  const { wallets: privyWallets, ready } = useWallets(); // Get all connected wallets from Privy
+  const { setActiveWallet: setWagmiActiveWallet } = useSetActiveWallet(); // Set active wallet for wagmi
   const { fundWallet } = useFundWallet();
+  const privy = usePrivy(); // Get Privy instance for export functionality
   const { connectWallet } = useConnectWallet({
     onSuccess: ({ wallet }) => {
       console.log("✅ Wallet connected successfully:", wallet);
@@ -62,6 +63,9 @@ export default function WalletModal({
       console.error("❌ Wallet connection failed:", error);
     },
   });
+
+  // Use wallets from context (which comes from Zustand store)
+  const wallets = contextWallets.length > 0 ? contextWallets : privyWallets;
 
   // Get Privy instance for linking social accounts
   const {
@@ -101,10 +105,15 @@ export default function WalletModal({
     : "0.0000";
 
   console.log(
-    "🔍 Connected wallets:",
+    "🔍 WalletModal - Context wallets:",
+    contextWallets.length,
+    "Privy wallets:",
+    privyWallets.length,
+    "Using:",
     wallets.length,
     ready ? "(ready)" : "(loading)"
   );
+  console.log("🔍 WalletModal - Wallets detail:", wallets);
 
   const copyToClipboard = async () => {
     if (walletAddress) {
@@ -198,7 +207,8 @@ export default function WalletModal({
   };
 
   const handleWalletSelect = (wallet: any) => {
-    setActiveWallet(wallet);
+    // Use context's setActiveWallet which syncs with Zustand store and wagmi
+    contextSetActiveWallet(wallet);
     setShowWalletSelector(false);
     console.log("Selected wallet:", wallet);
   };
@@ -222,8 +232,34 @@ export default function WalletModal({
   };
 
   const handleExportKey = async () => {
-    // For now, just call the parent handler
-    onExportKey();
+    try {
+      if (!activeWallet) {
+        console.error('No active wallet to export');
+        return;
+      }
+
+      // Check if this is an embedded wallet (only embedded wallets can export private keys)
+      const isEmbedded = activeWallet.walletClientType === 'privy' || 
+                        activeWallet.connectorType === 'embedded';
+
+      if (!isEmbedded) {
+        console.log('External wallets manage their own private keys');
+        alert('External wallets (like MetaMask) manage their own private keys. Please export from your wallet directly.');
+        return;
+      }
+
+      // For embedded wallets, use Privy's exportWallet function
+      if (privy?.exportWallet) {
+        await privy.exportWallet({ address: activeWallet.address });
+        console.log('Private key export initiated for embedded wallet');
+      } else {
+        console.error('Privy exportWallet function not available');
+        alert('Private key export is not available for this wallet type.');
+      }
+    } catch (error) {
+      console.error('Error exporting private key:', error);
+      alert('Failed to export private key. Please try again.');
+    }
   };
 
   const formatAddress = (address: string) => {

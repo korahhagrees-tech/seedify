@@ -23,11 +23,15 @@ export default function WalletSelector({
   onWalletSelect,
   currentWalletId 
 }: WalletSelectorProps) {
-  const { user } = useAuth();
-  const { wallets, ready } = useWallets(); // Get all connected wallets
+  const { user, wallets: contextWallets } = useAuth();
+  const { wallets: privyWallets, ready } = useWallets(); // Get all connected wallets from Privy
   const [error, setError] = useState<string | null>(null);
   
-  console.log('🔍 WalletSelector - Total wallets:', wallets.length, 'Ready:', ready);
+  // Use wallets from context (Zustand store) which has the most up-to-date list
+  const wallets = contextWallets.length > 0 ? contextWallets : privyWallets;
+  
+  console.log('🔍 WalletSelector - Context wallets:', contextWallets.length, 'Privy wallets:', privyWallets.length, 'Ready:', ready);
+  console.log('🔍 WalletSelector - Using wallets:', wallets.length, wallets);
 
   const handleWalletSelect = (wallet: any) => {
     onWalletSelect(wallet);
@@ -100,18 +104,16 @@ export default function WalletSelector({
                 {wallets.map((wallet, index) => {
                   const walletAddress = typeof wallet.address === 'string' ? wallet.address : (wallet.address as any)?.toString?.() || `wallet-${index}`;
                   return (
-                    <motion.button
+                    <button
                       key={walletAddress}
                       onClick={() => handleWalletSelect(wallet)}
-                      className={`w-full p-4 rounded-[20px] border-2 transition-all [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+                      className={`w-full p-4 rounded-[20px] border-2 transition-all hover:scale-[0.98] active:scale-[0.96] ${
                         currentWalletId === walletAddress
                           ? 'border-black bg-white'
                           : 'border-gray-300 bg-white/60 hover:border-gray-400 hover:bg-white'
                       }`}
-                      whileHover={{ scale: 0.98 }}
-                      whileTap={{ scale: 0.96 }}
                     >
-                      <div className="flex items-center gap-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                      <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
                           <Image
                             src={getWalletIcon(wallet)}
@@ -140,7 +142,7 @@ export default function WalletSelector({
                           </div>
                         )}
                       </div>
-                    </motion.button>
+                    </button>
                   );
                 })}
               </div>
