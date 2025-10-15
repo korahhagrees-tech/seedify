@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
@@ -151,7 +152,7 @@ export default function WalletConnectionModal({
                 </p>
                 {/* Debug info - remove in production */}
                 <p className="text-[10px] text-gray-500 mt-1 font-mono">
-                  Debug: {wallets.map((w, i) => `${i}:${getWalletDisplayName(w)}`).join(', ')}
+                  Debug: {wallets.map((w, i) => `${i}:${getWalletDisplayName(w, wallets)}`).join(', ')}
                 </p>
               </div>
 
@@ -201,7 +202,7 @@ export default function WalletConnectionModal({
                             </div>
                             <div className="flex-1 text-left">
                               <p className="text-sm font-medium text-black">
-                                {getWalletDisplayName(wallet)}
+                                {getWalletDisplayName(wallet, wallets)}
                               </p>
                               <p className="text-xs text-gray-600 font-mono">
                                 {formatWalletAddress(walletAddress)}

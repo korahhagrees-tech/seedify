@@ -71,71 +71,94 @@ export function formatWalletAddress(address: string, startChars: number = 6, end
 }
 
 // Get wallet display name based on type
-export function getWalletDisplayName(wallet: any): string {
+export function getWalletDisplayName(wallet: any, allWallets?: any[], index?: number): string {
   // Check meta.name first (most reliable)
   if (wallet.meta?.name) {
     return wallet.meta.name;
   }
   
+  let baseName = '';
+  
   // Check walletClientType (camelCase from Privy)
   if (wallet.walletClientType) {
     switch (wallet.walletClientType) {
       case 'privy':
-        return 'Embedded Wallet';
+        baseName = 'Embedded Wallet';
+        break;
       case 'metamask':
-        return 'MetaMask';
+        baseName = 'MetaMask';
+        break;
       case 'coinbase':
       case 'coinbase_wallet':
-        return 'Coinbase Wallet';
+        baseName = 'Coinbase Wallet';
+        break;
       case 'wallet_connect':
       case 'walletconnect':
-        return 'WalletConnect';
+        baseName = 'WalletConnect';
+        break;
       case 'rainbow':
-        return 'Rainbow';
+        baseName = 'Rainbow';
+        break;
       default:
-        return wallet.walletClientType.charAt(0).toUpperCase() + wallet.walletClientType.slice(1);
+        baseName = wallet.walletClientType.charAt(0).toUpperCase() + wallet.walletClientType.slice(1);
     }
-  }
-  
-  // Fallback to legacy wallet_client_type (snake_case)
-  if (wallet.wallet_client_type) {
+  } else if (wallet.wallet_client_type) {
+    // Fallback to legacy wallet_client_type (snake_case)
     switch (wallet.wallet_client_type) {
       case 'privy':
-        return 'Embedded Wallet';
+        baseName = 'Embedded Wallet';
+        break;
       case 'metamask':
-        return 'MetaMask';
+        baseName = 'MetaMask';
+        break;
       case 'coinbase':
-        return 'Coinbase Wallet';
+        baseName = 'Coinbase Wallet';
+        break;
       case 'walletconnect':
-        return 'WalletConnect';
+        baseName = 'WalletConnect';
+        break;
       default:
-        return wallet.wallet_client_type.charAt(0).toUpperCase() + wallet.wallet_client_type.slice(1);
+        baseName = wallet.wallet_client_type.charAt(0).toUpperCase() + wallet.wallet_client_type.slice(1);
     }
-  }
-  
-  // Check connectorType
-  if (wallet.connectorType) {
+  } else if (wallet.connectorType) {
+    // Check connectorType
     switch (wallet.connectorType) {
       case 'embedded':
-        return 'Embedded Wallet';
+        baseName = 'Embedded Wallet';
+        break;
       case 'injected':
-        return 'Browser Wallet';
+        baseName = 'Browser Wallet';
+        break;
       default:
-        return 'Connected Wallet';
+        baseName = 'Connected Wallet';
     }
-  }
-  
-  // Fallback to legacy connector_type
-  if (wallet.connector_type) {
+  } else if (wallet.connector_type) {
+    // Fallback to legacy connector_type
     switch (wallet.connector_type) {
       case 'embedded':
-        return 'Embedded Wallet';
+        baseName = 'Embedded Wallet';
+        break;
       default:
-        return 'Connected Wallet';
+        baseName = 'Connected Wallet';
+    }
+  } else {
+    baseName = 'Unknown Wallet';
+  }
+  
+  // If we have all wallets and this is an external wallet, add account number
+  if (allWallets && (wallet.walletClientType === 'metamask' || wallet.walletClientType === 'coinbase' || wallet.connectorType === 'injected')) {
+    const sameTypeWallets = allWallets.filter(w => 
+      w.walletClientType === wallet.walletClientType && 
+      w.connectorType === wallet.connectorType
+    );
+    
+    if (sameTypeWallets.length > 1) {
+      const accountIndex = sameTypeWallets.findIndex(w => w.address === wallet.address) + 1;
+      return `${baseName} #${accountIndex}`;
     }
   }
   
-  return 'Unknown Wallet';
+  return baseName;
 }
 
 // Check if wallet is embedded (Privy managed)

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Zustand store for authentication and wallet state management
  * Centralized state for user, wallets, and linked accounts
@@ -11,7 +12,7 @@ export interface LinkedAccount {
   type: string;
   address?: string;
   email?: string;
-  username?: string;
+  username?: string | null;
   subject?: string;
   // Add other account-specific fields as needed
   [key: string]: any;
@@ -129,7 +130,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         }
 
         // Extract all linked accounts from user.linkedAccounts
-        const accounts: LinkedAccount[] = user.linkedAccounts || [];
+        const accounts = (user.linkedAccounts || []) as LinkedAccount[];
         
         set({ linkedAccounts: accounts }, false, 'updateLinkedAccounts');
       },

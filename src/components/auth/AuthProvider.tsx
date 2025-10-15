@@ -55,6 +55,17 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
   // Sync Privy wallets to Zustand store
   useEffect(() => {
     console.log('🔍 [AUTH] Syncing wallets to store:', wallets);
+    console.log('🔍 [AUTH] Privy wallets count:', wallets?.length || 0);
+    if (wallets?.length > 0) {
+      wallets.forEach((wallet, index) => {
+        console.log(`🔍 [AUTH] Privy wallet ${index}:`, {
+          address: wallet.address,
+          walletClientType: wallet.walletClientType,
+          connectorType: wallet.connectorType,
+          meta: wallet.meta
+        });
+      });
+    }
     setWallets(wallets);
   }, [wallets, setWallets]);
 
@@ -101,17 +112,39 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
       
       console.log('🔍 [AUTH] Converted linkedAccounts to wallets:', linkedWallets);
       
-      // Merge with existing connected wallets, prioritizing linked accounts
+      // Start with linked accounts as base wallets
       const allWallets = [...linkedWallets];
       
-      // Add any connected wallets that aren't already in linked accounts
+      // Add ALL connected wallets (including multiple accounts from same provider)
       wallets.forEach((wallet: any) => {
-        const exists = linkedWallets.some((linked: any) => 
-          linked.address.toLowerCase() === wallet.address?.toLowerCase()
+        const exists = allWallets.some((existing: any) => 
+          existing.address?.toLowerCase() === wallet.address?.toLowerCase()
         );
         if (!exists) {
+          console.log('🔍 [AUTH] Adding new connected wallet:', wallet.address, wallet.walletClientType);
           allWallets.push(wallet);
         }
+      });
+      
+      // Sort wallets by type and address for consistent ordering
+      allWallets.sort((a: any, b: any) => {
+        // First sort by wallet type (embedded first, then external)
+        const typeOrder = (type: string) => {
+          if (type === 'privy' || type === 'embedded') return 0;
+          if (type === 'metamask') return 1;
+          if (type === 'coinbase') return 2;
+          return 3;
+        };
+        
+        const aTypeOrder = typeOrder(a.walletClientType || a.connectorType || 'unknown');
+        const bTypeOrder = typeOrder(b.walletClientType || b.connectorType || 'unknown');
+        
+        if (aTypeOrder !== bTypeOrder) {
+          return aTypeOrder - bTypeOrder;
+        }
+        
+        // Then sort by address for same type
+        return (a.address || '').localeCompare(b.address || '');
       });
       
       console.log('🔍 [AUTH] Final merged wallets:', allWallets);
