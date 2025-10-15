@@ -153,7 +153,7 @@ export default function WayOfFlowersCard({
                 src="/Blooming.svg"
                 alt="Blooming frame"
                 fill
-                className="object-contain scale-[1.0] lg:mt-0 md:-mt-2 -mt-2"
+                className="object-contain scale-[1.0] lg:mt-0 md:-mt-2 -mt-15"
                 priority
               />
             </div>
@@ -171,7 +171,7 @@ export default function WayOfFlowersCard({
               {/* Top section with seed emblem and text */}
               <div className="text-center mb-8">
                 {/* Seed emblem */}
-                <div className="mb-6 flex justify-center -mt-14">
+                <div className="mb-6 flex justify-center lg:-mt-16 md:-mt-16 -mt-18">
                   <Image
                     src={
                       seedEmblemUrl && seedEmblemUrl.length > 0
@@ -181,7 +181,7 @@ export default function WayOfFlowersCard({
                     alt=""
                     width={60}
                     height={60}
-                    className="w-37 h-37 -mt-14 mb-6"
+                    className="lg:w-37 md:w-37 w-30 lg:h-37 md:h-37 h-30 -mt-14 mb-6"
                     onError={(e) => {
                       console.log(
                         "🌸 [IMAGE] Error loading seed emblem, using placeholder"
@@ -198,7 +198,7 @@ export default function WayOfFlowersCard({
                 </div>
 
                 {/* Three text lines */}
-                <div className="-space-y-1 lg:-mt-1 md:-mt-4 -mt-2 text-black font-medium text-base lg:scale-[0.85] md:scale-[0.9] scale-[0.85]">
+                <div className="-space-y-1 lg:mt-1 md:-mt-2 -mt-2 text-black font-medium text-base lg:scale-[0.9] md:scale-[0.9] scale-[0.75]">
                   <div>{firstText}</div>
                   <div>{secondText}</div>
                   <div className="text-nowrap">{thirdText}</div>
@@ -206,8 +206,8 @@ export default function WayOfFlowersCard({
               </div>
 
               {/* Main quote section (no background, over SVG shape) */}
-              <div className="mb-8 -px-12 lg:scale-[0.98] md:scale-[0.95] scale-[0.98] lg:mt-1 -mt-2">
-                <p className="text-black text-left lg:text-[17px] md:text-[17px] text-[16px] leading-tight peridia-display-light">
+              <div className="mb-8 -px-12 lg:scale-[1.05] md:scale-[1.05] scale-[1.1] lg:mt-2 -mt-1 md:mt-4">
+                <p className="text-black text-left lg:text-[15px] md:text-[15px] text-[13px] leading-tight peridia-display-light tracking-wider">
                   {`"${mainQuote}"`}{" "}
                   <span className="text-black/70 mt-3 text-xs favorit-mono font-bold text-center">
                     {author}

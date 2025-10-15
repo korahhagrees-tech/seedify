@@ -67,8 +67,8 @@ export default function TendedEcosystem({
       {/* Emblem + Gradient Bar (conjoined) */}
       <div className="relative mb-4 overflow-hidden pt-4 pb-3">
         {/* Gradient bar */}
-        <div className="w-full max-w-[470px] rounded-full py-1 pl-16 pr-4 -ml-4 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.85]">
-          <span className="text-[12px] text-gray-700 text-nowrap block -ml-2">
+        <div className="lg:w-[480px] md:w-[480px] w-[440px] rounded-full py-1 pl-16 pr-4 -ml-4 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.85]">
+          <span className="text-[10px] lg:text-[12px] md:text-[12px] text-gray-700 text-nowrap block -ml-2">
             {beneficiaryName}
           </span>
         </div>
