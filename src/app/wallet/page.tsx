@@ -271,7 +271,7 @@ export default function WalletPage() {
       <GardenHeader />
 
       {/* Content Area - Tended Ecosystems List */}
-      <div className="px-4 pb-40 overflow-x-hidden lg:scale-[1.0] md:scale-[1.0] scale-[0.9] lg:mt-6 md:-mt-4 -mt-34">
+      <div className="px-4 pb-40 overflow-x-hidden lg:scale-[1.0] md:scale-[1.0] scale-[0.8] lg:mt-6 md:-mt-4 -mt-42">
         {/* Steward Seeds Section (always show; defaults to mock if backend empty) */}
         {stewardSeeds.length > 0 && (
           <div className="space-y-8 mb-10 scale-[0.8] lg:scale-[1.0] md:scale-[1.0] -ml-10">
@@ -297,17 +297,17 @@ export default function WalletPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20 mt-18"
+            className="text-center py-20 mt-68 lg:mt-48 md:mt-48"
           >
             <div className="text-gray-400 text-lg mb-2">{`You haven't tended`}</div>
             <div className="text-gray-400 text-lg mb-8">an Ecosystem yet</div>
             <div className="text-gray-500 text-sm mb-2">Explore the Garden</div>
             <div className="text-gray-500 text-sm">to start nurturing one</div>
-            <div className="text-gray-500 text-sm">Switch wallets from below to vire snapshots</div>
+            <div className="text-gray-500 text-sm">Switch wallets from below to view snapshots</div>
           </motion.div>
         ) : (
           /* Tended Ecosystems List */
-          <div className="space-y-4 mb-20">
+          <div className="space-y-4 mb-20 -mt-76 z-50 lg:mt-6 md:mt-6">
             {tendedEcosystems.map((snapshot, index) => (
               <TendedEcosystem
                 key={snapshot.id}
