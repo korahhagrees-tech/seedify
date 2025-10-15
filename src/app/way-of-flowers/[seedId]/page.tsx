@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { use } from "react";
 import WayOfFlowersCard from "@/components/WayOfFlowersCard";
@@ -33,7 +33,7 @@ export default function WayOfFlowers({
   const wayOfFlowersData = getWayOfFlowersData(seedId);
 
   // Function to call webhook and handle response
-  const callWebhookForImageGeneration = async (webhookData: any) => {
+  const callWebhookForImageGeneration = useCallback(async (webhookData: any) => {
     try {
       console.log('🔗 Calling webhook from way-of-flowers page:', webhookData);
       
@@ -85,7 +85,7 @@ export default function WayOfFlowers({
       // Clean up webhook data on failure
       localStorage.removeItem(`webhook_data_${seedId}`);
     }
-  };
+  }, [seedId]);
 
   // Check if we're coming from a successful mint (waiting for image generation)
   useEffect(() => {
