@@ -99,13 +99,13 @@ export default function EcosystemProjectCard({
     // PaymentModal now handles the transaction, so we just show success
     toast.success('Snapshot minted successfully!', { description: 'Your ecosystem has been tended.' });
     
-    // ✅ Route to blooming page after successful mint
+    // ✅ Route to way-of-flowers page after successful mint (waiting for image generation)
     // If BYPASS_SUCCESS_CHECK is true, route even on failure (for testing)
     // If false, only route when mintSuccess is true (normal behavior)
     if (BYPASS_SUCCESS_CHECK || mintSuccess) {
-      console.log('🌸 Routing to blooming page for seed:', seedId);
+      console.log('🌸 Routing to way-of-flowers page for seed:', seedId);
       setTimeout(() => {
-        router.push(`/way-of-flowers/${seedId}/blooming`);
+        router.push(`/way-of-flowers/${seedId}`);
       }, 1500); // Small delay to let user see success toast
     }
   };
@@ -212,27 +212,14 @@ export default function EcosystemProjectCard({
             description: "Your ecosystem has been tended.",
           });
           
-          // ✅ Route to blooming page after successful mint
-          if (BYPASS_SUCCESS_CHECK || mintSuccess) {
-            console.log('🌸 Routing to blooming page for seed:', seedId);
-            
-            // Pass image data through URL params if available
-            if (imageData) {
-              const params = new URLSearchParams({
-                snapshotImageUrl: imageData.imageUrl,
-                backgroundImageUrl: imageData.backgroundImageUrl,
-                beneficiaryCode: imageData.beneficiaryCode
-              });
-              
-              setTimeout(() => {
-                router.push(`/way-of-flowers/${seedId}/blooming?${params.toString()}`);
-              }, 1500);
-            } else {
-              setTimeout(() => {
-                router.push(`/way-of-flowers/${seedId}/blooming`);
-              }, 1500);
-            }
+          // Store image data in localStorage for way-of-flowers page to pick up
+          if (imageData && seedId) {
+            localStorage.setItem(`webhook_complete_${seedId}`, JSON.stringify(imageData));
+            console.log('🖼️ Stored webhook image data for seed:', seedId, imageData);
           }
+          
+          // Note: User should already be on way-of-flowers page at this point
+          // The way-of-flowers page will detect this data and show the Explore button
         },
         () => {
           setIsMinting(false);
@@ -242,9 +229,9 @@ export default function EcosystemProjectCard({
           
           // ✅ If BYPASS_SUCCESS_CHECK is true, route even on failure (for testing)
           if (BYPASS_SUCCESS_CHECK) {
-            console.log('⚠️ BYPASS MODE: Routing to blooming page despite failure');
+            console.log('⚠️ BYPASS MODE: Routing to way-of-flowers page despite failure');
             setTimeout(() => {
-              router.push(`/way-of-flowers/${seedId}/blooming`);
+              router.push(`/way-of-flowers/${seedId}`);
             }, 1500);
           }
         }
@@ -258,9 +245,9 @@ export default function EcosystemProjectCard({
       
       // ✅ If BYPASS_SUCCESS_CHECK is true, route even on error (for testing)
       if (BYPASS_SUCCESS_CHECK) {
-        console.log('⚠️ BYPASS MODE: Routing to blooming page despite error');
+        console.log('⚠️ BYPASS MODE: Routing to way-of-flowers page despite error');
         setTimeout(() => {
-          router.push(`/way-of-flowers/${seedId}/blooming`);
+          router.push(`/way-of-flowers/${seedId}`);
         }, 1500);
       }
     }

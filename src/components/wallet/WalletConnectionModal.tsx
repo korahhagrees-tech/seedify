@@ -41,6 +41,8 @@ export default function WalletConnectionModal({
   const { connectWallet } = useConnectWallet({
     onSuccess: ({ wallet }) => {
       console.log("✅ Wallet connected successfully:", wallet);
+      console.log("✅ New wallet address:", wallet.address);
+      console.log("✅ New wallet type:", wallet.walletClientType);
       onSuccess?.();
     },
     onError: (error) => {
@@ -49,6 +51,8 @@ export default function WalletConnectionModal({
   });
 
   const handleConnectNewWallet = () => {
+    console.log('🔍 [WalletConnectionModal] Connecting new wallet...');
+    console.log('🔍 [WalletConnectionModal] Current wallets before connect:', wallets.length);
     connectWallet({
       walletChainType: "ethereum-and-solana",
     });
@@ -141,7 +145,7 @@ export default function WalletConnectionModal({
             transition={{ type: "spring", duration: 0.5 }}
             className="fixed inset-x-6 top-1/2 -translate-y-1/2 z-50 max-w-sm mx-auto"
           >
-            <div className="bg-[#D9D9D9] rounded-tl-[40px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[40px] p-6 border-3 border-dotted border-gray-600 shadow-xl max-h-[600px] overflow-hidden flex flex-col">
+            <div className="bg-[#D9D9D9] rounded-tl-[40px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[40px] p-6 border-3 border-dotted border-gray-600 shadow-xl max-h-[80vh] overflow-hidden flex flex-col">
               {/* Header */}
               <div className="text-center mb-6">
                 <h2 className="text-xl font-light peridia-display-light text-black tracking-wider">
@@ -157,7 +161,7 @@ export default function WalletConnectionModal({
               </div>
 
               {/* Content - Scrollable wallet list */}
-              <div className="space-y-3 flex-1 overflow-y-auto max-h-[400px] mb-4">
+              <div className="space-y-3 flex-1 overflow-y-auto max-h-[60vh] mb-4">
                 {wallets.length === 0 ? (
                   <div className="text-center py-8">
                     <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">

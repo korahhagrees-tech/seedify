@@ -148,6 +148,8 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
       });
       
       console.log('🔍 [AUTH] Final merged wallets:', allWallets);
+      console.log('🔍 [AUTH] Total wallets count:', allWallets.length);
+      console.log('🔍 [AUTH] Wallet addresses:', allWallets.map(w => w.address));
       setWallets(allWallets as any);
     }
   }, [user?.linkedAccounts, wallets, setWallets]);

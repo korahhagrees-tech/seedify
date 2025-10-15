@@ -449,7 +449,7 @@ export default function PaymentModal({
         toast.success('Snapshot minted successfully!');
         
         // Close payment modal and call callback
-        onClose();
+      onClose();
         if (onConfirm) {
           onConfirm(amountInput);
         }

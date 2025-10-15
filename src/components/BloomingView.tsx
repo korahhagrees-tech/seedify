@@ -43,6 +43,17 @@ export default function BloomingView({
 
   // Get the final image URL (snapshot or seed as fallback)
   const finalImageUrl = snapshotImageUrl || seedImageUrl || assets.testPink;
+  
+  // Debug logging for image URLs
+  useEffect(() => {
+    console.log('🔍 [BloomingView] Image URLs:', {
+      snapshotImageUrl,
+      seedImageUrl,
+      finalImageUrl,
+      isBase64: snapshotImageUrl?.startsWith('data:'),
+      snapshotLength: snapshotImageUrl?.length
+    });
+  }, [snapshotImageUrl, seedImageUrl, finalImageUrl]);
 
   // Handle wallet modal
   const handleWallet = () => {
@@ -115,27 +126,42 @@ export default function BloomingView({
         {/* Large rounded image card with loading state and reveal animation */}
         <div className="relative w-full h-98 rounded-[50px] overflow-hidden border-2 border-dashed border-black/70 bg-white mb-8 mt-4 scale-[1.0]">
           {/* Base image - always visible */}
-          <Image
-            src={
-              finalImageUrl && finalImageUrl.length > 0
-                ? finalImageUrl
-                : "/seeds/01__GRG.png"
-            }
-            alt=""
-            fill
-            className="object-contain scale-[0.9]"
-            onError={(e) => {
-              console.log(
-                "🌸 [IMAGE] Error loading blooming image, using placeholder"
-              );
-              const target = e.target as HTMLImageElement;
-              if (
-                target.src !== `${window.location.origin}/seeds/01__GRG.png`
-              ) {
-                target.src = "https://d17wy07434ngk.cloudfront.net/seed1/seed.";
+          {finalImageUrl && finalImageUrl.startsWith('data:') ? (
+            // Use regular img tag for base64 data URLs
+            <img
+              src={finalImageUrl}
+              alt=""
+              className="w-full h-full object-contain scale-[0.9]"
+              onError={(e) => {
+                console.log("🌸 [IMAGE] Error loading base64 image");
+                const target = e.target as HTMLImageElement;
+                target.src = "/seeds/01__GRG.png";
+              }}
+            />
+          ) : (
+            // Use Next.js Image for regular URLs
+            <Image
+              src={
+                finalImageUrl && finalImageUrl.length > 0
+                  ? finalImageUrl
+                  : "/seeds/01__GRG.png"
               }
-            }}
-          />
+              alt=""
+              fill
+              className="object-contain scale-[0.9]"
+              onError={(e) => {
+                console.log(
+                  "🌸 [IMAGE] Error loading blooming image, using placeholder"
+                );
+                const target = e.target as HTMLImageElement;
+                if (
+                  target.src !== `${window.location.origin}/seeds/01__GRG.png`
+                ) {
+                  target.src = "https://d17wy07434ngk.cloudfront.net/seed1/seed.";
+                }
+              }}
+            />
+          )}
         </div>
 
         {/* Share button bottom-right */}

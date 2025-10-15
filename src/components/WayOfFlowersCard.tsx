@@ -18,6 +18,12 @@ interface WayOfFlowersCardProps {
   author: string;
   onExploreClick?: () => void;
   onTryAgainClick?: () => void;
+  isWaitingForImage?: boolean; // New prop for waiting state
+  imageGenerationData?: { // New prop for image data
+    snapshotImageUrl?: string;
+    backgroundImageUrl?: string;
+    beneficiaryCode?: string;
+  } | null;
 }
 
 export default function WayOfFlowersCard({
@@ -30,6 +36,8 @@ export default function WayOfFlowersCard({
   author,
   onExploreClick,
   onTryAgainClick,
+  isWaitingForImage = false,
+  imageGenerationData = null,
 }: WayOfFlowersCardProps) {
   const [showButtons, setShowButtons] = useState(false);
   const [transactionStatus, setTransactionStatus] = useState<
@@ -209,30 +217,55 @@ export default function WayOfFlowersCard({
 
               {/* Bottom section with Blooming and Explore */}
               <div className="text-center">
-                {/* Blooming text with pulse animation */}
-                <motion.div
-                  className="text-white font-medium text-2xl lg:mt-6 md:-mt-2 -mt-5"
-                  animate={{
-                    scale: [1, 1.05, 1],
-                    opacity: [0.8, 1, 0.8],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <p className="mt-26 mb-9 peridia-display">
-                    B
-                    <span className="mt-3 favorit-mono font-bold text-center">
-                      looming
-                    </span>
-                  </p>
-                </motion.div>
+                {/* Blooming text with pulse animation - only show when waiting for image */}
+                {isWaitingForImage && (
+                  <motion.div
+                    className="text-white font-medium text-2xl lg:mt-6 md:-mt-2 -mt-5"
+                    animate={{
+                      scale: [1, 1.05, 1],
+                      opacity: [0.8, 1, 0.8],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <p className="mt-26 mb-9 peridia-display">
+                      B
+                      <span className="mt-3 favorit-mono font-bold text-center">
+                        looming
+                      </span>
+                    </p>
+                  </motion.div>
+                )}
 
-                {/* Buttons based on transaction status */}
+                {/* Buttons based on state */}
                 <AnimatePresence>
-                  {showButtons && (
+                  {/* Show Explore button when image generation is complete */}
+                  {!isWaitingForImage && imageGenerationData && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{
+                        duration: 0.8,
+                        ease: "easeOut",
+                      }}
+                      className="flex flex-col items-center gap-3"
+                    >
+                      <Button
+                        onClick={onExploreClick}
+                        className="w-[160px] rounded-full border border-white/70 text-black text-xl scale-[0.85] ml-3 py-2 bg-white hover:bg-white/20 transition-all duration-300"
+                      >
+                        <span className="peridia-display">
+                          E<span className="favorit-mono">xplore</span>
+                        </span>
+                      </Button>
+                    </motion.div>
+                  )}
+
+                  {/* Fallback to original transaction-based buttons if not in image waiting mode */}
+                  {!isWaitingForImage && !imageGenerationData && showButtons && (
                     <motion.div
                       initial={{ opacity: 0, y: 20, scale: 0.9 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
