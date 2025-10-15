@@ -48,46 +48,83 @@ export default function WayOfFlowers({
       });
       setIsWaitingForImage(false);
     } else {
-      // No image data, assume we're waiting for generation
-      setIsWaitingForImage(true);
+      // No image data, check if we need to call webhook
+      const webhookDataString = localStorage.getItem(`webhook_data_${seedId}`);
       
-      // Check for webhook completion in localStorage (set by webhook callback)
-      const checkWebhookCompletion = () => {
-        const webhookData = localStorage.getItem(`webhook_complete_${seedId}`);
-        if (webhookData) {
-          try {
-            const data = JSON.parse(webhookData);
-            setImageGenerationData(data);
-            setIsWaitingForImage(false);
-            localStorage.removeItem(`webhook_complete_${seedId}`);
-            toast.success('Image generation completed!');
-          } catch (error) {
-            console.error('Error parsing webhook data:', error);
-          }
-        }
-      };
-      
-      // Check immediately
-      checkWebhookCompletion();
-      
-      // Set up polling to check for webhook completion
-      const pollInterval = setInterval(checkWebhookCompletion, 2000); // Check every 2 seconds
-      
-      // Fallback timeout (40 seconds) - remove this in production
-      const fallbackTimeout = setTimeout(() => {
-        clearInterval(pollInterval);
-        if (isWaitingForImage) {
+      if (webhookDataString) {
+        // We have webhook data from transaction → Start webhook call
+        setIsWaitingForImage(true);
+        console.log('🔄 Starting webhook call from way-of-flowers page');
+        
+        try {
+          const webhookData = JSON.parse(webhookDataString);
+          callWebhookForImageGeneration(webhookData);
+        } catch (error) {
+          console.error('Error parsing webhook data:', error);
           setIsWaitingForImage(false);
-          toast.info('Image generation is taking longer than expected. You can still explore the blooming view.');
         }
-      }, 40000);
-      
-      return () => {
-        clearInterval(pollInterval);
-        clearTimeout(fallbackTimeout);
-      };
+      } else {
+        // No webhook data, assume we're not in minting flow
+        setIsWaitingForImage(false);
+        console.log('ℹ️ No webhook data found - not in minting flow');
+      }
     }
-  }, [searchParams, seedId, isWaitingForImage]);
+  }, [searchParams, seedId]);
+
+  // Function to call webhook and handle response
+  const callWebhookForImageGeneration = async (webhookData: any) => {
+    try {
+      console.log('🔗 Calling webhook from way-of-flowers page:', webhookData);
+      
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+      const response = await fetch(`${apiBaseUrl}/snapshot-minted`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(webhookData),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Webhook failed: ${response.status}`);
+      }
+      
+      const webhookResult = await response.json();
+      console.log('✅ Webhook response:', webhookResult);
+      
+      // Process webhook response
+      if (webhookResult.success && webhookResult.data) {
+        const { imageUrl, beneficiaryCode } = webhookResult.data;
+        
+        // Transform beneficiaryCode format: 02-ELG -> 02__ELG
+        const transformedBeneficiaryCode = beneficiaryCode ? beneficiaryCode.replace('-', '__') : '';
+        const backgroundImageUrl = `/project_images/${transformedBeneficiaryCode}.png`;
+        
+        const imageData = {
+          snapshotImageUrl: imageUrl,
+          backgroundImageUrl,
+          beneficiaryCode
+        };
+        
+        setImageGenerationData(imageData);
+        setIsWaitingForImage(false);
+        toast.success('Image generation completed!');
+        
+        // Clean up webhook data
+        localStorage.removeItem(`webhook_data_${seedId}`);
+        
+        console.log('🖼️ Image generation completed:', imageData);
+      } else {
+        throw new Error('Webhook response indicates failure');
+      }
+      
+    } catch (error) {
+      console.error('❌ Webhook call failed:', error);
+      setIsWaitingForImage(false);
+      toast.error('Image generation failed. You can still explore the blooming view.');
+      
+      // Clean up webhook data on failure
+      localStorage.removeItem(`webhook_data_${seedId}`);
+    }
+  };
 
   // Fetch ecosystem background image
   useEffect(() => {

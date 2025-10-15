@@ -90,6 +90,9 @@ export default function EcosystemProjectCard({
 
   // Handle payment confirmation from modal
   const handlePaymentConfirm = async (amount: string) => {
+    console.log('🎯 [EcosystemCard] handlePaymentConfirm called with amount:', amount);
+    console.log('🎯 [EcosystemCard] seedId:', seedId);
+    
     setPaymentAmount(amount);
     setShowPaymentModal(false);
     
@@ -100,14 +103,11 @@ export default function EcosystemProjectCard({
     toast.success('Snapshot minted successfully!', { description: 'Your ecosystem has been tended.' });
     
     // ✅ Route to way-of-flowers page after successful mint (waiting for image generation)
-    // If BYPASS_SUCCESS_CHECK is true, route even on failure (for testing)
-    // If false, only route when mintSuccess is true (normal behavior)
-    if (BYPASS_SUCCESS_CHECK || mintSuccess) {
-      console.log('🌸 Routing to way-of-flowers page for seed:', seedId);
-      setTimeout(() => {
-        router.push(`/way-of-flowers/${seedId}`);
-      }, 1500); // Small delay to let user see success toast
-    }
+    console.log('🌸 [EcosystemCard] Routing to way-of-flowers page for seed:', seedId);
+    setTimeout(() => {
+      console.log('🌸 [EcosystemCard] Executing router.push now...');
+      router.push(`/way-of-flowers/${seedId}`);
+    }, 1500); // Small delay to let user see success toast
   };
 
   // Handle snapshot minting
@@ -142,8 +142,19 @@ export default function EcosystemProjectCard({
         description: "Confirm the transaction in your wallet...",
       });
 
-      // Convert user's ETH amount to wei
-      const amountInWei = (parseFloat(amountInEth) * 1e18).toString();
+      // Smart amount handling: Use backend's exact wei if user hasn't changed the amount
+      let amountInWei: string;
+      const backendValueEth = mintData.data.valueEth || "0.011"; // Fallback to default
+      
+      if (amountInEth === backendValueEth) {
+        // User hasn't changed the amount → Use backend's exact wei value (no precision loss)
+        amountInWei = mintData.data.value;
+        console.log('🎯 [EcosystemCard] Using backend\'s exact wei value (no conversion):', amountInWei);
+      } else {
+        // User changed the amount → Convert their new value to wei
+        amountInWei = (parseFloat(amountInEth) * 1e18).toString();
+        console.log('🔄 [EcosystemCard] User changed amount, converting to wei:', amountInWei);
+      }
 
       // Step 2: Execute contract transaction using Privy's sendTransaction with gas sponsorship
       const txResult = await sendTransaction(
@@ -201,41 +212,27 @@ export default function EcosystemProjectCard({
         description: "Processing snapshot...",
       });
 
-      // Step 5: Call webhook with retry logic
-      retryWebhook(
-        webhookData,
-        0,
-        (imageData) => {
-          setIsMinting(false);
-          setMintSuccess(true); // Mark as successful
-          toast.success("Snapshot minted successfully!", {
-            description: "Your ecosystem has been tended.",
-          });
-          
-          // Store image data in localStorage for way-of-flowers page to pick up
-          if (imageData && seedId) {
-            localStorage.setItem(`webhook_complete_${seedId}`, JSON.stringify(imageData));
-            console.log('🖼️ Stored webhook image data for seed:', seedId, imageData);
-          }
-          
-          // Note: User should already be on way-of-flowers page at this point
-          // The way-of-flowers page will detect this data and show the Explore button
-        },
-        () => {
-          setIsMinting(false);
-          toast.error("Snapshot processing failed", {
-            description: "Please try again.",
-          });
-          
-          // ✅ If BYPASS_SUCCESS_CHECK is true, route even on failure (for testing)
-          if (BYPASS_SUCCESS_CHECK) {
-            console.log('⚠️ BYPASS MODE: Routing to way-of-flowers page despite failure');
-            setTimeout(() => {
-              router.push(`/way-of-flowers/${seedId}`);
-            }, 1500);
-          }
-        }
-      );
+      // ❌ WEBHOOK CALL MOVED TO WAY-OF-FLOWERS PAGE
+      // The webhook will be called from the way-of-flowers page after routing
+      // to allow for proper waiting state with pulsing "Blooming" animation
+      
+      // Store webhook data for way-of-flowers page to use
+      if (seedId) {
+        localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(webhookData));
+        console.log('🔗 Webhook data stored for way-of-flowers page:', seedId);
+      }
+      
+      setIsMinting(false);
+      setMintSuccess(true); // Mark as successful
+      toast.success("Snapshot minted successfully!", {
+        description: "Your ecosystem has been tended.",
+      });
+      
+      // ✅ Route to way-of-flowers page immediately after successful transaction
+      console.log('🌸 Routing to way-of-flowers page for seed:', seedId);
+      setTimeout(() => {
+        router.push(`/way-of-flowers/${seedId}`);
+      }, 1500);
     } catch (error) {
       setIsMinting(false);
       toast.error("Snapshot minting failed", {

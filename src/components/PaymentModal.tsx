@@ -137,14 +137,28 @@ export default function PaymentModal({
           return;
         }
 
-        // Convert user's ETH amount to wei
-        const amountInWei = (parseFloat(amountInput) * 1e18).toString();
+        // Smart amount handling: Use backend's exact wei if user hasn't changed the amount
+        let amountInWei: string;
+        const backendValueEth = mintData.data.valueEth || "0.011"; // Fallback to default
+        
+        if (amountInput === backendValueEth) {
+          // User hasn't changed the amount → Use backend's exact wei value (no precision loss)
+          amountInWei = mintData.data.value;
+          console.log('🎯 Using backend\'s exact wei value (no conversion):', amountInWei);
+        } else {
+          // User changed the amount → Convert their new value to wei
+          amountInWei = (parseFloat(amountInput) * 1e18).toString();
+          console.log('🔄 User changed amount, converting to wei:', amountInWei);
+        }
 
         // Debug: Log the backend data we received
         console.log('🔍 Backend mintData:', JSON.stringify(mintData, null, 2));
+        console.log('🔍 Backend valueEth:', backendValueEth);
+        console.log('🔍 User input:', amountInput);
+        console.log('🔍 Amounts match:', amountInput === backendValueEth);
         console.log('🔍 Using beneficiaryIndex:', beneficiaryIndex);
         console.log('🔍 Using beneficiaryCode:', beneficiaryCode);
-        console.log('🔍 User amount in wei:', amountInWei);
+        console.log('🔍 Final amountInWei:', amountInWei);
         console.log('🔍 Using royaltyRecipient from backend:', mintData.data.args.royaltyRecipient);
 
         // Detect wallet type and use appropriate transaction method
@@ -427,21 +441,13 @@ export default function PaymentModal({
 
           console.log('🔗 Webhook data:', JSON.stringify(webhookData, null, 2));
 
-          // Call webhook to trigger image generation
-          try {
-            const webhookResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api'}/snapshot-minted`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(webhookData),
-            });
-            
-            if (webhookResponse.ok) {
-              console.log('✅ Webhook called successfully');
-            } else {
-              console.warn('⚠️ Webhook failed:', await webhookResponse.text());
-            }
-          } catch (webhookError) {
-            console.warn('⚠️ Webhook error:', webhookError);
+          // ❌ WEBHOOK CALL MOVED TO WAY-OF-FLOWERS PAGE
+          // The webhook will be called from the way-of-flowers page after routing
+          // to allow for proper waiting state with pulsing "Blooming" animation
+          // Store webhook data for way-of-flowers page to use
+          if (seedId) {
+            localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(webhookData));
+            console.log('🔗 Webhook data stored for way-of-flowers page:', seedId);
           }
         }
 
@@ -449,9 +455,13 @@ export default function PaymentModal({
         toast.success('Snapshot minted successfully!');
         
         // Close payment modal and call callback
-      onClose();
+        console.log('🎯 [PaymentModal] Transaction completed, calling onConfirm callback');
+        onClose();
         if (onConfirm) {
+          console.log('🎯 [PaymentModal] Calling onConfirm with amount:', amountInput);
           onConfirm(amountInput);
+        } else {
+          console.log('⚠️ [PaymentModal] No onConfirm callback provided');
         }
       } else {
         // For non-snapshot minting, just call the callback
