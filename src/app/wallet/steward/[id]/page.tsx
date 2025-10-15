@@ -6,7 +6,6 @@ import { useParams, useRouter } from "next/navigation";
 import SeedStewardStats from "@/components/SeedStewardStats";
 import { Seed } from "@/types/seed";
 import { fetchSeedById } from "@/lib/api/seeds";
-import Image from "next/image";
 import { assets } from "@/lib/assets";
 
 export default function StewardStatsRoute() {

@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { toast } from "sonner";
+import { useState, useEffect } from "react";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -19,6 +20,15 @@ export default function ShareModal({
   beneficiaryName,
   beneficiaryCode,
 }: ShareModalProps) {
+  const [canUseNativeShare, setCanUseNativeShare] = useState(false);
+
+  useEffect(() => {
+    // Check if native share is available
+    setCanUseNativeShare(
+      typeof navigator !== 'undefined' && 
+      typeof navigator.share === 'function'
+    );
+  }, []);
   
   // Download image
   const handleDownload = async () => {
@@ -48,19 +58,34 @@ export default function ShareModal({
   const handleShare = async () => {
     try {
       // Check if native share is available (mobile)
-      if (navigator.share && navigator.canShare) {
+      if (navigator.share && typeof navigator.canShare === 'function') {
         // Convert base64 to blob
         const response = await fetch(imageUrl);
         const blob = await response.blob();
         const file = new File([blob], 'way-of-flowers-snapshot.png', { type: 'image/png' });
         
-        await navigator.share({
-          title: 'Way of Flowers Snapshot',
-          text: `Check out my contribution to ${beneficiaryName || 'regenerative ecosystem'}!`,
-          files: [file],
-        });
-        
-        toast.success('Shared successfully!');
+        // Check if we can share this file
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: 'Way of Flowers Snapshot',
+            text: `Check out my contribution to ${beneficiaryName || 'regenerative ecosystem'}!`,
+            files: [file],
+          });
+          
+          toast.success('Shared successfully!');
+        } else {
+          // Fallback if file sharing not supported
+          const response2 = await fetch(imageUrl);
+          const blob2 = await response2.blob();
+          
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              'image/png': blob2
+            })
+          ]);
+          
+          toast.success('Image copied to clipboard!');
+        }
       } else {
         // Fallback for desktop: copy image to clipboard
         const response = await fetch(imageUrl);
@@ -170,7 +195,7 @@ export default function ShareModal({
                   onClick={handleShare}
                   className="w-full px-6 py-3 rounded-full border-2 border-dotted border-black text-black text-lg font-medium bg-white hover:bg-gray-100 transition-colors peridia-display"
                 >
-                  {navigator.share ? 'Share Image' : 'Copy to Clipboard'}
+                  {canUseNativeShare ? 'Share Image' : 'Copy to Clipboard'}
                 </button>
 
                 {/* Copy Link Button */}
