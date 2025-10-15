@@ -272,7 +272,7 @@ export default function WalletPage() {
       <GardenHeader />
 
       {/* Content Area - Tended Ecosystems List */}
-      <div className="px-4 pb-40 overflow-x-hidden lg:scale-[1.0] md:scale-[1.0] scale-[0.8] lg:mt-6 md:-mt-4 -mt-42">
+      <div className="px-4 pb-40 overflow-x-hidden lg:scale-[1.0] md:scale-[1.0] scale-[1.0] lg:mt-6 md:-mt-4 mt-2">
         {/* Steward Seeds Section (always show; defaults to mock if backend empty) */}
         {stewardSeeds.length > 0 && (
           <div className="space-y-8 mb-10 scale-[0.8] lg:scale-[1.0] md:scale-[1.0] -ml-10">
@@ -298,7 +298,7 @@ export default function WalletPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20 mt-68 lg:mt-48 md:mt-48"
+            className="text-center py-20 mt-68 lg:mt-28 md:mt-28"
           >
             <div className="text-gray-400 text-lg mb-2">{`You haven't tended`}</div>
             <div className="text-gray-400 text-lg mb-8">an Ecosystem yet</div>
@@ -323,6 +323,7 @@ export default function WalletPage() {
                 onShare={handleShare}
                 index={index}
                 beneficiarySlug={snapshot.beneficiarySlug} // Now uses actual beneficiary slug
+                beneficiaryCode={snapshot.beneficiaryCode} // Add beneficiary code for sharing
                 seedId={snapshot.seedId.toString()}
                 seedSlug={`seed-${snapshot.seedId}`}
               />

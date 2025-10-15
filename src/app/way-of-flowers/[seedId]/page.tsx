@@ -54,14 +54,19 @@ export default function WayOfFlowers({
       
       // Process webhook response
       if (webhookResult.success && webhookResult.data) {
-        const { imageUrl, beneficiaryCode } = webhookResult.data;
+        const { beneficiaryCode, blockchain } = webhookResult.data;
+        const { seedId: responseSeedId, snapshotId, processId } = webhookResult.data;
+        
+        // Construct the actual image URL using the response data
+        // Pattern: https://d17wy07434ngk.cloudfront.net/seed{seedId}/snap{seedId}-{positionInSeed}-{processId}.png
+        const constructedImageUrl = `https://d17wy07434ngk.cloudfront.net/seed${responseSeedId}/snap${responseSeedId}-${snapshotId}-${processId}.png`;
         
         // Transform beneficiaryCode format: 02-ELG -> 02__ELG
         const transformedBeneficiaryCode = beneficiaryCode ? beneficiaryCode.replace('-', '__') : '';
         const backgroundImageUrl = `/project_images/${transformedBeneficiaryCode}.png`;
         
         const imageData = {
-          snapshotImageUrl: imageUrl,
+          snapshotImageUrl: constructedImageUrl,
           backgroundImageUrl,
           beneficiaryCode
         };

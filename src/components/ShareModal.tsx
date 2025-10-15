@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
+import { assets } from "@/lib/assets";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -155,13 +156,13 @@ export default function ShareModal({
               {/* Image Preview */}
               <div className="relative w-full h-64 rounded-[30px] overflow-hidden border-2 border-dashed border-black/70 bg-gray-100 mb-6">
                 <Image
-                  src={imageUrl}
+                  src={imageUrl || "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"}
                   alt="Snapshot artwork"
                   fill
                   className="object-contain"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = "/seeds/01__GRG.png";
+                    target.src = "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
                   }}
                 />
               </div>
@@ -208,10 +209,14 @@ export default function ShareModal({
               </div>
 
               {/* Footer Text */}
-              <div className="text-center mt-6">
-                <p className="text-xs text-black/50 favorit-mono">
-                  WAY OF FLOWERS
-                </p>
+              <div className="text-center mt-6 mx-auto">
+                <Image
+                  src={assets.textBlack}
+                  alt="Footer text"
+                  width={100}
+                  height={100}
+                  className="w-auto h-auto mx-auto scale-[0.8] -mb-6"
+                />
               </div>
             </div>
           </motion.div>

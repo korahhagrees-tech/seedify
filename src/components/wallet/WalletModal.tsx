@@ -399,41 +399,41 @@ export default function WalletModal({
 
               {/* Social Account Linking Options */}
               <div className="space-y-2 mb-4 -mt-6 scale-[0.6] lg:scale-[0.8] md:scale-[0.8]">
-                <p className="text-xs text-center text-black/70 uppercase favorit-mono">
+                {/* <p className="text-xs text-center text-black/70 uppercase favorit-mono">
                   Link Additional Accounts
-                </p>
+                </p> */}
                 <div className="flex flex-wrap gap-2 justify-center">
                   {/* Social Login Buttons */}
-                  <button
+                  {/* <button
                     onClick={() => handleLinkSocialAccount("google")}
                     className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
                   >
                     Google
-                  </button>
-                  <button
+                  </button> */}
+                  {/* <button
                     onClick={() => handleLinkSocialAccount("twitter")}
                     className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
                   >
                     Twitter
-                  </button>
-                  <button
+                  </button> */}
+                  {/* <button
                     onClick={() => handleLinkSocialAccount("discord")}
                     className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
                   >
                     Discord
-                  </button>
-                  <button
+                  </button> */}
+                  {/* <button
                     onClick={() => handleLinkSocialAccount("github")}
                     className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
                   >
                     GitHub
-                  </button>
-                  <button
+                  </button> */}
+                  {/* <button
                     onClick={() => handleLinkEmail()}
                     className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
                   >
                     Email
-                  </button>
+                  </button> */}
                   {/* SMS linking not available in current Privy interface */}
                   {/* <button
                     onClick={() => handleLinkSms()}
@@ -441,12 +441,12 @@ export default function WalletModal({
                   >
                     SMS
                   </button> */}
-                  <button
+                  {/* <button
                     onClick={() => handleLinkPasskey()}
                     className="px-3 py-1 text-xs border border-gray-400 rounded-full text-black hover:bg-gray-50 transition-colors bg-white/60"
                   >
                     Passkey
-                  </button>
+                  </button> */}
                 </div>
               </div>
 

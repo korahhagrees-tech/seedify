@@ -37,6 +37,9 @@ export const assets = {
   grgichHills: "/Grgich-Hills.svg",
   walkersReserve: "/Walkers-R.svg",
 
+  textPink: "/test-pink.svg",
+  textBlack: "/assets/WOF_Logo-black.png",
+
   chooseBeneficiary: '/assets/BENEFICIARIES.svg'
 
 } as const;

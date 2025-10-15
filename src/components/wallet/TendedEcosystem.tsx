@@ -4,6 +4,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { assets } from "@/lib/assets";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import ShareModal from "@/components/ShareModal";
 
 interface TendedEcosystemProps {
   date: string;
@@ -14,11 +16,12 @@ interface TendedEcosystemProps {
   ecosystemCompost: string;
   onReadMore: () => void;
   onTendAgain: () => void;
-  onShare: () => void;
+  onShare?: () => void; // Made optional since we'll handle it internally
   index?: number;
   beneficiarySlug?: string;
   seedId?: string;
   seedSlug?: string;
+  beneficiaryCode?: string; // Add beneficiary code for sharing
 }
 
 export default function TendedEcosystem({
@@ -35,8 +38,10 @@ export default function TendedEcosystem({
   beneficiarySlug,
   seedId,
   seedSlug,
+  beneficiaryCode,
 }: TendedEcosystemProps) {
   const router = useRouter();
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   // Handle Tend Again button click - routes to ecosystem page
   const handleTendAgain = () => {
@@ -51,6 +56,15 @@ export default function TendedEcosystem({
         beneficiarySlug,
       });
       onTendAgain(); // Fallback to original handler
+    }
+  };
+
+  // Handle Share button click - open share modal
+  const handleShare = () => {
+    setIsShareModalOpen(true);
+    // Also call the original onShare if provided
+    if (onShare) {
+      onShare();
     }
   };
 
@@ -86,7 +100,7 @@ export default function TendedEcosystem({
 
       {/* Main Card */}
       <div className="p-6">
-        <div className="flex gap-6">
+        <div className="flex gap-6 lg:ml-0 -ml-6 md:ml-0">
           {/* Left Side - Large Image */}
           <div className="relative w-54 h-54 rounded-[50px] overflow-hidden flex-shrink-0 -mt-8">
             <Image
@@ -112,7 +126,7 @@ export default function TendedEcosystem({
             />
             {/* Share Icon */}
             <button
-              onClick={onShare}
+              onClick={handleShare}
               className="absolute bottom-2 -left-2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm opacity-80 z-20"
             >
               <Image
@@ -164,6 +178,15 @@ export default function TendedEcosystem({
           </div>
         </div>
       </div>
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        imageUrl={seedImageUrl}
+        beneficiaryName={beneficiaryName}
+        beneficiaryCode={beneficiaryCode}
+      />
     </motion.div>
   );
 }
