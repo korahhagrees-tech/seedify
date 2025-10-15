@@ -171,7 +171,7 @@ export default function WayOfFlowersCard({
               {/* Top section with seed emblem and text */}
               <div className="text-center mb-8">
                 {/* Seed emblem */}
-                <div className="mb-6 flex justify-center -mt-12">
+                <div className="mb-6 flex justify-center -mt-14">
                   <Image
                     src={
                       seedEmblemUrl && seedEmblemUrl.length > 0
@@ -198,7 +198,7 @@ export default function WayOfFlowersCard({
                 </div>
 
                 {/* Three text lines */}
-                <div className="-space-y-1 lg:-mt-5 md:-mt-3 -mt-8 text-black font-medium text-base lg:scale-[0.85] md:scale-[0.80] scale-[0.75]">
+                <div className="-space-y-1 lg:-mt-1 md:-mt-4 -mt-2 text-black font-medium text-base lg:scale-[0.85] md:scale-[0.9] scale-[0.85]">
                   <div>{firstText}</div>
                   <div>{secondText}</div>
                   <div className="text-nowrap">{thirdText}</div>
@@ -218,7 +218,7 @@ export default function WayOfFlowersCard({
               {/* Bottom section with Blooming and Explore */}
               <div className="text-center">
                 {/* Blooming text with pulse animation - only show when waiting for image */}
-                {isWaitingForImage && (
+                {transactionStatus === "success" && (
                   <motion.div
                     className="text-white font-medium text-2xl lg:mt-6 md:-mt-2 -mt-5"
                     animate={{
