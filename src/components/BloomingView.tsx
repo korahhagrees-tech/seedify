@@ -128,7 +128,7 @@ export default function BloomingView({
           {/* Base image - always visible */}
           {finalImageUrl && finalImageUrl.startsWith('data:') ? (
             // Use regular img tag for base64 data URLs
-            <img
+            <Image
               src={finalImageUrl}
               alt=""
               className="w-full h-full object-contain scale-[0.9]"

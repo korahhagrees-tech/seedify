@@ -32,45 +32,6 @@ export default function WayOfFlowers({
 
   const wayOfFlowersData = getWayOfFlowersData(seedId);
 
-  // Check if we're coming from a successful mint (waiting for image generation)
-  useEffect(() => {
-    // Check URL params for image data (in case we're coming from a completed webhook)
-    const snapshotImageUrl = searchParams.get('snapshotImageUrl');
-    const backgroundImageUrl = searchParams.get('backgroundImageUrl');
-    const beneficiaryCode = searchParams.get('beneficiaryCode');
-    
-    if (snapshotImageUrl || backgroundImageUrl || beneficiaryCode) {
-      // We have image data, set it and show explore button
-      setImageGenerationData({
-        snapshotImageUrl: snapshotImageUrl || undefined,
-        backgroundImageUrl: backgroundImageUrl || undefined,
-        beneficiaryCode: beneficiaryCode || undefined,
-      });
-      setIsWaitingForImage(false);
-    } else {
-      // No image data, check if we need to call webhook
-      const webhookDataString = localStorage.getItem(`webhook_data_${seedId}`);
-      
-      if (webhookDataString) {
-        // We have webhook data from transaction → Start webhook call
-        setIsWaitingForImage(true);
-        console.log('🔄 Starting webhook call from way-of-flowers page');
-        
-        try {
-          const webhookData = JSON.parse(webhookDataString);
-          callWebhookForImageGeneration(webhookData);
-        } catch (error) {
-          console.error('Error parsing webhook data:', error);
-          setIsWaitingForImage(false);
-        }
-      } else {
-        // No webhook data, assume we're not in minting flow
-        setIsWaitingForImage(false);
-        console.log('ℹ️ No webhook data found - not in minting flow');
-      }
-    }
-  }, [searchParams, seedId]);
-
   // Function to call webhook and handle response
   const callWebhookForImageGeneration = async (webhookData: any) => {
     try {
@@ -125,6 +86,46 @@ export default function WayOfFlowers({
       localStorage.removeItem(`webhook_data_${seedId}`);
     }
   };
+
+  // Check if we're coming from a successful mint (waiting for image generation)
+  useEffect(() => {
+    // Check URL params for image data (in case we're coming from a completed webhook)
+    const snapshotImageUrl = searchParams.get('snapshotImageUrl');
+    const backgroundImageUrl = searchParams.get('backgroundImageUrl');
+    const beneficiaryCode = searchParams.get('beneficiaryCode');
+    
+    if (snapshotImageUrl || backgroundImageUrl || beneficiaryCode) {
+      // We have image data, set it and show explore button
+      setImageGenerationData({
+        snapshotImageUrl: snapshotImageUrl || undefined,
+        backgroundImageUrl: backgroundImageUrl || undefined,
+        beneficiaryCode: beneficiaryCode || undefined,
+      });
+      setIsWaitingForImage(false);
+    } else {
+      // No image data, check if we need to call webhook
+      const webhookDataString = localStorage.getItem(`webhook_data_${seedId}`);
+      
+      if (webhookDataString) {
+        // We have webhook data from transaction → Start webhook call
+        setIsWaitingForImage(true);
+        console.log('🔄 Starting webhook call from way-of-flowers page');
+        
+        try {
+          const webhookData = JSON.parse(webhookDataString);
+          callWebhookForImageGeneration(webhookData);
+        } catch (error) {
+          console.error('Error parsing webhook data:', error);
+          setIsWaitingForImage(false);
+        }
+      } else {
+        // No webhook data, assume we're not in minting flow
+        setIsWaitingForImage(false);
+        console.log('ℹ️ No webhook data found - not in minting flow');
+      }
+    }
+  }, [searchParams, seedId, callWebhookForImageGeneration]);
+
 
   // Fetch ecosystem background image
   useEffect(() => {
