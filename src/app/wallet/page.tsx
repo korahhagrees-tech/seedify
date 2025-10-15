@@ -307,7 +307,7 @@ export default function WalletPage() {
           </motion.div>
         ) : (
           /* Tended Ecosystems List */
-          <div className="space-y-4 mb-20 -mt-76 z-50 lg:mt-6 md:mt-6">
+          <div className="space-y-4 mb-20 mt-2 z-50 lg:mt-6 md:mt-6">
             {tendedEcosystems.map((snapshot, index) => (
               <TendedEcosystem
                 key={snapshot.id}
