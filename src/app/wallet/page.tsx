@@ -10,6 +10,7 @@ import RootShapeArea from "@/components/wallet/RootShapeArea";
 import TendedEcosystem from "@/components/wallet/TendedEcosystem";
 import StewardSeedCard from "@/components/wallet/StewardSeedCard";
 import WalletModal from "@/components/wallet/WalletModal";
+import ShareModal from "@/components/ShareModal";
 import { useAuth } from "@/components/auth/AuthProvider";
 import GardenHeader from "@/components/GardenHeader";
 import { fetchBeneficiaryByIndex, fetchSeedById } from "@/lib/api";
@@ -74,6 +75,14 @@ export default function WalletPage() {
   const [tendedEcosystems, setTendedEcosystems] = useState<any[]>([]);
   const [stewardSeeds, setStewardSeeds] = useState<any[]>([]);
   const [beneficiaryLinks, setBeneficiaryLinks] = useState<Map<number, string>>(new Map());
+  
+  // Share modal state
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [shareData, setShareData] = useState<{
+    imageUrl: string;
+    beneficiaryName: string;
+    beneficiaryCode?: string;
+  } | null>(null);
 
   // Debug wallet address
   useEffect(() => {
@@ -162,7 +171,7 @@ export default function WalletPage() {
                 }
                 
                 // Return enriched snapshot data
-                return {
+                const enrichedSnapshot = {
                   ...snapshot,
                   // Use imageUrl from snapshot response as seedImageUrl
                   seedImageUrl: snapshot.imageUrl || '',
@@ -173,10 +182,19 @@ export default function WalletPage() {
                   beneficiaryCode: beneficiary?.code || '',
                   beneficiarySlug: beneficiary?.slug || `beneficiary-${snapshot.beneficiaryIndex}`,
                 };
+                
+                console.log(`🔍 [WALLET] Enriched snapshot ${snapshot.id}:`, {
+                  originalImageUrl: snapshot.imageUrl,
+                  seedImageUrl: enrichedSnapshot.seedImageUrl,
+                  beneficiaryName: enrichedSnapshot.beneficiaryName,
+                  beneficiaryCode: enrichedSnapshot.beneficiaryCode
+                });
+                
+                return enrichedSnapshot;
               } catch (e) {
                 console.error(`Failed to enrich snapshot ${snapshot.id}:`, e);
                 // Return original snapshot with fallback data
-                return {
+                const fallbackSnapshot = {
                   ...snapshot,
                   // Use imageUrl from snapshot response as seedImageUrl
                   seedImageUrl: snapshot.imageUrl || '',
@@ -186,6 +204,14 @@ export default function WalletPage() {
                   beneficiaryCode: '',
                   beneficiarySlug: `beneficiary-${snapshot.beneficiaryIndex}`,
                 };
+                
+                console.log(`🔍 [WALLET] Fallback snapshot ${snapshot.id}:`, {
+                  originalImageUrl: snapshot.imageUrl,
+                  seedImageUrl: fallbackSnapshot.seedImageUrl,
+                  beneficiaryName: fallbackSnapshot.beneficiaryName
+                });
+                
+                return fallbackSnapshot;
               }
             })
           );
@@ -227,9 +253,15 @@ export default function WalletPage() {
     router.push(`/ecosystem/ecosystem-${ecosystemId}`);
   };
 
-  const handleShare = () => {
-    // Handle share functionality
-    console.log("Share ecosystem");
+  const handleShare = (data: { imageUrl: string; beneficiaryName: string; beneficiaryCode?: string }) => {
+    // Set share data and open modal
+    setShareData(data);
+    setIsShareModalOpen(true);
+  };
+
+  const handleShareModalClose = () => {
+    setIsShareModalOpen(false);
+    setShareData(null);
   };
 
   const handleWalletModalClose = () => {
@@ -344,17 +376,24 @@ export default function WalletPage() {
       </div>
 
       {/* Wallet Modal */}
-      <div className="">
-        <WalletModal
-          isOpen={isWalletModalOpen}
-          onClose={handleWalletModalClose}
-          onLogout={handleLogout}
-          onAddFunds={handleAddFunds}
-          onExportKey={handleExportKey}
-          onSwitchWallet={handleSwitchWallet}
-          onPrivyHome={handlePrivyHome}
-        />
-      </div>
+      <WalletModal
+        isOpen={isWalletModalOpen}
+        onClose={handleWalletModalClose}
+        onLogout={handleLogout}
+        onAddFunds={handleAddFunds}
+        onExportKey={handleExportKey}
+        onSwitchWallet={handleSwitchWallet}
+        onPrivyHome={handlePrivyHome}
+      />
+
+      {/* Share Modal - Page Level */}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={handleShareModalClose}
+        imageUrl={shareData?.imageUrl || ""}
+        beneficiaryName={shareData?.beneficiaryName}
+        beneficiaryCode={shareData?.beneficiaryCode}
+      />
     </div>
   );
 }

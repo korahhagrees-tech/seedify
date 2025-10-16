@@ -86,7 +86,7 @@ export default function StewardStatsRoute() {
     <div className="min-h-screen w-full max-w-md mx-auto">
       <SeedStewardStats
         seed={seed}
-        links={{ openseaUrl: "https://opensea.io/" }}
+        links={{ openseaUrl: stats.openSeaUrl }}
         stats={stats}
       />
     </div>

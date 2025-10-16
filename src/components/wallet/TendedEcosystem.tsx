@@ -4,8 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { assets } from "@/lib/assets";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import ShareModal from "@/components/ShareModal";
+import { useState, useEffect } from "react";
 
 interface TendedEcosystemProps {
   date: string;
@@ -16,7 +15,7 @@ interface TendedEcosystemProps {
   ecosystemCompost: string;
   onReadMore: () => void;
   onTendAgain: () => void;
-  onShare?: () => void; // Made optional since we'll handle it internally
+  onShare?: (data: { imageUrl: string; beneficiaryName: string; beneficiaryCode?: string }) => void;
   index?: number;
   beneficiarySlug?: string;
   seedId?: string;
@@ -41,10 +40,14 @@ export default function TendedEcosystem({
   beneficiaryCode,
 }: TendedEcosystemProps) {
   const router = useRouter();
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [shareClickPosition, setShareClickPosition] = useState<
-    { x: number; y: number } | undefined
-  >();
+  const [imageErrorCount, setImageErrorCount] = useState(0);
+  const [currentImageSrc, setCurrentImageSrc] = useState(seedImageUrl || "/seeds/01__GRG.png");
+
+  // Reset image state when seedImageUrl prop changes
+  useEffect(() => {
+    setCurrentImageSrc(seedImageUrl || "/seeds/01__GRG.png");
+    setImageErrorCount(0);
+  }, [seedImageUrl]);
 
   // Handle Tend Again button click - routes to ecosystem page
   const handleTendAgain = () => {
@@ -62,13 +65,14 @@ export default function TendedEcosystem({
     }
   };
 
-  // Handle Share button click - open share modal
-  const handleShare = (clickPosition: { x: number; y: number }) => {
-    setShareClickPosition(clickPosition);
-    setIsShareModalOpen(true);
-    // Also call the original onShare if provided
+  // Handle Share button click - trigger page-level share modal
+  const handleShare = () => {
     if (onShare) {
-      onShare();
+      onShare({
+        imageUrl: currentImageSrc,
+        beneficiaryName: beneficiaryName,
+        beneficiaryCode: beneficiaryCode
+      });
     }
   };
 
@@ -108,37 +112,45 @@ export default function TendedEcosystem({
           {/* Left Side - Large Image */}
           <div className="relative w-54 h-54 rounded-[50px] overflow-hidden flex-shrink-0 -mt-8">
             <Image
-              src={
-                seedImageUrl && seedImageUrl.length > 0
-                  ? seedImageUrl
-                  : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
-              }
+              src={currentImageSrc}
               alt=""
               fill
               className="object-cover"
               onError={(e) => {
                 console.log(
-                  "🌸 [IMAGE] Error loading tended ecosystem image, using placeholder"
+                  `🌸 [IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
                 );
-                const target = e.target as HTMLImageElement;
-                if (
-                  target.src !== `${window.location.origin}/seeds/01__GRG.png`
-                ) {
-                  target.src =
-                    "https://d17wy07434ngk.cloudfront.net/seed1/seed.";
+                
+                const newErrorCount = imageErrorCount + 1;
+                setImageErrorCount(newErrorCount);
+                
+                // Prevent infinite retry loops
+                if (newErrorCount > 3) {
+                  console.log("🌸 [IMAGE] Max retries reached, using final fallback");
+                  setCurrentImageSrc("https://d17wy07434ngk.cloudfront.net/seed1/seed.png");
+                  return;
+                }
+                
+                // Try fallback images in sequence
+                const fallbackImages = [
+                  "https://d17wy07434ngk.cloudfront.net/seed1/seed.png",
+                  "https://d17wy07434ngk.cloudfront.net/seed2/seed.png", 
+                  "https://d17wy07434ngk.cloudfront.net/seed3/seed.png"
+                ];
+                
+                if (newErrorCount <= fallbackImages.length) {
+                  const fallbackSrc = fallbackImages[newErrorCount - 1];
+                  console.log(`🌸 [IMAGE] Trying fallback: ${fallbackSrc}`);
+                  setCurrentImageSrc(fallbackSrc);
+                } else {
+                  // Use a simple placeholder
+                  setCurrentImageSrc("https://d17wy07434ngk.cloudfront.net/seed1/seed.png");
                 }
               }}
             />
             {/* Share Icon */}
             <button
-              onClick={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                const clickPosition = {
-                  x: rect.left + rect.width / 2,
-                  y: rect.top + rect.height / 2,
-                };
-                handleShare(clickPosition);
-              }}
+              onClick={handleShare}
               className="absolute bottom-2 -left-2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm opacity-80 z-20"
             >
               <Image
@@ -191,18 +203,6 @@ export default function TendedEcosystem({
         </div>
       </div>
 
-      {/* Share Modal */}
-      <ShareModal
-        isOpen={isShareModalOpen}
-        onClose={() => {
-          setIsShareModalOpen(false);
-          setShareClickPosition(undefined);
-        }}
-        imageUrl={seedImageUrl}
-        beneficiaryName={beneficiaryName}
-        beneficiaryCode={beneficiaryCode}
-        clickPosition={shareClickPosition}
-      />
     </motion.div>
   );
 }

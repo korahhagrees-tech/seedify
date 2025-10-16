@@ -42,13 +42,23 @@ export default function BloomingView({
   const router = useRouter();
 
   // Get the final image URL (snapshot or seed as fallback)
+  const initialImageUrl = snapshotImageUrl || seedImageUrl || "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
+  const [currentImageSrc, setCurrentImageSrc] = useState(initialImageUrl);
+  const [imageErrorCount, setImageErrorCount] = useState(0);
+
+  // Legacy final image URL (for logging/debugging)
   const finalImageUrl = snapshotImageUrl || seedImageUrl || assets.testPink;
 
-  // Debug logging for image URLs
+  // Reset image state when props change
   useEffect(() => {
+    const newImageUrl = snapshotImageUrl || seedImageUrl || "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
+    setCurrentImageSrc(newImageUrl);
+    setImageErrorCount(0);
+    
     console.log("🔍 [BloomingView] Image URLs:", {
       snapshotImageUrl,
       seedImageUrl,
+      currentImageSrc: newImageUrl,
       finalImageUrl,
     });
   }, [snapshotImageUrl, seedImageUrl, finalImageUrl]);
@@ -96,13 +106,25 @@ export default function BloomingView({
   };
 
   useEffect(() => {
-    // After 30 seconds, trigger the reveal animation
+    // After 3 seconds, trigger the reveal animation (reduced from 40 seconds for better UX)
     const timer = setTimeout(() => {
       setShowReveal(true);
-    }, 40000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Also trigger reveal when snapshot image is available
+  useEffect(() => {
+    if (snapshotImageUrl && snapshotImageUrl.length > 0) {
+      // Small delay to ensure image is loaded, then trigger reveal
+      const timer = setTimeout(() => {
+        setShowReveal(true);
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [snapshotImageUrl]);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-white">
@@ -123,29 +145,94 @@ export default function BloomingView({
 
         {/* Large rounded image card with loading state and reveal animation */}
         <div className="relative w-full h-98 rounded-[50px] overflow-hidden border-2 border-dashed border-black/70 bg-white mb-8 mt-4 scale-[1.0]">
-          {/* Snapshot image - now using constructed URL */}
-          <Image
-            src={
-              finalImageUrl && finalImageUrl.length > 0
-                ? finalImageUrl
-                : "/seeds/01__GRG.png"
-            }
-            alt=""
-            fill
-            className="object-contain scale-[0.9]"
-            onError={(e) => {
-              console.log(
-                "🌸 [IMAGE] Error loading snapshot image, using placeholder"
-              );
-              const target = e.target as HTMLImageElement;
-              if (
-                target.src !== `${window.location.origin}/seeds/01__GRG.png`
-              ) {
-                target.src =
-                  "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
-              }
-            }}
-          />
+          {/* Base seed emblem - always visible initially */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Image
+              src={seedEmblemUrl}
+              alt="Seed emblem"
+              width={220}
+              height={220}
+              className="opacity-30 scale-[0.8] lg:scale-[1.1] md:scale-[0.8]"
+            />
+          </div>
+
+          {/* Overlay text with pulsing animation */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <motion.div 
+              className="text-center px-8"
+              animate={{ 
+                opacity: [0.4, 0.8, 0.4],
+                scale: [0.98, 1.02, 0.98]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <div className="text-[10px] leading-4 text-gray-600">
+                <div>your stewardship is becoming visible form</div>
+                <div>a morphological evolution accelerating beyond the</div>
+                <div>limits of Earth...</div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Animated snapshot reveal */}
+          <AnimatePresence>
+            {showReveal && (
+              <motion.div
+                initial={{ y: -1000, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 1000, opacity: 0 }}
+                transition={{
+                  type: "spring",
+                  damping: 20,
+                  stiffness: 100,
+                  duration: 2
+                }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={currentImageSrc}
+                  alt=""
+                  fill
+                  className="object-cover scale-[1.1]"
+                  onError={(e) => {
+                    console.log(
+                      `🌸 [BloomingView IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
+                    );
+                    
+                    const newErrorCount = imageErrorCount + 1;
+                    setImageErrorCount(newErrorCount);
+                    
+                    // Prevent infinite retry loops
+                    if (newErrorCount > 3) {
+                      console.log("🌸 [BloomingView IMAGE] Max retries reached, using final fallback");
+                      setCurrentImageSrc("https://d17wy07434ngk.cloudfront.net/seed1/seed.png");
+                      return;
+                    }
+                    
+                    // Try fallback images in sequence
+                    const fallbackImages = [
+                      "https://d17wy07434ngk.cloudfront.net/seed1/seed.png",
+                      "https://d17wy07434ngk.cloudfront.net/seed2/seed.png", 
+                      "https://d17wy07434ngk.cloudfront.net/seed3/seed.png"
+                    ];
+                    
+                    if (newErrorCount <= fallbackImages.length) {
+                      const fallbackSrc = fallbackImages[newErrorCount - 1];
+                      console.log(`🌸 [BloomingView IMAGE] Trying fallback: ${fallbackSrc}`);
+                      setCurrentImageSrc(fallbackSrc);
+                    } else {
+                      // Use a simple placeholder
+                      setCurrentImageSrc("https://d17wy07434ngk.cloudfront.net/seed1/seed.png");
+                    }
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Share button bottom-right */}

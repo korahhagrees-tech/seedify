@@ -9,21 +9,23 @@ import { useState } from "react";
 import Link from "next/link";
 
 type Beneficiary = {
-  id: string;
   name: string;
-  emblemUrl: string;
+  code: string;
+  index: number;
+  address: string;
   benefitShare: string; // e.g. "12.45%"
-  snapshots: number;
-  gain: string; // e.g. "0.112 ETH"
+  snapshotsGain: string; // e.g. "0.112 ETH"
   garden: string; // e.g. "1.911 ETH"
   yieldShare: string; // e.g. "0.211 ETH"
   unclaimed: string; // e.g. "0.162 ETH"
   claimed: string; // e.g. "0.222 ETH"
+  snapshotCount: number;
+  totalValue: string;
 };
 
 export interface SeedStewardStatsProps {
   seed: Seed;
-  links: { openseaUrl: string };
+  links?: { openseaUrl?: string };
   stats: {
     seedId: number;
     seedNumber: string;
@@ -61,13 +63,16 @@ export default function SeedStewardStats({
   const [imageError, setImageError] = useState(false);
 
   // Morph large rounded-square image to smaller circle on scroll
-  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.6]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.4]);
   const radius = useTransform(scrollYProgress, [0, 0.2], [60, 999]);
+  const width = useTransform(scrollYProgress, [0, 0.2], [980, 170]);
+  const height = useTransform(scrollYProgress, [0, 0.2], [550, 170]);
 
   // Button animations - start at top-right of image, drop down to right side
   const buttonScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
-  const buttonTranslateX = useTransform(scrollYProgress, [0, 0.2], [0, 40]);
-  const buttonTranslateY = useTransform(scrollYProgress, [0, 0.2], [0, 80]);
+  const buttonTranslateX = useTransform(scrollYProgress, [0, 0.2], [0, -60]);
+  const buttonTranslateY = useTransform(scrollYProgress, [0, 0.2], [0, -80]);
+  const buttonRight = useTransform(scrollYProgress, [0, 0.2], [0, 12]);
   const buttonOpacity = useTransform(
     scrollYProgress,
     [0, 0.05, 0.15, 0.2],
@@ -110,7 +115,7 @@ export default function SeedStewardStats({
         }}
       />
 
-      <div className="relative min-h-screen w-full max-w-md mx-auto overflow-hidden bg-transparent">
+      <div className="relative min-h-screen w-full max-w-4xl mx-auto overflow-hidden bg-transparent">
         {/* Foreground content */}
         <div className="relative z-10 px-4 pt-2 pb-6">
           {/* Header */}
@@ -118,11 +123,16 @@ export default function SeedStewardStats({
 
           {/* Hero with image and actions */}
           <div className="pt-4 pb-6">
-            <div className="flex items-start justify-between gap-4 relative max-w-md mx-auto mt-2">
+            <div className="flex items-start justify-center gap-4 relative max-w-4xl mx-auto -mt-2">
               {/* Morphing image */}
               <motion.div
-                style={{ scale, borderRadius: radius }}
-                className="relative lg:w-[370px] md:w-[370px] w-[320px] h-[370px] rounded-full overflow-hidden shadow-xl bg-white mx-auto scale-[0.6] -ml-20 -mt-22 -mb-34"
+                style={{ 
+                  scale, 
+                  borderRadius: radius,
+                  width: width,
+                  height: height
+                }}
+                className="relative overflow-hidden shadow-xl bg-white mx-auto scale-[0.6] -ml-20 -mt-28 mb-2"
               >
                 <Image
                   src={
@@ -147,15 +157,18 @@ export default function SeedStewardStats({
                   translateX: buttonTranslateX,
                   translateY: buttonTranslateY,
                   opacity: buttonOpacity,
+                  right: buttonRight,
                 }}
-                className="absolute top-2 right-12 flex flex-col gap-3"
+                className="absolute top-2 flex flex-col gap-3"
               >
-                <Link
-                  href={links.openseaUrl}
-                  className="px-4 py-0 text-nowrap rounded-full border-3 border-dotted border-gray-700 bg-gradient-to-r from-gray-200/90 to-white/90 text-gray-900 peridia-display text-sm text-center shadow-lg"
-                >
-                  View Opensea
-                </Link>
+                {links?.openseaUrl && (
+                  <Link
+                    href={links.openseaUrl}
+                    className="px-4 py-0 text-nowrap rounded-full border-3 border-dotted border-gray-700 bg-gradient-to-r from-gray-200/90 to-white/90 text-gray-900 peridia-display text-sm text-center shadow-lg"
+                  >
+                    View Opensea
+                  </Link>
+                )}
                 <button className="px-6 py-2 rounded-full border-3 border-dashed border-white/80 bg-purple-200/90 text-gray-900 peridia-display text-sm shadow-lg">
                   Customise Display
                 </button>
@@ -165,20 +178,20 @@ export default function SeedStewardStats({
         </div>
 
         {/* Main dotted container */}
-        <div className="relative z-0 mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-30 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
+        <div className="relative z-0 mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-75 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
           {/* Section: Core Seed Metrics - Full width with 3x2 grid */}
-          <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
-            {/* Full width header with INFO button */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center w-full justify-between mb-6 bg-gray-400 rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[0.8] mt-6">
               <div className="flex-1">
-                <div className="text-lg font-bold tracking-wide text-gray-900 peridia-display">
-                  CORE SEED METRICS
+                <div className="text-lg font-light scale-[0.6] lg:scale-[0.7] md:scale-[0.6] tracking-wide text-gray-900">
+                  <p className="-ml-18">CORE SEED METRICS</p>
                 </div>
               </div>
-              <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 border-2 border-dashed border-gray-700 text-gray-900 text-sm">
+              <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 text-gray-900 text-sm -ml-16 left-8">
                 INFO ▼
               </div>
             </div>
+          <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
+            {/* Full width header with INFO button */}
 
             {/* Core metrics 3x2 grid - single background */}
             <div className="grid grid-cols-3 gap-4 mb-6">
@@ -352,15 +365,15 @@ export default function SeedStewardStats({
           </div>
 
           {/* Section: Your Regenerative Impact - Two separate cards side by side */}
-          <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
-            <div className="mb-6">
-              <div className="flex items-center justify-between bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
+            <div className="mb-3">
+              <div className="flex items-center justify-between bg-gradient-to-r from-gray-300/80 to-white/60 rounded-full px-4 py-0">
                 <span className="tracking-wide text-gray-900 favorit-mono text-sm">
                   YOUR REGENERATIVE IMPACT
                 </span>
                 <span className="text-gray-900">▼</span>
               </div>
             </div>
+          <div className="rounded-[28px] m-4 p-6">
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Left Card: Impact Details */}
@@ -371,11 +384,11 @@ export default function SeedStewardStats({
                     <div className="text-[10px] text-black/80 mb-2">
                       IMMEDIATE IMPACT
                     </div>
-                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-3 py-2 text-sm text-center text-gray-900">
-                      {parseFloat(stats.immediateImpact).toFixed(6)} ETH
+                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-3 py-1 text-sm text-center text-gray-900 text-nowrap">
+                      <p className="text-nowrap scale-[0.7] lg:scale-[0.9] md:scale-[0.7]">{parseFloat(stats.immediateImpact).toFixed(6)} ETH</p>
                     </div>
                     {stats.immediateImpactDate && (
-                      <div className="text-[9px] text-black/70 mt-2">
+                      <div className="text-[7px] text-right text-black/70 mt-2">
                         DISTRIBUTED: {formatDate(stats.immediateImpactDate)}
                       </div>
                     )}
@@ -386,11 +399,11 @@ export default function SeedStewardStats({
                     <div className="text-[10px] text-black/80 mb-2">
                       LONGTERM IMPACT
                     </div>
-                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-3 py-2 text-sm text-center text-gray-900">
-                      {parseFloat(stats.longtermImpact).toFixed(6)} ETH
+                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-3 py-1 text-sm text-center text-gray-900 text-nowrap">
+                      <p className="text-nowrap scale-[0.7] lg:scale-[0.9] md:scale-[0.7]">{parseFloat(stats.longtermImpact).toFixed(6)} ETH</p>
                     </div>
                     {stats.longtermImpactDate && (
-                      <div className="text-[9px] text-black/70 mt-2">
+                      <div className="text-[7px] text-right text-black/70 mt-2">
                         DISTRIBUTED: {formatDate(stats.longtermImpactDate)}
                       </div>
                     )}
@@ -404,10 +417,14 @@ export default function SeedStewardStats({
                   {/* Action Buttons */}
                   <div className="space-y-3 mb-4">
                     <button className="w-full px-3 py-2 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-sm">
-                      View Certificates
+                      <Link href="https://app.regen.network/profiles/daa2cbf0-6a5a-11f0-ae30-0afffa81c869/projects">
+                        View Certificates
+                      </Link>
                     </button>
                     <button className="w-full px-3 py-2 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-sm">
-                      Scan Blockchain
+                      <Link href="https://basescan.org/address/0x9142A61188e829BF924CeffF27e8ed8111700C9B">
+                        Scan Blockchain
+                      </Link>
                     </button>
                   </div>
 
@@ -445,16 +462,16 @@ export default function SeedStewardStats({
 
             <div className="space-y-4">
               {stats.beneficiaries && stats.beneficiaries.length > 0 ? (
-                stats.beneficiaries.map((beneficiary) => (
+                stats.beneficiaries.map((beneficiary, index) => (
                   <div
-                    key={beneficiary.id}
+                    key={`${beneficiary.index}-${beneficiary.code}`}
                     className="rounded-[24px] bg-gradient-to-r from-white/60 to-white/30 backdrop-blur p-3 border-1 border-black"
                   >
                     {/* Title bar */}
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 rounded-full border-3 border-dotted border-black bg-white overflow-hidden flex-shrink-0 relative">
                         <Image
-                          src={beneficiary.emblemUrl}
+                          src={`/seeds/0${beneficiary.index + 1}__${beneficiary.code.split('-')[1]}.png`}
                           alt={beneficiary.name}
                           fill
                           className="object-contain p-1"
@@ -473,26 +490,26 @@ export default function SeedStewardStats({
                       <div className="grid grid-cols-3 gap-2">
                         <Pill
                           label="BENEFIT SHARE"
-                          value={beneficiary.benefitShare}
+                          value={`${beneficiary.benefitShare}%`}
                         />
                         <Pill
                           label="#SNAPSHOTS"
-                          value={`${beneficiary.snapshots}`}
-                          trailing={`GAIN ${beneficiary.gain}`}
+                          value={`${beneficiary.snapshotCount}`}
+                          trailing={`GAIN ${parseFloat(beneficiary.snapshotsGain).toFixed(6)} ETH`}
                         />
-                        <Pill label="GARDEN" value={beneficiary.garden} />
+                        <Pill label="GARDEN" value={`${parseFloat(beneficiary.garden).toFixed(6)} ETH`} />
                       </div>
 
                       {/* Second row: YIELD SHARE and UNCLAIMED */}
                       <div className="grid grid-cols-2 gap-2">
                         <Pill
                           label="YIELD SHARE"
-                          value={beneficiary.yieldShare}
+                          value={`${parseFloat(beneficiary.yieldShare).toFixed(6)} ETH`}
                         />
                         <Pill
                           label="UNCLAIMED"
-                          value={beneficiary.unclaimed}
-                          trailing={`${beneficiary.claimed} CLAIMED`}
+                          value={`${parseFloat(beneficiary.unclaimed).toFixed(6)} ETH`}
+                          trailing={`${parseFloat(beneficiary.claimed).toFixed(6)} ETH CLAIMED`}
                         />
                       </div>
                     </div>

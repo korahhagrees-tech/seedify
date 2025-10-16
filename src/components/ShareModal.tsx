@@ -15,6 +15,13 @@ interface ShareModalProps {
   clickPosition?: { x: number; y: number };
 }
 
+// Fallback images for when main image fails to load
+const FALLBACK_IMAGES = [
+  "https://d17wy07434ngk.cloudfront.net/seed1/seed.png",
+  "https://d17wy07434ngk.cloudfront.net/seed2/seed.png",
+  "https://d17wy07434ngk.cloudfront.net/seed3/seed.png",
+];
+
 export default function ShareModal({
   isOpen,
   onClose,
@@ -24,6 +31,8 @@ export default function ShareModal({
   clickPosition,
 }: ShareModalProps) {
   const [canUseNativeShare, setCanUseNativeShare] = useState(false);
+  const [currentImageSrc, setCurrentImageSrc] = useState(imageUrl || FALLBACK_IMAGES[0]);
+  const [imageErrorCount, setImageErrorCount] = useState(0);
 
   useEffect(() => {
     // Check if native share is available
@@ -32,11 +41,17 @@ export default function ShareModal({
     );
   }, []);
 
+  // Reset image state when imageUrl prop changes
+  useEffect(() => {
+    setCurrentImageSrc(imageUrl || FALLBACK_IMAGES[0]);
+    setImageErrorCount(0);
+  }, [imageUrl]);
+
   // Download image
   const handleDownload = async () => {
     try {
-      // Convert base64 to blob
-      const response = await fetch(imageUrl);
+      // Convert base64 to blob - use currentImageSrc
+      const response = await fetch(currentImageSrc);
       const blob = await response.blob();
 
       // Create download link
@@ -61,8 +76,8 @@ export default function ShareModal({
     try {
       // Check if native share is available (mobile)
       if (navigator.share && typeof navigator.canShare === "function") {
-        // Convert base64 to blob
-        const response = await fetch(imageUrl);
+        // Convert base64 to blob - use currentImageSrc
+        const response = await fetch(currentImageSrc);
         const blob = await response.blob();
         const file = new File([blob], "way-of-flowers-snapshot.png", {
           type: "image/png",
@@ -80,8 +95,8 @@ export default function ShareModal({
 
           toast.success("Shared successfully!");
         } else {
-          // Fallback if file sharing not supported
-          const response2 = await fetch(imageUrl);
+          // Fallback if file sharing not supported - use currentImageSrc
+          const response2 = await fetch(currentImageSrc);
           const blob2 = await response2.blob();
 
           await navigator.clipboard.write([
@@ -90,12 +105,12 @@ export default function ShareModal({
             }),
           ]);
 
-          toast.success("Image copied to clipboard!");
-        }
-      } else {
-        // Fallback for desktop: copy image to clipboard
-        const response = await fetch(imageUrl);
-        const blob = await response.blob();
+        toast.success("Image copied to clipboard!");
+      }
+    } else {
+      // Fallback for desktop: copy image to clipboard - use currentImageSrc
+      const response = await fetch(currentImageSrc);
+      const blob = await response.blob();
 
         await navigator.clipboard.write([
           new ClipboardItem({
@@ -136,37 +151,15 @@ export default function ShareModal({
             onClick={onClose}
           />
 
-          {/* Modal */}
+          {/* Modal - Centered like WalletModal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className={
-              clickPosition
-                ? "fixed z-50"
-                : "fixed inset-0 z-50 flex items-center justify-center p-4"
-            }
-            style={
-              clickPosition
-                ? {
-                    left: Math.max(
-                      16,
-                      Math.min(clickPosition.x - 150, window.innerWidth - 316)
-                    ), // 316 = modal width (284) + padding
-                    top: Math.max(
-                      16,
-                      Math.min(clickPosition.y - 50, window.innerHeight - 500)
-                    ), // Approximate modal height
-                  }
-                : undefined
-            }
+            className="fixed inset-x-6 top-1/2 -translate-y-1/2 z-50 max-w-sm mx-auto"
           >
-            <div
-              className={`bg-white rounded-[40px] border-2 border-dotted border-black p-6 relative shadow-2xl ${
-                clickPosition ? "w-80" : "max-w-md w-full mx-auto"
-              }`}
-            >
+            <div className="bg-white rounded-[40px] border-2 border-dotted border-black p-6 relative shadow-2xl">
               {/* Close Button */}
               <button
                 onClick={onClose}
@@ -183,17 +176,34 @@ export default function ShareModal({
               {/* Image Preview */}
               <div className="relative w-full h-64 rounded-[30px] overflow-hidden border-2 border-dashed border-black/70 bg-gray-100 mb-6">
                 <Image
-                  src={
-                    imageUrl ||
-                    "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
-                  }
+                  src={currentImageSrc}
                   alt="Snapshot artwork"
                   fill
-                  className="object-contain"
+                  className="object-cover"
                   onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src =
-                      "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
+                    console.log(
+                      `🌸 [ShareModal IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
+                    );
+                    
+                    const newErrorCount = imageErrorCount + 1;
+                    setImageErrorCount(newErrorCount);
+                    
+                    // Prevent infinite retry loops
+                    if (newErrorCount > 3) {
+                      console.log("🌸 [ShareModal IMAGE] Max retries reached, using final fallback");
+                      setCurrentImageSrc(FALLBACK_IMAGES[0]);
+                      return;
+                    }
+                    
+                    // Try fallback images in sequence
+                    if (newErrorCount <= FALLBACK_IMAGES.length) {
+                      const fallbackSrc = FALLBACK_IMAGES[newErrorCount - 1];
+                      console.log(`🌸 [ShareModal IMAGE] Trying fallback: ${fallbackSrc}`);
+                      setCurrentImageSrc(fallbackSrc);
+                    } else {
+                      // Use first fallback as final fallback
+                      setCurrentImageSrc(FALLBACK_IMAGES[0]);
+                    }
                   }}
                 />
               </div>

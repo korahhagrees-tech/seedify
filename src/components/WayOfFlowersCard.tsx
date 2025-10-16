@@ -19,8 +19,7 @@ interface WayOfFlowersCardProps {
   onExploreClick?: () => void;
   onTryAgainClick?: () => void;
   isWaitingForImage?: boolean; // New prop for waiting state
-  imageGenerationData?: {
-    // New prop for image data
+  imageGenerationData?: { // New prop for image data
     snapshotImageUrl?: string;
     backgroundImageUrl?: string;
     beneficiaryCode?: string;
@@ -170,19 +169,9 @@ export default function WayOfFlowersCard({
             {/* Content positioned on the card */}
             <div className="relative z-10 p-8">
               {/* Top section with seed emblem and text */}
-              <div className="text-center mb-8 relative">
-                {/* Buttons positioned to overlay on the image area - positioned in upper right */}
-                <div className="absolute top-4 right-4 flex flex-col gap-2 z-20">
-                  <button className="px-3 py-1.5 rounded-full border-2 border-dotted border-black/60 bg-white/80 text-black text-[10px] font-medium hover:bg-white/90 transition-colors whitespace-nowrap">
-                    View Opensea
-                  </button>
-                  <button className="px-3 py-1.5 rounded-full border border-black/60 bg-purple-200/80 text-black text-[10px] font-medium hover:bg-purple-200/90 transition-colors whitespace-nowrap">
-                    Customise Display
-                  </button>
-                </div>
-
-                {/* Seed emblem - properly centered */}
-                <div className="mb-4 flex justify-center items-center -mt-20">
+              <div className="text-center mb-8">
+                {/* Seed emblem */}
+                <div className="mb-6 flex justify-center lg:-mt-16 md:-mt-16 -mt-18">
                   <Image
                     src={
                       seedEmblemUrl && seedEmblemUrl.length > 0
@@ -190,9 +179,9 @@ export default function WayOfFlowersCard({
                         : "/seeds/01__GRG.png"
                     }
                     alt=""
-                    width={300}
-                    height={300}
-                    className="w-full max-w-[300px] h-auto object-contain"
+                    width={60}
+                    height={60}
+                    className="lg:w-37 md:w-37 w-30 lg:h-37 md:h-37 h-30 -mt-14 mb-6"
                     onError={(e) => {
                       console.log(
                         "🌸 [IMAGE] Error loading seed emblem, using placeholder"
@@ -209,7 +198,7 @@ export default function WayOfFlowersCard({
                 </div>
 
                 {/* Three text lines */}
-                <div className="-space-y-1 -mt-4 text-black font-medium text-base lg:scale-[0.9] md:scale-[0.9] scale-[0.75]">
+                <div className="-space-y-1 lg:mt-1 md:-mt-2 -mt-2 text-black font-medium text-base lg:scale-[0.9] md:scale-[0.9] scale-[0.75]">
                   <div>{firstText}</div>
                   <div>{secondText}</div>
                   <div className="text-nowrap">{thirdText}</div>
@@ -276,41 +265,39 @@ export default function WayOfFlowersCard({
                   )}
 
                   {/* Fallback to original transaction-based buttons if not in image waiting mode */}
-                  {!isWaitingForImage &&
-                    !imageGenerationData &&
-                    showButtons && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        transition={{
-                          duration: 0.8,
-                          ease: "easeOut",
-                        }}
-                        className="flex flex-col items-center gap-3"
-                      >
-                        {transactionStatus === "success" && (
-                          <>
-                            <Button
-                              onClick={onExploreClick}
-                              className="w-[160px] rounded-full border border-white/70 text-black text-xl scale-[0.85] ml-3 py-2 bg-white hover:bg-white/20 transition-all duration-300"
-                            >
-                              <span className="peridia-display">
-                                E<span className="favorit-mono">xplore</span>
-                              </span>
-                            </Button>
-                          </>
-                        )}
-
-                        {transactionStatus === "failed" && (
+                  {!isWaitingForImage && !imageGenerationData && showButtons && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{
+                        duration: 0.8,
+                        ease: "easeOut",
+                      }}
+                      className="flex flex-col items-center gap-3"
+                    >
+                      {transactionStatus === "success" && (
+                        <>
                           <Button
-                            onClick={onTryAgainClick}
-                            className="w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
+                            onClick={onExploreClick}
+                            className="w-[160px] rounded-full border border-white/70 text-black text-xl scale-[0.85] ml-3 py-2 bg-white hover:bg-white/20 transition-all duration-300"
                           >
-                            Try Again
+                            <span className="peridia-display">
+                              E<span className="favorit-mono">xplore</span>
+                            </span>
                           </Button>
-                        )}
-                      </motion.div>
-                    )}
+                        </>
+                      )}
+
+                      {transactionStatus === "failed" && (
+                        <Button
+                          onClick={onTryAgainClick}
+                          className="w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
+                        >
+                          Try Again
+                        </Button>
+                      )}
+                    </motion.div>
+                  )}
                 </AnimatePresence>
               </div>
             </div>

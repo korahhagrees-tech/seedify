@@ -25,9 +25,6 @@ export default function BloomingPage({
 
   const [isWalletModalOpen, setIsWalletModalOpen] = React.useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = React.useState(false);
-  const [shareClickPosition, setShareClickPosition] = React.useState<
-    { x: number; y: number } | undefined
-  >();
 
   // Extract image data from URL params
   const snapshotImageUrl = searchParams.get("snapshotImageUrl");
@@ -54,7 +51,6 @@ export default function BloomingPage({
   };
 
   const handleShare = (clickPosition: { x: number; y: number }) => {
-    setShareClickPosition(clickPosition);
     setIsShareModalOpen(true);
   };
 
@@ -85,19 +81,13 @@ export default function BloomingPage({
       />
 
       {/* Share Modal */}
-      {snapshotImageUrl && (
-        <ShareModal
-          isOpen={isShareModalOpen}
-          onClose={() => {
-            setIsShareModalOpen(false);
-            setShareClickPosition(undefined);
-          }}
-          imageUrl={snapshotImageUrl}
-          beneficiaryName={eco.title.replace(/\s+Regenerative.*$/, "")}
-          beneficiaryCode={beneficiaryCode || undefined}
-          clickPosition={shareClickPosition}
-        />
-      )}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        imageUrl={snapshotImageUrl || eco.backgroundImageUrl || ""}
+        beneficiaryName={eco.title.replace(/\s+Regenerative.*$/, "")}
+        beneficiaryCode={beneficiaryCode || undefined}
+      />
     </>
   );
 }
