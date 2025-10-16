@@ -42,6 +42,9 @@ export default function TendedEcosystem({
 }: TendedEcosystemProps) {
   const router = useRouter();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [shareClickPosition, setShareClickPosition] = useState<
+    { x: number; y: number } | undefined
+  >();
 
   // Handle Tend Again button click - routes to ecosystem page
   const handleTendAgain = () => {
@@ -60,7 +63,8 @@ export default function TendedEcosystem({
   };
 
   // Handle Share button click - open share modal
-  const handleShare = () => {
+  const handleShare = (clickPosition: { x: number; y: number }) => {
+    setShareClickPosition(clickPosition);
     setIsShareModalOpen(true);
     // Also call the original onShare if provided
     if (onShare) {
@@ -120,13 +124,21 @@ export default function TendedEcosystem({
                 if (
                   target.src !== `${window.location.origin}/seeds/01__GRG.png`
                 ) {
-                  target.src = "https://d17wy07434ngk.cloudfront.net/seed1/seed.";
+                  target.src =
+                    "https://d17wy07434ngk.cloudfront.net/seed1/seed.";
                 }
               }}
             />
             {/* Share Icon */}
             <button
-              onClick={handleShare}
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const clickPosition = {
+                  x: rect.left + rect.width / 2,
+                  y: rect.top + rect.height / 2,
+                };
+                handleShare(clickPosition);
+              }}
               className="absolute bottom-2 -left-2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm opacity-80 z-20"
             >
               <Image
@@ -182,10 +194,14 @@ export default function TendedEcosystem({
       {/* Share Modal */}
       <ShareModal
         isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
+        onClose={() => {
+          setIsShareModalOpen(false);
+          setShareClickPosition(undefined);
+        }}
         imageUrl={seedImageUrl}
         beneficiaryName={beneficiaryName}
         beneficiaryCode={beneficiaryCode}
+        clickPosition={shareClickPosition}
       />
     </motion.div>
   );

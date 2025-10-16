@@ -12,6 +12,7 @@ interface ShareModalProps {
   imageUrl: string;
   beneficiaryName?: string;
   beneficiaryCode?: string;
+  clickPosition?: { x: number; y: number };
 }
 
 export default function ShareModal({
@@ -20,38 +21,38 @@ export default function ShareModal({
   imageUrl,
   beneficiaryName,
   beneficiaryCode,
+  clickPosition,
 }: ShareModalProps) {
   const [canUseNativeShare, setCanUseNativeShare] = useState(false);
 
   useEffect(() => {
     // Check if native share is available
     setCanUseNativeShare(
-      typeof navigator !== 'undefined' && 
-      typeof navigator.share === 'function'
+      typeof navigator !== "undefined" && typeof navigator.share === "function"
     );
   }, []);
-  
+
   // Download image
   const handleDownload = async () => {
     try {
       // Convert base64 to blob
       const response = await fetch(imageUrl);
       const blob = await response.blob();
-      
+
       // Create download link
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = `way-of-flowers-snapshot-${Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
-      toast.success('Image downloaded successfully!');
+
+      toast.success("Image downloaded successfully!");
     } catch (error) {
-      console.error('Download failed:', error);
-      toast.error('Failed to download image');
+      console.error("Download failed:", error);
+      toast.error("Failed to download image");
     }
   };
 
@@ -59,50 +60,54 @@ export default function ShareModal({
   const handleShare = async () => {
     try {
       // Check if native share is available (mobile)
-      if (navigator.share && typeof navigator.canShare === 'function') {
+      if (navigator.share && typeof navigator.canShare === "function") {
         // Convert base64 to blob
         const response = await fetch(imageUrl);
         const blob = await response.blob();
-        const file = new File([blob], 'way-of-flowers-snapshot.png', { type: 'image/png' });
-        
+        const file = new File([blob], "way-of-flowers-snapshot.png", {
+          type: "image/png",
+        });
+
         // Check if we can share this file
         if (navigator.canShare({ files: [file] })) {
           await navigator.share({
-            title: 'Way of Flowers Snapshot',
-            text: `Check out my contribution to ${beneficiaryName || 'regenerative ecosystem'}!`,
+            title: "Way of Flowers Snapshot",
+            text: `Check out my contribution to ${
+              beneficiaryName || "regenerative ecosystem"
+            }!`,
             files: [file],
           });
-          
-          toast.success('Shared successfully!');
+
+          toast.success("Shared successfully!");
         } else {
           // Fallback if file sharing not supported
           const response2 = await fetch(imageUrl);
           const blob2 = await response2.blob();
-          
+
           await navigator.clipboard.write([
             new ClipboardItem({
-              'image/png': blob2
-            })
+              "image/png": blob2,
+            }),
           ]);
-          
-          toast.success('Image copied to clipboard!');
+
+          toast.success("Image copied to clipboard!");
         }
       } else {
         // Fallback for desktop: copy image to clipboard
         const response = await fetch(imageUrl);
         const blob = await response.blob();
-        
+
         await navigator.clipboard.write([
           new ClipboardItem({
-            'image/png': blob
-          })
+            "image/png": blob,
+          }),
         ]);
-        
-        toast.success('Image copied to clipboard!');
+
+        toast.success("Image copied to clipboard!");
       }
     } catch (error) {
-      console.error('Share failed:', error);
-      toast.error('Failed to share image');
+      console.error("Share failed:", error);
+      toast.error("Failed to share image");
     }
   };
 
@@ -111,10 +116,10 @@ export default function ShareModal({
     try {
       const currentUrl = window.location.href;
       await navigator.clipboard.writeText(currentUrl);
-      toast.success('Link copied to clipboard!');
+      toast.success("Link copied to clipboard!");
     } catch (error) {
-      console.error('Copy link failed:', error);
-      toast.error('Failed to copy link');
+      console.error("Copy link failed:", error);
+      toast.error("Failed to copy link");
     }
   };
 
@@ -137,9 +142,31 @@ export default function ShareModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className={
+              clickPosition
+                ? "fixed z-50"
+                : "fixed inset-0 z-50 flex items-center justify-center p-4"
+            }
+            style={
+              clickPosition
+                ? {
+                    left: Math.max(
+                      16,
+                      Math.min(clickPosition.x - 150, window.innerWidth - 316)
+                    ), // 316 = modal width (284) + padding
+                    top: Math.max(
+                      16,
+                      Math.min(clickPosition.y - 50, window.innerHeight - 500)
+                    ), // Approximate modal height
+                  }
+                : undefined
+            }
           >
-            <div className="bg-white rounded-[40px] border-2 border-dotted border-black p-6 max-w-md w-full mx-auto relative shadow-2xl">
+            <div
+              className={`bg-white rounded-[40px] border-2 border-dotted border-black p-6 relative shadow-2xl ${
+                clickPosition ? "w-80" : "max-w-md w-full mx-auto"
+              }`}
+            >
               {/* Close Button */}
               <button
                 onClick={onClose}
@@ -156,13 +183,17 @@ export default function ShareModal({
               {/* Image Preview */}
               <div className="relative w-full h-64 rounded-[30px] overflow-hidden border-2 border-dashed border-black/70 bg-gray-100 mb-6">
                 <Image
-                  src={imageUrl || "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"}
+                  src={
+                    imageUrl ||
+                    "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
+                  }
                   alt="Snapshot artwork"
                   fill
                   className="object-contain"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
+                    target.src =
+                      "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
                   }}
                 />
               </div>
@@ -196,7 +227,7 @@ export default function ShareModal({
                   onClick={handleShare}
                   className="w-full px-6 py-3 rounded-full border-2 border-dotted border-black text-black text-lg font-medium bg-white hover:bg-gray-100 transition-colors peridia-display"
                 >
-                  {canUseNativeShare ? 'Share Image' : 'Copy to Clipboard'}
+                  {canUseNativeShare ? "Share Image" : "Copy to Clipboard"}
                 </button>
 
                 {/* Copy Link Button */}
@@ -225,4 +256,3 @@ export default function ShareModal({
     </AnimatePresence>
   );
 }
-

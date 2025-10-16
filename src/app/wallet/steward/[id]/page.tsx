@@ -21,27 +21,29 @@ export default function StewardStatsRoute() {
         ? params.id[0]
         : (params.id as string);
       if (!id) return;
-      
+
       try {
         setLoading(true);
-        
+
         // Fetch seed data
         const s = await fetchSeedById(id);
         setSeed(s || null);
-        
+
         // Fetch stats data
-        const statsResponse = await fetch(`https://seedify-backend.up.railway.app/api/seeds/${id}/stats`);
+        const statsResponse = await fetch(
+          `https://seedify-backend.up.railway.app/api/seeds/${id}/stats`
+        );
         if (statsResponse.ok) {
           const statsData = await statsResponse.json();
           setStats(statsData.success ? statsData.stats : null);
         } else {
-          console.error('Failed to fetch stats:', statsResponse.statusText);
+          console.error("Failed to fetch stats:", statsResponse.statusText);
           setStats(null);
         }
-        
+
         setHasFetched(true);
       } catch (error) {
-        console.error('Error loading data:', error);
+        console.error("Error loading data:", error);
         setHasFetched(true);
       } finally {
         setLoading(false);
@@ -53,7 +55,7 @@ export default function StewardStatsRoute() {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p>Loading...</p>
+        <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
       </div>
     );
   }

@@ -20,7 +20,7 @@ interface BloomingViewProps {
   storyText?: string;
   onExploreGarden?: () => void;
   onStory?: () => void;
-  onShare?: () => void;
+  onShare?: (clickPosition: { x: number; y: number }) => void;
   onWallet?: () => void;
 }
 
@@ -43,13 +43,13 @@ export default function BloomingView({
 
   // Get the final image URL (snapshot or seed as fallback)
   const finalImageUrl = snapshotImageUrl || seedImageUrl || assets.testPink;
-  
+
   // Debug logging for image URLs
   useEffect(() => {
-    console.log('🔍 [BloomingView] Image URLs:', {
+    console.log("🔍 [BloomingView] Image URLs:", {
       snapshotImageUrl,
       seedImageUrl,
-      finalImageUrl
+      finalImageUrl,
     });
   }, [snapshotImageUrl, seedImageUrl, finalImageUrl]);
 
@@ -141,7 +141,8 @@ export default function BloomingView({
               if (
                 target.src !== `${window.location.origin}/seeds/01__GRG.png`
               ) {
-                target.src = "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
+                target.src =
+                  "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
               }
             }}
           />
@@ -149,7 +150,16 @@ export default function BloomingView({
 
         {/* Share button bottom-right */}
         <button
-          onClick={onShare}
+          onClick={(e) => {
+            if (onShare) {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const clickPosition = {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2,
+              };
+              onShare(clickPosition);
+            }
+          }}
           className="absolute top-132 right-4 w-12 h-12 rounded-full bg-white/95 opacity-70 shadow flex items-center justify-center"
         >
           <Image

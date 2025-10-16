@@ -8,7 +8,6 @@ import { Seed } from "@/types/seed";
 import { useState } from "react";
 import Link from "next/link";
 
-
 type Beneficiary = {
   id: string;
   name: string;
@@ -88,10 +87,10 @@ export default function SeedStewardStats({
   // Helper function to format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
   };
 
@@ -180,65 +179,65 @@ export default function SeedStewardStats({
                 INFO ▼
               </div>
             </div>
-            
+
             {/* Core metrics 3x2 grid - single background */}
             <div className="grid grid-cols-3 gap-4 mb-6">
               {/* SEED NUMBER */}
               <div className="text-center">
-                <div className="text-xs tracking-wide text-black/90 mb-2">
+                <div className="text-[10px] tracking-wide text-black/90 mb-2">
                   SEED NUMBER
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
                   {stats.seedNumber}
                 </div>
               </div>
-              
+
               {/* MINTED ON */}
               <div className="text-center">
-                <div className="text-xs tracking-wide text-black/90 mb-2">
+                <div className="text-[10px] tracking-wide text-black/90 mb-2">
                   MINTED ON
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
                   {formatDate(stats.mintedOn)}
                 </div>
               </div>
-              
+
               {/* SNAPSHOTS */}
               <div className="text-center">
-                <div className="text-xs tracking-wide text-black/90 mb-2">
+                <div className="text-[10px] tracking-wide text-black/90 mb-2">
                   SNAPSHOTS
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
                   {stats.totalSnapshots}
                 </div>
               </div>
-              
+
               {/* SNAPSHOT PRICE */}
               <div className="text-center">
-                <div className="text-xs tracking-wide text-black/90 mb-2">
+                <div className="text-[10px] tracking-wide text-black/90 mb-2">
                   SNAPSHOT PRICE
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
-                  {parseFloat(stats.snapshotPrice).toFixed(6)} ETH
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
+                  {parseFloat(stats.snapshotPrice).toFixed(5)} ETH
                 </div>
               </div>
-              
+
               {/* SNAPSHOT SHARE */}
               <div className="text-center">
-                <div className="text-xs tracking-wide text-black/90 mb-2">
+                <div className="text-[10px] tracking-wide text-black/90 mb-2">
                   SNAPSHOT SHARE
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
                   {formatPercentage(stats.snapshotShare)}
                 </div>
               </div>
-              
+
               {/* 20% SHARE VALUE */}
               <div className="text-center">
-                <div className="text-xs tracking-wide text-black/90 mb-2">
+                <div className="text-[10px] tracking-wide text-black/90 mb-2">
                   20% SHARE VALUE
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-3 py-2 text-lg text-gray-900 text-center">
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
                   {parseFloat(stats.twentyPercentShareValue).toFixed(3)} ETH
                 </div>
               </div>
@@ -252,30 +251,30 @@ export default function SeedStewardStats({
               <div className="space-y-4">
                 {/* NUTRIENT RESERVE TOTAL */}
                 <div className="text-center">
-                  <div className="text-xs tracking-wide text-black/90 mb-2">
+                  <div className="text-[10px] tracking-wide text-black/90 mb-2">
                     NUTRIENT RESERVE TOTAL
                   </div>
-                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
                     {weiToEth(stats.nutrientReserveTotal)} ETH
                   </div>
                 </div>
-                
+
                 {/* YOUR CONTRIBUTIONS */}
                 <div className="text-center">
-                  <div className="text-xs tracking-wide text-black/90 mb-2">
+                  <div className="text-[10px] tracking-wide text-black/90 mb-2">
                     YOUR CONTRIBUTIONS
                   </div>
-                  <div className="bg-gray-200/80 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                  <div className="bg-gray-200/80 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
                     {weiToEth(stats.highestSeedDeposit)} ETH
                   </div>
                 </div>
-                
+
                 {/* ABSOLUTE NUTRIENT YIELD */}
                 <div className="text-center">
-                  <div className="text-xs tracking-wide text-black/90 mb-2">
+                  <div className="text-[10px] tracking-wide text-black/90 mb-2">
                     ABSOLUTE NUTRIENT YIELD
                   </div>
-                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
                     {parseFloat(stats.absoluteNutrientYield).toFixed(6)} ETH
                   </div>
                 </div>
@@ -287,30 +286,30 @@ export default function SeedStewardStats({
               <div className="space-y-4">
                 {/* HARVESTABLE */}
                 <div className="text-center">
-                  <div className="text-xs tracking-wide text-black/90 mb-2">
+                  <div className="text-[10px] tracking-wide text-black/90 mb-2">
                     HARVESTABLE
                   </div>
-                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
                     {parseFloat(stats.harvestable).toFixed(6)} ETH
                   </div>
                 </div>
-                
+
                 {/* MATURATION DATE */}
                 <div className="text-center">
-                  <div className="text-xs tracking-wide text-black/90 mb-2">
+                  <div className="text-[10px] tracking-wide text-black/90 mb-2">
                     MATURATION DATE
                   </div>
-                  <div className="bg-gray-200/80 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                  <div className="bg-gray-200/80 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
                     {formatDate(stats.maturationDate)}
                   </div>
                 </div>
-                
+
                 {/* EARLY HARVEST FEE */}
                 <div className="text-center">
-                  <div className="text-xs tracking-wide text-black/90 mb-2">
+                  <div className="text-[10px] tracking-wide text-black/90 mb-2">
                     EARLY HARVEST FEE
                   </div>
-                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-4 py-2 text-xl text-gray-900 text-center">
+                  <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
                     {parseFloat(stats.earlyHarvestFee.amount).toFixed(6)} ETH
                   </div>
                 </div>
@@ -320,99 +319,111 @@ export default function SeedStewardStats({
 
           {/* Action buttons */}
           <div className="mx-4 mb-6">
-            <div className="flex gap-3">
-              <button className="flex-1 px-6 py-3 rounded-full bg-purple-200/80 border-3 border-dotted border-black text-gray-900 peridia-display text-xl">
-                Amplify Impact
-              </button>
-              <button className="px-6 py-3 rounded-full bg-white/80 border-1 border-black text-gray-900 peridia-display text-xl">
-                Harvest
-              </button>
-            </div>
-            <div className="flex gap-3 mt-2 text-xs text-black/70">
-              <div className="flex-1 text-center">
-                Add more funds to your seed to amplify its longterm impact & increase your snapshot share
+            <div className="flex gap-4">
+              {/* Amplify Impact Section */}
+              <div className="flex-1">
+                {/* Button with scalloped edges and border */}
+                <button className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors">
+                  Amplify Impact
+                </button>
+                {/* Description container - narrower and touching button */}
+                <div className="bg-purple-200/40 rounded-xl p-2 mx-5 -mt-3">
+                  <div className="text-[9px] text-black/70 text-center leading-tight">
+                    Add more funds to your seed to amplify its longterm impact &
+                    increase your snapshot share
+                  </div>
+                </div>
               </div>
-              <div className="w-24 text-center">
-                Harvest the nutrient reserve to withdraw available funds
+
+              {/* Harvest Section */}
+              <div className="flex-1">
+                {/* Button with scalloped edges and border */}
+                <button className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors">
+                  Harvest
+                </button>
+                {/* Description container - narrower and touching button */}
+                <div className="bg-white/40 rounded-xl p-2 mx-5 -mt-3">
+                  <div className="text-[9px] text-black/70 text-center leading-tight">
+                    Harvest the nutrient reserve to withdraw available funds
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Section: Your Regenerative Impact - Two separate cards side by side */}
           <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex-1">
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
-                  <span className="tracking-wide text-gray-900 favorit-mono">
-                    YOUR REGENERATIVE IMPACT
-                  </span>
-                </div>
+            <div className="mb-6">
+              <div className="flex items-center justify-between bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
+                <span className="tracking-wide text-gray-900 favorit-mono text-sm">
+                  YOUR REGENERATIVE IMPACT
+                </span>
+                <span className="text-gray-900">▼</span>
               </div>
-              <div className="pr-2">▼</div>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Left Card: Impact Details */}
               <div className="rounded-[28px] bg-gray-400/40 p-4">
                 <div className="space-y-4">
                   {/* IMMEDIATE IMPACT */}
                   <div>
-                    <div className="text-sm text-black/80 mb-2">
+                    <div className="text-[10px] text-black/80 mb-2">
                       IMMEDIATE IMPACT
                     </div>
-                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-6 py-3 text-2xl text-center text-gray-900">
+                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-3 py-2 text-sm text-center text-gray-900">
                       {parseFloat(stats.immediateImpact).toFixed(6)} ETH
                     </div>
                     {stats.immediateImpactDate && (
-                      <div className="text-xs text-black/70 mt-2">
+                      <div className="text-[9px] text-black/70 mt-2">
                         DISTRIBUTED: {formatDate(stats.immediateImpactDate)}
                       </div>
                     )}
                   </div>
-                  
+
                   {/* LONGTERM IMPACT */}
                   <div>
-                    <div className="text-sm text-black/80 mb-2">
+                    <div className="text-[10px] text-black/80 mb-2">
                       LONGTERM IMPACT
                     </div>
-                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-6 py-3 text-2xl text-center text-gray-900">
+                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-3 py-2 text-sm text-center text-gray-900">
                       {parseFloat(stats.longtermImpact).toFixed(6)} ETH
                     </div>
                     {stats.longtermImpactDate && (
-                      <div className="text-xs text-black/70 mt-2">
+                      <div className="text-[9px] text-black/70 mt-2">
                         DISTRIBUTED: {formatDate(stats.longtermImpactDate)}
                       </div>
                     )}
                   </div>
                 </div>
               </div>
-              
+
               {/* Right Card: Actions & Yield */}
               <div className="rounded-[28px] bg-gray-400/40 p-4">
                 <div className="flex flex-col justify-between h-full">
                   {/* Action Buttons */}
                   <div className="space-y-3 mb-4">
-                    <button className="w-full px-6 py-3 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-xl">
+                    <button className="w-full px-3 py-2 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-sm">
                       View Certificates
                     </button>
-                    <button className="w-full px-6 py-3 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-xl">
+                    <button className="w-full px-3 py-2 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-sm">
                       Scan Blockchain
                     </button>
                   </div>
-                  
+
                   {/* OVERALL ACCUMULATED YIELD */}
                   <div>
-                    <div className="text-sm text-black/80 mb-2">
+                    <div className="text-[10px] text-black/80 mb-2">
                       OVERALL ACCUMULATED YIELD
                     </div>
-                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-6 py-3 text-2xl text-center text-gray-900">
+                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-2 py-2 text-[11px] text-center text-gray-900">
                       {parseFloat(stats.overallAccumulatedYield).toFixed(6)} ETH
                     </div>
                   </div>
-                  
+
                   {/* Distribute Yield Button */}
                   <div className="mt-4">
-                    <button className="w-full px-6 py-3 rounded-full border-3 border-dotted border-black bg-purple-200/80 text-gray-900 peridia-display text-xl">
+                    <button className="w-full px-3 py-2 rounded-full border-3 border-dotted border-black bg-purple-200/80 text-gray-900 peridia-display text-sm">
                       Distribute Yield
                     </button>
                   </div>
@@ -423,17 +434,15 @@ export default function SeedStewardStats({
 
           {/* Section: Detailed Data of Your Stewarded Ecosystems - Full width with background */}
           <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex-1">
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
-                  <span className="tracking-wide text-gray-900 favorit-mono">
-                    DETAILED DATA OF YOUR STEWARDED ECOSYSTEMS
-                  </span>
-                </div>
+            <div className="mb-6">
+              <div className="flex items-center justify-between bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
+                <span className="tracking-wide text-gray-900 favorit-mono text-sm">
+                  DETAILED DATA OF YOUR STEWARDED ECOSYSTEMS
+                </span>
+                <span className="text-gray-900">▼</span>
               </div>
-              <div className="pr-2">▼</div>
             </div>
-            
+
             <div className="space-y-4">
               {stats.beneficiaries && stats.beneficiaries.length > 0 ? (
                 stats.beneficiaries.map((beneficiary) => (
@@ -453,26 +462,39 @@ export default function SeedStewardStats({
                           onError={() => setImageError(true)}
                         />
                       </div>
-                      <div className="flex-1 text-center text-gray-900 peridia-display">
+                      <div className="flex-1 text-center text-gray-900 peridia-display text-sm">
                         {beneficiary.name}
                       </div>
                     </div>
 
-                    {/* Row of stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                      <Pill label="BENEFIT SHARE" value={beneficiary.benefitShare} />
-                      <Pill
-                        label="#SNAPSHOTS"
-                        value={`${beneficiary.snapshots}`}
-                        trailing={`GAIN ${beneficiary.gain}`}
-                      />
-                      <Pill label="GARDEN" value={beneficiary.garden} />
-                      <Pill label="YIELD SHARE" value={beneficiary.yieldShare} />
-                      <Pill
-                        label="UNCLAIMED"
-                        value={beneficiary.unclaimed}
-                        trailing={`${beneficiary.claimed} CLAIMED`}
-                      />
+                    {/* Row of stats - responsive grid */}
+                    <div className="grid grid-cols-1 gap-2">
+                      {/* First row: BENEFIT SHARE and #SNAPSHOTS with GARDEN */}
+                      <div className="grid grid-cols-3 gap-2">
+                        <Pill
+                          label="BENEFIT SHARE"
+                          value={beneficiary.benefitShare}
+                        />
+                        <Pill
+                          label="#SNAPSHOTS"
+                          value={`${beneficiary.snapshots}`}
+                          trailing={`GAIN ${beneficiary.gain}`}
+                        />
+                        <Pill label="GARDEN" value={beneficiary.garden} />
+                      </div>
+
+                      {/* Second row: YIELD SHARE and UNCLAIMED */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <Pill
+                          label="YIELD SHARE"
+                          value={beneficiary.yieldShare}
+                        />
+                        <Pill
+                          label="UNCLAIMED"
+                          value={beneficiary.unclaimed}
+                          trailing={`${beneficiary.claimed} CLAIMED`}
+                        />
+                      </div>
                     </div>
                   </div>
                 ))
@@ -511,15 +533,15 @@ function Pill({
 }) {
   return (
     <div className="bg-gray-400/40 rounded-[20px] p-2">
-      <div className="text-[11px] text-black/80 mb-1 tracking-wide">
+      <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase">
         {label}
       </div>
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex-1 bg-white/80 border-2 border-dashed border-black rounded-full px-3 py-2 text-gray-900 text-sm text-center">
+      <div className="flex flex-col gap-1">
+        <div className="bg-white/80 border-2 border-dashed border-black rounded-full px-2 py-1.5 text-gray-900 text-[10px] text-center">
           {value}
         </div>
         {trailing && (
-          <div className="bg-white/60 border-1 border-black rounded-full px-3 py-2 text-[11px] text-gray-900 whitespace-nowrap">
+          <div className="bg-white/60 border-1 border-black rounded-full px-2 py-1 text-[9px] text-gray-900 text-center">
             {trailing}
           </div>
         )}

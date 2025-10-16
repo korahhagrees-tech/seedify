@@ -3,26 +3,36 @@
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import BloomingView from "@/components/BloomingView";
-import { getEcosystemProject, getWayOfFlowersData } from "@/lib/data/componentData";
+import {
+  getEcosystemProject,
+  getWayOfFlowersData,
+} from "@/lib/data/componentData";
 import WalletModal from "@/components/wallet/WalletModal";
 import ShareModal from "@/components/ShareModal";
 import { useAuth } from "@/components/auth/AuthProvider";
 
-export default function BloomingPage({ params }: { params: Promise<{ seedId: string }> }) {
+export default function BloomingPage({
+  params,
+}: {
+  params: Promise<{ seedId: string }>;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { seedId } = React.use(params);
   const eco = getEcosystemProject(seedId);
   const wof = getWayOfFlowersData(seedId);
   const { logout } = useAuth();
-  
+
   const [isWalletModalOpen, setIsWalletModalOpen] = React.useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = React.useState(false);
+  const [shareClickPosition, setShareClickPosition] = React.useState<
+    { x: number; y: number } | undefined
+  >();
 
   // Extract image data from URL params
-  const snapshotImageUrl = searchParams.get('snapshotImageUrl');
-  const backgroundImageUrlParam = searchParams.get('backgroundImageUrl');
-  const beneficiaryCode = searchParams.get('beneficiaryCode');
+  const snapshotImageUrl = searchParams.get("snapshotImageUrl");
+  const backgroundImageUrlParam = searchParams.get("backgroundImageUrl");
+  const beneficiaryCode = searchParams.get("beneficiaryCode");
 
   // Use URL param background image if available, otherwise use default
   const backgroundImageUrl = backgroundImageUrlParam || eco.backgroundImageUrl;
@@ -43,7 +53,8 @@ export default function BloomingPage({ params }: { params: Promise<{ seedId: str
     }, 100);
   };
 
-  const handleShare = () => {
+  const handleShare = (clickPosition: { x: number; y: number }) => {
+    setShareClickPosition(clickPosition);
     setIsShareModalOpen(true);
   };
 
@@ -61,7 +72,7 @@ export default function BloomingPage({ params }: { params: Promise<{ seedId: str
         onShare={handleShare}
         onWallet={handleWallet}
       />
-      
+
       {/* Wallet Modal */}
       <WalletModal
         isOpen={isWalletModalOpen}
@@ -72,19 +83,21 @@ export default function BloomingPage({ params }: { params: Promise<{ seedId: str
         onSwitchWallet={() => {}}
         onPrivyHome={() => router.push("https://home.privy.io/login")}
       />
-      
+
       {/* Share Modal */}
       {snapshotImageUrl && (
         <ShareModal
           isOpen={isShareModalOpen}
-          onClose={() => setIsShareModalOpen(false)}
+          onClose={() => {
+            setIsShareModalOpen(false);
+            setShareClickPosition(undefined);
+          }}
           imageUrl={snapshotImageUrl}
           beneficiaryName={eco.title.replace(/\s+Regenerative.*$/, "")}
           beneficiaryCode={beneficiaryCode || undefined}
+          clickPosition={shareClickPosition}
         />
       )}
     </>
   );
 }
-
-
