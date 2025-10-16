@@ -4,6 +4,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import SeedStewardStats from "@/components/SeedStewardStats";
+import AmplifySeedModal from "@/components/wallet/AmplifySeedModal";
+import HarvestSeedModal from "@/components/wallet/HarvestSeedModal";
 import { Seed } from "@/types/seed";
 import { fetchSeedById } from "@/lib/api/seeds";
 
@@ -14,6 +16,8 @@ export default function StewardStatsRoute() {
   const [stats, setStats] = useState<any>(null);
   const [hasFetched, setHasFetched] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isAmplifyModalOpen, setIsAmplifyModalOpen] = useState(false);
+  const [isHarvestModalOpen, setIsHarvestModalOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -52,6 +56,32 @@ export default function StewardStatsRoute() {
     load();
   }, [params.id]);
 
+  // Modal handlers
+  const handleAmplifyClick = () => {
+    console.log('🌱 Amplify button clicked from page level');
+    setIsAmplifyModalOpen(true);
+  };
+
+  const handleHarvestClick = () => {
+    console.log('🌾 Harvest button clicked from page level');
+    setIsHarvestModalOpen(true);
+  };
+
+  // Helper functions for modal data formatting
+  const formatPercentage = (value: string) => {
+    const num = parseFloat(value);
+    return `${num.toFixed(1)}%`;
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
@@ -87,8 +117,49 @@ export default function StewardStatsRoute() {
       <SeedStewardStats
         seed={seed}
         links={{ openseaUrl: stats.openSeaUrl }}
+        onAmplifyClick={handleAmplifyClick}
+        onHarvestClick={handleHarvestClick}
         stats={stats}
       />
+
+      {/* Amplify Seed Modal - with scaling */}
+      <div className="scale-[0.5] lg:scale-[0.7] md:scale-[0.7]">
+        <AmplifySeedModal
+          isOpen={isAmplifyModalOpen}
+          onClose={() => setIsAmplifyModalOpen(false)}
+          seedId={stats.seedId.toString()}
+          stats={{
+            totalValue: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+            fundsCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
+            snapRewards: `${parseFloat(stats.absoluteNutrientYield).toFixed(3)} ETH`,
+            numSnaps: stats.totalSnapshots.toString(),
+            totalFundings: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+            yearlyFunding: `${parseFloat(stats.immediateImpact).toFixed(3)} ETH`,
+            allSeedsTotal: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+            snapsPercentage: formatPercentage(stats.snapshotShare),
+            currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
+            maturationDate: formatDate(stats.maturationDate),
+            prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
+          }}
+        />
+      </div>
+
+      {/* Harvest Seed Modal - with scaling */}
+      <div className="scale-[0.5] lg:scale-[0.7] md:scale-[0.7]">
+        <HarvestSeedModal
+          isOpen={isHarvestModalOpen}
+          onClose={() => setIsHarvestModalOpen(false)}
+          seedId={stats.seedId.toString()}
+          stats={{
+            nutrientReserve: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+            mintingDate: formatDate(stats.mintedOn),
+            totalCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
+            currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
+            maturationDate: formatDate(stats.maturationDate),
+            prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
+          }}
+        />
+      </div>
     </div>
   );
 }

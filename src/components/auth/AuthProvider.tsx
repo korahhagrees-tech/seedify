@@ -128,12 +128,13 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
       
       // Sort wallets by type and address for consistent ordering
       allWallets.sort((a: any, b: any) => {
-        // First sort by wallet type (embedded first, then external)
+        // First sort by wallet type (external EVM first, then embedded)
         const typeOrder = (type: string) => {
-          if (type === 'privy' || type === 'embedded') return 0;
-          if (type === 'metamask') return 1;
-          if (type === 'coinbase') return 2;
-          return 3;
+          if (type === 'metamask') return 0;  // External EVM first
+          if (type === 'coinbase') return 1;  // External EVM second
+          if (type === 'walletconnect') return 2;  // External EVM third
+          if (type === 'privy' || type === 'embedded') return 3;  // Embedded last
+          return 4;
         };
         
         const aTypeOrder = typeOrder(a.walletClientType || a.connectorType || 'unknown');
@@ -151,8 +152,26 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
       console.log('🔍 [AUTH] Total wallets count:', allWallets.length);
       console.log('🔍 [AUTH] Wallet addresses:', allWallets.map(w => w.address));
       setWallets(allWallets as any);
+
+      // Auto-set the first external EVM wallet as active if no active wallet is set
+      if (allWallets.length > 0 && !activeWallet) {
+        // First try to find an external EVM wallet from the original Privy wallets
+        const firstExternalPrivyWallet = wallets.find((wallet: any) => {
+          const walletType = wallet.walletClientType || wallet.connectorType || 'unknown';
+          return walletType === 'metamask' || walletType === 'coinbase' || walletType === 'walletconnect';
+        });
+        
+        if (firstExternalPrivyWallet) {
+          console.log('🔍 [AUTH] Auto-setting first external EVM wallet as active:', firstExternalPrivyWallet.address);
+          setActiveWallet(firstExternalPrivyWallet);
+        } else if (wallets.length > 0) {
+          // Fallback to first Privy wallet if no external EVM wallet found
+          console.log('🔍 [AUTH] No external EVM wallet found, using first Privy wallet:', wallets[0].address);
+          setActiveWallet(wallets[0]);
+        }
+      }
     }
-  }, [user?.linkedAccounts, wallets, setWallets]);
+  }, [user?.linkedAccounts, wallets, setWallets, activeWallet, setActiveWallet]);
 
   // Sync Privy ready state
   useEffect(() => {

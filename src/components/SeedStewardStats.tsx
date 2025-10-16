@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import GardenHeader from "@/components/GardenHeader";
 import RootShapeArea from "@/components/wallet/RootShapeArea";
 import { Seed } from "@/types/seed";
 import { useState } from "react";
 import Link from "next/link";
+// Modals moved to page level - no imports needed
 
 type Beneficiary = {
   name: string;
@@ -26,6 +27,8 @@ type Beneficiary = {
 export interface SeedStewardStatsProps {
   seed: Seed;
   links?: { openseaUrl?: string };
+  onAmplifyClick?: () => void;
+  onHarvestClick?: () => void;
   stats: {
     seedId: number;
     seedNumber: string;
@@ -57,10 +60,13 @@ export interface SeedStewardStatsProps {
 export default function SeedStewardStats({
   seed,
   links,
+  onAmplifyClick,
+  onHarvestClick,
   stats,
 }: SeedStewardStatsProps) {
   const { scrollYProgress } = useScroll();
   const [imageError, setImageError] = useState(false);
+  const [isInfoDropdownOpen, setIsInfoDropdownOpen] = useState(false);
 
   // Morph large rounded-square image to smaller circle on scroll
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.4]);
@@ -104,6 +110,33 @@ export default function SeedStewardStats({
     const num = parseFloat(value);
     return `${num.toFixed(1)}%`;
   };
+
+  // Toggle info dropdown
+  const toggleInfoDropdown = () => {
+    console.log('🔄 Toggle info dropdown clicked');
+    setIsInfoDropdownOpen(!isInfoDropdownOpen);
+  };
+
+  // Open Amplify Modal
+  const handleAmplifyClick = () => {
+    console.log('🌱 Amplify button clicked');
+    if (onAmplifyClick) {
+      onAmplifyClick();
+    }
+  };
+
+  // Open Harvest Modal
+  const handleHarvestClick = () => {
+    console.log('🌾 Harvest button clicked');
+    if (onHarvestClick) {
+      onHarvestClick();
+    }
+  };
+
+  // Debug logging
+  console.log('🔍 SeedStewardStats state:', {
+    isInfoDropdownOpen
+  });
 
   return (
     <>
@@ -186,10 +219,69 @@ export default function SeedStewardStats({
                   <p className="-ml-18">CORE SEED METRICS</p>
                 </div>
               </div>
-              <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 text-gray-900 text-sm -ml-16 left-8">
-                INFO ▼
-              </div>
+              <button
+                onClick={toggleInfoDropdown}
+                className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 text-gray-900 text-sm -ml-16 left-8 hover:bg-white/90 transition-colors cursor-pointer relative z-20"
+              >
+                INFO 
+                <motion.span
+                  animate={{ rotate: isInfoDropdownOpen ? 180 : 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  ▼
+                </motion.span>
+              </button>
             </div>
+
+            {/* Info Dropdown Modal */}
+            <AnimatePresence>
+              {isInfoDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, y: -20 }}
+                  animate={{ opacity: 1, height: "auto", y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: -20 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <div className="mx-4 mb-4 rounded-[28px] bg-gray-400/40 p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Left Column */}
+                      <div className="space-y-4">
+                        <div className="text-sm text-gray-900">
+                          <span className="font-bold">Nutrient Reserve</span> ~ current value of your seed. Compounding sum of your contributions and snapshot share distributions
+                        </div>
+                        <div className="text-sm text-gray-900">
+                          <span className="font-bold">Absolute Nutrient Yield</span> ~ total value you created for the benefit of your selection of biodiversity projects
+                        </div>
+                        <div className="text-sm text-gray-900">
+                          <span className="font-bold">Immediate Impact</span> ~ total value of snapshot sales (50% of Mint) for regenerating our habitats 100% Distributed Monthly
+                        </div>
+                        <div className="text-sm text-gray-900">
+                          <span className="font-bold">Longterm Impact</span> ~ total value generated for biodiversity by farming the Nutrient Reserve 100% Distributed Quarterly
+                        </div>
+                      </div>
+
+                      {/* Right Column */}
+                      <div className="space-y-4">
+                        <div className="text-sm text-gray-900">
+                          <span className="font-bold">Snapshot Share</span> ~ dynamic % your seed receives from each snapshot calculated relative to Lowest(10%) & Highest(20%) Nutrient Reserve value across available seeds
+                        </div>
+                        <div className="text-sm text-gray-900">
+                          <span className="font-bold">Harvestable</span> ~ current amount you will receive if choosing to withdraw funds
+                        </div>
+                        <div className="text-sm text-gray-900">
+                          <span className="font-bold">Maturation Date</span> ~ earliest time the Nutrient Reserve can be withdrawn in full. Sale of NFT is permitted regardless
+                        </div>
+                        <div className="text-sm text-gray-900">
+                          <span className="font-bold">Early Harvest Fee</span> ~ the value you forfeit if you choose to withdraw prematurely
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
           <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
             {/* Full width header with INFO button */}
 
@@ -336,14 +428,17 @@ export default function SeedStewardStats({
               {/* Amplify Impact Section */}
               <div className="flex-1">
                 {/* Button with scalloped edges and border */}
-                <button className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors">
+                <button 
+                  onClick={handleAmplifyClick}
+                  className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors cursor-pointer z-20"
+                >
                   Amplify Impact
                 </button>
                 {/* Description container - narrower and touching button */}
-                <div className="bg-purple-200/40 rounded-xl p-2 mx-5 -mt-3">
-                  <div className="text-[9px] text-black/70 text-center leading-tight">
-                    Add more funds to your seed to amplify its longterm impact &
-                    increase your snapshot share
+                <div className="bg-purple-200/40 rounded-xl p-2 mx-2 -mt-3">
+                  <div className="text-[9px] text-center text-black/70 leading-tight">
+                    <span className="">Add more funds to your seed to amplify its</span> <span className="peridia-display-light">longterm impact & </span>
+                    <span className="">increase your <span className="peridia-display-light">snapshot share</span></span>
                   </div>
                 </div>
               </div>
@@ -351,13 +446,16 @@ export default function SeedStewardStats({
               {/* Harvest Section */}
               <div className="flex-1">
                 {/* Button with scalloped edges and border */}
-                <button className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors">
+                <button 
+                  onClick={handleHarvestClick}
+                  className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors cursor-pointer z-20"
+                >
                   Harvest
                 </button>
                 {/* Description container - narrower and touching button */}
                 <div className="bg-white/40 rounded-xl p-2 mx-5 -mt-3">
                   <div className="text-[9px] text-black/70 text-center leading-tight">
-                    Harvest the nutrient reserve to withdraw available funds
+                    Harvest the nutrient reserve to <span className="peridia-display-light">withdraw</span> available funds
                   </div>
                 </div>
               </div>
@@ -375,13 +473,13 @@ export default function SeedStewardStats({
             </div>
           <div className="rounded-[28px] m-4 p-6">
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.1] md:scale-[0.9]">
               {/* Left Card: Impact Details */}
-              <div className="rounded-[28px] bg-gray-400/40 p-4">
+              <div className="rounded-[28px] bg-gray-400/40 p-4 h-45">
                 <div className="space-y-4">
                   {/* IMMEDIATE IMPACT */}
-                  <div>
-                    <div className="text-[10px] text-black/80 mb-2">
+                  <div className="">
+                    <div className="text-[12px] text-black/80 mb-0">
                       IMMEDIATE IMPACT
                     </div>
                     <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-3 py-1 text-sm text-center text-gray-900 text-nowrap">
@@ -395,8 +493,8 @@ export default function SeedStewardStats({
                   </div>
 
                   {/* LONGTERM IMPACT */}
-                  <div>
-                    <div className="text-[10px] text-black/80 mb-2">
+                  <div className="">
+                    <div className="text-[12px] text-black/80 mb-0">
                       LONGTERM IMPACT
                     </div>
                     <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-3 py-1 text-sm text-center text-gray-900 text-nowrap">
@@ -412,16 +510,16 @@ export default function SeedStewardStats({
               </div>
 
               {/* Right Card: Actions & Yield */}
-              <div className="rounded-[28px] bg-gray-400/40 p-4">
+              <div className="rounded-[28px] p-4">
                 <div className="flex flex-col justify-between h-full">
                   {/* Action Buttons */}
-                  <div className="space-y-3 mb-4">
-                    <button className="w-full px-3 py-2 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-sm">
+                  <div className="space-y-3 mb-4 -mt-4">
+                    <button className="px-3 w-38 py-1 text-nowrap rounded-full bg-white/70 text-gray-900 peridia-display text-sm">
                       <Link href="https://app.regen.network/profiles/daa2cbf0-6a5a-11f0-ae30-0afffa81c869/projects">
                         View Certificates
                       </Link>
                     </button>
-                    <button className="w-full px-3 py-2 rounded-full border-1 border-black bg-white/90 text-gray-900 peridia-display text-sm">
+                    <button className="w-38 px-3 py-1 rounded-full bg-white/70 text-gray-900 peridia-display text-sm">
                       <Link href="https://basescan.org/address/0x9142A61188e829BF924CeffF27e8ed8111700C9B">
                         Scan Blockchain
                       </Link>
@@ -429,20 +527,22 @@ export default function SeedStewardStats({
                   </div>
 
                   {/* OVERALL ACCUMULATED YIELD */}
-                  <div>
-                    <div className="text-[10px] text-black/80 mb-2">
+                    <div className="text-[10px] text-white text-nowrap mb-1">
                       OVERALL ACCUMULATED YIELD
                     </div>
-                    <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-2 py-2 text-[11px] text-center text-gray-900">
+                  <div className="w-38 h-15 bg-gray-400/40 rounded-lg p-2">
+                    <div className="rounded-full px-2 -mt-4 py-2 text-[16px] text-center text-gray-900">
                       {parseFloat(stats.overallAccumulatedYield).toFixed(6)} ETH
                     </div>
-                  </div>
 
-                  {/* Distribute Yield Button */}
-                  <div className="mt-4">
-                    <button className="w-full px-3 py-2 rounded-full border-3 border-dotted border-black bg-purple-200/80 text-gray-900 peridia-display text-sm">
-                      Distribute Yield
-                    </button>
+                    {/* Distribute Yield Button */}
+                    <div className="-mt-5">
+                      <button className="w-38 -ml-2 px-6 py-1 rounded-full border-4 border-dotted border-gray-300 text-nowrap bg-white/80 text-gray-900 peridia-display text-sm mt-4">
+                        <p className="text-nowrap scale-[0.8] lg:scale-[1.0] md:scale-[0.8]">
+                          <span className="peridia-display">D</span>istribute <span className="peridia-display">Y</span>ield
+                        </p>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -450,22 +550,22 @@ export default function SeedStewardStats({
           </div>
 
           {/* Section: Detailed Data of Your Stewarded Ecosystems - Full width with background */}
-          <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
-            <div className="mb-6">
-              <div className="flex items-center justify-between bg-gradient-to-r from-gray-300/80 to-white/60 border-1 border-black rounded-full px-4 py-2">
-                <span className="tracking-wide text-gray-900 favorit-mono text-sm">
+            <div className="-mb-2">
+              <div className="flex items-center bg-gradient-to-r from-gray-300/80 to-white/70 text-center justify-center rounded-full px-4 py-0">
+                <span className="text-nowrap tracking-wide text-gray-900 favorit-mono text-[14px] -ml-3 scale-[0.9] lg:scale-[0.9] md:scale-[0.9]">
                   DETAILED DATA OF YOUR STEWARDED ECOSYSTEMS
                 </span>
-                <span className="text-gray-900">▼</span>
+                <span className="text-gray-900 -ml-2">▼</span>
               </div>
             </div>
+          <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
 
             <div className="space-y-4">
               {stats.beneficiaries && stats.beneficiaries.length > 0 ? (
                 stats.beneficiaries.map((beneficiary, index) => (
                   <div
                     key={`${beneficiary.index}-${beneficiary.code}`}
-                    className="rounded-[24px] bg-gradient-to-r from-white/60 to-white/30 backdrop-blur p-3 border-1 border-black"
+                    className=""
                   >
                     {/* Title bar */}
                     <div className="flex items-center gap-3 mb-3">
@@ -479,8 +579,8 @@ export default function SeedStewardStats({
                           onError={() => setImageError(true)}
                         />
                       </div>
-                      <div className="flex-1 text-center text-gray-900 peridia-display text-sm">
-                        {beneficiary.name}
+                      <div className="flex-1 border text-nowrap border-black rounded-full bg-white/80 text-center text-gray-900 text-sm w-45 py-1 -ml-12">
+                        <p className="text-nowrap scale-[0.8] lg:scale-[0.5] md:scale-[0.8]-ml-4 left-4">{beneficiary.name}</p>
                       </div>
                     </div>
 
@@ -535,6 +635,8 @@ export default function SeedStewardStats({
           </div>
         </div>
       </div>
+
+      {/* Modals moved to page level for proper centering */}
     </>
   );
 }
