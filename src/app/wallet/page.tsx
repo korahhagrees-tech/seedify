@@ -330,7 +330,7 @@ export default function WalletPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20 mt-68 lg:mt-28 md:mt-28"
+            className="text-center py-20 mt-68 lg:mt-22 md:mt-28"
           >
             <div className="text-gray-400 text-lg mb-2">{`You haven't tended`}</div>
             <div className="text-gray-400 text-lg mb-8">an Ecosystem yet</div>

@@ -233,9 +233,9 @@ export default function AmplifySeedModal({
             transition={{ type: "spring", duration: 0.5 }}
             className="fixed inset-x-6 top-1/2 -translate-y-1/2 z-50 max-w-lg mx-auto"
           >
-            {/* Modal with animated border transition */}
+            {/* Modal with animated border transition and scaling */}
             <motion.div 
-              className="bg-[#D9D9D9] p-6 border-3 border-dotted border-gray-600 shadow-xl scale-[1.05]"
+              className="bg-[#D9D9D9] p-6 border-3 border-dotted border-gray-600 shadow-xl scale-[0.5] lg:scale-[0.7] md:scale-[0.7]"
               animate={{
                 borderRadius: currentState === 'communication' 
                   ? '120px 40px 40px 120px' // asymmetric: top-left large, others small

@@ -112,9 +112,12 @@ export default function SeedStewardStats({
   };
 
   // Toggle info dropdown
-  const toggleInfoDropdown = () => {
-    console.log('🔄 Toggle info dropdown clicked');
+  const toggleInfoDropdown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('🔄 Toggle info dropdown clicked - BEFORE:', isInfoDropdownOpen);
     setIsInfoDropdownOpen(!isInfoDropdownOpen);
+    console.log('🔄 Toggle info dropdown clicked - AFTER:', !isInfoDropdownOpen);
   };
 
   // Open Amplify Modal
@@ -211,9 +214,9 @@ export default function SeedStewardStats({
         </div>
 
         {/* Main dotted container */}
-        <div className="relative z-0 mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-75 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
+        <div className="relative z-10 mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-75 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
           {/* Section: Core Seed Metrics - Full width with 3x2 grid */}
-            <div className="flex items-center w-full justify-between mb-6 bg-gray-400 rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[0.8] mt-6">
+            <div className="flex items-center w-full justify-between mb-6 bg-gray-400 rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[0.8] mt-6" style={{ pointerEvents: 'auto' }}>
               <div className="flex-1">
                 <div className="text-lg font-light scale-[0.6] lg:scale-[0.7] md:scale-[0.6] tracking-wide text-gray-900">
                   <p className="-ml-18">CORE SEED METRICS</p>
@@ -221,13 +224,16 @@ export default function SeedStewardStats({
               </div>
               <button
                 onClick={toggleInfoDropdown}
-                className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 text-gray-900 text-sm -ml-16 left-8 hover:bg-white/90 transition-colors cursor-pointer relative z-20"
+                onMouseDown={() => console.log('🖱️ INFO button mouse down')}
+                onMouseUp={() => console.log('🖱️ INFO button mouse up')}
+                className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 text-gray-900 text-sm -ml-16 left-8 hover:bg-white/90 transition-colors cursor-pointer relative z-50 w-22 border-2 border-red-500"
+                style={{ pointerEvents: 'auto', position: 'relative' }}
               >
                 INFO 
                 <motion.span
                   animate={{ rotate: isInfoDropdownOpen ? 180 : 0 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
-                >
+                  >
                   ▼
                 </motion.span>
               </button>

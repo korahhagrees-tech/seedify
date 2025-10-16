@@ -182,7 +182,7 @@ export default function HarvestSeedModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[1.05] md:scale-[1.05] scale-[0.98]"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[0.7] md:scale-[0.7] scale-[0.5]"
           >
             {/* State 1: Disconnected Wallet */}
             {!authenticated ? (

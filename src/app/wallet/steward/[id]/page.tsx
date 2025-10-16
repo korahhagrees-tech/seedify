@@ -122,44 +122,40 @@ export default function StewardStatsRoute() {
         stats={stats}
       />
 
-      {/* Amplify Seed Modal - with scaling */}
-      <div className="scale-[0.5] lg:scale-[0.7] md:scale-[0.7]">
-        <AmplifySeedModal
-          isOpen={isAmplifyModalOpen}
-          onClose={() => setIsAmplifyModalOpen(false)}
-          seedId={stats.seedId.toString()}
-          stats={{
-            totalValue: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
-            fundsCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
-            snapRewards: `${parseFloat(stats.absoluteNutrientYield).toFixed(3)} ETH`,
-            numSnaps: stats.totalSnapshots.toString(),
-            totalFundings: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
-            yearlyFunding: `${parseFloat(stats.immediateImpact).toFixed(3)} ETH`,
-            allSeedsTotal: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
-            snapsPercentage: formatPercentage(stats.snapshotShare),
-            currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
-            maturationDate: formatDate(stats.maturationDate),
-            prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
-          }}
-        />
-      </div>
+      {/* Amplify Seed Modal */}
+      <AmplifySeedModal
+        isOpen={isAmplifyModalOpen}
+        onClose={() => setIsAmplifyModalOpen(false)}
+        seedId={stats.seedId.toString()}
+        stats={{
+          totalValue: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+          fundsCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
+          snapRewards: `${parseFloat(stats.absoluteNutrientYield).toFixed(3)} ETH`,
+          numSnaps: stats.totalSnapshots.toString(),
+          totalFundings: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+          yearlyFunding: `${parseFloat(stats.immediateImpact).toFixed(3)} ETH`,
+          allSeedsTotal: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+          snapsPercentage: formatPercentage(stats.snapshotShare),
+          currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
+          maturationDate: formatDate(stats.maturationDate),
+          prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
+        }}
+      />
 
-      {/* Harvest Seed Modal - with scaling */}
-      <div className="scale-[0.5] lg:scale-[0.7] md:scale-[0.7]">
-        <HarvestSeedModal
-          isOpen={isHarvestModalOpen}
-          onClose={() => setIsHarvestModalOpen(false)}
-          seedId={stats.seedId.toString()}
-          stats={{
-            nutrientReserve: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
-            mintingDate: formatDate(stats.mintedOn),
-            totalCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
-            currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
-            maturationDate: formatDate(stats.maturationDate),
-            prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
-          }}
-        />
-      </div>
+      {/* Harvest Seed Modal */}
+      <HarvestSeedModal
+        isOpen={isHarvestModalOpen}
+        onClose={() => setIsHarvestModalOpen(false)}
+        seedId={stats.seedId.toString()}
+        stats={{
+          nutrientReserve: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+          mintingDate: formatDate(stats.mintedOn),
+          totalCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
+          currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
+          maturationDate: formatDate(stats.maturationDate),
+          prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
+        }}
+      />
     </div>
   );
 }
