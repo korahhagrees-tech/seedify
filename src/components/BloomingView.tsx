@@ -144,7 +144,7 @@ export default function BloomingView({
         </div>
 
         {/* Large rounded image card with loading state and reveal animation */}
-        <div className="relative w-full h-98 rounded-[50px] overflow-hidden border-2 border-dashed border-black/70 bg-gray-400 mb-8 mt-4 scale-[1.0]">
+        <div className="relative w-full h-98 rounded-[50px] overflow-hidden border-2 border-dashed border-black/70 bg-[#F0ECF3] mb-8 mt-4 scale-[1.0]">
           {/* Base seed emblem - always visible initially */}
           <div className="absolute inset-0 flex items-center justify-center">
             <Image
@@ -170,7 +170,7 @@ export default function BloomingView({
                 ease: "easeInOut"
               }}
             >
-              <div className="text-[10px] leading-4 text-gray-600">
+              <div className="lg:text-[14px] md:text-[12x] text-[12px] leading-4 text-gray-600">
                 <div>your stewardship is becoming visible form</div>
                 <div>a morphological evolution accelerating beyond the</div>
                 <div>limits of Earth...</div>

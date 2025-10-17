@@ -47,7 +47,7 @@ export default function SeedDetailPage({
 
       {/* Main Content Container */}
       <motion.div
-        className="px-2 lg:px-4 md:px-4 -pb-[220px] -mb-77"
+        className="px-2 lg:px-4 md:px-4 -pb-[2px] -mb-88"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -80,8 +80,8 @@ export default function SeedDetailPage({
                 imageError
                   ? "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
                   : seed.seedImageUrl && seed.seedImageUrl.length > 0
-                  ? seed.seedImageUrl
-                  : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
+                    ? seed.seedImageUrl
+                    : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
               }
               alt=""
               fill
@@ -146,7 +146,7 @@ export default function SeedDetailPage({
         </div>
 
         {/* Expandable seedbed */}
-        <div className="px-2 lg:px-0 md:px-0">
+        <div className="px-2 lg:px-0 md:px-0 -mb-30">
           <SeedbedPullUp selectedSeed={seed} />
         </div>
       </motion.div>

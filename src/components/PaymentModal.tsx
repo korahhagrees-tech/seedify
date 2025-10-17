@@ -36,10 +36,10 @@ interface PaymentModalProps {
   beneficiaryCode?: string; // Beneficiary code (e.g., "01-GRG", "04-BUE")
 }
 
-export default function PaymentModal({ 
-  isOpen, 
-  onClose, 
-  seedId = "1", 
+export default function PaymentModal({
+  isOpen,
+  onClose,
+  seedId = "1",
   amount = 50,
   onConfirm,
   isSnapshotMint = false,
@@ -63,19 +63,19 @@ export default function PaymentModal({
       setAmountInput(amount.toString());
     }
   }, [amount]);
-  
+
   const { wallets: privyWallets } = useWallets();
   const { writeContractAsync } = useWriteContract();
   const { fundWallet } = useFundWallet();
-  
+
   // Use wallets from context (Zustand store) or fallback to Privy wallets
   const wallets = contextWallets.length > 0 ? contextWallets : privyWallets;
-  
+
   // Get ETH balance from wagmi
   const { data: balanceData } = useBalance({
     address: walletAddress as `0x${string}`,
   });
-  
+
   const balance = balanceData ? parseFloat(balanceData.formatted).toFixed(4) : '0.0000';
 
   const formatAddress = (address: string) => {
@@ -113,8 +113,8 @@ export default function PaymentModal({
   };
 
   const handleTransaction = async () => {
-      setIsProcessing(true);
-      
+    setIsProcessing(true);
+
     try {
       // Use activeWallet from context (Zustand store), fallback to first wallet
       const currentActiveWallet = activeWallet || wallets[0];
@@ -140,7 +140,7 @@ export default function PaymentModal({
         // Smart amount handling: Use backend's exact wei if user hasn't changed the amount
         let amountInWei: string;
         const backendValueEth = mintData.data.valueEth || "0.011"; // Fallback to default
-        
+
         if (amountInput === backendValueEth) {
           // User hasn't changed the amount → Use backend's exact wei value (no precision loss)
           amountInWei = mintData.data.value;
@@ -163,11 +163,11 @@ export default function PaymentModal({
 
         // Detect wallet type and use appropriate transaction method
         // Embedded wallets include: email/social login wallets, privy embedded wallets
-        const isEmbeddedWallet = currentActiveWallet.walletClientType === 'privy' || 
-                                currentActiveWallet.connectorType === 'embedded' ||
-                                currentActiveWallet.walletClientType === 'embedded' ||
-                                // Additional checks for email/social login wallets
-                                (currentActiveWallet.walletClientType && !['solana', 'metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect'].includes(currentActiveWallet.walletClientType));
+        const isEmbeddedWallet = currentActiveWallet.walletClientType === 'privy' ||
+          currentActiveWallet.connectorType === 'embedded' ||
+          currentActiveWallet.walletClientType === 'embedded' ||
+          // Additional checks for email/social login wallets
+          (currentActiveWallet.walletClientType && !['solana', 'metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect'].includes(currentActiveWallet.walletClientType));
         const isSolanaWallet = currentActiveWallet.walletClientType === 'solana';
         let txHash: string | undefined;
 
@@ -193,12 +193,12 @@ export default function PaymentModal({
           return;
         } else if (isEmbeddedWallet) {
           console.log('🔄 Using embedded wallet flow for email/social login wallet');
-          
+
           // Determine which contract we're interacting with
           const contractAddress = mintData.data.contractAddress.toLowerCase();
           const isSnapFactory = contractAddress === SNAP_FACTORY_ADDRESS.toLowerCase();
           const isSnapshotNFT = contractAddress === SNAPSHOT_NFT_ADDRESS.toLowerCase();
-          
+
           console.log('🔍 Contract detection:', {
             contractAddress,
             isSnapFactory,
@@ -226,7 +226,7 @@ export default function PaymentModal({
                 "outputs": [{ "name": "", "type": "uint256" }]
               }
             ];
-            
+
             transactionArgs = [
               BigInt(mintData.data.args.seedId),
               BigInt(beneficiaryIndex),
@@ -252,7 +252,7 @@ export default function PaymentModal({
                 "outputs": [{ "name": "", "type": "uint256" }]
               }
             ];
-            
+
             transactionArgs = [
               BigInt(mintData.data.args.seedId),
               BigInt(beneficiaryIndex),
@@ -293,7 +293,7 @@ export default function PaymentModal({
                 }
               }
             );
-            
+
             txHash = txResult.hash;
             console.log('✅ Embedded wallet transaction hash:', txHash);
           } catch (embeddedError) {
@@ -309,13 +309,13 @@ export default function PaymentModal({
           // For external EVM wallets (MetaMask, Coinbase, etc.) or fallback for any EVM wallet
           // This will trigger the wallet's native transaction modal
           toast.info('Please confirm the transaction in your wallet...');
-          
+
           try {
             // Determine which contract we're interacting with
             const contractAddress = mintData.data.contractAddress.toLowerCase();
             const isSnapFactory = contractAddress === SNAP_FACTORY_ADDRESS.toLowerCase();
             const isSnapshotNFT = contractAddress === SNAPSHOT_NFT_ADDRESS.toLowerCase();
-            
+
             console.log('🔍 External wallet contract detection:', {
               contractAddress,
               isSnapFactory,
@@ -351,7 +351,7 @@ export default function PaymentModal({
                   "outputs": [{ "name": "", "type": "string" }]
                 }
               ];
-              
+
               transactionArgs = [
                 BigInt(mintData.data.args.seedId),
                 BigInt(beneficiaryIndex),
@@ -359,7 +359,7 @@ export default function PaymentModal({
                 currentActiveWallet.address as `0x${string}`,
                 mintData.data.args.royaltyRecipient as `0x${string}` // ✅ Use actual royaltyRecipient from backend
               ];
-              
+
               valueToSend = BigInt(amountInWei); // SnapFactory is payable
             } else {
               // SnapshotNFT ABI - uses value and projectCode
@@ -386,7 +386,7 @@ export default function PaymentModal({
                   "outputs": [{ "name": "", "type": "string" }]
                 }
               ];
-              
+
               transactionArgs = [
                 BigInt(mintData.data.args.seedId),
                 BigInt(beneficiaryIndex),
@@ -395,7 +395,7 @@ export default function PaymentModal({
                 BigInt(amountInWei),
                 beneficiaryCode || "DEFAULT"
               ];
-              
+
               valueToSend = BigInt(0); // SnapshotNFT is nonpayable
             }
 
@@ -453,7 +453,7 @@ export default function PaymentModal({
 
         // Transaction completed successfully
         toast.success('Snapshot minted successfully!');
-        
+
         // Close payment modal and call callback
         console.log('🎯 [PaymentModal] Transaction completed, calling onConfirm callback');
         onClose();
@@ -510,44 +510,44 @@ export default function PaymentModal({
                 >
                   <span className="text-black text-lg font-bold">×</span>
                 </button>
-                
-              {/* Header */}
+
+                {/* Header */}
                 <h2 className="text-2xl text-black text-center -mt-6 peridia-display-light">
-                Your Contribution
-              </h2>
+                  Your Contribution
+                </h2>
 
-              {/* Informational Banner */}
-                <div className="bg-white rounded-[20px] px-6 py-0 border-1 border-black/40 mb-6 mt-4">
+                {/* Informational Banner */}
+                <div className="bg-[#D3C9DE] rounded-[20px] px-6 py-0 border-1 border-black/40 mb-6 mt-4">
                   <p className="text-black text-center text-sm font-medium uppercase favorit-mono text-nowrap scale-[0.7] -ml-8">
-                  YOU ARE ABOUT TO SPRING FORTH A NEW GROWTH
-                </p>
-              </div>
+                    YOU ARE ABOUT TO SPRING FORTH A NEW GROWTH
+                  </p>
+                </div>
 
-              {/* Price and Allocation */}
-              <div className="flex items-start gap-4 mb-6">
-                {/* Price */}
+                {/* Price and Allocation */}
+                <div className="flex items-start gap-4 mb-6">
+                  {/* Price */}
                   <div className="bg-white rounded-full px-4 py-4 border-1 border-black/40 flex-none scale-[0.6] -ml-8 -mt-8 w-[165px]">
                     <div className="text-black text-[12px] font-light text-center items-center uppercase -mt-4 mb-1">PRICE</div>
                     <div className="text-black text-2xl font-light break-all whitespace-normal leading-tight">{amountInput} ETH</div>
-                </div>
+                  </div>
 
-                {/* Allocation Breakdown */}
+                  {/* Allocation Breakdown */}
                   <div className="flex-1 -ml-22 scale-[0.6] -mt-6">
                     <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-1">
                       50% SENT TO SELECTED ECOSYSTEM
-                  </div>
+                    </div>
                     <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-1">
-                    20% ACCUMULATES AS SEED COMPOST
-                  </div>
+                      20% ACCUMULATES AS SEED COMPOST
+                    </div>
                     <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-1">
-                    30% NURTURES THIS FLOURISHING
+                      30% NURTURES THIS FLOURISHING
+                    </div>
                   </div>
                 </div>
-              </div>
 
                 {/* Email Input with inside label */}
                 <div className="mb-6">
-                <div className="relative">
+                  <div className="relative">
                     <input
                       type="email"
                       value={email}
@@ -590,7 +590,7 @@ export default function PaymentModal({
                 >
                   <span className="text-black text-xl font-bold">×</span>
                 </button>
-                
+
                 {/* Header */}
                 <h2 className="text-2xl text-black text-center mb-6 peridia-display-light">
                   Your Contribution
@@ -623,30 +623,30 @@ export default function PaymentModal({
                   <div className="flex items-center gap-2 mt-4">
                     <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
                     <span className="text-sm text-black">{user?.email || formatAddress(walletAddress || '')}</span>
-                  <button
-                    onClick={handleAddFunds}
-                    className="w-48 px-8 py-0 lg:-ml-1 md:-ml-1 -ml-6 mb-6 -mt-4 border-3 border-dotted border-gray-500 rounded-full text-xl text-black peridia-display-light bg-[#E2E3F0] hover:bg-gray-50 transition-colors scale-[0.7] text-nowrap"
-                  >
-                    A<span className="favorit-mono font-light text-nowrap">dd</span> F<span className="favorit-mono font-light text-nowrap">unds</span>
-                  </button>
-                  </div>
-                    <button onClick={async () => {
-                      onClose();
-                      await logout();
-                      // Force refresh to clear all state
-                      setTimeout(() => {
-                        window.location.href = "/";
-                      }, 100);
-                    }} className="flex items-center gap-2 text-sm text-black hover:text-gray-800 transition-colors -mt-6 -mb-3">
-                      <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
-                      <span className="text-sm font-light text-nowrap">Log out</span>
+                    <button
+                      onClick={handleAddFunds}
+                      className="w-48 px-8 py-0 lg:-ml-1 md:-ml-1 -ml-6 mb-6 -mt-4 border-3 border-dotted border-gray-500 rounded-full text-xl text-black peridia-display-light bg-[#F2EAF8] hover:bg-gray-50 transition-colors scale-[0.7] text-nowrap"
+                    >
+                      A<span className="favorit-mono font-light text-nowrap">dd</span> F<span className="favorit-mono font-light text-nowrap">unds</span>
                     </button>
-                <button 
-                  onClick={handleWalletConnect}
-                  className="w-[50%] px-4 py-1 text-nowrap border-2 border-dotted border-black rounded-full text-sm lg:ml-40 md:ml-40 ml-36 -mt-34 text-black bg-white hover:bg-gray-50 transition-colors scale-[0.8]"
-                >
-                  <span className="lg:ml-0 md:ml-0 -ml-2">C</span><span className="favorit-mono font-light text-nowrap">onnect</span> A<span className="favorit-mono font-light text-nowrap">ccount</span>
-                </button>
+                  </div>
+                  <button onClick={async () => {
+                    onClose();
+                    await logout();
+                    // Force refresh to clear all state
+                    setTimeout(() => {
+                      window.location.href = "/";
+                    }, 100);
+                  }} className="flex items-center gap-2 text-sm text-black hover:text-gray-800 transition-colors -mt-6 -mb-3">
+                    <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
+                    <span className="text-sm font-light text-nowrap">Log out</span>
+                  </button>
+                  <button
+                    onClick={handleWalletConnect}
+                    className="w-[50%] px-4 py-1 text-nowrap border-2 border-dotted border-black rounded-full text-sm lg:ml-40 md:ml-40 ml-36 -mt-34 text-black bg-white hover:bg-gray-50 transition-colors scale-[0.8]"
+                  >
+                    <span className="lg:ml-0 md:ml-0 -ml-2">C</span><span className="favorit-mono font-light text-nowrap">onnect</span> A<span className="favorit-mono font-light text-nowrap">ccount</span>
+                  </button>
                 </div>
 
                 {/* Informational Banner - Different background */}
@@ -661,12 +661,12 @@ export default function PaymentModal({
                   {/* Price Input */}
                   <div className="bg-white rounded-full px-4 py-2 border-1 border-black/40 flex-none scale-[0.7] -ml-4 -mt-6 w-[165px]">
                     <div className="text-black text-[12px] font-medium uppercase mb-1 text-center">PRICE</div>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.001"
-                    value={amountInput}
-                    onChange={(e) => setAmountInput(e.target.value)}
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.001"
+                      value={amountInput}
+                      onChange={(e) => setAmountInput(e.target.value)}
                       className="text-black text-lg font-light bg-transparent border-none outline-none w-full"
                       placeholder="0.011"
                     />
@@ -684,49 +684,49 @@ export default function PaymentModal({
                     <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-2">
                       30% NURTURES THIS FLOURISHING
                     </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Email Input with inside label */}
-              <div className="mb-6">
-                <div className="relative">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                {/* Email Input with inside label */}
+                <div className="mb-6">
+                  <div className="relative">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="w-full bg-white rounded-full px-4 py-3 text-black text-sm border-1 border-black/30 outline-none mt-2 placeholder:text-black/50"
-                    placeholder="user@mail.com"
-                  />
+                      placeholder="user@mail.com"
+                    />
                     <span className="absolute left-4 top-2 text-black text-[10px] favorit-mono uppercase">STAY IN TOUCH</span>
+                  </div>
                 </div>
-              </div>
 
                 {/* Confirm Contribution Button */}
-               <Button
-                 onClick={handleTransaction}
-                 disabled={isProcessing}
+                <Button
+                  onClick={handleTransaction}
+                  disabled={isProcessing}
                   className="w-2/3 text-wrap bg-white border-2 border-dotted border-black ml-10 text-black text-sm font-medium py-6 rounded-full hover:bg-gray-100 transition-colors peridia-display-light disabled:opacity-50"
-               >
-                 {isProcessing ? (
-                   <div className="flex items-center justify-center gap-2">
-                     <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                     PROCESSING...
-                   </div>
-                 ) : (
+                >
+                  {isProcessing ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                      PROCESSING...
+                    </div>
+                  ) : (
                     <span className="text-nowrap text-base -mt-1 -mb-2">C<span className="favorit-mono font-light text-nowrap">onfrim</span><br /> C<span className="favorit-mono font-light text-nowrap -mt-2">ontribution</span></span>
-                 )}
-               </Button>
+                  )}
+                </Button>
 
                 {/* Mint Your Own Artwork text */}
                 <p className="text-center text-xs text-black/70 mt-2">
                   MINT YOUR OWN ARTWORK
                 </p>
-            </div>
+              </div>
             )}
           </motion.div>
         </>
       )}
-      
+
       {/* Wallet Connection Modal */}
       <WalletConnectionModal
         isOpen={showWalletConnection}

@@ -131,7 +131,7 @@ export default function RootShapeArea({
         {showStoryButton ? (
           <button
             onClick={handleStory}
-            className="absolute left-1/2 -translate-x-1/2 top-[18%] px-6 py-0 h-8 rounded-full bg-gray-200 shadow peridia-display border-3 border-black/70 border-dotted"
+            className="absolute left-1/2 -translate-x-1/2 top-[18%] px-6 py-0 h-8 rounded-full bg-[#F0ECF3] shadow peridia-display border-3 border-black/70 border-dotted"
           >
             <span className="text-lg">Story</span>
           </button>
@@ -161,7 +161,7 @@ export default function RootShapeArea({
         {/* Wallet - left lobe */}
         <button
           onClick={handleWallet}
-          className="absolute left-[12%] bottom-[18%] px-4 py-1 h-6 text-xs rounded-full bg-gray-200 border-2 border-dotted scale-[1.3] border-black/70 shadow"
+          className="absolute left-[12%] bottom-[18%] px-4 py-1 h-6 text-xs rounded-full bg-[#F0ECF3] border-2 border-dotted scale-[1.3] border-black/70 shadow"
         >
           <span className="-mt-2">Wallet</span>
         </button>

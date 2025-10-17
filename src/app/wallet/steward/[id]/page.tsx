@@ -15,7 +15,7 @@ export default function StewardStatsRoute() {
   const [seed, setSeed] = useState<Seed | null>(null);
   const [stats, setStats] = useState<any>(null);
   const [hasFetched, setHasFetched] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // Render immediately without a loading state
   const [isAmplifyModalOpen, setIsAmplifyModalOpen] = useState(false);
   const [isHarvestModalOpen, setIsHarvestModalOpen] = useState(false);
 
@@ -27,7 +27,6 @@ export default function StewardStatsRoute() {
       if (!id) return;
 
       try {
-        setLoading(true);
 
         // Fetch seed data
         const s = await fetchSeedById(id);
@@ -50,7 +49,7 @@ export default function StewardStatsRoute() {
         console.error("Error loading data:", error);
         setHasFetched(true);
       } finally {
-        setLoading(false);
+        // no-op
       }
     }
     load();
@@ -82,80 +81,56 @@ export default function StewardStatsRoute() {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  if (!seed && hasFetched) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p>Seed not found.</p>
-        <button onClick={() => router.push("/wallet")} className="underline">
-          Back to Wallet
-        </button>
-      </div>
-    );
-  }
-
-  if (!seed || !stats) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p>Failed to load data.</p>
-        <button onClick={() => router.push("/wallet")} className="underline">
-          Back to Wallet
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen w-full max-w-md mx-auto">
-      <SeedStewardStats
-        seed={seed}
-        links={{ openseaUrl: stats.openSeaUrl }}
-        onAmplifyClick={handleAmplifyClick}
-        onHarvestClick={handleHarvestClick}
-        stats={stats}
-      />
+      {seed && stats && (
+        <SeedStewardStats
+          seed={seed}
+          links={{ openseaUrl: stats.openSeaUrl }}
+          onAmplifyClick={handleAmplifyClick}
+          onHarvestClick={handleHarvestClick}
+          stats={stats}
+        />
+      )}
 
       {/* Amplify Seed Modal */}
-      <AmplifySeedModal
-        isOpen={isAmplifyModalOpen}
-        onClose={() => setIsAmplifyModalOpen(false)}
-        seedId={stats.seedId.toString()}
-        stats={{
-          totalValue: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
-          fundsCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
-          snapRewards: `${parseFloat(stats.absoluteNutrientYield).toFixed(3)} ETH`,
-          numSnaps: stats.totalSnapshots.toString(),
-          totalFundings: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
-          yearlyFunding: `${parseFloat(stats.immediateImpact).toFixed(3)} ETH`,
-          allSeedsTotal: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
-          snapsPercentage: formatPercentage(stats.snapshotShare),
-          currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
-          maturationDate: formatDate(stats.maturationDate),
-          prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
-        }}
-      />
+      {stats && (
+        <AmplifySeedModal
+          isOpen={isAmplifyModalOpen}
+          onClose={() => setIsAmplifyModalOpen(false)}
+          seedId={stats.seedId.toString()}
+          stats={{
+            totalValue: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+            fundsCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
+            snapRewards: `${parseFloat(stats.absoluteNutrientYield).toFixed(3)} ETH`,
+            numSnaps: stats.totalSnapshots.toString(),
+            totalFundings: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+            yearlyFunding: `${parseFloat(stats.immediateImpact).toFixed(3)} ETH`,
+            allSeedsTotal: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+            snapsPercentage: formatPercentage(stats.snapshotShare),
+            currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
+            maturationDate: formatDate(stats.maturationDate),
+            prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
+          }}
+        />
+      )}
 
       {/* Harvest Seed Modal */}
-      <HarvestSeedModal
-        isOpen={isHarvestModalOpen}
-        onClose={() => setIsHarvestModalOpen(false)}
-        seedId={stats.seedId.toString()}
-        stats={{
-          nutrientReserve: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
-          mintingDate: formatDate(stats.mintedOn),
-          totalCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
-          currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
-          maturationDate: formatDate(stats.maturationDate),
-          prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
-        }}
-      />
+      {stats && (
+        <HarvestSeedModal
+          isOpen={isHarvestModalOpen}
+          onClose={() => setIsHarvestModalOpen(false)}
+          seedId={stats.seedId.toString()}
+          stats={{
+            nutrientReserve: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+            mintingDate: formatDate(stats.mintedOn),
+            totalCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
+            currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
+            maturationDate: formatDate(stats.maturationDate),
+            prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
+          }}
+        />
+      )}
     </div>
   );
 }

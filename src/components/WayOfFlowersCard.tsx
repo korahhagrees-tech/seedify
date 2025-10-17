@@ -28,6 +28,28 @@ export default function WayOfFlowersCard({
   onExploreClick,
 }: WayOfFlowersCardProps) {
   const [showButtons, setShowButtons] = useState(false);
+  const bloomingWords = [
+    "Sprouting",
+    "Springing Forth",
+    "Unfolding",
+    "Branching",
+    "Flourishing",
+    "Blooming",
+    "Blossoming",
+  ];
+  const [wordIndex, setWordIndex] = useState(0);
+
+  // Rotate the blooming words randomly (avoid immediate repeats)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => {
+        let next = Math.floor(Math.random() * bloomingWords.length);
+        if (next === prev) next = (prev + 1) % bloomingWords.length;
+        return next;
+      });
+    }, 2200);
+    return () => clearInterval(interval);
+  }, []);
 
   // Show explore button after 15 seconds
   useEffect(() => {
@@ -37,6 +59,22 @@ export default function WayOfFlowersCard({
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Render blooming word(s) with first letter of each word in peridia-display
+  const renderStylizedWord = (phrase: string) => {
+    const parts = phrase.split(" ");
+    return (
+      <>
+        {parts.map((w, i) => (
+          <span key={`${w}-${i}`} className="whitespace-nowrap">
+            <span className="peridia-display">{w.charAt(0)}</span>
+            {w.slice(1)}
+            {i < parts.length - 1 ? " " : null}
+          </span>
+        ))}
+      </>
+    );
+  };
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-black/50 backdrop-blur-lg">
@@ -69,7 +107,7 @@ export default function WayOfFlowersCard({
       <div className="relative z-10 px-4 pt-8 pb-8">
         <div className="max-w-md mx-auto">
           {/* The Way of Flowers logo */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 scale-[0.8] lg:scale-[1.0] md:scale-[1.0]">
             <Image
               src={assets.text}
               alt="The Way of Flowers"
@@ -158,23 +196,38 @@ export default function WayOfFlowersCard({
               <div className="text-center">
                 {/* Blooming text with pulse animation - only show when waiting for image */}
                 <motion.div
-                  className="text-white font-medium text-2xl lg:mt-6 md:-mt-2 -mt-5"
+                  className="text-white font-medium lg:mt-6 md:mt-4 -mt-5"
                   animate={{
                     scale: [1, 1.05, 1],
-                    opacity: [0.8, 1, 0.8],
+                    opacity: [0.85, 1, 0.85],
                   }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <p className="mt-26 mb-9 peridia-display">
-                    B
-                    <span className="mt-3 favorit-mono font-bold text-center">
-                      looming
-                    </span>
-                  </p>
+                  <div className="lg:mt-34 md:mt-34 mt-30 mb-4">
+                    <AnimatePresence mode="wait">
+                      <motion.span
+                        key={bloomingWords[wordIndex]}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
+                        className="inline-block rounded-full px-4 py-1 text-white"
+                        style={{
+                          // Slightly adapt font size by length to reduce stretching
+                          fontSize:
+                            bloomingWords[wordIndex].length > 14
+                              ? "1.1rem"
+                              : bloomingWords[wordIndex].length > 10
+                                ? "1.25rem"
+                                : "1.35rem",
+                          letterSpacing: 0.5,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {renderStylizedWord(bloomingWords[wordIndex])}
+                      </motion.span>
+                    </AnimatePresence>
+                  </div>
                 </motion.div>
 
                 {/* Single Explore button - shows after 15 seconds */}

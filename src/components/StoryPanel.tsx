@@ -30,7 +30,7 @@ export default function StoryPanel({ text, onBack, title, author }: StoryPanelPr
         </button>
 
         {/* Title block */}
-        <div className="text-center mt-6 mb-4">
+        <div className="text-center mt-6 mb-6">
           <div className="lg:text-[38px] md:text-[28px] text-[30px] text-center tracking-wider leading-[0.95] scale-[0.7] -mt-8 peridia-display-light">{title || "We are the Soil for What Comes Next"}</div>
           <div className="text-2xl -mt-1">{title ? "" : "for What Comes Next"}</div>
           <div className="text-xs text-black/70 mt-2">{author ? `by ${author}` : "by Stanley Qiufan Chen"}</div>

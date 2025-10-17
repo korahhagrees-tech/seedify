@@ -89,6 +89,17 @@ export default function WalletPage() {
     console.log('🔍 [WALLET] Current walletAddress:', walletAddress);
   }, [walletAddress]);
 
+  // --- Lightweight cookie helpers (tiny metadata only) ---
+  const getCookie = (name: string): string | null => {
+    if (typeof document === 'undefined') return null;
+    const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
+    return match ? decodeURIComponent(match[1]) : null;
+  };
+  const setCookie = (name: string, value: string, maxAgeSeconds = 60 * 60 * 24): void => {
+    if (typeof document === 'undefined') return;
+    document.cookie = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAgeSeconds}; Path=/; SameSite=Lax`;
+  };
+
   // Fetch user's seeds (steward check) and snapshots (tended ecosystems)
   useEffect(() => {
     let cancelled = false;
@@ -106,14 +117,20 @@ export default function WalletPage() {
         const testSeedsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSeeds(testAddress)}`;
         console.log('🧪 [WALLET] Test seeds URL:', testSeedsUrl);
 
-        // Fetch user's seeds from /users/{address}/seeds endpoint for StewardSeedCard
+        // Fetch user's seeds from /users/{address}/seeds endpoint for StewardSeedCard (with ETag cookies)
+        const addressKey = walletAddress.toLowerCase();
         const seedsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSeeds(walletAddress)}`;
         console.log('🔗 [WALLET] Fetching seeds from:', seedsUrl);
-
-        const seedsResponse = await fetch(seedsUrl);
+        const seedsEtagCookieKey = `seeds_etag_${addressKey}`;
+        const seedsPrevEtag = getCookie(seedsEtagCookieKey);
+        const seedsResponse = await fetch(seedsUrl, {
+          headers: seedsPrevEtag ? { 'If-None-Match': seedsPrevEtag } : undefined,
+        });
         console.log('📊 [WALLET] Seeds API Response status:', seedsResponse.status);
 
-        if (seedsResponse.ok) {
+        if (seedsResponse.status === 304) {
+          console.log('✅ [WALLET] Seeds not modified (ETag). Skipping state update.');
+        } else if (seedsResponse.ok) {
           const seedsData = await seedsResponse.json();
           console.log('📊 [WALLET] Seeds API Response data:', seedsData);
 
@@ -122,6 +139,8 @@ export default function WalletPage() {
             if (!cancelled) {
               setStewardSeeds(seedsData.seeds);
             }
+            const newEtag = seedsResponse.headers.get('ETag');
+            if (newEtag) setCookie(seedsEtagCookieKey, newEtag, 60 * 60); // 1 hour
           } else {
             console.log('❌ [WALLET] No seeds found or API failed:', seedsData);
             if (!cancelled) {
@@ -135,135 +154,162 @@ export default function WalletPage() {
           }
         }
 
-        // Fetch user's snapshots from /users/{address}/snapshots endpoint for TendedEcosystem
+        // Fetch user's snapshots from /users/{address}/snapshots endpoint for TendedEcosystem (with ETag + throttle)
         const snapshotsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSnapshots(walletAddress)}`;
         console.log('🔗 [WALLET] API_CONFIG.baseUrl:', API_CONFIG.baseUrl);
         console.log('🔗 [WALLET] API_ENDPOINTS.userSnapshots(walletAddress):', API_ENDPOINTS.userSnapshots(walletAddress));
         console.log('🔗 [WALLET] Final snapshots URL:', snapshotsUrl);
+        const snapsEtagCookieKey = `snaps_etag_${addressKey}`;
+        const snapsLastCookieKey = `snaps_last_${addressKey}`;
+        const prevSnapsEtag = getCookie(snapsEtagCookieKey);
+        const prevSnapsLast = getCookie(snapsLastCookieKey);
 
-        const snapshotsResponse = await fetch(snapshotsUrl);
+        // Throttle refetch if we fetched within last 20s and already have data
+        const nowMs = Date.now();
+        const lastMs = prevSnapsLast ? parseInt(prevSnapsLast, 10) : 0;
+        const shouldThrottle = tendedEcosystems.length > 0 && lastMs && nowMs - lastMs < 20_000;
 
-        console.log('📊 [WALLET] API Response status:', snapshotsResponse.status);
+        let snapshotsResponse: Response | null = null;
+        if (!shouldThrottle) {
+          snapshotsResponse = await fetch(snapshotsUrl, {
+            headers: prevSnapsEtag ? { 'If-None-Match': prevSnapsEtag } : undefined,
+          });
+        } else {
+          console.log('⏭️ [WALLET] Skipping snapshots refetch (throttled <20s).');
+        }
 
-        if (!snapshotsResponse.ok) {
+        if (snapshotsResponse) {
+          console.log('📊 [WALLET] API Response status:', snapshotsResponse.status);
+        }
+
+        if (snapshotsResponse && !snapshotsResponse.ok && snapshotsResponse.status !== 304) {
           throw new Error(`API request failed with status ${snapshotsResponse.status}`);
         }
 
-        const snapshotsData = await snapshotsResponse.json();
-        console.log('📊 [WALLET] API Response data:', snapshotsData);
+        if (snapshotsResponse && snapshotsResponse.status !== 304) {
+          const snapshotsData = await snapshotsResponse.json();
+          console.log('📊 [WALLET] API Response data:', snapshotsData);
 
-        if (snapshotsData.success && snapshotsData.snapshots.length > 0) {
-          console.log('✅ [WALLET] Loaded snapshots:', snapshotsData.snapshots);
-          console.log('🔍 [WALLET] First snapshot structure:', snapshotsData.snapshots[0]);
+          if (snapshotsData.success && snapshotsData.snapshots.length > 0) {
+            console.log('✅ [WALLET] Loaded snapshots:', snapshotsData.snapshots);
+            console.log('🔍 [WALLET] First snapshot structure:', snapshotsData.snapshots[0]);
 
-          // Enrich snapshots with seed and beneficiary data
-          const enrichedSnapshots = await Promise.all(
-            snapshotsData.snapshots.map(async (snapshot: any) => {
-              try {
-                // Fetch seed data to get seed image and info
-                const seedData = await fetchSeedById(snapshot.seedId.toString());
-
-                // Fetch beneficiary data to get proper name and readMoreLink
-                const beneficiary = await fetchBeneficiaryByIndex(snapshot.beneficiaryIndex);
-                console.log(`🔍 [WALLET] Beneficiary data for index ${snapshot.beneficiaryIndex}:`, beneficiary);
-
-                // Fetch seed stats to get ecosystem compost value
-                let ecosystemCompost = "0.00 ETH"; // Default fallback
+            // Enrich snapshots with seed and beneficiary data
+            const enrichedSnapshots = await Promise.all(
+              snapshotsData.snapshots.map(async (snapshot: any) => {
                 try {
-                  console.log(`🔍 [WALLET] Fetching seed stats for seedId: ${snapshot.seedId} (type: ${typeof snapshot.seedId}), beneficiaryCode: ${beneficiary?.code}`);
-                  const seedStats = await fetchSeedStats(snapshot.seedId.toString());
-                  console.log(`🔍 [WALLET] Seed stats response for seedId ${snapshot.seedId}:`, seedStats);
+                  // Fetch seed data to get seed image and info
+                  const seedData = await fetchSeedById(snapshot.seedId.toString());
 
-                  if (seedStats?.beneficiaries && Array.isArray(seedStats.beneficiaries)) {
-                    console.log(`🔍 [WALLET] Available beneficiaries in stats:`, seedStats.beneficiaries.map((b: any) => ({ code: b.code, totalValue: b.totalValue })));
+                  // Fetch beneficiary data to get proper name and readMoreLink
+                  const beneficiary = await fetchBeneficiaryByIndex(snapshot.beneficiaryIndex);
+                  console.log(`🔍 [WALLET] Beneficiary data for index ${snapshot.beneficiaryIndex}:`, beneficiary);
 
-                    // Find matching beneficiary by code
-                    const matchingBeneficiary = seedStats.beneficiaries.find(
-                      (b: any) => b.code === beneficiary?.code
-                    );
+                  // Fetch seed stats to get ecosystem compost value
+                  let ecosystemCompost = "0.00 ETH"; // Default fallback
+                  try {
+                    console.log(`🔍 [WALLET] Fetching seed stats for seedId: ${snapshot.seedId} (type: ${typeof snapshot.seedId}), beneficiaryCode: ${beneficiary?.code}`);
+                    const seedStats = await fetchSeedStats(snapshot.seedId.toString());
+                    console.log(`🔍 [WALLET] Seed stats response for seedId ${snapshot.seedId}:`, seedStats);
 
-                    console.log(`🔍 [WALLET] Looking for beneficiary code: ${beneficiary?.code}`);
-                    console.log(`🔍 [WALLET] Matching beneficiary found:`, matchingBeneficiary);
+                    if (seedStats?.beneficiaries && Array.isArray(seedStats.beneficiaries)) {
+                      console.log(`🔍 [WALLET] Available beneficiaries in stats:`, seedStats.beneficiaries.map((b: any) => ({ code: b.code, totalValue: b.totalValue })));
 
-                    if (matchingBeneficiary?.totalValue) {
-                      const rawValue = parseFloat(matchingBeneficiary.totalValue);
-                      ecosystemCompost = `${rawValue.toFixed(6)} ETH`;
-                      console.log(`🔍 [WALLET] Raw totalValue: ${matchingBeneficiary.totalValue}, parsed: ${rawValue}, formatted: ${ecosystemCompost}`);
+                      // Find matching beneficiary by code
+                      const matchingBeneficiary = seedStats.beneficiaries.find(
+                        (b: any) => b.code === beneficiary?.code
+                      );
+
+                      console.log(`🔍 [WALLET] Looking for beneficiary code: ${beneficiary?.code}`);
+                      console.log(`🔍 [WALLET] Matching beneficiary found:`, matchingBeneficiary);
+
+                      if (matchingBeneficiary?.totalValue) {
+                        const rawValue = parseFloat(matchingBeneficiary.totalValue);
+                        ecosystemCompost = `${rawValue.toFixed(6)} ETH`;
+                        console.log(`🔍 [WALLET] Raw totalValue: ${matchingBeneficiary.totalValue}, parsed: ${rawValue}, formatted: ${ecosystemCompost}`);
+                      } else {
+                        console.log(`🔍 [WALLET] No matching beneficiary or totalValue found`);
+                      }
                     } else {
-                      console.log(`🔍 [WALLET] No matching beneficiary or totalValue found`);
+                      console.log(`🔍 [WALLET] No beneficiaries array in seed stats`);
                     }
-                  } else {
-                    console.log(`🔍 [WALLET] No beneficiaries array in seed stats`);
+                  } catch (statsError) {
+                    console.warn(`Failed to fetch seed stats for snapshot ${snapshot.id}:`, statsError);
                   }
-                } catch (statsError) {
-                  console.warn(`Failed to fetch seed stats for snapshot ${snapshot.id}:`, statsError);
+
+                  // Store readMoreLink in the map
+                  if (beneficiary?.projectData?.readMoreLink) {
+                    setBeneficiaryLinks(prev => new Map(prev).set(snapshot.beneficiaryIndex, beneficiary.projectData!.readMoreLink!));
+                  }
+
+                  // Return enriched snapshot data
+                  const enrichedSnapshot = {
+                    ...snapshot,
+                    // Use imageUrl from snapshot response as seedImageUrl
+                    seedImageUrl: snapshot.imageUrl || '',
+                    seedName: seedData?.name || `Seed ${snapshot.seedId}`,
+                    seedLabel: seedData?.label || `SEED ${snapshot.seedId}`,
+                    // Add beneficiary data
+                    beneficiaryName: beneficiary?.name || `Beneficiary #${snapshot.beneficiaryIndex}`,
+                    beneficiaryCode: beneficiary?.code || '',
+                    beneficiarySlug: beneficiary?.slug || `beneficiary-${snapshot.beneficiaryIndex}`,
+                    // Add ecosystem compost value
+                    ecosystemCompost: ecosystemCompost,
+                  };
+
+                  console.log(`🔍 [WALLET] Enriched snapshot ${snapshot.id}:`, {
+                    originalImageUrl: snapshot.imageUrl,
+                    seedImageUrl: enrichedSnapshot.seedImageUrl,
+                    beneficiaryName: enrichedSnapshot.beneficiaryName,
+                    beneficiaryCode: enrichedSnapshot.beneficiaryCode,
+                    ecosystemCompost: enrichedSnapshot.ecosystemCompost
+                  });
+
+                  return enrichedSnapshot;
+                } catch (e) {
+                  console.error(`Failed to enrich snapshot ${snapshot.id}:`, e);
+                  // Return original snapshot with fallback data
+                  const fallbackSnapshot = {
+                    ...snapshot,
+                    // Use imageUrl from snapshot response as seedImageUrl
+                    seedImageUrl: snapshot.imageUrl || '',
+                    seedName: `Seed ${snapshot.seedId}`,
+                    seedLabel: `SEED ${snapshot.seedId}`,
+                    beneficiaryName: `Beneficiary #${snapshot.beneficiaryIndex}`,
+                    beneficiaryCode: '',
+                    beneficiarySlug: `beneficiary-${snapshot.beneficiaryIndex}`,
+                    ecosystemCompost: "0.00 ETH", // Default fallback
+                  };
+
+                  console.log(`🔍 [WALLET] Fallback snapshot ${snapshot.id}:`, {
+                    originalImageUrl: snapshot.imageUrl,
+                    seedImageUrl: fallbackSnapshot.seedImageUrl,
+                    beneficiaryName: fallbackSnapshot.beneficiaryName,
+                    ecosystemCompost: fallbackSnapshot.ecosystemCompost
+                  });
+
+                  return fallbackSnapshot;
                 }
+              })
+            );
 
-                // Store readMoreLink in the map
-                if (beneficiary?.projectData?.readMoreLink) {
-                  setBeneficiaryLinks(prev => new Map(prev).set(snapshot.beneficiaryIndex, beneficiary.projectData!.readMoreLink!));
-                }
+            if (!cancelled) {
+              setTendedEcosystems(enrichedSnapshots);
+              console.log('✅ [WALLET] Enriched snapshots:', enrichedSnapshots);
+            }
 
-                // Return enriched snapshot data
-                const enrichedSnapshot = {
-                  ...snapshot,
-                  // Use imageUrl from snapshot response as seedImageUrl
-                  seedImageUrl: snapshot.imageUrl || '',
-                  seedName: seedData?.name || `Seed ${snapshot.seedId}`,
-                  seedLabel: seedData?.label || `SEED ${snapshot.seedId}`,
-                  // Add beneficiary data
-                  beneficiaryName: beneficiary?.name || `Beneficiary #${snapshot.beneficiaryIndex}`,
-                  beneficiaryCode: beneficiary?.code || '',
-                  beneficiarySlug: beneficiary?.slug || `beneficiary-${snapshot.beneficiaryIndex}`,
-                  // Add ecosystem compost value
-                  ecosystemCompost: ecosystemCompost,
-                };
-
-                console.log(`🔍 [WALLET] Enriched snapshot ${snapshot.id}:`, {
-                  originalImageUrl: snapshot.imageUrl,
-                  seedImageUrl: enrichedSnapshot.seedImageUrl,
-                  beneficiaryName: enrichedSnapshot.beneficiaryName,
-                  beneficiaryCode: enrichedSnapshot.beneficiaryCode,
-                  ecosystemCompost: enrichedSnapshot.ecosystemCompost
-                });
-
-                return enrichedSnapshot;
-              } catch (e) {
-                console.error(`Failed to enrich snapshot ${snapshot.id}:`, e);
-                // Return original snapshot with fallback data
-                const fallbackSnapshot = {
-                  ...snapshot,
-                  // Use imageUrl from snapshot response as seedImageUrl
-                  seedImageUrl: snapshot.imageUrl || '',
-                  seedName: `Seed ${snapshot.seedId}`,
-                  seedLabel: `SEED ${snapshot.seedId}`,
-                  beneficiaryName: `Beneficiary #${snapshot.beneficiaryIndex}`,
-                  beneficiaryCode: '',
-                  beneficiarySlug: `beneficiary-${snapshot.beneficiaryIndex}`,
-                  ecosystemCompost: "0.00 ETH", // Default fallback
-                };
-
-                console.log(`🔍 [WALLET] Fallback snapshot ${snapshot.id}:`, {
-                  originalImageUrl: snapshot.imageUrl,
-                  seedImageUrl: fallbackSnapshot.seedImageUrl,
-                  beneficiaryName: fallbackSnapshot.beneficiaryName,
-                  ecosystemCompost: fallbackSnapshot.ecosystemCompost
-                });
-
-                return fallbackSnapshot;
-              }
-            })
-          );
-
-          if (!cancelled) {
-            setTendedEcosystems(enrichedSnapshots);
-            console.log('✅ [WALLET] Enriched snapshots:', enrichedSnapshots);
+            const newSnapsEtag = snapshotsResponse.headers.get('ETag');
+            if (newSnapsEtag) setCookie(snapsEtagCookieKey, newSnapsEtag, 60 * 10); // 10 minutes
+            setCookie(snapsLastCookieKey, String(Date.now()), 60 * 10);
+          } else {
+            console.log('❌ [WALLET] No snapshots found or API failed:', snapshotsData);
+            if (!cancelled) {
+              setTendedEcosystems([]);
+            }
           }
         } else {
-          console.log('❌ [WALLET] No snapshots found or API failed:', snapshotsData);
-          if (!cancelled) {
-            setTendedEcosystems([]);
-          }
+          // 304 or throttled
+          console.log('✅ [WALLET] Using existing snapshots (304/throttled).');
         }
       } catch (_e) {
         console.error('Failed to load wallet data:', _e);
