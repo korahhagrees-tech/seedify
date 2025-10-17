@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -19,7 +20,7 @@ export default function WayOfFlowers({
   const searchParams = useSearchParams();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [ecosystemBackgroundUrl, setEcosystemBackgroundUrl] = useState<string>("");
-  
+
   // Image generation state management
   const [isWaitingForImage, setIsWaitingForImage] = useState(false);
   const [imageGenerationData, setImageGenerationData] = useState<{
@@ -37,57 +38,57 @@ export default function WayOfFlowers({
   const callWebhookForImageGeneration = useCallback(async (webhookData: any) => {
     try {
       console.log('🔗 Calling webhook from way-of-flowers page:', webhookData);
-      
+
       const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
       const response = await fetch(`${apiBaseUrl}/snapshot-minted`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(webhookData),
       });
-      
+
       if (!response.ok) {
         throw new Error(`Webhook failed: ${response.status}`);
       }
-      
+
       const webhookResult = await response.json();
       console.log('✅ Webhook response:', webhookResult);
-      
+
       // Process webhook response
       if (webhookResult.success && webhookResult.data) {
         const { beneficiaryCode, blockchain } = webhookResult.data;
         const { seedId: responseSeedId, snapshotId, processId } = webhookResult.data;
-        
+
         // Construct the actual image URL using the response data
         // Pattern: https://d17wy07434ngk.cloudfront.net/seed{seedId}/snap{seedId}-{positionInSeed}-{processId}.png
         const constructedImageUrl = `https://d17wy07434ngk.cloudfront.net/seed${responseSeedId}/snap${responseSeedId}-${snapshotId}-${processId}.png`;
-        
+
         // Transform beneficiaryCode format: 02-ELG -> 02__ELG
         const transformedBeneficiaryCode = beneficiaryCode ? beneficiaryCode.replace('-', '__') : '';
         const backgroundImageUrl = `/project_images/${transformedBeneficiaryCode}.png`;
-        
+
         const imageData = {
           snapshotImageUrl: constructedImageUrl,
           backgroundImageUrl,
           beneficiaryCode
         };
-        
+
         setImageGenerationData(imageData);
         setIsWaitingForImage(false);
         toast.success('Image generation completed!');
-        
+
         // Clean up webhook data
         localStorage.removeItem(`webhook_data_${seedId}`);
-        
+
         console.log('🖼️ Image generation completed:', imageData);
       } else {
         throw new Error('Webhook response indicates failure');
       }
-      
+
     } catch (error) {
       console.error('❌ Webhook call failed:', error);
       setIsWaitingForImage(false);
       toast.error('Image generation failed. You can still explore the blooming view.');
-      
+
       // Clean up webhook data on failure
       localStorage.removeItem(`webhook_data_${seedId}`);
     }
@@ -99,7 +100,7 @@ export default function WayOfFlowers({
     const snapshotImageUrl = searchParams.get('snapshotImageUrl');
     const backgroundImageUrl = searchParams.get('backgroundImageUrl');
     const beneficiaryCode = searchParams.get('beneficiaryCode');
-    
+
     if (snapshotImageUrl || backgroundImageUrl || beneficiaryCode) {
       // We have image data, set it and show explore button
       setImageGenerationData({
@@ -111,12 +112,12 @@ export default function WayOfFlowers({
     } else {
       // No image data, check if we need to call webhook
       const webhookDataString = localStorage.getItem(`webhook_data_${seedId}`);
-      
+
       if (webhookDataString) {
         // We have webhook data from transaction → Start webhook call
         setIsWaitingForImage(true);
         console.log('🔄 Starting webhook call from way-of-flowers page');
-        
+
         try {
           const webhookData = JSON.parse(webhookDataString);
           callWebhookForImageGeneration(webhookData);
@@ -175,7 +176,7 @@ export default function WayOfFlowers({
       if (imageGenerationData.beneficiaryCode) {
         params.set('beneficiaryCode', imageGenerationData.beneficiaryCode);
       }
-      
+
       const queryString = params.toString();
       router.push(`/way-of-flowers/${seedId}/blooming${queryString ? `?${queryString}` : ''}`);
     } else {
@@ -203,9 +204,9 @@ export default function WayOfFlowers({
         mainQuote={wayOfFlowersData.mainQuote}
         author={wayOfFlowersData.author}
         onExploreClick={handleExploreClick}
-        onTryAgainClick={handleTryAgainClick}
-        isWaitingForImage={isWaitingForImage}
-        imageGenerationData={imageGenerationData}
+      // onTryAgainClick={handleTryAgainClick}
+      // isWaitingForImage={isWaitingForImage}
+      // imageGenerationData={imageGenerationData}
       />
 
       {/* Payment Modal for Try Again */}

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -39,9 +38,9 @@ interface HarvestSeedModalProps {
   };
 }
 
-export default function HarvestSeedModal({ 
-  isOpen, 
-  onClose, 
+export default function HarvestSeedModal({
+  isOpen,
+  onClose,
   seedId = "1",
   stats = {
     nutrientReserve: "2.826 ETH",
@@ -69,19 +68,19 @@ export default function HarvestSeedModal({
       setWithdrawalAmount(stats.currentClaimable);
     }
   }, [stats.currentClaimable]);
-  
+
   const { wallets: privyWallets } = useWallets();
   const { writeContractAsync } = useWriteContract();
   const { fundWallet } = useFundWallet();
-  
+
   // Use wallets from context (Zustand store) or fallback to Privy wallets
   const wallets = contextWallets.length > 0 ? contextWallets : privyWallets;
-  
+
   // Get ETH balance from wagmi
   const { data: balanceData } = useBalance({
     address: walletAddress as `0x${string}`,
   });
-  
+
   const balance = balanceData ? parseFloat(balanceData.formatted).toFixed(4) : '0.0000';
 
   const formatAddress = (address: string) => {
@@ -120,7 +119,7 @@ export default function HarvestSeedModal({
 
   const handleHarvest = async () => {
     setIsProcessing(true);
-    
+
     try {
       // Use activeWallet from context (Zustand store), fallback to first wallet
       const currentActiveWallet = activeWallet || wallets[0];
@@ -133,7 +132,7 @@ export default function HarvestSeedModal({
       // Show withdrawal modal
       setShowWithdrawalModal(true);
       setIsProcessing(false);
-      
+
     } catch (error) {
       console.error('Harvest failed:', error);
       toast.error('Harvest failed. Please try again.');
@@ -143,16 +142,16 @@ export default function HarvestSeedModal({
 
   const handleWithdraw = async () => {
     setIsProcessing(true);
-    
+
     try {
       // TODO: Implement actual withdrawal logic here
       console.log('Withdrawing:', withdrawalAmount);
-      
+
       // For now, just show success
       toast.success('Withdrawal processed successfully!');
       setShowWithdrawalModal(false);
       onClose();
-      
+
     } catch (error) {
       console.error('Withdrawal failed:', error);
       toast.error('Withdrawal failed. Please try again.');
@@ -194,7 +193,7 @@ export default function HarvestSeedModal({
                 >
                   <span className="text-black text-lg font-bold">×</span>
                 </button>
-                
+
                 {/* Header */}
                 <h2 className="text-2xl text-black text-center -mt-6 peridia-display-light">
                   Harvest Seed Nutrients
@@ -230,7 +229,7 @@ export default function HarvestSeedModal({
                 >
                   <span className="text-black text-xl font-bold">×</span>
                 </button>
-                
+
                 {/* Header */}
                 <h2 className="text-2xl text-black text-center mb-6 peridia-display-light">
                   Harvest Seed Nutrients
@@ -256,13 +255,13 @@ export default function HarvestSeedModal({
                       <span className="text-base font-light text-gray-700">{balance} ETH</span>
                     </div>
                   </div>
-                  
+
                   {/* Email and Actions */}
                   <div className="flex items-center gap-2 mt-3">
                     <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
                     <span className="text-sm text-black">{user?.email || formatAddress(walletAddress || '')}</span>
                   </div>
-                  
+
                   <div className="flex gap-2 mt-3">
                     <button
                       onClick={handleAddFunds}
@@ -270,20 +269,20 @@ export default function HarvestSeedModal({
                     >
                       Add Funds
                     </button>
-                    <button 
+                    <button
                       onClick={async () => {
                         onClose();
                         await logout();
                         setTimeout(() => {
                           window.location.href = "/";
                         }, 100);
-                      }} 
+                      }}
                       className="flex items-center gap-2 px-4 py-1 text-sm text-black hover:text-gray-800 transition-colors"
                     >
                       <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
                       Log out
                     </button>
-                    <button 
+                    <button
                       onClick={handleWalletConnect}
                       className="px-4 py-1 border border-dotted border-black rounded-full text-sm text-black bg-white hover:bg-gray-50 transition-colors"
                     >
@@ -320,7 +319,7 @@ export default function HarvestSeedModal({
                       <span className="text-sm font-medium text-black">{stats.totalCommitted}</span>
                     </div>
                   </div>
-                  
+
                   {/* Row 2 */}
                   <div className="text-center">
                     <p className="text-xs text-gray-600 mb-2">CURRENT CLAIMABLE</p>
@@ -385,7 +384,7 @@ export default function HarvestSeedModal({
           </motion.div>
         </>
       )}
-      
+
       {/* Wallet Connection Modal */}
       <WalletConnectionModal
         isOpen={showWalletConnection}

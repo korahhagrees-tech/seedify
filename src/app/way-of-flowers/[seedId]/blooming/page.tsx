@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import * as React from "react";
@@ -74,9 +75,9 @@ export default function BloomingPage({
         isOpen={isWalletModalOpen}
         onClose={handleWalletModalClose}
         onLogout={handleLogout}
-        onAddFunds={() => {}}
-        onExportKey={() => {}}
-        onSwitchWallet={() => {}}
+        onAddFunds={() => { }}
+        onExportKey={() => { }}
+        onSwitchWallet={() => { }}
         onPrivyHome={() => router.push("https://home.privy.io/login")}
       />
 

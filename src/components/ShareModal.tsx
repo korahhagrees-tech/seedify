@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -51,10 +52,12 @@ export default function ShareModal({
   const handleDownload = async () => {
     try {
       // Convert base64 to blob - use currentImageSrc
-      const response = await fetch(currentImageSrc);
+      const response = await fetch(currentImageSrc, { credentials: 'omit' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
       const blob = await response.blob();
 
-      // Create download link
+      // Create download link from blob (works for same-origin or CORS-enabled sources)
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -67,7 +70,19 @@ export default function ShareModal({
       toast.success("Image downloaded successfully!");
     } catch (error) {
       console.error("Download failed:", error);
-      toast.error("Failed to download image");
+      // Fallback: open the image in a new tab so the user can save it manually
+      try {
+        const a = document.createElement('a');
+        a.href = currentImageSrc;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast.info("Opened image in a new tab. Use Save to download.");
+      } catch (_e) {
+        toast.error("Failed to download image");
+      }
     }
   };
 
@@ -87,9 +102,8 @@ export default function ShareModal({
         if (navigator.canShare({ files: [file] })) {
           await navigator.share({
             title: "Way of Flowers Snapshot",
-            text: `Check out my contribution to ${
-              beneficiaryName || "regenerative ecosystem"
-            }!`,
+            text: `Check out my contribution to ${beneficiaryName || "regenerative ecosystem"
+              }!`,
             files: [file],
           });
 
@@ -105,12 +119,12 @@ export default function ShareModal({
             }),
           ]);
 
-        toast.success("Image copied to clipboard!");
-      }
-    } else {
-      // Fallback for desktop: copy image to clipboard - use currentImageSrc
-      const response = await fetch(currentImageSrc);
-      const blob = await response.blob();
+          toast.success("Image copied to clipboard!");
+        }
+      } else {
+        // Fallback for desktop: copy image to clipboard - use currentImageSrc
+        const response = await fetch(currentImageSrc);
+        const blob = await response.blob();
 
         await navigator.clipboard.write([
           new ClipboardItem({
@@ -122,15 +136,21 @@ export default function ShareModal({
       }
     } catch (error) {
       console.error("Share failed:", error);
-      toast.error("Failed to share image");
+      // Final fallback: copy the image URL as text
+      try {
+        await navigator.clipboard.writeText(currentImageSrc);
+        toast.success("Image link copied to clipboard!");
+      } catch (_e) {
+        toast.error("Failed to share image");
+      }
     }
   };
 
   // Copy link to clipboard
   const handleCopyLink = async () => {
     try {
-      const currentUrl = window.location.href;
-      await navigator.clipboard.writeText(currentUrl);
+      // Copy the actual image URL, not the page URL
+      await navigator.clipboard.writeText(currentImageSrc);
       toast.success("Link copied to clipboard!");
     } catch (error) {
       console.error("Copy link failed:", error);
@@ -184,17 +204,17 @@ export default function ShareModal({
                     console.log(
                       `🌸 [ShareModal IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
                     );
-                    
+
                     const newErrorCount = imageErrorCount + 1;
                     setImageErrorCount(newErrorCount);
-                    
+
                     // Prevent infinite retry loops
                     if (newErrorCount > 3) {
                       console.log("🌸 [ShareModal IMAGE] Max retries reached, using final fallback");
                       setCurrentImageSrc(FALLBACK_IMAGES[0]);
                       return;
                     }
-                    
+
                     // Try fallback images in sequence
                     if (newErrorCount <= FALLBACK_IMAGES.length) {
                       const fallbackSrc = FALLBACK_IMAGES[newErrorCount - 1];

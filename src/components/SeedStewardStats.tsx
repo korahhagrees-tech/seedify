@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import Image from "next/image";
@@ -162,8 +163,8 @@ export default function SeedStewardStats({
             <div className="flex items-start justify-center gap-4 relative max-w-4xl mx-auto -mt-2">
               {/* Morphing image */}
               <motion.div
-                style={{ 
-                  scale, 
+                style={{
+                  scale,
                   borderRadius: radius,
                   width: width,
                   height: height
@@ -175,8 +176,8 @@ export default function SeedStewardStats({
                     imageError
                       ? "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
                       : seed.seedImageUrl && seed.seedImageUrl.length > 0
-                      ? seed.seedImageUrl
-                      : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
+                        ? seed.seedImageUrl
+                        : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
                   }
                   alt={""}
                   fill
@@ -214,79 +215,79 @@ export default function SeedStewardStats({
         </div>
 
         {/* Main dotted container */}
-        <div className="relative z-10 mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-75 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
+        <div className="relative mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-75 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
           {/* Section: Core Seed Metrics - Full width with 3x2 grid */}
-            <div className="flex items-center w-full justify-between mb-6 bg-gray-400 rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[0.8] mt-6" style={{ pointerEvents: 'auto' }}>
-              <div className="flex-1">
-                <div className="text-lg font-light scale-[0.6] lg:scale-[0.7] md:scale-[0.6] tracking-wide text-gray-900">
-                  <p className="-ml-18">CORE SEED METRICS</p>
-                </div>
+          <div className="flex z-50 items-center w-full justify-between mb-6 bg-gray-400 rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[0.8] mt-6" style={{ pointerEvents: 'auto' }}>
+            <div className="flex-1">
+              <div className="text-lg font-light scale-[0.6] lg:scale-[0.7] md:scale-[0.6] tracking-wide text-gray-900">
+                <p className="-ml-18">CORE SEED METRICS</p>
               </div>
-              <button
-                onClick={toggleInfoDropdown}
-                onMouseDown={() => console.log('🖱️ INFO button mouse down')}
-                onMouseUp={() => console.log('🖱️ INFO button mouse up')}
-                className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 text-gray-900 text-sm -ml-16 left-8 hover:bg-white/90 transition-colors cursor-pointer relative z-50 w-22 border-2 border-red-500"
-                style={{ pointerEvents: 'auto', position: 'relative' }}
-              >
-                INFO 
-                <motion.span
-                  animate={{ rotate: isInfoDropdownOpen ? 180 : 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  >
-                  ▼
-                </motion.span>
-              </button>
             </div>
+            <button
+              onClick={toggleInfoDropdown}
+              onMouseDown={() => console.log('🖱️ INFO button mouse down')}
+              onMouseUp={() => console.log('🖱️ INFO button mouse up')}
+              className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 text-gray-900 text-sm -ml-16 left-8 hover:bg-white/90 transition-colors cursor-pointer relative z-50 w-22 border-2 border-red-500"
+              style={{ pointerEvents: 'auto', position: 'relative' }}
+            >
+              INFO
+              <motion.span
+                animate={{ rotate: isInfoDropdownOpen ? 180 : 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              >
+                ▼
+              </motion.span>
+            </button>
+          </div>
 
-            {/* Info Dropdown Modal */}
-            <AnimatePresence>
-              {isInfoDropdownOpen && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0, y: -20 }}
-                  animate={{ opacity: 1, height: "auto", y: 0 }}
-                  exit={{ opacity: 0, height: 0, y: -20 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="overflow-hidden"
-                >
-                  <div className="mx-4 mb-4 rounded-[28px] bg-gray-400/40 p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Left Column */}
-                      <div className="space-y-4">
-                        <div className="text-sm text-gray-900">
-                          <span className="font-bold">Nutrient Reserve</span> ~ current value of your seed. Compounding sum of your contributions and snapshot share distributions
-                        </div>
-                        <div className="text-sm text-gray-900">
-                          <span className="font-bold">Absolute Nutrient Yield</span> ~ total value you created for the benefit of your selection of biodiversity projects
-                        </div>
-                        <div className="text-sm text-gray-900">
-                          <span className="font-bold">Immediate Impact</span> ~ total value of snapshot sales (50% of Mint) for regenerating our habitats 100% Distributed Monthly
-                        </div>
-                        <div className="text-sm text-gray-900">
-                          <span className="font-bold">Longterm Impact</span> ~ total value generated for biodiversity by farming the Nutrient Reserve 100% Distributed Quarterly
-                        </div>
+          {/* Info Dropdown Modal */}
+          <AnimatePresence>
+            {isInfoDropdownOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, y: -20 }}
+                animate={{ opacity: 1, height: "auto", y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -20 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="mx-4 mb-4 rounded-[28px] bg-gray-400/40 p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Left Column */}
+                    <div className="space-y-4">
+                      <div className="text-sm text-gray-900">
+                        <span className="font-bold">Nutrient Reserve</span> ~ current value of your seed. Compounding sum of your contributions and snapshot share distributions
                       </div>
+                      <div className="text-sm text-gray-900">
+                        <span className="font-bold">Absolute Nutrient Yield</span> ~ total value you created for the benefit of your selection of biodiversity projects
+                      </div>
+                      <div className="text-sm text-gray-900">
+                        <span className="font-bold">Immediate Impact</span> ~ total value of snapshot sales (50% of Mint) for regenerating our habitats 100% Distributed Monthly
+                      </div>
+                      <div className="text-sm text-gray-900">
+                        <span className="font-bold">Longterm Impact</span> ~ total value generated for biodiversity by farming the Nutrient Reserve 100% Distributed Quarterly
+                      </div>
+                    </div>
 
-                      {/* Right Column */}
-                      <div className="space-y-4">
-                        <div className="text-sm text-gray-900">
-                          <span className="font-bold">Snapshot Share</span> ~ dynamic % your seed receives from each snapshot calculated relative to Lowest(10%) & Highest(20%) Nutrient Reserve value across available seeds
-                        </div>
-                        <div className="text-sm text-gray-900">
-                          <span className="font-bold">Harvestable</span> ~ current amount you will receive if choosing to withdraw funds
-                        </div>
-                        <div className="text-sm text-gray-900">
-                          <span className="font-bold">Maturation Date</span> ~ earliest time the Nutrient Reserve can be withdrawn in full. Sale of NFT is permitted regardless
-                        </div>
-                        <div className="text-sm text-gray-900">
-                          <span className="font-bold">Early Harvest Fee</span> ~ the value you forfeit if you choose to withdraw prematurely
-                        </div>
+                    {/* Right Column */}
+                    <div className="space-y-4">
+                      <div className="text-sm text-gray-900">
+                        <span className="font-bold">Snapshot Share</span> ~ dynamic % your seed receives from each snapshot calculated relative to Lowest(10%) & Highest(20%) Nutrient Reserve value across available seeds
+                      </div>
+                      <div className="text-sm text-gray-900">
+                        <span className="font-bold">Harvestable</span> ~ current amount you will receive if choosing to withdraw funds
+                      </div>
+                      <div className="text-sm text-gray-900">
+                        <span className="font-bold">Maturation Date</span> ~ earliest time the Nutrient Reserve can be withdrawn in full. Sale of NFT is permitted regardless
+                      </div>
+                      <div className="text-sm text-gray-900">
+                        <span className="font-bold">Early Harvest Fee</span> ~ the value you forfeit if you choose to withdraw prematurely
                       </div>
                     </div>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
             {/* Full width header with INFO button */}
@@ -362,7 +363,7 @@ export default function SeedStewardStats({
               <div className="space-y-4">
                 {/* NUTRIENT RESERVE TOTAL */}
                 <div className="text-center">
-                  <div className="text-[10px] tracking-wide text-black/90 mb-2">
+                  <div className="text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                     NUTRIENT RESERVE TOTAL
                   </div>
                   <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
@@ -372,7 +373,7 @@ export default function SeedStewardStats({
 
                 {/* YOUR CONTRIBUTIONS */}
                 <div className="text-center">
-                  <div className="text-[10px] tracking-wide text-black/90 mb-2">
+                  <div className="text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                     YOUR CONTRIBUTIONS
                   </div>
                   <div className="bg-gray-200/80 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
@@ -382,7 +383,7 @@ export default function SeedStewardStats({
 
                 {/* ABSOLUTE NUTRIENT YIELD */}
                 <div className="text-center">
-                  <div className="text-[10px] tracking-wide text-black/90 mb-2">
+                  <div className="text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                     ABSOLUTE NUTRIENT YIELD
                   </div>
                   <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
@@ -434,7 +435,7 @@ export default function SeedStewardStats({
               {/* Amplify Impact Section */}
               <div className="flex-1">
                 {/* Button with scalloped edges and border */}
-                <button 
+                <button
                   onClick={handleAmplifyClick}
                   className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors cursor-pointer z-20"
                 >
@@ -452,7 +453,7 @@ export default function SeedStewardStats({
               {/* Harvest Section */}
               <div className="flex-1">
                 {/* Button with scalloped edges and border */}
-                <button 
+                <button
                   onClick={handleHarvestClick}
                   className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors cursor-pointer z-20"
                 >
@@ -469,17 +470,17 @@ export default function SeedStewardStats({
           </div>
 
           {/* Section: Your Regenerative Impact - Two separate cards side by side */}
-            <div className="mb-3">
-              <div className="flex items-center justify-between bg-gradient-to-r from-gray-300/80 to-white/60 rounded-full px-4 py-0">
-                <span className="tracking-wide text-gray-900 favorit-mono text-sm">
-                  YOUR REGENERATIVE IMPACT
-                </span>
-                <span className="text-gray-900">▼</span>
-              </div>
+          <div className="mb-3">
+            <div className="flex items-center justify-between bg-gradient-to-r from-gray-300/80 to-white/60 rounded-full px-4 py-0">
+              <span className="tracking-wide text-gray-900 favorit-mono text-sm">
+                YOUR REGENERATIVE IMPACT
+              </span>
+              <span className="text-gray-900">▼</span>
             </div>
+          </div>
           <div className="rounded-[28px] m-4 p-6">
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.1] md:scale-[0.9]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.1] md:scale-[1.1] -ml-3 lg:-ml-3 md:-ml-3">
               {/* Left Card: Impact Details */}
               <div className="rounded-[28px] bg-gray-400/40 p-4 h-45">
                 <div className="space-y-4">
@@ -533,9 +534,9 @@ export default function SeedStewardStats({
                   </div>
 
                   {/* OVERALL ACCUMULATED YIELD */}
-                    <div className="text-[10px] text-white text-nowrap mb-1">
-                      OVERALL ACCUMULATED YIELD
-                    </div>
+                  <div className="text-[10px] text-white text-nowrap mb-1">
+                    OVERALL ACCUMULATED YIELD
+                  </div>
                   <div className="w-38 h-15 bg-gray-400/40 rounded-lg p-2">
                     <div className="rounded-full px-2 -mt-4 py-2 text-[16px] text-center text-gray-900">
                       {parseFloat(stats.overallAccumulatedYield).toFixed(6)} ETH
@@ -556,14 +557,14 @@ export default function SeedStewardStats({
           </div>
 
           {/* Section: Detailed Data of Your Stewarded Ecosystems - Full width with background */}
-            <div className="-mb-2">
-              <div className="flex items-center bg-gradient-to-r from-gray-300/80 to-white/70 text-center justify-center rounded-full px-4 py-0">
-                <span className="text-nowrap tracking-wide text-gray-900 favorit-mono text-[14px] -ml-3 scale-[0.9] lg:scale-[0.9] md:scale-[0.9]">
-                  DETAILED DATA OF YOUR STEWARDED ECOSYSTEMS
-                </span>
-                <span className="text-gray-900 -ml-2">▼</span>
-              </div>
+          <div className="-mb-2">
+            <div className="flex items-center bg-gradient-to-r from-gray-300/80 to-white/70 text-center justify-center rounded-full px-4 py-0">
+              <span className="text-nowrap tracking-wide text-gray-900 favorit-mono text-[14px] -ml-3 scale-[0.9] lg:scale-[0.9] md:scale-[0.9]">
+                DETAILED DATA OF YOUR STEWARDED ECOSYSTEMS
+              </span>
+              <span className="text-gray-900 -ml-2">▼</span>
             </div>
+          </div>
           <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
 
             <div className="space-y-4">
@@ -634,7 +635,7 @@ export default function SeedStewardStats({
         <div className="fixed -bottom-1 left-0 right-0 z-30 pt-4 scale-[1.1]">
           <div className="max-w-md mx-auto px-4">
             <RootShapeArea
-              onWallet={() => {}}
+              onWallet={() => { }}
               showGlassEffect={false}
               showStoryButton={false}
             />
