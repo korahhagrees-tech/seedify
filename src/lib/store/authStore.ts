@@ -22,22 +22,22 @@ export interface LinkedAccount {
 export interface AuthState {
   // Privy user object
   user: User | null;
-  
+
   // All connected wallets from useWallets()
   wallets: ConnectedWallet[];
-  
+
   // Currently active/selected wallet
   activeWallet: ConnectedWallet | null;
-  
+
   // All linked accounts from user.linkedAccounts
   linkedAccounts: LinkedAccount[];
-  
+
   // Privy ready state
   ready: boolean;
-  
+
   // Authentication state
   authenticated: boolean;
-  
+
   // Derived wallet address (for backward compatibility)
   walletAddress: string | null;
 }
@@ -45,28 +45,28 @@ export interface AuthState {
 export interface AuthActions {
   // Set user and update derived state
   setUser: (user: User | null) => void;
-  
+
   // Set wallets array
   setWallets: (wallets: ConnectedWallet[]) => void;
-  
+
   // Set active wallet
   setActiveWallet: (wallet: ConnectedWallet | null) => void;
-  
+
   // Set ready state
   setReady: (ready: boolean) => void;
-  
+
   // Set authenticated state
   setAuthenticated: (authenticated: boolean) => void;
-  
+
   // Update linked accounts from user object
   updateLinkedAccounts: () => void;
-  
+
   // Get wallet by address
   getWalletByAddress: (address: string) => ConnectedWallet | undefined;
-  
+
   // Get all wallet addresses
   getAllWalletAddresses: () => string[];
-  
+
   // Reset store (on logout)
   reset: () => void;
 }
@@ -88,7 +88,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
       setUser: (user) => {
         set({ user, authenticated: !!user }, false, 'setUser');
-        
+
         // Auto-update linked accounts when user changes
         if (user) {
           get().updateLinkedAccounts();
@@ -97,18 +97,31 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
       setWallets: (wallets) => {
         set({ wallets }, false, 'setWallets');
-        
+
         // If we have wallets but no active wallet, set the first one
         if (wallets.length > 0 && !get().activeWallet) {
-          set({ activeWallet: wallets[0], walletAddress: wallets[0].address }, false, 'setWallets:autoSetActive');
+          const address = wallets[0].address;
+          // Only use actual wallet addresses (starting with 0x, B, or other valid wallet formats)
+          const isValidWalletAddress = typeof address === 'string' &&
+            (address.startsWith('0x') || address.startsWith('B') || address.length > 30);
+          const walletAddress = isValidWalletAddress ? address : null;
+          set({ activeWallet: wallets[0], walletAddress }, false, 'setWallets:autoSetActive');
         }
       },
 
       setActiveWallet: (wallet) => {
+        // Ensure walletAddress is always a string or null, never an object
+        const address = wallet?.address;
+        // Only use actual wallet addresses (starting with 0x, B, or other valid wallet formats)
+        // Filter out email addresses and other non-wallet strings
+        const isValidWalletAddress = typeof address === 'string' &&
+          (address.startsWith('0x') || address.startsWith('B') || address.length > 30);
+        const walletAddress = isValidWalletAddress ? address : null;
+
         set(
           {
             activeWallet: wallet,
-            walletAddress: wallet?.address || null,
+            walletAddress,
           },
           false,
           'setActiveWallet'
@@ -132,7 +145,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
         // Extract all linked accounts from user.linkedAccounts
         const accounts = (user.linkedAccounts || []) as LinkedAccount[];
-        
+
         set({ linkedAccounts: accounts }, false, 'updateLinkedAccounts');
       },
 

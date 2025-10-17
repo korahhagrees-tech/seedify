@@ -79,8 +79,8 @@ export default function SeedStewardStats({
   // Morph large rounded-square image to smaller circle on scroll
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.4]);
   const radius = useTransform(scrollYProgress, [0, 0.2], [60, 999]);
-  const width = useTransform(scrollYProgress, [0, 0.2], [980, 170]);
-  const height = useTransform(scrollYProgress, [0, 0.2], [550, 170]);
+  const width = useTransform(scrollYProgress, [0, 0.2], [900, 120]);
+  const height = useTransform(scrollYProgress, [0, 0.2], [380, 120]);
 
   // Button animations - start at top-right of image, drop down to right side
   const buttonScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
@@ -252,9 +252,9 @@ export default function SeedStewardStats({
         </div>
 
         {/* Main dotted container */}
-        <div className="relative mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-75 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
+        <div className="relative mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-48 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
           {/* Section: Core Seed Metrics - Full width with 3x2 grid */}
-          <div className="flex z-50 items-center w-full justify-between mb-6 bg-gray-400 rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[0.8] mt-6" style={{ pointerEvents: 'auto' }}>
+          <div className="flex z-50 items-center w-full justify-between mb-6 bg-gray-400 rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[0.8] mt-12" style={{ pointerEvents: 'auto' }}>
             <div className="flex-1">
               <div className="text-lg font-light scale-[0.6] lg:scale-[0.7] md:scale-[0.6] tracking-wide text-gray-900">
                 <p className="-ml-18">CORE SEED METRICS</p>

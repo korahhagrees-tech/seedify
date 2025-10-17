@@ -52,6 +52,8 @@ export default function EcosystemPage() {
 
         // Convert beneficiary data to ecosystem project format, passing seed data for seedEmblemUrl
         const ecosystem = beneficiaryToEcosystemProject(beneficiary, seed);
+        console.log('🔍 [EcosystemPage] ecosystem data:', ecosystem);
+        console.log('🔍 [EcosystemPage] seedEmblemUrl type:', typeof ecosystem.seedEmblemUrl, ecosystem.seedEmblemUrl);
         setEcosystemData(ecosystem);
       } catch (err) {
         console.error("Error loading ecosystem data:", err);

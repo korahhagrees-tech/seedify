@@ -228,6 +228,9 @@ export default function About() {
                         <p>Exhibition Text:				{`Chen ‘Stanley’ Qiufan`}</p>
                         <p>Exhibition Text Recording:			Dr Penny Oxi Pëng</p>
                       </p>
+                      <p className="text-xs leading-relaxed mt-3">
+                        Special Thanks: Office Impart, Charlie Fisher, Brad Royes, Noah Saso, Jake Hartnell, Marvin Gross, Nanak Nihal Khalsa, Oliver Sauter, Beth McCarthy, Joshua Dávila, Daniel Stein, Fatemeh Fannizadeh
+                      </p>
                     </p>
                   </>
                 )}

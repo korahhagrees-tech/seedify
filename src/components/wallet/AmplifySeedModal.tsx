@@ -231,7 +231,7 @@ export default function AmplifySeedModal({
         <>
           {/* Backdrop */}
           <motion.div
-            key="wallet-modal-backdrop"
+            key="amplify-modal-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

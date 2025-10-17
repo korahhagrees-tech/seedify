@@ -406,7 +406,7 @@ export default function WalletModal({
                     <span className="favorit-mono">ome</span>
                   </p>
                 </button>
-                <div className="w-[50%] ml-14 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]">
+                <div className="w-[50%] ml-18 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]">
                   <button
                     onClick={handleConnectAccount}
                     className="w-full px-4 py-2 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors peridia-display text-nowrap"

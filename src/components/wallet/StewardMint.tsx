@@ -287,12 +287,12 @@ export default function StewardMint({
               <div className="-mb-14 lg:-mb-30 md:-mb-16 -px-12 lg:scale-[0.98] md:scale-[0.95] scale-[0.90] lg:mt-1 md:-mt-1 -mt-3">
                 <div className="grid grid-cols-2 px-1 gap-6 mt-12 lg:mt-14 md:mt-12 mb-9">
                   {[1, 2, 3, 4].map((slot) => (
-                    <div key={slot} className={`${slot % 2 === 1 ? '-ml-6 lg:-ml-2 md:-ml-2' : 'ml-2 lg:ml-2 md:ml-2'} relative`}>
+                    <div key={slot} className={`${slot % 2 === 1 ? '-ml-2 lg:-ml-2 md:-ml-2' : '-ml-2 lg:ml-2 md:ml-2'} relative`}>
                       <button
                         onClick={() => setOpenDropdown(openDropdown === slot ? null : slot)}
                         className="px-8 py-0 w-full rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden"
                       >
-                        <span className="block w-36 -ml-6 truncate whitespace-nowrap align-middle">
+                        <span className="block lg:w-33 w-30 md:w-33 lg:-ml-6 md:-ml-6 -ml-8 text-center truncate whitespace-nowrap">
                           {labelForSlot(slot)}
                         </span>
                         {/* <span className="ml-2 align-middle">▾</span> */}

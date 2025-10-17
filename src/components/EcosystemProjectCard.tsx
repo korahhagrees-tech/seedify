@@ -533,23 +533,26 @@ export default function EcosystemProjectCard({
 
           {/* Seed emblem - right side */}
           <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-md">
-            {seedEmblemUrl && (
-              <Image
-                src={
-                  seedEmblemUrl && seedEmblemUrl.length > 0
-                    ? seedEmblemUrl
-                    : assets.glowers
-                }
-                alt=""
-                width={60}
-                height={60}
-                className="rounded-full"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = assets.glowers;
-                }}
-              />
-            )}
+            {(() => {
+              console.log('🔍 EcosystemProjectCard seedEmblemUrl:', seedEmblemUrl, typeof seedEmblemUrl);
+              return seedEmblemUrl && typeof seedEmblemUrl === 'string';
+            })() && (
+                <Image
+                  src={
+                    seedEmblemUrl && seedEmblemUrl.length > 0
+                      ? seedEmblemUrl
+                      : assets.glowers
+                  }
+                  alt=""
+                  width={60}
+                  height={60}
+                  className="rounded-full"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = assets.glowers;
+                  }}
+                />
+              )}
           </div>
         </div>
       </div>
@@ -558,11 +561,11 @@ export default function EcosystemProjectCard({
       <PaymentModal
         isOpen={showPaymentModal}
         onClose={() => setShowPaymentModal(false)}
-        seedId={seedId}
-        amount={snapshotPrice ? parseFloat(snapshotPrice) : 0.011}
+        seedId={typeof seedId === 'string' ? seedId : String(seedId || '')}
+        amount={typeof snapshotPrice === 'string' ? parseFloat(snapshotPrice) : 0.011}
         onConfirm={handlePaymentConfirm}
         isSnapshotMint={true}
-        beneficiaryIndex={typeof beneficiaryIndex === 'object' && beneficiaryIndex !== null ? (beneficiaryIndex as any)?.index || 0 : beneficiaryIndex || 0}
+        beneficiaryIndex={typeof beneficiaryIndex === 'number' ? beneficiaryIndex : 0}
       />
     </div>
   );

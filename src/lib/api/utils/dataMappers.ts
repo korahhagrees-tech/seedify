@@ -20,33 +20,35 @@ import { BeneficiaryData, BeneficiaryProjectData } from '@/types/api';
  */
 export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData, seedData?: any) {
   const { projectData } = beneficiary;
-  
+
   if (!projectData) {
     throw new Error(`Beneficiary ${beneficiary.code} is missing projectData`);
   }
-  
+
   // Combine title and subtitle
   const title = `${projectData.title} ${projectData.subtitle}`.trim();
-  
+
   // Use location as subtitle
   const subtitle = projectData.location;
-  
+
   // Combine description and benefits for short text (each benefit on new line)
   const benefitsList = projectData.benefits
     .map(benefit => `• ${benefit}`)
     .join('\n');
-  
+
   const shortText = `${projectData.description}\n\nKey Benefits:\n${benefitsList}`;
-  
+
   // Use moreDetails as extended text
   const extendedText = projectData.moreDetails;
-  
+
   // Use backgroundImage
   const backgroundImageUrl = projectData.backgroundImage;
-  
+
   // Get seedEmblemUrl from wayOfFlowersData if available
-  const seedEmblemUrl = seedData?.wayOfFlowersData?.seedEmblemUrl;
-  
+  const seedEmblemUrl = typeof seedData?.wayOfFlowersData?.seedEmblemUrl === 'string'
+    ? seedData.wayOfFlowersData.seedEmblemUrl
+    : undefined;
+
   return {
     title,
     subtitle,
@@ -74,11 +76,11 @@ export function getEcosystemProjectBySlug(
   seedData?: any
 ) {
   const beneficiary = beneficiaries.find(b => b.slug === slug);
-  
+
   if (!beneficiary) {
     return null;
   }
-  
+
   return beneficiaryToEcosystemProject(beneficiary, seedData);
 }
 
