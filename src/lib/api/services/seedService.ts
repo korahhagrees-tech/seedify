@@ -46,7 +46,7 @@ export async function fetchGardenData(): Promise<GardenDataResponse> {
 
   try {
     const response = await apiClient.get<SeedsResponse>(API_ENDPOINTS.seeds);
-    
+
     if (!response.success || !response.seeds) {
       throw new APIError('Invalid response format');
     }
@@ -75,7 +75,7 @@ export async function fetchSeedById(id: string): Promise<Seed | null> {
 
   try {
     const response = await apiClient.get<SeedResponse>(API_ENDPOINTS.seedById(id));
-    
+
     if (!response.success || !response.seed) {
       return null;
     }
@@ -130,5 +130,26 @@ export function getWayOfFlowersDataForSeed(seedId: string) {
  */
 export function getStoryData(seedId: string) {
   return getSeedStory(seedId);
+}
+
+/**
+ * Fetch seed stats by ID
+ */
+export async function fetchSeedStats(seedId: string): Promise<any> {
+  console.log('🌸 [SEED-SERVICE] Fetching seed stats for ID:', seedId);
+
+  try {
+    const response = await apiClient.get(API_ENDPOINTS.seedStats(seedId));
+
+    if (!response.success || !response.stats) {
+      throw new APIError('Invalid seed stats response format');
+    }
+
+    console.log('🌸 [SEED-SERVICE] Successfully fetched seed stats for:', seedId);
+    return response.stats;
+  } catch (error) {
+    console.error('🌸 [SEED-SERVICE] Error fetching seed stats:', error);
+    throw error;
+  }
 }
 

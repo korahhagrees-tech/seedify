@@ -5,8 +5,6 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { assets } from "@/lib/assets";
-import { useWaitForTransactionReceipt } from "wagmi";
-import { useSearchParams } from "next/navigation";
 
 interface WayOfFlowersCardProps {
   backgroundImageUrl: string;
@@ -17,13 +15,6 @@ interface WayOfFlowersCardProps {
   mainQuote: string;
   author: string;
   onExploreClick?: () => void;
-  onTryAgainClick?: () => void;
-  isWaitingForImage?: boolean; // New prop for waiting state
-  imageGenerationData?: { // New prop for image data
-    snapshotImageUrl?: string;
-    backgroundImageUrl?: string;
-    beneficiaryCode?: string;
-  } | null;
 }
 
 export default function WayOfFlowersCard({
@@ -35,69 +26,17 @@ export default function WayOfFlowersCard({
   mainQuote,
   author,
   onExploreClick,
-  onTryAgainClick,
-  isWaitingForImage = false,
-  imageGenerationData = null,
 }: WayOfFlowersCardProps) {
   const [showButtons, setShowButtons] = useState(false);
-  const [transactionStatus, setTransactionStatus] = useState<
-    "pending" | "success" | "failed"
-  >("pending");
-  const [txHash, setTxHash] = useState<string | null>(null);
-  const searchParams = useSearchParams();
 
-  // Get transaction hash from URL params
+  // Show explore button after 15 seconds
   useEffect(() => {
-    const hash = searchParams.get("txHash");
-    if (hash) {
-      setTxHash(hash);
-    }
-  }, [searchParams]);
-
-  // Use wagmi to wait for transaction
-  const {
-    data: receipt,
-    isLoading,
-    isError,
-  } = useWaitForTransactionReceipt({
-    hash: txHash as `0x${string}`,
-    query: {
-      enabled: !!txHash,
-      retry: 10,
-      retryDelay: 4000, // 4 seconds between retries
-    },
-  });
-
-  // Handle transaction status changes
-  useEffect(() => {
-    if (receipt) {
-      setTransactionStatus("success");
+    const timer = setTimeout(() => {
       setShowButtons(true);
-    } else if (isError) {
-      setTransactionStatus("failed");
-      setShowButtons(true);
-    } else if (!isLoading && txHash) {
-      // If we have a hash but no receipt and not loading, wait for timeout
-      const timer = setTimeout(() => {
-        setTransactionStatus("failed");
-        setShowButtons(true);
-      }, 40000);
+    }, 15000); // 15 seconds
 
-      return () => clearTimeout(timer);
-    }
-  }, [receipt, isError, isLoading, txHash]);
-
-  // Fallback: if no transaction hash, show explore after 40 seconds (original behavior)
-  useEffect(() => {
-    if (!txHash) {
-      const timer = setTimeout(() => {
-        setShowButtons(true);
-        setTransactionStatus("success");
-      }, 40000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [txHash]);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-black/50 backdrop-blur-lg">
@@ -218,32 +157,29 @@ export default function WayOfFlowersCard({
               {/* Bottom section with Blooming and Explore */}
               <div className="text-center">
                 {/* Blooming text with pulse animation - only show when waiting for image */}
-                {transactionStatus === "success" && (
-                  <motion.div
-                    className="text-white font-medium text-2xl lg:mt-6 md:-mt-2 -mt-5"
-                    animate={{
-                      scale: [1, 1.05, 1],
-                      opacity: [0.8, 1, 0.8],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <p className="mt-26 mb-9 peridia-display">
-                      B
-                      <span className="mt-3 favorit-mono font-bold text-center">
-                        looming
-                      </span>
-                    </p>
-                  </motion.div>
-                )}
+                <motion.div
+                  className="text-white font-medium text-2xl lg:mt-6 md:-mt-2 -mt-5"
+                  animate={{
+                    scale: [1, 1.05, 1],
+                    opacity: [0.8, 1, 0.8],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <p className="mt-26 mb-9 peridia-display">
+                    B
+                    <span className="mt-3 favorit-mono font-bold text-center">
+                      looming
+                    </span>
+                  </p>
+                </motion.div>
 
-                {/* Buttons based on state */}
+                {/* Single Explore button - shows after 15 seconds */}
                 <AnimatePresence>
-                  {/* Show Explore button when image generation is complete */}
-                  {!isWaitingForImage && imageGenerationData && (
+                  {showButtons && (
                     <motion.div
                       initial={{ opacity: 0, y: 20, scale: 0.9 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -263,56 +199,10 @@ export default function WayOfFlowersCard({
                       </Button>
                     </motion.div>
                   )}
-
-                  {/* Fallback to original transaction-based buttons if not in image waiting mode */}
-                  {!isWaitingForImage && !imageGenerationData && showButtons && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{
-                        duration: 0.8,
-                        ease: "easeOut",
-                      }}
-                      className="flex flex-col items-center gap-3"
-                    >
-                      {transactionStatus === "success" && (
-                        <>
-                          <Button
-                            onClick={onExploreClick}
-                            className="w-[160px] rounded-full border border-white/70 text-black text-xl scale-[0.85] ml-3 py-2 bg-white hover:bg-white/20 transition-all duration-300"
-                          >
-                            <span className="peridia-display">
-                              E<span className="favorit-mono">xplore</span>
-                            </span>
-                          </Button>
-                        </>
-                      )}
-
-                      {transactionStatus === "failed" && (
-                        <Button
-                          onClick={onTryAgainClick}
-                          className="w-[160px] rounded-full border border-white/70 text-black text-base py-2 bg-white hover:bg-white/20 transition-all duration-300"
-                        >
-                          Try Again
-                        </Button>
-                      )}
-                    </motion.div>
-                  )}
                 </AnimatePresence>
               </div>
             </div>
           </motion.div>
-          {txHash && (
-            <Button
-              variant="ghost"
-              onClick={() =>
-                window.open(`https://basescan.org/tx/${txHash}`, "_blank")
-              }
-              className="text-white justify-center items-center mt-2 ml-24 underline hover:text-white/80 transition-colors text-sm"
-            >
-              View on Explorer
-            </Button>
-          )}
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import StewardMint from "@/components/wallet/StewardMint";
 import { usePrivy } from "@privy-io/react-auth";
+import { assets } from "@/lib/assets";
 
 export default function MintPage() {
   const params = useParams();
@@ -31,14 +32,14 @@ export default function MintPage() {
 
   // Check if user is authenticated and address matches
   useEffect(() => {
-    console.log('🔍 useEffect triggered:', { 
-      authenticated, 
-      privyAuthenticated, 
-      user: !!user, 
+    console.log('🔍 useEffect triggered:', {
+      authenticated,
+      privyAuthenticated,
+      user: !!user,
       walletAddress,
-      activeWallet: activeWallet?.address 
+      activeWallet: activeWallet?.address
     });
-    
+
     // Wait a bit for authentication state to stabilize
     const timer = setTimeout(() => {
       if (!authenticated || !user || !walletAddress || !address) {
@@ -91,7 +92,7 @@ export default function MintPage() {
 
   return (
     <StewardMint
-      backgroundImageUrl="/seeds/01__GRG.png"
+      backgroundImageUrl={assets.flowersBg}
       onMintClick={handleMintClick}
       onTryAgainClick={handleTryAgainClick}
     />

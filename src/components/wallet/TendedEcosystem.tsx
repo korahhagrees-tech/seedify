@@ -110,7 +110,7 @@ export default function TendedEcosystem({
       <div className="p-6">
         <div className="flex gap-6 lg:ml-0 -ml-6 md:ml-0">
           {/* Left Side - Large Image */}
-          <div className="relative w-54 h-54 rounded-[50px] overflow-hidden flex-shrink-0 -mt-8">
+          <div className="relative lg:w-54 md:w-54 w-48 lg:h-54 md:h-54 h-48 rounded-[50px] overflow-hidden flex-shrink-0 -mt-8">
             <Image
               src={currentImageSrc}
               alt=""
@@ -120,24 +120,24 @@ export default function TendedEcosystem({
                 console.log(
                   `🌸 [IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
                 );
-                
+
                 const newErrorCount = imageErrorCount + 1;
                 setImageErrorCount(newErrorCount);
-                
+
                 // Prevent infinite retry loops
                 if (newErrorCount > 3) {
                   console.log("🌸 [IMAGE] Max retries reached, using final fallback");
                   setCurrentImageSrc("https://d17wy07434ngk.cloudfront.net/seed1/seed.png");
                   return;
                 }
-                
+
                 // Try fallback images in sequence
                 const fallbackImages = [
                   "https://d17wy07434ngk.cloudfront.net/seed1/seed.png",
-                  "https://d17wy07434ngk.cloudfront.net/seed2/seed.png", 
+                  "https://d17wy07434ngk.cloudfront.net/seed2/seed.png",
                   "https://d17wy07434ngk.cloudfront.net/seed3/seed.png"
                 ];
-                
+
                 if (newErrorCount <= fallbackImages.length) {
                   const fallbackSrc = fallbackImages[newErrorCount - 1];
                   console.log(`🌸 [IMAGE] Trying fallback: ${fallbackSrc}`);
@@ -151,7 +151,7 @@ export default function TendedEcosystem({
             {/* Share Icon */}
             <button
               onClick={handleShare}
-              className="absolute bottom-2 -left-2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm opacity-80 z-20"
+              className="absolute bottom-2 -left-2 w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm opacity-80 z-50"
             >
               <Image
                 src={assets.share}
@@ -164,22 +164,22 @@ export default function TendedEcosystem({
           </div>
 
           {/* Right Side - Details and Buttons */}
-          <div className="flex-1 space-y-4 -mt-7">
+          <div className="flex-1 space-y-2 -mt-7">
             {/* Contribution Details */}
             <div className="space-y-1">
-              <div className="text-xs text-gray-500 uppercase">
+              <div className="text-[9px] text-nowrap font-bold text-center text-gray-500 uppercase">
                 YOUR CONTRIBUTION
               </div>
-              <div className="text-lg text-center text-gray-900">
+              <div className="text-lg text-nowrap text-center text-gray-900 scale-[0.8] lg:scale-[1.0] md:scale-[0.8]">
                 {userContribution}
               </div>
             </div>
 
             <div className="space-y-1">
-              <div className="text-xs text-gray-500 uppercase">
+              <div className="text-[9px] text-nowrap font-bold text-center text-gray-500 uppercase">
                 ECOSYSTEM COMPOST
               </div>
-              <div className="text-lg text-center text-gray-900">
+              <div className="text-lg text-nowrap text-center text-gray-900 scale-[0.8] lg:scale-[1.0] md:scale-[0.8]">
                 {ecosystemCompost}
               </div>
             </div>

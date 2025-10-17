@@ -18,22 +18,23 @@ export const API_ENDPOINTS = {
   // Health & Status
   health: '/health',
   status: '/status',
-  
+
   // Seeds
   seeds: '/seeds',
   seedById: (id: string) => `/seeds/${id}`,
   seedsCount: '/seeds/count',
-  
+  seedStats: (id: string) => `/seeds/${id}/stats`,
+
   // Beneficiaries
   beneficiaries: '/beneficiaries',
   beneficiaryByIndex: (index: number) => `/beneficiaries/${index}`,
   beneficiaryByCode: (code: string) => `/beneficiaries/code/${code}`,
-  
+
   // Snapshots
   snapshotsBySeed: (seedId: string) => `/snapshots/seed/${seedId}`,
   snapshotsByBeneficiary: (beneficiaryIndex: number) => `/snapshots/beneficiary/${beneficiaryIndex}`,
   snapshotStats: '/snapshots/stats',
-  
+
   // User-Specific
   userSeeds: (address: string) => `/users/${address}/seeds`,
   userSeedsCount: (address: string) => `/users/${address}/seeds/count`,
@@ -43,14 +44,14 @@ export const API_ENDPOINTS = {
   userBalance: (address: string) => `/users/${address}/balance`,
   userStats: (address: string) => `/users/${address}/stats`,
   userPortfolio: (address: string) => `/users/${address}/portfolio`,
-  
+
   // Write Operations
   writeCreateSeed: '/write/seeds/create',
   writeDepositToSeed: (id: string) => `/write/seeds/${id}/deposit`,
   writeWithdrawFromSeed: (id: string) => `/write/seeds/${id}/withdraw`,
   writeClaimProfits: (id: string) => `/write/seeds/${id}/claim-profits`,
-  writeMintSnapshot: (seedId: string, beneficiaryIndex?: number) => 
-    beneficiaryIndex !== undefined 
+  writeMintSnapshot: (seedId: string, beneficiaryIndex?: number) =>
+    beneficiaryIndex !== undefined
       ? `/write/snapshots/mint/${seedId}?beneficiaryIndex=${beneficiaryIndex}`
       : `/write/snapshots/mint/${seedId}`,
 } as const;

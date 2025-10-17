@@ -47,15 +47,15 @@ export default function StewardMint({
       try {
         const response = await fetch(`${API_CONFIG.baseUrl}/beneficiaries/`);
         const data = await response.json();
-        
+
         if (data.success && data.beneficiaries) {
           setBeneficiaries(data.beneficiaries);
-          
+
           // Select random beneficiary for the circle image
           const randomIndex = Math.floor(Math.random() * data.beneficiaries.length);
           const randomBeneficiary = data.beneficiaries[randomIndex];
           setRandomBeneficiaryImage(randomBeneficiary.projectData.backgroundImage);
-          
+
           // Select 4 random beneficiaries for the buttons
           const shuffled = [...data.beneficiaries].sort(() => 0.5 - Math.random());
           setSelectedBeneficiaries(shuffled.slice(0, 4));
@@ -128,7 +128,7 @@ export default function StewardMint({
         src={
           backgroundImageUrl && backgroundImageUrl.length > 0
             ? backgroundImageUrl
-            : "/seeds/01__GRG.png"
+            : "/project_images/01__GRG.png"
         }
         alt=""
         fill
@@ -139,8 +139,8 @@ export default function StewardMint({
             "🌸 [IMAGE] Error loading WayOfFlowers background image, using placeholder"
           );
           const target = e.target as HTMLImageElement;
-          if (target.src !== `${window.location.origin}/seeds/01__GRG.png`) {
-            target.src = "/seeds/01__GRG.png";
+          if (target.src !== `${window.location.origin}/project_images/01__GRG.png`) {
+            target.src = "/project_images/01__GRG.png";
           }
         }}
       />
@@ -152,7 +152,7 @@ export default function StewardMint({
       <div className="relative z-10 px-4 pt-8 pb-8">
         <div className="max-w-md mx-auto">
           {/* The Way of Flowers logo */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 scale-[0.8] lg:scale-[0.7] md:scale-[0.7]">
             <Image
               src={assets.text}
               alt="The Way of Flowers"
@@ -164,7 +164,7 @@ export default function StewardMint({
 
           {/* Main card */}
           <motion.div
-            className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-4 border-dotted border-white/70 h-[750px]"
+            className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-4 border-dotted border-white/70 h-[580px] lg:h-[750px] md:h-[750px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -175,17 +175,17 @@ export default function StewardMint({
                 src="/Blooming.svg"
                 alt="Blooming frame"
                 fill
-                className="object-contain scale-[1.0] lg:mt-0 md:-mt-2 -mt-2"
+                className="object-contain lg:scale-[1.0] md:scale-[1.0] scale-[1.05] lg:-mt-2 md:-mt-2 mt-4"
                 priority
               />
             </div>
             {/* Header window + dots (match EcosystemProjectCard layout, white dots) */}
             <div className="relative h-28">
               {/* Four small solid white circles */}
-              <div className="absolute top-12 left-6 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
-              <div className="absolute top-32 left-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
-              <div className="absolute top-12 right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
-              <div className="absolute -bottom-4 right-0 -translate-x-1/2 translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute lg:top-12 md:top-12 top-8 lg:left-6 md:left-6 left-7 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute lg:top-32 md:top-32 top-26 lg:left-3 md:left-3 left-4 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute lg:top-12 md:top-12 top-9 lg:right-3 md:right-3 right-4 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute lg:-bottom-4 md:-bottom-4 bottom-2 lg:right-0 md:right-0 right-1 -translate-x-1/2 translate-y-1/2 w-6 h-6 rounded-full bg-white" />
             </div>
 
             {/* Content positioned on the card */}
@@ -193,19 +193,19 @@ export default function StewardMint({
               {/* Top section with welcome message and beneficiary image */}
               <div className="text-center mb-8">
                 {/* Welcome text */}
-                <div className="mb-6 -mt-12">
-                  <div className="text-black font-bold text-2xl mb-2">WELCOME</div>
+                <div className="mb-6 -mt-30 lg:-mt-32 md:-mt-30 peridia-display-light">
+                  <div className="text-black text-2xl -mb-1">WELCOME</div>
                   <div className="text-black/70 text-sm">to the flourishing</div>
                 </div>
 
                 {/* Random beneficiary image in circle */}
-                <div className="mb-6 flex justify-center">
-                  <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-black/20">
+                <div className="mb-20 lg:mb-26 md:mb-30 -mt-4 lg:-mt-2 md:-mt-6 flex justify-center">
+                  <div className="w-16 lg:w-20 md:w-20 h-16 lg:h-20 md:h-20 rounded-full overflow-hidden border-2 border-black/20">
                     <Image
                       src={
                         randomBeneficiaryImage && randomBeneficiaryImage.length > 0
                           ? randomBeneficiaryImage
-                          : "/seeds/01__GRG.png"
+                          : "/project_images/01__GRG.png"
                       }
                       alt=""
                       width={80}
@@ -218,9 +218,9 @@ export default function StewardMint({
                         const target = e.target as HTMLImageElement;
                         if (
                           target.src !==
-                          `${window.location.origin}/seeds/01__GRG.png`
+                          `${window.location.origin}/project_images/01__GRG.png`
                         ) {
-                          target.src = "/seeds/01__GRG.png";
+                          target.src = "/project_images/01__GRG.png";
                         }
                       }}
                     />
@@ -228,22 +228,64 @@ export default function StewardMint({
                 </div>
 
                 {/* Choose four beneficiaries text */}
-                <div className="-mt-8 text-black font-bold text-base lg:scale-[0.85] md:scale-[0.80] scale-[0.75]">
-                  <div className="text-nowrap">CHOOSE FOUR BENEFICIARIES</div>
+                <div className="-mt-8 text-black font-bold text-base lg:scale-[0.55] md:scale-[0.55] scale-[0.6]">
+                  <Image
+                    src={assets.chooseBeneficiary}
+                    alt="Choose four beneficiaries"
+                    width={100}
+                    height={100}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
 
               {/* Four beneficiary buttons section */}
-              <div className="mb-8 -px-12 lg:scale-[0.98] md:scale-[0.95] scale-[0.98] lg:mt-1 -mt-2">
-                <div className="grid grid-cols-2 gap-3">
-                  {selectedBeneficiaries.map((beneficiary, index) => (
+              <div className="-mb-14 lg:-mb-30 md:-mb-16 -px-12 lg:scale-[0.98] md:scale-[0.95] scale-[0.90] lg:mt-1 md:-mt-1 -mt-3">
+                <div className="grid grid-cols-2 px-1 gap-6 mt-12 lg:mt-14 md:mt-12 mb-9">
+                  {/* {selectedBeneficiaries.map((beneficiary, index) => (
                     <button
                       key={beneficiary.index}
-                      className="px-4 py-3 rounded-full border-2 border-dotted border-black/70 bg-white/80 text-black text-sm font-medium hover:bg-white transition-colors"
+                      className="px-4 py-1 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors"
                     >
                       Beneficiary {String(index + 1).padStart(2, '0')}
                     </button>
-                  ))}
+                  ))} */}
+                  <div className="-ml-6 lg:-ml-2 md:-ml-2">
+                    <button
+                      className="px-8 py-0 text-nowrap rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors"
+                    >
+                      Beneficiary 01
+                    </button>
+                  </div>
+                  <div className="ml-2 lg:ml-2 md:ml-2">
+                    <button
+                      className="px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-nowrap text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors"
+                    >
+                      Beneficiary 02
+                    </button>
+                  </div>
+                  <div className="-ml-6 lg:-ml-2 md:-ml-2">
+                    <button
+                      className="px-8 py-0 text-nowrap rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors"
+                    >
+                      Beneficiary 03
+                    </button>
+                  </div>
+                  <div className="ml-2 lg:ml-2 md:ml-2">
+                    <button
+                      className="px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-nowrap text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors"
+                    >
+                      Beneficiary 04
+                    </button>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-black text-sm -mt-4 mb-4">
+                    <p className="text-black text-nowrap text-sm">Thank you for becoming a <span className="peridia-display-light">Seed Steward.</span></p>
+                  </div>
+                  <div className="text-black lg:text-[13px] md:text-[13px] text-[11px] scale-[1.1] lg:scale-[1.0] md:scale-[1.0] -mt-2 lg:-mt-1 md:-mt-1">
+                    <p className="">Your support weaves verified conservation with synthetic botanical intelligence, creating digital flora that blooms <p>through authentic environmental care.</p></p>
+                  </div>
                 </div>
               </div>
 
@@ -251,7 +293,7 @@ export default function StewardMint({
               <div className="text-center">
                 {/* MINT button with pulse animation */}
                 <motion.div
-                  className="lg:mt-6 md:-mt-2 -mt-5"
+                  className="lg:mt-6 md:-mt-2 -mt-30"
                   animate={{
                     scale: [1, 1.05, 1],
                     opacity: [0.8, 1, 0.8],
@@ -264,9 +306,9 @@ export default function StewardMint({
                 >
                   <button
                     onClick={onMintClick}
-                    className="mt-26 mb-9 px-8 py-3 rounded-full border-2 border-dotted border-white/70 text-black text-xl font-medium bg-white hover:bg-white/20 transition-all duration-300 peridia-display"
+                    className="mt-46 mb-9 px-8 py-3 rounded-full border-2 border-dotted border-white/70 text-white text-xl font-medium bg-transparent hover:bg-white/20 transition-all duration-300 peridia-display"
                   >
-                    MINT
+                    <p className="text-white text-2xl scale-[0.8] lg:scale-[1.2] md:scale-[0.9] font-medium">MINT</p>
                   </button>
                 </motion.div>
 
@@ -282,7 +324,7 @@ export default function StewardMint({
                       }}
                       className="flex flex-col items-center gap-3"
                     >
-                      {transactionStatus === "success" && (
+                      {/* {transactionStatus === "success" && (
                         <>
                           <Button
                             onClick={onMintClick}
@@ -293,7 +335,7 @@ export default function StewardMint({
                             </span>
                           </Button>
                         </>
-                      )}
+                      )} */}
 
                       {transactionStatus === "failed" && (
                         <Button
@@ -320,10 +362,10 @@ export default function StewardMint({
               View on Explorer
             </Button>
           )}
-          
+
           {/* by CROSSLUCID */}
           <div className="text-center mt-4">
-            <div className="text-white/80 text-sm">by CROSSLUCID</div>
+            <div className="text-white text-2xl peridia-display-light">by CROSSLUCID</div>
           </div>
         </div>
       </div>

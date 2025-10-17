@@ -14,7 +14,7 @@ interface SeedCardProps {
 
 export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
   const [imageError, setImageError] = useState(false);
-  
+
   const handleImageLoad = () => {
     console.log("🌸 [IMAGE] Successfully loaded:", seed.seedImageUrl);
   };
@@ -62,8 +62,8 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
               imageError
                 ? "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
                 : seed.seedImageUrl && seed.seedImageUrl.length > 0
-                ? seed.seedImageUrl
-                : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
+                  ? seed.seedImageUrl
+                  : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
             }
             alt=""
             fill
@@ -94,7 +94,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
           <div className="text-[10px] font-light text-black mb-2 mt-1">
             RAISED
           </div>
-          <div className="text-xl text-nowrap scale-[0.7] lg:scale-[0.9] md:scale-[0.8] -ml-2 lg:-ml-2 md:-ml-2 -mt-3 font-light text-black">
+          <div className="text-2xl text-nowrap scale-[0.7] lg:scale-[0.8] md:scale-[0.7] -ml-5 lg:-ml-2 md:-ml-2 -mt-4 font-light favorit-mono text-black/70">
             {parseFloat(seed.depositAmount).toFixed(4)}{" "}
             <span className="text-xl">ETH</span>
           </div>
@@ -110,7 +110,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
           <div className="text-[10px] font-light text-black mb-2 mt-1">
             SNAP PRICE
           </div>
-          <div className="text-2xl text-nowrap scale-[0.7] lg:scale-[0.8] md:scale-[0.7] -ml-5 lg:-ml-3 md:-ml-3 -mt-3 font-light text-black">
+          <div className="text-2xl text-nowrap scale-[0.7] lg:scale-[0.8] md:scale-[0.7] -ml-5 lg:-ml- md:-ml-3 -mt-4 font-light text-black/80">
             {parseFloat(seed.snapshotPrice).toFixed(4)}{" "}
             <span className="text-xl">ETH</span>
           </div>
@@ -126,7 +126,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
           <div className="text-[10px] font-light text-black mb-2 mt-1">
             EVOLUTIONS
           </div>
-          <div className="text-2xl text-nowrap scale-[0.9] -mt-3 font-light text-black">
+          <div className="text-2xl text-nowrap scale-[0.7] -mt-4 font-light text-black">
             {seed.snapshotCount}
           </div>
         </motion.div>

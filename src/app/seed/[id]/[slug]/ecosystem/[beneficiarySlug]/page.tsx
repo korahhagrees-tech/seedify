@@ -91,7 +91,7 @@ export default function EcosystemPage() {
   }
 
   return (
-    <div className="min-h-screen w-full max-w-md mx-auto bg-white">
+    <div className="min-h-screen w-full max-w-md mx-auto bg-white overflow-hidden">
       <EcosystemProjectCard
         backgroundImageUrl={ecosystemData.backgroundImageUrl}
         title={ecosystemData.title}

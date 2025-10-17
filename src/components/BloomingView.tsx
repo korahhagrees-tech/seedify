@@ -54,7 +54,7 @@ export default function BloomingView({
     const newImageUrl = snapshotImageUrl || seedImageUrl || "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
     setCurrentImageSrc(newImageUrl);
     setImageErrorCount(0);
-    
+
     console.log("🔍 [BloomingView] Image URLs:", {
       snapshotImageUrl,
       seedImageUrl,
@@ -121,7 +121,7 @@ export default function BloomingView({
       const timer = setTimeout(() => {
         setShowReveal(true);
       }, 1000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [snapshotImageUrl]);
@@ -144,7 +144,7 @@ export default function BloomingView({
         </div>
 
         {/* Large rounded image card with loading state and reveal animation */}
-        <div className="relative w-full h-98 rounded-[50px] overflow-hidden border-2 border-dashed border-black/70 bg-white mb-8 mt-4 scale-[1.0]">
+        <div className="relative w-full h-98 rounded-[50px] overflow-hidden border-2 border-dashed border-black/70 bg-gray-400 mb-8 mt-4 scale-[1.0]">
           {/* Base seed emblem - always visible initially */}
           <div className="absolute inset-0 flex items-center justify-center">
             <Image
@@ -158,9 +158,9 @@ export default function BloomingView({
 
           {/* Overlay text with pulsing animation */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <motion.div 
+            <motion.div
               className="text-center px-8"
-              animate={{ 
+              animate={{
                 opacity: [0.4, 0.8, 0.4],
                 scale: [0.98, 1.02, 0.98]
               }}
@@ -202,24 +202,24 @@ export default function BloomingView({
                     console.log(
                       `🌸 [BloomingView IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
                     );
-                    
+
                     const newErrorCount = imageErrorCount + 1;
                     setImageErrorCount(newErrorCount);
-                    
+
                     // Prevent infinite retry loops
                     if (newErrorCount > 3) {
                       console.log("🌸 [BloomingView IMAGE] Max retries reached, using final fallback");
                       setCurrentImageSrc("https://d17wy07434ngk.cloudfront.net/seed1/seed.png");
                       return;
                     }
-                    
+
                     // Try fallback images in sequence
                     const fallbackImages = [
                       "https://d17wy07434ngk.cloudfront.net/seed1/seed.png",
-                      "https://d17wy07434ngk.cloudfront.net/seed2/seed.png", 
+                      "https://d17wy07434ngk.cloudfront.net/seed2/seed.png",
                       "https://d17wy07434ngk.cloudfront.net/seed3/seed.png"
                     ];
-                    
+
                     if (newErrorCount <= fallbackImages.length) {
                       const fallbackSrc = fallbackImages[newErrorCount - 1];
                       console.log(`🌸 [BloomingView IMAGE] Trying fallback: ${fallbackSrc}`);
@@ -271,7 +271,7 @@ export default function BloomingView({
         <div className="relative mt-18 lg:mt-12">
           <RootShapeArea
             onStory={onStory}
-            onSubstrate={() => {}}
+            onSubstrate={() => { }}
             onWallet={handleWallet}
             onExploreGarden={onExploreGarden}
           />

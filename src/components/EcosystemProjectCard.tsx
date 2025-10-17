@@ -92,16 +92,16 @@ export default function EcosystemProjectCard({
   const handlePaymentConfirm = async (amount: string) => {
     console.log('🎯 [EcosystemCard] handlePaymentConfirm called with amount:', amount);
     console.log('🎯 [EcosystemCard] seedId:', seedId);
-    
+
     setPaymentAmount(amount);
     setShowPaymentModal(false);
-    
+
     // Mark as successful mint
     setMintSuccess(true);
-    
+
     // PaymentModal now handles the transaction, so we just show success
     toast.success('Snapshot minted successfully!', { description: 'Your ecosystem has been tended.' });
-    
+
     // ✅ Route to way-of-flowers page after successful mint (waiting for image generation)
     console.log('🌸 [EcosystemCard] Routing to way-of-flowers page for seed:', seedId);
     setTimeout(() => {
@@ -145,7 +145,7 @@ export default function EcosystemProjectCard({
       // Smart amount handling: Use backend's exact wei if user hasn't changed the amount
       let amountInWei: string;
       const backendValueEth = mintData.data.valueEth || "0.011"; // Fallback to default
-      
+
       if (amountInEth === backendValueEth) {
         // User hasn't changed the amount → Use backend's exact wei value (no precision loss)
         amountInWei = mintData.data.value;
@@ -215,19 +215,19 @@ export default function EcosystemProjectCard({
       // ❌ WEBHOOK CALL MOVED TO WAY-OF-FLOWERS PAGE
       // The webhook will be called from the way-of-flowers page after routing
       // to allow for proper waiting state with pulsing "Blooming" animation
-      
+
       // Store webhook data for way-of-flowers page to use
       if (seedId) {
         localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(webhookData));
         console.log('🔗 Webhook data stored for way-of-flowers page:', seedId);
       }
-      
+
       setIsMinting(false);
       setMintSuccess(true); // Mark as successful
       toast.success("Snapshot minted successfully!", {
         description: "Your ecosystem has been tended.",
       });
-      
+
       // ✅ Route to way-of-flowers page immediately after successful transaction
       console.log('🌸 Routing to way-of-flowers page for seed:', seedId);
       setTimeout(() => {
@@ -239,7 +239,7 @@ export default function EcosystemProjectCard({
         description: "Please try again.",
       });
       console.error("Minting error:", error);
-      
+
       // ✅ If BYPASS_SUCCESS_CHECK is true, route even on error (for testing)
       if (BYPASS_SUCCESS_CHECK) {
         console.log('⚠️ BYPASS MODE: Routing to way-of-flowers page despite error');
@@ -433,12 +433,12 @@ export default function EcosystemProjectCard({
               data-main-content
             >
               {/* Short text - always visible */}
-              <div className="mb-44 whitespace-pre-line">{shortText}</div>
+              <div className="mb-50 lg:mb-20 md:mb-20 whitespace-pre-line">{shortText}</div>
 
               {/* Extended text - completely hidden/shown like old code */}
               {showExtended && (
                 <div
-                  className="overflow-hidden whitespace-pre-line -mt-44 mb-54"
+                  className="overflow-hidden whitespace-pre-line -mt-44 lg:-mt-14 md:-mt-14 mb-54 lg:mb-20 md:mb-20"
                   data-expanded-content
                 >
                   {extendedText}
@@ -477,12 +477,41 @@ export default function EcosystemProjectCard({
                   setShowExtended(!checked);
                   // Smooth scroll animation within the text container
                   setTimeout(() => {
-                    const textContainer = document.querySelector("[data-main-content]");
+                    const textContainer = document.querySelector("[data-main-content]") as HTMLElement;
+                    const expandedContent = document.querySelector("[data-expanded-content]") as HTMLElement;
+
                     if (textContainer) {
-                      textContainer.scrollTo({
-                        top: !checked ? textContainer.scrollHeight : 0,
-                        behavior: "smooth"
-                      });
+                      if (!checked) {
+                        // Show extended text - scroll to the end of short text area
+                        // Find the short text element and scroll to its bottom
+                        const shortTextElement = textContainer.querySelector('.mb-50, .lg\\:mb-20, .md\\:mb-20') as HTMLElement;
+                        if (shortTextElement) {
+                          const shortTextBottom = shortTextElement.offsetTop + shortTextElement.offsetHeight - textContainer.offsetTop;
+                          textContainer.scrollTo({
+                            top: shortTextBottom,
+                            behavior: "smooth"
+                          });
+                        } else if (expandedContent) {
+                          // Fallback: scroll to beginning of extended content
+                          const expandedTop = expandedContent.offsetTop - textContainer.offsetTop;
+                          textContainer.scrollTo({
+                            top: expandedTop,
+                            behavior: "smooth"
+                          });
+                        } else {
+                          // Final fallback: scroll to 80% of the content
+                          textContainer.scrollTo({
+                            top: textContainer.scrollHeight * 0.8,
+                            behavior: "smooth"
+                          });
+                        }
+                      } else {
+                        // Hide extended text - scroll up to top
+                        textContainer.scrollTo({
+                          top: 0,
+                          behavior: "smooth"
+                        });
+                      }
                     }
                   }, 100);
                 }}

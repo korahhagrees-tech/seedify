@@ -239,8 +239,8 @@ export default function WalletModal({
       }
 
       // Check if this is an embedded wallet (only embedded wallets can export private keys)
-      const isEmbedded = activeWallet.walletClientType === 'privy' || 
-                        activeWallet.connectorType === 'embedded';
+      const isEmbedded = activeWallet.walletClientType === 'privy' ||
+        activeWallet.connectorType === 'embedded';
 
       if (!isEmbedded) {
         console.log('External wallets manage their own private keys');
@@ -358,7 +358,7 @@ export default function WalletModal({
                   </button>
                 </div>
                 <div className="flex items-center gap-2 -mt-5">
-                  <Image
+                  {/* <Image
                     src={assets.key}
                     alt="Key"
                     width={16}
@@ -370,7 +370,7 @@ export default function WalletModal({
                     className="text-sm text-black hover:text-gray-900 transition-colors"
                   >
                     Export private key
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
