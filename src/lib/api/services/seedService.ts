@@ -139,7 +139,9 @@ export async function fetchSeedStats(seedId: string): Promise<any> {
   console.log('🌸 [SEED-SERVICE] Fetching seed stats for ID:', seedId);
 
   try {
-    const response = await apiClient.get(API_ENDPOINTS.seedStats(seedId));
+    const response = await apiClient.get<{ success: boolean; stats: any; timestamp?: number }>(
+      API_ENDPOINTS.seedStats(seedId)
+    );
 
     if (!response.success || !response.stats) {
       throw new APIError('Invalid seed stats response format');
