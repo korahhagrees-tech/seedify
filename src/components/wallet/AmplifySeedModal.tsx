@@ -152,7 +152,7 @@ export default function AmplifySeedModal({
       toast.info('Setting up wallet... Please wait.');
       return;
     }
-    if (!authenticated) {
+    if (!user) {
       toast.info('Please connect your wallet to continue.');
       return;
     }
