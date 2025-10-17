@@ -54,9 +54,32 @@ export default function StewardMint({
   const [randomBeneficiaryImage, setRandomBeneficiaryImage] = useState<string>("");
   const [selectedBeneficiaries, setSelectedBeneficiaries] = useState<Beneficiary[]>([]);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null); // 1..4 or null
-  const [selectedBySlot, setSelectedBySlot] = useState<Record<number, Beneficiary | null>>({ 1: null, 2: null, 3: null, 4: null });
+  const [showBeneficiaryModal, setShowBeneficiaryModal] = useState(false);
+  const [currentSlot, setCurrentSlot] = useState<number | null>(null);
+  const [selectedBySlot, setSelectedBySlot] = useState<Record<number, Beneficiary | null>>({
+    1: null,
+    2: null,
+    3: null,
+    4: null
+  });
   const searchParams = useSearchParams();
   const { sendTransaction } = useSendTransaction();
+
+  // Close modal when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.beneficiary-modal')) {
+        setShowBeneficiaryModal(false);
+        setCurrentSlot(null);
+      }
+    };
+
+    if (showBeneficiaryModal) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [showBeneficiaryModal]);
 
   // Fetch beneficiaries on component mount
   useEffect(() => {
@@ -99,8 +122,20 @@ export default function StewardMint({
   };
 
   const handleSelect = (slot: number, b: Beneficiary) => {
-    setSelectedBySlot((prev) => ({ ...prev, [slot]: b }));
+    console.log(`🔍 [STEWARD-MINT] Selecting beneficiary ${b.name} for slot ${slot}`);
+    setSelectedBySlot((prev) => {
+      const newState = { ...prev, [slot]: b };
+      console.log(`🔍 [STEWARD-MINT] New selectedBySlot state:`, newState);
+      return newState;
+    });
     setOpenDropdown(null);
+    setShowBeneficiaryModal(false);
+    setCurrentSlot(null);
+  };
+
+  const handleBeneficiaryClick = (slot: number) => {
+    setCurrentSlot(slot);
+    setShowBeneficiaryModal(true);
   };
 
   // Get transaction hash from URL params
@@ -283,41 +318,56 @@ export default function StewardMint({
                 </div>
               </div>
 
-              {/* Four beneficiary dropdowns section */}
+              {/* Four individual beneficiary dropdowns section */}
               <div className="-mb-14 lg:-mb-30 md:-mb-16 -px-12 lg:scale-[0.98] md:scale-[0.95] scale-[0.90] lg:mt-1 md:-mt-1 -mt-3">
-                <div className="grid grid-cols-2 px-1 gap-6 mt-12 lg:mt-14 md:mt-12 mb-9">
-                  {[1, 2, 3, 4].map((slot) => (
-                    <div key={slot} className={`${slot % 2 === 1 ? '-ml-2 lg:-ml-2 md:-ml-2' : '-ml-2 lg:ml-2 md:ml-2'} relative`}>
-                      <button
-                        onClick={() => setOpenDropdown(openDropdown === slot ? null : slot)}
-                        className="px-8 py-0 w-full rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden"
-                      >
-                        <span className="block lg:w-33 w-30 md:w-33 lg:-ml-6 md:-ml-6 -ml-8 text-center truncate whitespace-nowrap">
-                          {labelForSlot(slot)}
-                        </span>
-                        {/* <span className="ml-2 align-middle">▾</span> */}
-                      </button>
-                      {openDropdown === slot && (
-                        <div className="absolute z-50 mt-2 w-[220px] max-h-48 overflow-auto rounded-2xl border-2 border-dotted border-black/60 bg-white/95 shadow -ml-8">
-                          {optionsForSlot(slot).map((b) => (
-                            <button
-                              key={`${b.index}-${b.code}`}
-                              onClick={() => handleSelect(slot, b)}
-                              className="block w-full text-left px-3 py-2 hover:bg-gray-100"
-                            >
-                              <div className="text-xs text-black truncate">
-                                {b.projectData?.title || b.name}
-                              </div>
-                              <div className="text-[10px] text-gray-500 truncate">{b.code}</div>
-                            </button>
-                          ))}
-                          {optionsForSlot(slot).length === 0 && (
-                            <div className="px-3 py-2 text-xs text-gray-500">No options</div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                <div className="grid grid-cols-2 gap-4 mt-12 lg:mt-14 md:mt-12 mb-9">
+                  {/* Beneficiary 01 */}
+                  <div className="relative">
+                    <button
+                      onClick={() => handleBeneficiaryClick(1)}
+                      className="w-full px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden -ml-4"
+                    >
+                      <span className="block text-center truncate whitespace-nowrap">
+                        {labelForSlot(1)}
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Beneficiary 02 */}
+                  <div className="relative">
+                    <button
+                      onClick={() => handleBeneficiaryClick(2)}
+                      className="w-full px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden ml-4"
+                    >
+                      <span className="block text-center truncate whitespace-nowrap">
+                        {labelForSlot(2)}
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Beneficiary 03 */}
+                  <div className="relative">
+                    <button
+                      onClick={() => handleBeneficiaryClick(3)}
+                      className="w-full px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden -ml-4"
+                    >
+                      <span className="block text-center truncate whitespace-nowrap">
+                        {labelForSlot(3)}
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Beneficiary 04 */}
+                  <div className="relative">
+                    <button
+                      onClick={() => handleBeneficiaryClick(4)}
+                      className="w-full px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden ml-4"
+                    >
+                      <span className="block text-center truncate whitespace-nowrap">
+                        {labelForSlot(4)}
+                      </span>
+                    </button>
+                  </div>
                 </div>
                 <div className="text-center">
                   <div className="text-black text-sm -mt-4 mb-4">
@@ -510,6 +560,116 @@ export default function StewardMint({
           </div>
         </div>
       </div>
+
+      {/* Beneficiary Selection Modal */}
+      <AnimatePresence>
+        {showBeneficiaryModal && currentSlot && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-lg"
+            onClick={() => {
+              setShowBeneficiaryModal(false);
+              setCurrentSlot(null);
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="beneficiary-modal relative w-full max-w-2xl mx-4 max-h-[80vh] bg-white/95 backdrop-blur-lg scale-[0.8] lg:scale-[0.8] md:scale-[0.8] rounded-3xl border-4 border-dotted border-black/60 shadow-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="p-6 border-b border-gray-200/50">
+                <div className="text-center">
+                  <h2 className="text-2xl font-bold text-black peridia-display">
+                    Select Beneficiary {String(currentSlot).padStart(2, '0')}
+                  </h2>
+                  <p className="text-gray-600 text-sm mt-2">
+                    Choose from the available beneficiaries
+                  </p>
+                </div>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6 max-h-[60vh] overflow-y-auto">
+                <div className="space-y-3">
+                  {optionsForSlot(currentSlot).map((b) => (
+                    <button
+                      key={`${b.index}-${b.code}`}
+                      onClick={() => handleSelect(currentSlot, b)}
+                      className="w-full text-left p-4 rounded-2xl border-2 border-dotted border-gray-300 hover:border-black/60 hover:bg-gray-50 transition-all duration-200 group"
+                    >
+                      <div className="flex items-center space-x-4">
+                        {/* Beneficiary Image */}
+                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                          <Image
+                            src={b.projectData?.backgroundImage || "/project_images/01__GRG.png"}
+                            alt=""
+                            width={48}
+                            height={48}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = "/project_images/01__GRG.png";
+                            }}
+                          />
+                        </div>
+
+                        {/* Beneficiary Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="text-lg font-semibold text-black truncate group-hover:text-gray-800">
+                            {b.projectData?.title || b.name}
+                          </div>
+                          <div className="text-sm text-gray-500 truncate">
+                            {b.code}
+                          </div>
+                          <div className="text-xs text-gray-400 mt-1">
+                            Index: {b.index}
+                          </div>
+                        </div>
+
+                        {/* Selection Indicator */}
+                        <div className="w-6 h-6 rounded-full border-2 border-gray-300 flex-shrink-0 group-hover:border-black/60 transition-colors">
+                          {selectedBySlot[currentSlot]?.index === b.index && (
+                            <div className="w-full h-full rounded-full bg-black/80 flex items-center justify-center">
+                              <div className="w-2 h-2 rounded-full bg-white"></div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+
+                  {optionsForSlot(currentSlot).length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      No beneficiaries available
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="p-6 border-t border-gray-200/50 -mt-14">
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => {
+                      setShowBeneficiaryModal(false);
+                      setCurrentSlot(null);
+                    }}
+                    className="px-8 py-3 rounded-full border-2 border-dotted border-black/60 bg-transparent text-black hover:bg-black/10 transition-colors peridia-display-light"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

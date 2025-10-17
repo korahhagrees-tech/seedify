@@ -296,8 +296,10 @@ export default function WalletPage() {
             );
 
             if (!cancelled) {
-              setTendedEcosystems(enrichedSnapshots);
-              console.log('✅ [WALLET] Enriched snapshots:', enrichedSnapshots);
+              // Reverse order to show newest first (backend returns oldest first)
+              const reversedSnapshots = enrichedSnapshots.reverse();
+              setTendedEcosystems(reversedSnapshots);
+              console.log('✅ [WALLET] Enriched snapshots (newest first):', reversedSnapshots);
             }
 
             const newSnapsEtag = snapshotsResponse.headers.get('ETag');
