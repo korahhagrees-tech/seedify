@@ -30,14 +30,14 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
   const { user, ready, authenticated, logout: privyLogout } = usePrivy();
   const { wallets } = useWallets();
   const { setActiveWallet: setWagmiActiveWallet } = useSetActiveWallet();
-  
+
   // Get store state and actions
   const storeUser = useAuthStore((state) => state.user);
   const walletAddress = useAuthStore((state) => state.walletAddress);
   const activeWallet = useAuthStore((state) => state.activeWallet);
   const linkedAccounts = useAuthStore((state) => state.linkedAccounts);
   const storeWallets = useAuthStore((state) => state.wallets);
-  
+
   const setUser = useAuthStore((state) => state.setUser);
   const setWallets = useAuthStore((state) => state.setWallets);
   const setActiveWallet = useAuthStore((state) => state.setActiveWallet);
@@ -73,7 +73,7 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (user?.linkedAccounts && user.linkedAccounts.length > 0) {
       console.log('🔍 [AUTH] Syncing linkedAccounts as wallets:', user.linkedAccounts);
-      
+
       // Convert linkedAccounts to wallet format for consistency
       const linkedWallets = user.linkedAccounts.map((account: any) => ({
         address: account.address,
@@ -103,21 +103,21 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
         switchChain: () => Promise.resolve(),
         // Meta information
         meta: {
-          name: account.walletClientType === 'privy' ? 'Embedded Wallet' : 
-                account.walletClientType === 'metamask' ? 'MetaMask' :
-                account.walletClientType === 'coinbase' ? 'Coinbase Wallet' : 'Unknown Wallet',
+          name: account.walletClientType === 'privy' ? 'Embedded Wallet' :
+            account.walletClientType === 'metamask' ? 'MetaMask' :
+              account.walletClientType === 'coinbase' ? 'Coinbase Wallet' : 'Unknown Wallet',
           icon: account.walletClientType === 'privy' ? 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUiIGhl...' : null
         }
       }));
-      
+
       console.log('🔍 [AUTH] Converted linkedAccounts to wallets:', linkedWallets);
-      
+
       // Start with linked accounts as base wallets
       const allWallets = [...linkedWallets];
-      
+
       // Add ALL connected wallets (including multiple accounts from same provider)
       wallets.forEach((wallet: any) => {
-        const exists = allWallets.some((existing: any) => 
+        const exists = allWallets.some((existing: any) =>
           existing.address?.toLowerCase() === wallet.address?.toLowerCase()
         );
         if (!exists) {
@@ -125,7 +125,7 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
           allWallets.push(wallet);
         }
       });
-      
+
       // Sort wallets by type and address for consistent ordering
       allWallets.sort((a: any, b: any) => {
         // First sort by wallet type (external EVM first, then embedded)
@@ -136,38 +136,46 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
           if (type === 'privy' || type === 'embedded') return 3;  // Embedded last
           return 4;
         };
-        
+
         const aTypeOrder = typeOrder(a.walletClientType || a.connectorType || 'unknown');
         const bTypeOrder = typeOrder(b.walletClientType || b.connectorType || 'unknown');
-        
+
         if (aTypeOrder !== bTypeOrder) {
           return aTypeOrder - bTypeOrder;
         }
-        
+
         // Then sort by address for same type
         return (a.address || '').localeCompare(b.address || '');
       });
-      
+
       console.log('🔍 [AUTH] Final merged wallets:', allWallets);
       console.log('🔍 [AUTH] Total wallets count:', allWallets.length);
       console.log('🔍 [AUTH] Wallet addresses:', allWallets.map(w => w.address));
       setWallets(allWallets as any);
 
-      // Auto-set the first external EVM wallet as active if no active wallet is set
+      // Auto-set the first EVM wallet as active if no active wallet is set
       if (allWallets.length > 0 && !activeWallet) {
-        // First try to find an external EVM wallet from the original Privy wallets
-        const firstExternalPrivyWallet = wallets.find((wallet: any) => {
-          const walletType = wallet.walletClientType || wallet.connectorType || 'unknown';
-          return walletType === 'metamask' || walletType === 'coinbase' || walletType === 'walletconnect';
+        // Prefer external EVM wallets
+        const firstExternalEvm = allWallets.find((w: any) => {
+          const type = (w.walletClientType || w.connectorType || '').toLowerCase();
+          const isExternal = type === 'metamask' || type === 'coinbase' || type === 'walletconnect';
+          const isEvm = (w.chainType || '').toLowerCase() === 'ethereum';
+          return isExternal && isEvm;
         });
-        
-        if (firstExternalPrivyWallet) {
-          console.log('🔍 [AUTH] Auto-setting first external EVM wallet as active:', firstExternalPrivyWallet.address);
-          setActiveWallet(firstExternalPrivyWallet);
-        } else if (wallets.length > 0) {
-          // Fallback to first Privy wallet if no external EVM wallet found
-          console.log('🔍 [AUTH] No external EVM wallet found, using first Privy wallet:', wallets[0].address);
-          setActiveWallet(wallets[0]);
+
+        // Fallback to embedded EVM wallet (Privy) if no external
+        const firstEmbeddedEvm = allWallets.find((w: any) => {
+          const isEmbedded = (w.walletClientType || w.connectorType || '').toLowerCase() === 'privy' || (w.connectorType || '').toLowerCase() === 'embedded';
+          const isEvm = (w.chainType || '').toLowerCase() === 'ethereum';
+          return isEmbedded && isEvm;
+        });
+
+        const chosen = firstExternalEvm || firstEmbeddedEvm || null;
+        if (chosen) {
+          console.log('🔍 [AUTH] Auto-setting EVM wallet as active:', chosen.address);
+          setActiveWallet(chosen as any);
+        } else {
+          console.log('🔍 [AUTH] No EVM wallet available to set active (only non-EVM wallets present).');
         }
       }
     }
@@ -186,8 +194,15 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
   // Handle active wallet setting (sync with wagmi)
   const handleSetActiveWallet = (wallet: ConnectedWallet | null) => {
     setActiveWallet(wallet);
-    if (wallet) {
-      setWagmiActiveWallet(wallet);
+    // Only set Wagmi active wallet for EVM wallets
+    try {
+      if (wallet && (wallet as any).chainType === 'ethereum') {
+        setWagmiActiveWallet(wallet);
+      } else if (wallet) {
+        console.log('🔍 [AUTH] Skipping Wagmi setActiveWallet for non-EVM wallet:', (wallet as any).chainType);
+      }
+    } catch (err) {
+      console.warn('⚠️ [AUTH] Failed to set Wagmi active wallet (likely non-EVM):', err);
     }
   };
 
@@ -199,9 +214,9 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      user: storeUser, 
-      walletAddress, 
+    <AuthContext.Provider value={{
+      user: storeUser,
+      walletAddress,
       balance: "0.063", // Mock balance - will be replaced by wagmi balance
       logout,
       wallets: storeWallets,
@@ -229,7 +244,7 @@ interface AuthProviderProps {
 export default function AuthProvider({ children }: AuthProviderProps) {
   const appId = getPrivyAppId();
   const clientId = getPrivyClientId();
-  
+
   return (
     <PrivyProvider appId={appId} clientId={clientId} config={privyConfig}>
       <QueryClientProvider client={queryClient}>

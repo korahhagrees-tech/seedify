@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { use } from "react";
 import WayOfFlowersCard from "@/components/WayOfFlowersCard";
@@ -28,6 +28,7 @@ export default function WayOfFlowers({
     backgroundImageUrl?: string;
     beneficiaryCode?: string;
   } | null>(null);
+  const webhookInFlightRef = useRef(false);
 
   // Unwrap params using React.use()
   const { seedId } = use(params);
@@ -36,6 +37,11 @@ export default function WayOfFlowers({
 
   // Function to call webhook and handle response
   const callWebhookForImageGeneration = useCallback(async (webhookData: any) => {
+    if (webhookInFlightRef.current) {
+      console.log('⏭️ Webhook already in-flight; skipping duplicate call');
+      return;
+    }
+    webhookInFlightRef.current = true;
     try {
       console.log('🔗 Calling webhook from way-of-flowers page:', webhookData);
 
@@ -77,7 +83,7 @@ export default function WayOfFlowers({
         toast.success('Image generation completed!');
 
         // Clean up webhook data
-        localStorage.removeItem(`webhook_data_${seedId}`);
+        // Keep data around until navigation completes; do cleanup later if needed
 
         console.log('🖼️ Image generation completed:', imageData);
       } else {
@@ -89,8 +95,21 @@ export default function WayOfFlowers({
       setIsWaitingForImage(false);
       toast.error('Image generation failed. You can still explore the blooming view.');
 
-      // Clean up webhook data on failure
-      localStorage.removeItem(`webhook_data_${seedId}`);
+      // Fallback: construct snapshot image URL from the original payload we sent
+      try {
+        const { seedId: sId, snapshotId, processId, beneficiaryCode } = webhookData || {};
+        if (sId && snapshotId && processId) {
+          const constructedImageUrl = `https://d17wy07434ngk.cloudfront.net/seed${sId}/snap${sId}-${snapshotId}-${processId}.png`;
+          const transformedCode = beneficiaryCode ? String(beneficiaryCode).replace('-', '__') : '';
+          const backgroundImageUrl = transformedCode ? `/project_images/${transformedCode}.png` : undefined;
+          setImageGenerationData({ snapshotImageUrl: constructedImageUrl, backgroundImageUrl, beneficiaryCode });
+        }
+      } catch (e) {
+        console.warn('Fallback URL construction failed', e);
+      }
+    }
+    finally {
+      webhookInFlightRef.current = false;
     }
   }, [seedId]);
 
@@ -164,25 +183,57 @@ export default function WayOfFlowers({
   }, [seedId, wayOfFlowersData.backgroundImageUrl]);
 
   const handleExploreClick = () => {
-    // Navigate to blooming page with image data
-    if (imageGenerationData) {
-      const params = new URLSearchParams();
-      if (imageGenerationData.snapshotImageUrl) {
-        params.set('snapshotImageUrl', imageGenerationData.snapshotImageUrl);
-      }
-      if (imageGenerationData.backgroundImageUrl) {
-        params.set('backgroundImageUrl', imageGenerationData.backgroundImageUrl);
-      }
-      if (imageGenerationData.beneficiaryCode) {
-        params.set('beneficiaryCode', imageGenerationData.beneficiaryCode);
-      }
+    // Navigate to blooming page with validated image data
+    let img = imageGenerationData;
 
-      const queryString = params.toString();
-      router.push(`/way-of-flowers/${seedId}/blooming${queryString ? `?${queryString}` : ''}`);
-    } else {
-      // Fallback to blooming page without image data
-      router.push(`/way-of-flowers/${seedId}/blooming`);
+    // If current data is missing/invalid, rebuild from stored payload
+    const isInvalid = !img ||
+      !img.snapshotImageUrl || img.snapshotImageUrl.includes('undefined') ||
+      !img.backgroundImageUrl || img.backgroundImageUrl.endsWith('/.png');
+
+    if (isInvalid) {
+      try {
+        const storedStr = localStorage.getItem(`webhook_data_${seedId}`);
+        if (storedStr) {
+          const stored = JSON.parse(storedStr);
+          const sId = stored?.seedId;
+          const snapshotId = stored?.snapshotId;
+          const processId = stored?.processId;
+          const code = stored?.beneficiaryCode as string | undefined;
+          const constructed = (sId && snapshotId && processId)
+            ? `https://d17wy07434ngk.cloudfront.net/seed${sId}/snap${sId}-${snapshotId}-${processId}.png`
+            : undefined;
+          const bg = code ? `/project_images/${String(code).replace('-', '__')}.png` : undefined;
+          img = {
+            snapshotImageUrl: constructed,
+            backgroundImageUrl: bg,
+            beneficiaryCode: code,
+          };
+          setImageGenerationData(img);
+        }
+      } catch { /* ignore */ }
     }
+
+    const params = new URLSearchParams();
+    if (img?.snapshotImageUrl && !img.snapshotImageUrl.includes('undefined')) {
+      params.set('snapshotImageUrl', img.snapshotImageUrl);
+    }
+    if (img?.backgroundImageUrl && !img.backgroundImageUrl.endsWith('/.png')) {
+      params.set('backgroundImageUrl', img.backgroundImageUrl);
+    }
+    if (img?.beneficiaryCode) {
+      params.set('beneficiaryCode', img.beneficiaryCode);
+    }
+    try {
+      const stored = localStorage.getItem(`webhook_data_${seedId}`);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed?.beneficiaryName) params.set('beneficiaryName', parsed.beneficiaryName);
+      }
+    } catch { }
+
+    const queryString = params.toString();
+    router.push(`/way-of-flowers/${seedId}/blooming${queryString ? `?${queryString}` : ''}`);
   };
 
   const handleTryAgainClick = () => {

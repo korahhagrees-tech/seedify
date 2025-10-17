@@ -13,6 +13,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSeedStory } from "@/lib/data/componentData";
 import { usePrivy } from "@privy-io/react-auth";
+import { clearAppStorage } from "@/lib/auth/logoutUtils";
 
 export default function About() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function About() {
   const [showStoryPanel, setShowStoryPanel] = useState(false);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const [isAudioPlayerOpen, setIsAudioPlayerOpen] = useState(false);
+  const defaultAudioUrl = "https://soundcloud.com/crosslucid/we-are-the-soil-for-what-comes-next-by-stanley-qiufan-chen?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing";
   const { logout } = usePrivy();
 
   // Use seed 1 data for the about page
@@ -47,11 +49,16 @@ export default function About() {
   };
 
   const handleTabClick = (tab: "substrate" | "credits" | "tnc") => {
+    // If StoryPanel is open, close it and switch to the requested tab content
+    setShowStoryPanel(false);
     setActiveTab(tab);
   };
 
   const handleStoryClick = () => {
     setShowStoryPanel(true);
+  };
+  const handleStoryAudioClick = () => {
+    setIsAudioPlayerOpen(true);
   };
 
   const handleBackFromStory = () => {
@@ -67,6 +74,7 @@ export default function About() {
   };
 
   const handleLogout = async () => {
+    clearAppStorage();
     await logout();
     router.push("/");
     // Force refresh to clear all state
@@ -141,6 +149,8 @@ export default function About() {
                   title={getSeedStory("1").title}
                   author={getSeedStory("1").author}
                   onBack={handleBackFromStory}
+                  audioUrl={defaultAudioUrl}
+                  onAudioClick={handleStoryAudioClick}
                 />
               </motion.div>
             ) : (
@@ -171,6 +181,10 @@ export default function About() {
                     <p className="text-xs leading-relaxed">
                       The aesthetic language emerges from a generative morphological art engine trained on botanical datasets and responsive to verified conservation data, establishing direct connections between artistic evolution and ecological action.
                     </p>
+                    <p className="text-xs leading-relaxed">
+                      This innovative approach reveals how protocol art becomes both a catalyst for environmental regeneration, creating a meaningful bridge between world building and real-world impact through communal engagement, ultimately embodying the principle that the model is the message.
+
+                    </p>
                   </>
                 )}
 
@@ -189,6 +203,31 @@ export default function About() {
                     <p className="text-left text-xs leading-relaxed">
                       ~~~<br />
                       <span className="peridia-display-light">The Way of Flowers</span> is a collaborative creation that brings together artists, technologists, environmental scientists, and conservationists from around the world.
+                      This project represents the culmination of years of research into digital art, blockchain technology, and environmental conservation.
+                      <p className="text-xs leading-relaxed mt-3">
+                        Our team includes leading experts in generative art, ecological restoration, and sustainable technology who have dedicated their expertise to bridging the gap between digital creativity and environmental impact. The botanical art engine was developed in collaboration with renowned digital artists and environmental researchers, ensuring that each piece not only represents artistic excellence but also contributes to real-world conservation efforts.
+                        Special thanks to our conservation partners, community moderators, and the thousands of participants who have contributed to making this project a living, breathing ecosystem of art and environmental action.
+                        The project was conceived and developed by a team of passionate individuals who believe in the power of art to inspire environmental change. Our botanical art engine utilizes cutting-edge machine learning techniques to create unique, evolving artworks that respond to real-world conservation data.
+                      </p>
+                      <p className="text-xs leading-relaxed mt-3">
+                        We extend our gratitude to the botanical gardens, research institutions, and conservation organizations worldwide who have provided the datasets and inspiration that make this project possible. Together, we're cultivating a digital garden that grows more beautiful with every act of environmental stewardship.
+                        Our technical infrastructure is built on the latest advances in blockchain technology, ensuring secure and transparent transactions while maintaining the artistic integrity of each piece. The generative art engine represents years of research and development in machine learning and computational creativity.
+                        Special recognition goes to our community of artists, developers, and environmental advocates who have contributed their time, expertise, and passion to this project. Their dedication to both artistic excellence and environmental impact has been instrumental in bringing this vision to life.
+                      </p>
+                      <p className="text-xs leading-relaxed mt-3">
+                        We also acknowledge the indigenous communities and traditional knowledge holders whose understanding of botanical relationships and environmental stewardship has informed our approach to digital conservation art. Their wisdom continues to guide our commitment to respectful and sustainable environmental engagement.
+                      </p>
+                      <p className="text-xs leading-relaxed mt-3">
+                        <p className="peridia-display-light font-bold">Creative Circle</p>
+                        <p>Artists & Creative Direction:			CROSSLUCID</p>
+                        <p>Morphological Art Engine:			CROSSLUCID</p>
+                        <p>Biodiversity project curation:		Sarah Baxendell ~ Art Ecology</p>
+                        <p>Smart Contracts:				Adriano Guerrera</p>
+                        <p>Graphic Design:				Roxy Zeiher</p>
+                        <p>dApp: 						Maa Lee</p>
+                        <p>Exhibition Text:				Chen ‘Stanley’ Qiufan</p>
+                        <p>Exhibition Text Recording:			Dr Penny Oxi Pëng</p>
+                      </p>
                     </p>
                   </>
                 )}

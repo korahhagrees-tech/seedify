@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import SeedDetailPage from "@/components/seeds/SeedDetailPage";
 import { Seed } from "@/types/seed";
 import { fetchSeedById } from "@/lib/api/seeds";
+import GardenHeader from "@/components/GardenHeader";
 
 export default function SeedDetailsRoute() {
   const params = useParams();
@@ -42,6 +43,10 @@ export default function SeedDetailsRoute() {
 
   return (
     <div className="-mt-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pb-44">
+      {/* Header Section */}
+      <div className="pt-18 -pb-4">
+        <GardenHeader />
+      </div>
       <SeedDetailPage seed={seed} onBack={() => router.push("/garden")} />
     </div>
   );

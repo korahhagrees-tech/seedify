@@ -102,7 +102,7 @@ export default function TendedEcosystem({
             alt="Seed emblem"
             width={22}
             height={22}
-            className="w-8 h-8"
+            className="w-12 h-12"
           />
         </div>
       </div>

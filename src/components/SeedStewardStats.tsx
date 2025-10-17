@@ -8,6 +8,9 @@ import RootShapeArea from "@/components/wallet/RootShapeArea";
 import { Seed } from "@/types/seed";
 import { useState } from "react";
 import Link from "next/link";
+import { usePrivy } from '@privy-io/react-auth';
+import { useAuth } from "@/components/auth/AuthProvider";
+import { toast } from 'sonner';
 // Modals moved to page level - no imports needed
 
 type Beneficiary = {
@@ -69,6 +72,10 @@ export default function SeedStewardStats({
   const [imageError, setImageError] = useState(false);
   const [isInfoDropdownOpen, setIsInfoDropdownOpen] = useState(false);
 
+  // Wallet-related hooks for defensive checks
+  const { ready, authenticated } = usePrivy();
+  const { activeWallet, wallets } = useAuth();
+
   // Morph large rounded-square image to smaller circle on scroll
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.4]);
   const radius = useTransform(scrollYProgress, [0, 0.2], [60, 999]);
@@ -124,6 +131,21 @@ export default function SeedStewardStats({
   // Open Amplify Modal
   const handleAmplifyClick = () => {
     console.log('🌱 Amplify button clicked');
+
+    // Defensive checks for wallet functionality
+    if (!ready) {
+      toast.info('Setting up wallet... Please wait.');
+      return;
+    }
+    if (!authenticated) {
+      toast.info('Please connect your wallet to continue.');
+      return;
+    }
+    if (!activeWallet) {
+      toast.error("No active wallet found. Please connect your wallet.");
+      return;
+    }
+
     if (onAmplifyClick) {
       onAmplifyClick();
     }
@@ -132,6 +154,21 @@ export default function SeedStewardStats({
   // Open Harvest Modal
   const handleHarvestClick = () => {
     console.log('🌾 Harvest button clicked');
+
+    // Defensive checks for wallet functionality
+    if (!ready) {
+      toast.info('Setting up wallet... Please wait.');
+      return;
+    }
+    if (!authenticated) {
+      toast.info('Please connect your wallet to continue.');
+      return;
+    }
+    if (!activeWallet) {
+      toast.error("No active wallet found. Please connect your wallet.");
+      return;
+    }
+
     if (onHarvestClick) {
       onHarvestClick();
     }
@@ -158,10 +195,10 @@ export default function SeedStewardStats({
           {/* Header */}
           <GardenHeader />
 
-          {/* Hero with image and actions */}
-          <div className="pt-4 pb-6">
+          {/* Hero with image and actions - moved above stats content */}
+          <div className="pt-4 pb-6 relative">
             <div className="flex items-start justify-center gap-4 relative max-w-4xl mx-auto -mt-2">
-              {/* Morphing image */}
+              {/* Transformed circular image - appears on scroll */}
               <motion.div
                 style={{
                   scale,
@@ -169,7 +206,7 @@ export default function SeedStewardStats({
                   width: width,
                   height: height
                 }}
-                className="relative overflow-hidden shadow-xl bg-white mx-auto scale-[0.6] -ml-20 -mt-28 mb-2"
+                className="absolute top-4 right-4 overflow-hidden shadow-xl bg-white z-10"
               >
                 <Image
                   src={
@@ -196,7 +233,7 @@ export default function SeedStewardStats({
                   opacity: buttonOpacity,
                   right: buttonRight,
                 }}
-                className="absolute top-2 flex flex-col gap-3"
+                className="absolute top-2 flex flex-col gap-3 z-20"
               >
                 {links?.openseaUrl && (
                   <Link
@@ -227,7 +264,7 @@ export default function SeedStewardStats({
               onClick={toggleInfoDropdown}
               onMouseDown={() => console.log('🖱️ INFO button mouse down')}
               onMouseUp={() => console.log('🖱️ INFO button mouse up')}
-              className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 text-gray-900 text-sm -ml-16 left-8 hover:bg-white/90 transition-colors cursor-pointer relative z-50 w-22 border-2 border-red-500"
+              className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 text-gray-900 text-sm -ml-16 left-8 hover:bg-white/90 transition-colors cursor-pointer relative z-50 w-22"
               style={{ pointerEvents: 'auto', position: 'relative' }}
             >
               INFO
@@ -240,7 +277,7 @@ export default function SeedStewardStats({
             </button>
           </div>
 
-          {/* Info Dropdown Modal */}
+          {/* Info Dropdown Modal - positioned as overlay over stats section */}
           <AnimatePresence>
             {isInfoDropdownOpen && (
               <motion.div
@@ -248,9 +285,9 @@ export default function SeedStewardStats({
                 animate={{ opacity: 1, height: "auto", y: 0 }}
                 exit={{ opacity: 0, height: 0, y: -20 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="overflow-hidden"
+                className="absolute top-0 left-0 right-0 z-50 overflow-hidden"
               >
-                <div className="mx-4 mb-4 rounded-[28px] bg-gray-400/40 p-6">
+                <div className="mx-4 mb-4 rounded-[28px] bg-gray-400/90 backdrop-blur-sm p-6 shadow-lg border-2 border-dotted border-gray-600">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Left Column */}
                     <div className="space-y-4">
@@ -356,10 +393,10 @@ export default function SeedStewardStats({
             </div>
           </div>
 
-          {/* Two separate sections below */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mx-4 mb-6">
+          {/* Two separate sections below - always side by side */}
+          <div className="grid grid-cols-2 gap-2 mx-4 mb-6 scale-[0.9] lg:scale-[1.0] md:scale-[0.95]">
             {/* Left Card: NUTRIENT RESERVE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-gray-400/40 p-6">
+            <div className="rounded-[28px] bg-gray-400/40 p-4">
               <div className="space-y-4">
                 {/* NUTRIENT RESERVE TOTAL */}
                 <div className="text-center">
@@ -394,7 +431,7 @@ export default function SeedStewardStats({
             </div>
 
             {/* Right Card: HARVESTABLE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-gray-400/40 p-6">
+            <div className="rounded-[28px] bg-gray-400/40 p-4">
               <div className="space-y-4">
                 {/* HARVESTABLE */}
                 <div className="text-center">
@@ -437,7 +474,7 @@ export default function SeedStewardStats({
                 {/* Button with scalloped edges and border */}
                 <button
                   onClick={handleAmplifyClick}
-                  className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors cursor-pointer z-20"
+                  className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors cursor-pointer z-30"
                 >
                   Amplify Impact
                 </button>
@@ -455,7 +492,7 @@ export default function SeedStewardStats({
                 {/* Button with scalloped edges and border */}
                 <button
                   onClick={handleHarvestClick}
-                  className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors cursor-pointer z-20"
+                  className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors cursor-pointer z-30"
                 >
                   Harvest
                 </button>

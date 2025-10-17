@@ -9,11 +9,19 @@ import { assets } from "@/lib/assets";
 import { useWaitForTransactionReceipt } from "wagmi";
 import { useSearchParams } from "next/navigation";
 import { API_CONFIG } from "@/lib/api/config";
+import { useSendTransaction } from "@privy-io/react-auth";
+import { encodeFunctionData, parseEther } from "viem";
+import { toast } from "sonner";
 
 interface StewardMintProps {
   backgroundImageUrl: string;
   onMintClick?: () => void;
   onTryAgainClick?: () => void;
+  walletAddress?: string; // optional, for display/checks only
+  prepareData?: any | null;
+  prepareLoading?: boolean;
+  prepareError?: string | null;
+  userEvmAddress?: string | undefined;
 }
 
 interface Beneficiary {
@@ -30,6 +38,11 @@ export default function StewardMint({
   backgroundImageUrl,
   onMintClick,
   onTryAgainClick,
+  walletAddress,
+  prepareData,
+  prepareLoading,
+  prepareError,
+  userEvmAddress,
 }: StewardMintProps) {
   const [showButtons, setShowButtons] = useState(false);
   const [transactionStatus, setTransactionStatus] = useState<
@@ -39,7 +52,10 @@ export default function StewardMint({
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
   const [randomBeneficiaryImage, setRandomBeneficiaryImage] = useState<string>("");
   const [selectedBeneficiaries, setSelectedBeneficiaries] = useState<Beneficiary[]>([]);
+  const [openDropdown, setOpenDropdown] = useState<number | null>(null); // 1..4 or null
+  const [selectedBySlot, setSelectedBySlot] = useState<Record<number, Beneficiary | null>>({ 1: null, 2: null, 3: null, 4: null });
   const searchParams = useSearchParams();
+  const { sendTransaction } = useSendTransaction();
 
   // Fetch beneficiaries on component mount
   useEffect(() => {
@@ -67,6 +83,24 @@ export default function StewardMint({
 
     fetchBeneficiaries();
   }, []);
+
+  const optionsForSlot = (slot: number): Beneficiary[] => {
+    if (!Array.isArray(beneficiaries)) return [];
+    if (slot === 1) return beneficiaries;
+    return beneficiaries.filter((b) => b.index !== 1);
+  };
+
+  const labelForSlot = (slot: number): string => {
+    const sel = selectedBySlot[slot];
+    if (!sel) return `Beneficiary ${String(slot).padStart(2, '0')}`;
+    // Prefer project title if available, else name
+    return sel.projectData?.title || sel.name || `Beneficiary ${String(slot).padStart(2, '0')}`;
+  };
+
+  const handleSelect = (slot: number, b: Beneficiary) => {
+    setSelectedBySlot((prev) => ({ ...prev, [slot]: b }));
+    setOpenDropdown(null);
+  };
 
   // Get transaction hash from URL params
   useEffect(() => {
@@ -162,6 +196,15 @@ export default function StewardMint({
             />
           </div>
 
+          {/* Optional wallet address display (render-only, no gating) */}
+          {walletAddress && (
+            <div className="text-center mb-2">
+              {/* <div className="inline-block px-3 py-1 rounded-full bg-white/70 text-black text-xs font-mono">
+                {walletAddress}
+              </div> */}
+            </div>
+          )}
+
           {/* Main card */}
           <motion.div
             className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-4 border-dotted border-white/70 h-[580px] lg:h-[750px] md:h-[750px]"
@@ -239,45 +282,41 @@ export default function StewardMint({
                 </div>
               </div>
 
-              {/* Four beneficiary buttons section */}
+              {/* Four beneficiary dropdowns section */}
               <div className="-mb-14 lg:-mb-30 md:-mb-16 -px-12 lg:scale-[0.98] md:scale-[0.95] scale-[0.90] lg:mt-1 md:-mt-1 -mt-3">
                 <div className="grid grid-cols-2 px-1 gap-6 mt-12 lg:mt-14 md:mt-12 mb-9">
-                  {/* {selectedBeneficiaries.map((beneficiary, index) => (
-                    <button
-                      key={beneficiary.index}
-                      className="px-4 py-1 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors"
-                    >
-                      Beneficiary {String(index + 1).padStart(2, '0')}
-                    </button>
-                  ))} */}
-                  <div className="-ml-6 lg:-ml-2 md:-ml-2">
-                    <button
-                      className="px-8 py-0 text-nowrap rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors"
-                    >
-                      Beneficiary 01
-                    </button>
-                  </div>
-                  <div className="ml-2 lg:ml-2 md:ml-2">
-                    <button
-                      className="px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-nowrap text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors"
-                    >
-                      Beneficiary 02
-                    </button>
-                  </div>
-                  <div className="-ml-6 lg:-ml-2 md:-ml-2">
-                    <button
-                      className="px-8 py-0 text-nowrap rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors"
-                    >
-                      Beneficiary 03
-                    </button>
-                  </div>
-                  <div className="ml-2 lg:ml-2 md:ml-2">
-                    <button
-                      className="px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-nowrap text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors"
-                    >
-                      Beneficiary 04
-                    </button>
-                  </div>
+                  {[1, 2, 3, 4].map((slot) => (
+                    <div key={slot} className={`${slot % 2 === 1 ? '-ml-6 lg:-ml-2 md:-ml-2' : 'ml-2 lg:ml-2 md:ml-2'} relative`}>
+                      <button
+                        onClick={() => setOpenDropdown(openDropdown === slot ? null : slot)}
+                        className="px-8 py-0 w-full rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden"
+                      >
+                        <span className="block w-36 -ml-6 truncate whitespace-nowrap align-middle">
+                          {labelForSlot(slot)}
+                        </span>
+                        {/* <span className="ml-2 align-middle">▾</span> */}
+                      </button>
+                      {openDropdown === slot && (
+                        <div className="absolute z-50 mt-2 w-[220px] max-h-48 overflow-auto rounded-2xl border-2 border-dotted border-black/60 bg-white/95 shadow -ml-8">
+                          {optionsForSlot(slot).map((b) => (
+                            <button
+                              key={`${b.index}-${b.code}`}
+                              onClick={() => handleSelect(slot, b)}
+                              className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+                            >
+                              <div className="text-xs text-black truncate">
+                                {b.projectData?.title || b.name}
+                              </div>
+                              <div className="text-[10px] text-gray-500 truncate">{b.code}</div>
+                            </button>
+                          ))}
+                          {optionsForSlot(slot).length === 0 && (
+                            <div className="px-3 py-2 text-xs text-gray-500">No options</div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
                 <div className="text-center">
                   <div className="text-black text-sm -mt-4 mb-4">
@@ -305,7 +344,108 @@ export default function StewardMint({
                   }}
                 >
                   <button
-                    onClick={onMintClick}
+                    onClick={async () => {
+                      try {
+                        if (prepareLoading) {
+                          toast.info('Loading mint data...');
+                          return;
+                        }
+                        if (prepareError || !prepareData) {
+                          toast.error('Minting data unavailable');
+                          return;
+                        }
+                        if (prepareData.seedCapReached) {
+                          toast.error('Seed cap reached.');
+                          return;
+                        }
+                        if (!prepareData.canMint) {
+                          toast.error(prepareData.isLocked ? 'Factory locked. You are not authorized to create seeds.' : 'You are not authorized to create seeds.');
+                          return;
+                        }
+                        if (!userEvmAddress) {
+                          toast.info('Connect an EVM wallet to continue');
+                          return;
+                        }
+                        // Collect 4 beneficiary indices
+                        const indices = [1, 2, 3, 4].map((slot) => selectedBySlot[slot]?.index).filter((v) => typeof v === 'number') as number[];
+                        if (indices.length !== 4) {
+                          toast.error('Please select four beneficiaries');
+                          return;
+                        }
+
+                        const contractAddress = prepareData.contractAddress as `0x${string}`;
+                        const snapshotPriceEth = prepareData.defaultSnapshotPrice || '0.011';
+                        const totalMinimumCostEth = prepareData.totalMinimumCost || snapshotPriceEth;
+                        const location = 'berlin'; // default; could be user input later
+
+                        const createSeedABI = [
+                          {
+                            type: 'function',
+                            name: 'createSeed',
+                            stateMutability: 'payable',
+                            inputs: [
+                              { name: 'seedReceiver', type: 'address' },
+                              { name: 'snapshotPrice', type: 'uint256' },
+                              { name: 'location', type: 'string' },
+                              { name: 'beneficiaryIndexList', type: 'uint256[4]' }
+                            ],
+                            outputs: [{ name: 'seedId', type: 'uint256' }]
+                          }
+                        ] as const;
+
+                        const data = encodeFunctionData({
+                          abi: createSeedABI as any,
+                          functionName: 'createSeed',
+                          args: [
+                            userEvmAddress as `0x${string}`,
+                            parseEther(snapshotPriceEth),
+                            location,
+                            [
+                              BigInt(indices[0]),
+                              BigInt(indices[1]),
+                              BigInt(indices[2]),
+                              BigInt(indices[3])
+                            ]
+                          ]
+                        });
+
+                        const tx = await sendTransaction(
+                          {
+                            to: contractAddress,
+                            value: parseEther(totalMinimumCostEth).toString(),
+                            data
+                          },
+                          {
+                            sponsor: true,
+                            uiOptions: {
+                              description: `Create a seed (min cost ${totalMinimumCostEth} ETH)`
+                            }
+                          }
+                        );
+
+                        toast.success('Transaction submitted');
+
+                        // Optionally call seed-created webhook (without seedId until parsed elsewhere)
+                        try {
+                          const base = API_CONFIG.baseUrl || process.env.NEXT_PUBLIC_API_BASE_URL || '';
+                          await fetch(`${base}/seed-created`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              creator: userEvmAddress,
+                              recipient: userEvmAddress,
+                              snapshotPrice: snapshotPriceEth,
+                              beneficiaries: indices,
+                              txHash: tx.hash,
+                              timestamp: Math.floor(Date.now() / 1000)
+                            })
+                          });
+                        } catch { }
+                      } catch (e: any) {
+                        console.error(e);
+                        toast.error(e?.message || 'Failed to create seed');
+                      }
+                    }}
                     className="mt-46 mb-9 px-8 py-3 rounded-full border-2 border-dotted border-white/70 text-white text-xl font-medium bg-transparent hover:bg-white/20 transition-all duration-300 peridia-display"
                   >
                     <p className="text-white text-2xl scale-[0.8] lg:scale-[1.2] md:scale-[0.9] font-medium">MINT</p>

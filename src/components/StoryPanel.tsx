@@ -3,15 +3,18 @@
 import { motion } from "framer-motion";
 import { assets } from "@/lib/assets";
 import Image from "next/image";
+import { useState } from "react";
 
 interface StoryPanelProps {
   text: string;
   onBack: () => void;
   title?: string;
   author?: string;
+  audioUrl?: string;
+  onAudioClick?: () => void;
 }
 
-export default function StoryPanel({ text, onBack, title, author }: StoryPanelProps) {
+export default function StoryPanel({ text, onBack, title, author, audioUrl, onAudioClick }: StoryPanelProps) {
   return (
     <motion.div
       className="w-full"
@@ -37,13 +40,17 @@ export default function StoryPanel({ text, onBack, title, author }: StoryPanelPr
         </div>
 
         <div className="mx-auto my-2 w-10 h-10 rounded-full border border-black flex items-center justify-center">
-          <Image src="/audio-play.svg" alt="Audio" width={20} height={20} />
+          <button onClick={onAudioClick} aria-label="Play audio">
+            <Image src="/audio-play.svg" alt="Audio" width={20} height={20} />
+          </button>
         </div>
 
         {/* Body content */}
         <div className="max-h-[520px] overflow-y-auto pr-1 text-xs tracking-tight [scrollbar-width:none] [&::-webkit-scrollbar]:hidden leading-relaxed text-black/90">
           <p className="whitespace-pre-line">{text}</p>
         </div>
+
+        {/* Audio modal handled at page level for full-screen backdrop */}
       </div>
     </motion.div>
   );

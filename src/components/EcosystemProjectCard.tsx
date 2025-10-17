@@ -216,10 +216,11 @@ export default function EcosystemProjectCard({
       // The webhook will be called from the way-of-flowers page after routing
       // to allow for proper waiting state with pulsing "Blooming" animation
 
-      // Store webhook data for way-of-flowers page to use
+      // Store webhook data for way-of-flowers page to use (augment with beneficiaryName for display)
       if (seedId) {
-        localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(webhookData));
-        console.log('🔗 Webhook data stored for way-of-flowers page:', seedId);
+        const toStore = { ...webhookData, beneficiaryName: title || undefined } as any;
+        localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(toStore));
+        console.log('🔗 Webhook data stored for way-of-flowers page:', seedId, toStore);
       }
 
       setIsMinting(false);

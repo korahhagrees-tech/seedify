@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { prepareDepositToSeed } from "@/lib/api/services/writeService";
 import { useWriteTransaction } from "@/lib/api/hooks/useWriteTransaction";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { clearAppStorage } from "@/lib/auth/logoutUtils";
 import Image from "next/image";
 import { assets } from "@/lib/assets";
 import { useBalance, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
@@ -51,7 +52,7 @@ export default function PaymentModal({
   const [isProcessing, setIsProcessing] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showWalletConnection, setShowWalletConnection] = useState(false);
-  const { authenticated, login, logout } = usePrivy();
+  const { ready, authenticated, login, logout } = usePrivy();
   const { execute } = useWriteTransaction();
   const { user, walletAddress, wallets: contextWallets, activeWallet, linkedAccounts } = useAuth();
   const router = useRouter();
@@ -116,6 +117,19 @@ export default function PaymentModal({
     setIsProcessing(true);
 
     try {
+      // Defensive readiness/authentication checks (no flow changes)
+      if (!ready) {
+        toast.info('Setting up wallet... Please wait.');
+        setIsProcessing(false);
+        return;
+      }
+      if (!authenticated) {
+        toast.info('Please connect your wallet to continue.');
+        setIsProcessing(false);
+        setShowWalletConnection(true);
+        return;
+      }
+
       // Use activeWallet from context (Zustand store), fallback to first wallet
       const currentActiveWallet = activeWallet || wallets[0];
       if (!currentActiveWallet) {
@@ -632,6 +646,7 @@ export default function PaymentModal({
                   </div>
                   <button onClick={async () => {
                     onClose();
+                    clearAppStorage();
                     await logout();
                     // Force refresh to clear all state
                     setTimeout(() => {

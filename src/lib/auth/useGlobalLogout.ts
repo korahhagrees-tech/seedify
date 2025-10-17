@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { usePrivy } from "@privy-io/react-auth";
+import { clearAppStorage } from "@/lib/auth/logoutUtils";
 
 export function useGlobalLogout() {
   const router = useRouter();
@@ -9,6 +10,7 @@ export function useGlobalLogout() {
 
   const handleLogout = async () => {
     try {
+      clearAppStorage();
       await logout();
     } catch (err) {
       console.error("Logout failed", err);

@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { prepareDepositToSeed } from "@/lib/api/services/writeService";
 import { useWriteTransaction } from "@/lib/api/hooks/useWriteTransaction";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { clearAppStorage } from "@/lib/auth/logoutUtils";
 import Image from "next/image";
 import { assets } from "@/lib/assets";
 import { useBalance, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
@@ -56,7 +57,7 @@ export default function HarvestSeedModal({
   const [showWalletConnection, setShowWalletConnection] = useState(false);
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
   const [withdrawalAmount, setWithdrawalAmount] = useState(stats.currentClaimable);
-  const { authenticated, login, logout } = usePrivy();
+  const { ready, authenticated, login, logout } = usePrivy();
   const { execute } = useWriteTransaction();
   const { user, walletAddress, wallets: contextWallets, activeWallet, linkedAccounts } = useAuth();
   const router = useRouter();
@@ -121,6 +122,17 @@ export default function HarvestSeedModal({
     setIsProcessing(true);
 
     try {
+      if (!ready) {
+        toast.info('Setting up wallet... Please wait.');
+        setIsProcessing(false);
+        return;
+      }
+      if (!authenticated) {
+        toast.info('Please connect your wallet to continue.');
+        setIsProcessing(false);
+        setShowWalletConnection(true);
+        return;
+      }
       // Use activeWallet from context (Zustand store), fallback to first wallet
       const currentActiveWallet = activeWallet || wallets[0];
       if (!currentActiveWallet) {
@@ -272,6 +284,7 @@ export default function HarvestSeedModal({
                     <button
                       onClick={async () => {
                         onClose();
+                        clearAppStorage();
                         await logout();
                         setTimeout(() => {
                           window.location.href = "/";

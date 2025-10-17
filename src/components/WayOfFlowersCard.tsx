@@ -107,7 +107,7 @@ export default function WayOfFlowersCard({
       <div className="relative z-10 px-4 pt-8 pb-8">
         <div className="max-w-md mx-auto">
           {/* The Way of Flowers logo */}
-          <div className="text-center mb-8 scale-[0.8] lg:scale-[1.0] md:scale-[1.0]">
+          <div className="text-center mb-8 scale-[0.5] lg:scale-[0.7] md:scale-[0.7]">
             <Image
               src={assets.text}
               alt="The Way of Flowers"

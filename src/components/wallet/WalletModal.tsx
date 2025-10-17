@@ -77,9 +77,16 @@ export default function WalletModal({
     linkEmail,
     linkPasskey,
   } = usePrivy();
+  // Determine an EVM address (if available) for wagmi balance calls
+  const evmAddress: `0x${string}` | undefined =
+    (activeWallet && (activeWallet as any).chainType === 'ethereum' && activeWallet.address?.startsWith('0x')
+      ? (activeWallet.address as `0x${string}`)
+      : undefined) ||
+    (walletAddress && walletAddress.startsWith('0x') ? (walletAddress as `0x${string}`) : undefined);
+
   const { data: balanceData } = useBalance({
-    address: walletAddress as `0x${string}`,
-  });
+    address: evmAddress,
+  } as any);
 
   const { login } = useLogin({
     onComplete: ({
@@ -99,6 +106,12 @@ export default function WalletModal({
       console.error("Login failed", error);
     },
   });
+
+  // Safely derive an email to display from Privy user object
+  const displayEmail = (user as any)?.email?.address ||
+    (Array.isArray((user as any)?.linkedAccounts)
+      ? (user as any).linkedAccounts.find((a: any) => a.type === 'email')?.address
+      : undefined);
 
   const balance = balanceData
     ? parseFloat(balanceData.formatted).toFixed(4)
@@ -267,7 +280,7 @@ export default function WalletModal({
   };
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="sync">
       {isOpen && (
         <>
           {/* Backdrop */}
@@ -310,7 +323,7 @@ export default function WalletModal({
                       className="flex items-center justify-center transition-colors scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
                     >
                       <span className="text-base font-mono text-black">
-                        {formatAddress(walletAddress || "")}
+                        {evmAddress ? formatAddress(evmAddress) : (activeWallet?.address || walletAddress || "")}
                       </span>
                       <Image
                         src={assets.copy}
@@ -324,11 +337,19 @@ export default function WalletModal({
                       <span className="text-xs text-green-600">Copied!</span>
                     )}
                   </div>
-                  <div className="bg-gray-100 px-3 scale-[0.8] -mt-3 py-1 rounded-lg">
-                    <span className="text-base scale-[1.3] font-light text-nowrap text-[#64668B] -mt-4">
-                      {balance} ETH
-                    </span>
-                  </div>
+                  {evmAddress ? (
+                    <div className="bg-gray-100 px-3 scale-[0.8] -mt-3 py-1 rounded-lg">
+                      <span className="text-base scale-[1.3] font-light text-nowrap text-[#64668B] -mt-4">
+                        {balance} ETH
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-100 px-3 scale-[0.8] -mt-3 py-1 rounded-lg">
+                      <span className="text-base scale-[1.1] font-light text-nowrap text-[#64668B] -mt-4">
+                        Non‑EVM wallet
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -342,12 +363,12 @@ export default function WalletModal({
                     height={16}
                     className="w-4 h-4"
                   />
-                  <span className="text-sm text-black">
-                    {user?.email || formatAddress(walletAddress || "")}
+                  <span className="text-sm text-black scale-[0.9] lg:scale-[1.0] md:scale-[0.95] -ml-4 lg:ml-0 md:-ml-2">
+                    {displayEmail || (evmAddress ? formatAddress(evmAddress) : (activeWallet?.address || walletAddress || ""))}
                   </span>
                   <button
                     onClick={handleSwitchWallet}
-                    className="w-[30%] ml-12 px-2 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
+                    className="w-[30%] lg:ml-2 md:ml-2 -ml-2 px-2 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
                   >
                     <span className="text-base scale-[1.05] font-light -mt-2">
                       {wallets.length > 1 ? "Switch" : "Change"}

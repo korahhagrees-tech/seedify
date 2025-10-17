@@ -25,11 +25,11 @@ export default function SeedDetailPage({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="min-h-screen w-full max-w-sm mx-auto lg:-mt-6 md:-mt-10 -mt-2 relative lg:scale-[1.0] md:scale-[0.95] scale-[1.0] overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="min-h-screen w-full max-w-sm mx-auto lg:-mt-8 md:-mt-14 -mt-12 relative lg:scale-[1.0] md:scale-[0.95] scale-[1.0] overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {/* Steward Label - positioned above the main content */}
-      <div className="relative pt-4 pb-2 ml-2 lg:ml-4 md:ml-4">
+      <div className="relative pt-4 pb-2 ml-2 lg:ml-4 md:ml-4 scale-[0.8] lg:scale-[1.0] md:scale-[0.95] z-10">
         <motion.div
-          className="absolute top-38 left-1/2 -translate-x-1/2 z-10"
+          className="absolute top-14 lg:top-14 md:top-10 left-1/2 -translate-x-1/2 z-10"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.25 }}
@@ -52,14 +52,9 @@ export default function SeedDetailPage({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        {/* Header Section */}
-        <div className="pt-4 pb-2">
-          <GardenHeader />
-        </div>
-
         {/* Seed Label Badge */}
         <div className="relative mb-4">
-          <div className="absolute top-10 -left-2 lg:-left-4 md:-left-4 z-10">
+          <div className="absolute top-2 -left-2 lg:-left-4 md:-left-4 z-10 scale-[0.8] lg:scale-[1.0] md:scale-[0.95]">
             <span className="bg-white border border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
               {seed.label.toUpperCase()}
             </span>
@@ -67,7 +62,7 @@ export default function SeedDetailPage({
         </div>
 
         {/* Seed Image Section */}
-        <div className="mt-8 mb-6 px-2 lg:px-0 md:px-0">
+        <div className="mt-8 mb-6 px-2 lg:px-0 md:px-0 z-10">
           <motion.div
             className="relative w-full h-[350px] lg:h-[400px] md:h-[400px] rounded-[40px] overflow-hidden mx-auto"
             initial={{ opacity: 0, scale: 0.95 }}

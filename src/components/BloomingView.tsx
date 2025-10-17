@@ -9,6 +9,7 @@ import RootShapeArea from "@/components/wallet/RootShapeArea";
 import GardenHeader from "./GardenHeader";
 import WalletModal from "@/components/wallet/WalletModal";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { clearAppStorage } from "@/lib/auth/logoutUtils";
 import { useRouter } from "next/navigation";
 
 interface BloomingViewProps {
@@ -45,6 +46,8 @@ export default function BloomingView({
   const initialImageUrl = snapshotImageUrl || seedImageUrl || "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
   const [currentImageSrc, setCurrentImageSrc] = useState(initialImageUrl);
   const [imageErrorCount, setImageErrorCount] = useState(0);
+  const [isPinging, setIsPinging] = useState(false);
+  const [isSnapshotReady, setIsSnapshotReady] = useState(false);
 
   // Legacy final image URL (for logging/debugging)
   const finalImageUrl = snapshotImageUrl || seedImageUrl || assets.testPink;
@@ -54,6 +57,7 @@ export default function BloomingView({
     const newImageUrl = snapshotImageUrl || seedImageUrl || "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
     setCurrentImageSrc(newImageUrl);
     setImageErrorCount(0);
+    setIsSnapshotReady(false);
 
     console.log("🔍 [BloomingView] Image URLs:", {
       snapshotImageUrl,
@@ -62,6 +66,34 @@ export default function BloomingView({
       finalImageUrl,
     });
   }, [snapshotImageUrl, seedImageUrl, finalImageUrl]);
+
+  // Attempt to check the constructed snapshot image URL before switching
+  const pingSnapshotImage = async () => {
+    if (!snapshotImageUrl) return;
+    setIsPinging(true);
+    const attempts = 4;
+    for (let i = 0; i < attempts; i++) {
+      try {
+        const res = await fetch(snapshotImageUrl, { method: 'HEAD', cache: 'no-store' });
+        if (res.ok && res.status !== 403) {
+          setCurrentImageSrc(snapshotImageUrl);
+          setIsSnapshotReady(true);
+          break;
+        }
+      } catch (_) {
+        // ignore and retry
+      }
+      await new Promise((r) => setTimeout(r, 1500));
+    }
+    setIsPinging(false);
+  };
+
+  useEffect(() => {
+    if (snapshotImageUrl) {
+      void pingSnapshotImage();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [snapshotImageUrl]);
 
   // Handle wallet modal
   const handleWallet = () => {
@@ -78,6 +110,7 @@ export default function BloomingView({
 
   const handleLogout = async () => {
     setIsWalletModalOpen(false);
+    clearAppStorage();
     await logout();
     // Force refresh to clear all state
     setTimeout(() => {
@@ -103,6 +136,12 @@ export default function BloomingView({
   const handlePrivyHome = () => {
     // Privy home logic here
     router.push("https://home.privy.io/login");
+  };
+
+  const handleSubstrate = () => {
+    // Substrate logic here
+    console.log("Substrate clicked");
+    router.push("/about");
   };
 
   useEffect(() => {
@@ -152,7 +191,7 @@ export default function BloomingView({
               alt="Seed emblem"
               width={220}
               height={220}
-              className="opacity-30 scale-[0.8] lg:scale-[1.1] md:scale-[0.8]"
+              className="opacity-90 scale-[0.8] lg:scale-[1.1] md:scale-[0.8]"
             />
           </div>
 
@@ -170,7 +209,7 @@ export default function BloomingView({
                 ease: "easeInOut"
               }}
             >
-              <div className="lg:text-[14px] md:text-[12x] text-[12px] leading-4 text-gray-600">
+              <div className="lg:text-[14px] md:text-[12x] text-[12px] leading-4 text-[#5F5F5F]">
                 <div>your stewardship is becoming visible form</div>
                 <div>a morphological evolution accelerating beyond the</div>
                 <div>limits of Earth...</div>
@@ -197,7 +236,7 @@ export default function BloomingView({
                   src={currentImageSrc}
                   alt=""
                   fill
-                  className="object-cover scale-[1.1]"
+                  className="object-cover scale-[1.18] mt-6"
                   onError={(e) => {
                     console.log(
                       `🌸 [BloomingView IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
@@ -258,20 +297,34 @@ export default function BloomingView({
           />
         </button>
 
-        {/* You funded text - moved below the image */}
-        <div className="text-center text-[12px] leading-5 text-black/95 mb-4">
-          <div>
-            You funded <span className="peridia-display">{beneficiary}</span>
+        {/* Try Again (reload image) */}
+        {snapshotImageUrl && !isSnapshotReady && (
+          <div className="text-center -mt-4 mb-2">
+            <button
+              onClick={() => {
+                setImageErrorCount(0);
+                void pingSnapshotImage();
+              }}
+              className="text-sm underline text-black/70 hover:text-black transition-colors"
+              disabled={isPinging}
+            >
+              {isPinging ? 'Checking image…' : 'Reload'}
+            </button>
           </div>
-          <div>Regenerative Sheep Grazing and here is how the</div>
-          <div>{`plant's morphology carries this as memory`}</div>
+        )}
+
+        {/* You funded text - moved below the image */}
+        <div className="text-center lg:text-[22px] md:text-[21px] text-[18px] scale-[0.8] lg:scale-[0.7] md:scale-[0.7] leading-4 lg:leading-8 md:leading-8 text-black mb-4">
+          <div className="">
+            You funded <span className="peridia-display">{beneficiary}</span><span className="text-wrap"> and here is how the </span>
+          </div><p className="text-nowrap -ml-10 lg:-ml-8 md:-ml-7">plant's morphology carries this as memory</p>
         </div>
 
         {/* Root shape area */}
         <div className="relative mt-18 lg:mt-12">
           <RootShapeArea
             onStory={onStory}
-            onSubstrate={() => { }}
+            onSubstrate={handleSubstrate}
             onWallet={handleWallet}
             onExploreGarden={onExploreGarden}
           />

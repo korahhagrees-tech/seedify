@@ -12,9 +12,11 @@ import StewardSeedCard from "@/components/wallet/StewardSeedCard";
 import WalletModal from "@/components/wallet/WalletModal";
 import ShareModal from "@/components/ShareModal";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { clearAppStorage } from "@/lib/auth/logoutUtils";
 import GardenHeader from "@/components/GardenHeader";
 import { fetchBeneficiaryByIndex, fetchSeedById, fetchSeedStats } from "@/lib/api";
 import { API_CONFIG, API_ENDPOINTS } from "@/lib/api/config";
+import { getCodeForIndex, codeToSeedEmblemPath } from "@/lib/data/beneficiaryIndexMap";
 
 // Mock data for tended ecosystems
 // Each tended ecosystem represents a snapshot mint of a beneficiary from a seed
@@ -355,6 +357,7 @@ export default function WalletPage() {
 
   const handleLogout = async () => {
     setIsWalletModalOpen(false);
+    clearAppStorage();
     await logout();
     router.push("/");
     // Force refresh to clear all state
@@ -428,25 +431,29 @@ export default function WalletPage() {
         ) : (
           /* Tended Ecosystems List */
           <div className="space-y-4 mb-20 mt-6 z-50 lg:mt-6 md:mt-6">
-            {tendedEcosystems.map((snapshot, index) => (
-              <TendedEcosystem
-                key={snapshot.id}
-                date={new Date(snapshot.timestamp * 1000).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
-                seedEmblemUrl={assets.glowers}
-                beneficiaryName={snapshot.beneficiaryName} // Now uses actual beneficiary name
-                seedImageUrl={snapshot.seedImageUrl} // Now uses actual seed image
-                userContribution={`${snapshot.valueEth} ETH`}
-                ecosystemCompost={snapshot.ecosystemCompost} // Now uses fetched ecosystem compost value
-                onReadMore={() => handleReadMore(snapshot.beneficiaryIndex)}
-                onTendAgain={() => handleTendAgain(snapshot.id)}
-                onShare={handleShare}
-                index={index}
-                beneficiarySlug={snapshot.beneficiarySlug} // Now uses actual beneficiary slug
-                beneficiaryCode={snapshot.beneficiaryCode} // Add beneficiary code for sharing
-                seedId={snapshot.seedId.toString()}
-                seedSlug={`seed-${snapshot.seedId}`}
-              />
-            ))}
+            {tendedEcosystems.map((snapshot, index) => {
+              const codeFromIndex = getCodeForIndex(snapshot.beneficiaryIndex);
+              const emblem = codeToSeedEmblemPath(codeFromIndex);
+              return (
+                <TendedEcosystem
+                  key={snapshot.id}
+                  date={new Date(snapshot.timestamp * 1000).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
+                  seedEmblemUrl={emblem}
+                  beneficiaryName={snapshot.beneficiaryName} // Now uses actual beneficiary name
+                  seedImageUrl={snapshot.seedImageUrl} // Now uses actual seed image
+                  userContribution={`${snapshot.valueEth} ETH`}
+                  ecosystemCompost={snapshot.ecosystemCompost} // Now uses fetched ecosystem compost value
+                  onReadMore={() => handleReadMore(snapshot.beneficiaryIndex)}
+                  onTendAgain={() => handleTendAgain(snapshot.id)}
+                  onShare={handleShare}
+                  index={index}
+                  beneficiarySlug={snapshot.beneficiarySlug} // Now uses actual beneficiary slug
+                  beneficiaryCode={snapshot.beneficiaryCode} // Add beneficiary code for sharing
+                  seedId={snapshot.seedId.toString()}
+                  seedSlug={`seed-${snapshot.seedId}`}
+                />
+              );
+            })}
           </div>
         )}
       </div>

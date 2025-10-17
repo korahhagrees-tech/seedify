@@ -2,6 +2,7 @@
 
 import { usePrivy } from '@privy-io/react-auth';
 import { useGlobalLogout } from '@/lib/auth/useGlobalLogout';
+import { clearAppStorage } from "@/lib/auth/logoutUtils";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
@@ -26,6 +27,7 @@ export default function UserProfile({ className }: UserProfileProps) {
   }
 
   const handleLogout = async () => {
+    clearAppStorage();
     await globalLogout();
     // Force refresh to clear all state
     setTimeout(() => {
