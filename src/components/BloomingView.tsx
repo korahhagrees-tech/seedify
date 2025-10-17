@@ -317,7 +317,7 @@ export default function BloomingView({
         <div className="text-center lg:text-[22px] md:text-[21px] text-[18px] scale-[0.8] lg:scale-[0.7] md:scale-[0.7] leading-4 lg:leading-8 md:leading-8 text-black mb-4">
           <div className="">
             You funded <span className="peridia-display">{beneficiary}</span><span className="text-wrap"> and here is how the </span>
-          </div><p className="text-nowrap -ml-10 lg:-ml-8 md:-ml-7">plant's morphology carries this as memory</p>
+          </div><p className="text-nowrap -ml-10 lg:-ml-8 md:-ml-7">{`plant's`} morphology carries this as memory</p>
         </div>
 
         {/* Root shape area */}

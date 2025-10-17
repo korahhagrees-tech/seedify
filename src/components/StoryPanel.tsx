@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { motion } from "framer-motion";
 import { assets } from "@/lib/assets";
 import Image from "next/image";
-import { useState } from "react";
+
 
 interface StoryPanelProps {
   text: string;

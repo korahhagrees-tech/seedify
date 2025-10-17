@@ -156,6 +156,23 @@ export default function HarvestSeedModal({
     setIsProcessing(true);
 
     try {
+      // Defensive checks for wallet functionality
+      if (!ready) {
+        toast.info('Setting up wallet... Please wait.');
+        setIsProcessing(false);
+        return;
+      }
+      if (!authenticated) {
+        toast.info('Please connect your wallet to continue.');
+        setIsProcessing(false);
+        return;
+      }
+      if (!activeWallet) {
+        toast.error("No active wallet found. Please connect your wallet.");
+        setIsProcessing(false);
+        return;
+      }
+
       // TODO: Implement actual withdrawal logic here
       console.log('Withdrawing:', withdrawalAmount);
 

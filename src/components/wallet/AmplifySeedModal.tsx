@@ -21,6 +21,7 @@ import {
 import { useBalance } from "wagmi";
 import { useSetActiveWallet } from "@privy-io/wagmi";
 import { base } from "viem/chains";
+import { toast } from 'sonner';
 
 interface AmplifySeedModalProps {
   isOpen: boolean;
@@ -146,6 +147,20 @@ export default function AmplifySeedModal({
   };
 
   const handleExtendCultivation = () => {
+    // Defensive checks for wallet functionality
+    if (!ready) {
+      toast.info('Setting up wallet... Please wait.');
+      return;
+    }
+    if (!authenticated) {
+      toast.info('Please connect your wallet to continue.');
+      return;
+    }
+    if (!activeWallet) {
+      toast.error("No active wallet found. Please connect your wallet.");
+      return;
+    }
+
     // TODO: Implement extend cultivation logic
     console.log('Extending cultivation with amount:', contributionAmount);
     onClose();
@@ -234,10 +249,10 @@ export default function AmplifySeedModal({
             className="fixed inset-x-6 top-1/2 -translate-y-1/2 z-50 max-w-lg mx-auto"
           >
             {/* Modal with animated border transition and scaling */}
-            <motion.div 
+            <motion.div
               className="bg-[#D9D9D9] p-6 border-3 border-dotted border-gray-600 shadow-xl scale-[0.5] lg:scale-[0.7] md:scale-[0.7]"
               animate={{
-                borderRadius: currentState === 'communication' 
+                borderRadius: currentState === 'communication'
                   ? '120px 40px 40px 120px' // asymmetric: top-left large, others small
                   : '40px 40px 40px 40px'   // uniform: all corners same
               }}
@@ -302,7 +317,7 @@ export default function AmplifySeedModal({
                         <span className="text-sm font-medium text-black">{stats.numSnaps}</span>
                       </div>
                     </div>
-                    
+
                     {/* Row 2 */}
                     <div className="text-center">
                       <p className="text-xs text-gray-600 mb-2">TOTAL FUNDINGS</p>
@@ -373,13 +388,13 @@ export default function AmplifySeedModal({
                         <span className="text-base font-light text-gray-700">{balance} ETH</span>
                       </div>
                     </div>
-                    
+
                     {/* Email and Actions */}
                     <div className="flex items-center gap-2 mt-3">
                       <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
                       <span className="text-sm text-black">{user?.email || formatAddress(walletAddress || '')}</span>
                     </div>
-                    
+
                     <div className="flex gap-2 mt-3">
                       <button
                         onClick={handleAddFunds}
@@ -387,14 +402,14 @@ export default function AmplifySeedModal({
                       >
                         Add Funds
                       </button>
-                      <button 
+                      <button
                         onClick={handleLogout}
                         className="flex items-center gap-2 px-4 py-1 text-sm text-black hover:text-gray-800 transition-colors"
                       >
                         <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
                         Log out
                       </button>
-                      <button 
+                      <button
                         onClick={handleConnectAccount}
                         className="px-4 py-1 border border-dotted border-black rounded-full text-sm text-black bg-white hover:bg-gray-50 transition-colors"
                       >

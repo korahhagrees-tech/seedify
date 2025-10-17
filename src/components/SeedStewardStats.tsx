@@ -198,7 +198,7 @@ export default function SeedStewardStats({
           {/* Hero with image and actions - moved above stats content */}
           <div className="pt-4 pb-6 relative">
             <div className="flex items-start justify-center gap-4 relative max-w-4xl mx-auto -mt-2">
-              {/* Transformed circular image - appears on scroll */}
+              {/* Single morphing image - starts large, transforms to small circle on scroll */}
               <motion.div
                 style={{
                   scale,
@@ -206,7 +206,7 @@ export default function SeedStewardStats({
                   width: width,
                   height: height
                 }}
-                className="absolute top-4 right-4 overflow-hidden shadow-xl bg-white z-10"
+                className="relative overflow-hidden shadow-xl bg-white mx-auto"
               >
                 <Image
                   src={
@@ -474,7 +474,7 @@ export default function SeedStewardStats({
                 {/* Button with scalloped edges and border */}
                 <button
                   onClick={handleAmplifyClick}
-                  className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors cursor-pointer z-30"
+                  className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors cursor-pointer z-40"
                 >
                   Amplify Impact
                 </button>
@@ -492,7 +492,7 @@ export default function SeedStewardStats({
                 {/* Button with scalloped edges and border */}
                 <button
                   onClick={handleHarvestClick}
-                  className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors cursor-pointer z-30"
+                  className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors cursor-pointer z-40"
                 >
                   Harvest
                 </button>

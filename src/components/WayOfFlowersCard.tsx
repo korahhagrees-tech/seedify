@@ -49,7 +49,7 @@ export default function WayOfFlowersCard({
       });
     }, 2200);
     return () => clearInterval(interval);
-  }, []);
+  }, [bloomingWords]);
 
   // Show explore button after 15 seconds
   useEffect(() => {
