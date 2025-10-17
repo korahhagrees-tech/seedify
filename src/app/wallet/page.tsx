@@ -325,7 +325,7 @@ export default function WalletPage() {
     return () => {
       cancelled = true;
     };
-  }, [walletAddress]);
+  }, [walletAddress, tendedEcosystems]);
 
   const handleReadMore = (beneficiaryIndex: number) => {
     // Get beneficiary's readMoreLink from the map

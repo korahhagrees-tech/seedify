@@ -111,7 +111,7 @@ export default function WayOfFlowers({
     finally {
       webhookInFlightRef.current = false;
     }
-  }, [seedId]);
+  }, []);
 
   // Check if we're coming from a successful mint (waiting for image generation)
   useEffect(() => {

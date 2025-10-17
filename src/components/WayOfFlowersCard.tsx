@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { assets } from "@/lib/assets";
@@ -28,16 +28,19 @@ export default function WayOfFlowersCard({
   onExploreClick,
 }: WayOfFlowersCardProps) {
   const [showButtons, setShowButtons] = useState(false);
-  const bloomingWords = [
-    "Sprouting",
-    "Springing Forth",
-    "Unfolding",
-    "Branching",
-    "Flourishing",
-    "Blooming",
-    "Blossoming",
-  ];
   const [wordIndex, setWordIndex] = useState(0);
+  const bloomingWords = useMemo(
+    () => [
+      "Sprouting",
+      "Springing Forth",
+      "Unfolding",
+      "Branching",
+      "Flourishing",
+      "Blooming",
+      "Blossoming",
+    ],
+    []
+  );
 
   // Rotate the blooming words randomly (avoid immediate repeats)
   useEffect(() => {

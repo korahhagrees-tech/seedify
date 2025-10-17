@@ -210,7 +210,7 @@ export default function About() {
                         The project was conceived and developed by a team of passionate individuals who believe in the power of art to inspire environmental change. Our botanical art engine utilizes cutting-edge machine learning techniques to create unique, evolving artworks that respond to real-world conservation data.
                       </p>
                       <p className="text-xs leading-relaxed mt-3">
-                        We extend our gratitude to the botanical gardens, research institutions, and conservation organizations worldwide who have provided the datasets and inspiration that make this project possible. Together, we're cultivating a digital garden that grows more beautiful with every act of environmental stewardship.
+                        We extend our gratitude to the botanical gardens, research institutions, and conservation organizations worldwide who have provided the datasets and inspiration that make this project possible. Together, we&apos;re cultivating a digital garden that grows more beautiful with every act of environmental stewardship.
                         Our technical infrastructure is built on the latest advances in blockchain technology, ensuring secure and transparent transactions while maintaining the artistic integrity of each piece. The generative art engine represents years of research and development in machine learning and computational creativity.
                         Special recognition goes to our community of artists, developers, and environmental advocates who have contributed their time, expertise, and passion to this project. Their dedication to both artistic excellence and environmental impact has been instrumental in bringing this vision to life.
                       </p>
@@ -225,7 +225,7 @@ export default function About() {
                         <p>Smart Contracts:				Adriano Guerrera</p>
                         <p>Graphic Design:				Roxy Zeiher</p>
                         <p>dApp: 						Maa Lee</p>
-                        <p>Exhibition Text:				Chen ‘Stanley’ Qiufan</p>
+                        <p>Exhibition Text:				{`Chen ‘Stanley’ Qiufan`}</p>
                         <p>Exhibition Text Recording:			Dr Penny Oxi Pëng</p>
                       </p>
                     </p>
