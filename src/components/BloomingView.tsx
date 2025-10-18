@@ -159,7 +159,7 @@ export default function BloomingView({
       // Small delay to ensure image is loaded, then trigger reveal
       const timer = setTimeout(() => {
         setShowReveal(true);
-      }, 1000);
+      }, 70000);
 
       return () => clearTimeout(timer);
     }
