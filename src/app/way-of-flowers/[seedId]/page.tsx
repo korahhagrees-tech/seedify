@@ -93,7 +93,7 @@ export default function WayOfFlowers({
     } catch (error) {
       console.error('❌ Webhook call failed:', error);
       setIsWaitingForImage(false);
-      toast.error('Image generation failed. You can still explore the blooming view.');
+      // toast.error('Image generation failed. You can still explore the blooming view.');
 
       // Fallback: construct snapshot image URL from the original payload we sent
       try {
