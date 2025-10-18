@@ -462,12 +462,61 @@ export default function PaymentModal({
           }
         }
 
-        // Step 4: Store webhook data and proceed (no transaction verification)
+        // Step 4: Verify transaction status before proceeding
         if (txHash) {
           console.log('🔍 Transaction submitted with hash:', txHash);
-          toast.info('Transaction submitted! Proceeding...');
+          toast.info('Verifying transaction... Please wait.');
 
-          // Create webhook data without verification
+          // Poll transaction status with retries
+          let transactionStatus = null;
+          const maxAttempts = 20; // 20 attempts = ~2 minutes max wait
+          let attempts = 0;
+          const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+
+          while (attempts < maxAttempts && !transactionStatus) {
+            try {
+              await new Promise(resolve => setTimeout(resolve, 6000)); // Wait 6 seconds between attempts
+              
+              const statusResponse = await fetch(`${apiBaseUrl}/transactions/${txHash}/status`);
+              
+              if (statusResponse.ok) {
+                const statusData = await statusResponse.json();
+                console.log('🔍 Transaction status response:', statusData);
+
+                if (statusData.success && statusData.transaction) {
+                  const status = statusData.transaction.status;
+                  
+                  if (status === 'success') {
+                    console.log('✅ Transaction confirmed as successful');
+                    transactionStatus = statusData.transaction;
+                    break;
+                  } else if (status === 'reverted') {
+                    console.error('❌ Transaction reverted:', statusData.transaction.revertReason);
+                    toast.error('Transaction failed and reverted. Please try again.');
+                    setIsProcessing(false);
+                    return; // Exit early - do not proceed with routing or API calls
+                  } else {
+                    console.log('⏳ Transaction status pending, continuing to poll...');
+                  }
+                }
+              }
+              
+              attempts++;
+            } catch (error) {
+              console.warn(`⚠️ Status check attempt ${attempts + 1} failed:`, error);
+              attempts++;
+            }
+          }
+
+          // Check if we timed out without getting a success status
+          if (!transactionStatus) {
+            console.error('❌ Transaction verification timed out');
+            toast.error('Transaction verification timed out. Please check your wallet.');
+            setIsProcessing(false);
+            return; // Exit early - do not proceed
+          }
+
+          // Transaction verified as successful, create data for snapshot-minted endpoint
           const webhookData = {
             contractAddress: mintData.data.contractAddress,
             seedId: mintData.data.args.seedId,
@@ -477,16 +526,16 @@ export default function PaymentModal({
             creator: currentActiveWallet.address,
             txHash: txHash,
             timestamp: Math.floor(Date.now() / 1000),
-            blockNumber: mintData.data.blockNumber,
+            blockNumber: transactionStatus.blockNumber || mintData.data.blockNumber,
             processId: mintData.data.processId,
-            // Default transaction status since we're not verifying
-            transactionStatus: 'pending',
-            gasUsed: '0',
-            effectiveGasPrice: '0',
+            // Add verified transaction data
+            transactionStatus: transactionStatus.status,
+            gasUsed: transactionStatus.gasUsed || '0',
+            effectiveGasPrice: transactionStatus.effectiveGasPrice || '0',
             transactionFee: '0',
           };
 
-          console.log('🔗 Webhook data:', JSON.stringify(webhookData, null, 2));
+          console.log('🔗 Verified data for snapshot-minted:', JSON.stringify(webhookData, null, 2));
 
           // Store webhook data for way-of-flowers page to use
           if (seedId) {
