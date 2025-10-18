@@ -148,7 +148,7 @@ export default function BloomingView({
     // After 3 seconds, trigger the reveal animation (reduced from 40 seconds for better UX)
     const timer = setTimeout(() => {
       setShowReveal(true);
-    }, 3000);
+    }, 70000);
 
     return () => clearTimeout(timer);
   }, []);
