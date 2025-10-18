@@ -517,7 +517,7 @@ export default function SeedStewardStats({
           </div>
           <div className="rounded-[28px] m-4 p-6">
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.1] md:scale-[1.1] -ml-3 lg:-ml-3 md:-ml-3">
+            <div className="grid grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.1] md:scale-[1.1] -ml-3 lg:-ml-3 md:-ml-3">
               {/* Left Card: Impact Details */}
               <div className="rounded-[28px] bg-gray-400/40 p-4 h-45">
                 <div className="space-y-4">

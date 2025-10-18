@@ -54,9 +54,9 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
             transform: "transform rotate-6 lg:-rotate-6 md:-rotate-2 scale-[1.2] lg:scale-[1.2] md:scale-[1.2]"
           },
           labelPosition: {
-            top: "right-8 lg:right-18 md:right-26",
-            left: "top-56 lg:top-1/2 md:top-14",
-            transform: "transform -rotate-90 lg:-rotate-90 md:rotate-106 scale-[1.2] lg:scale-[1.2] md:scale-[1.2]"
+            top: "right-24 lg:right-18 md:right-26",
+            left: "top-22 lg:top-1/2 md:top-16",
+            transform: "transform rotate-104 lg:-rotate-90 md:rotate-106 scale-[1.1] lg:scale-[1.2] md:scale-[1.2]"
           }
         },
         // Buena Vista (third largest)
@@ -69,9 +69,9 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
             transform: "transform -rotate-6 lg:-rotate-6 md:-rotate-6 scale-[1.2] lg:scale-[1.2] md:scale-[1.2]"
           },
           labelPosition: {
-            top: "left-8 lg:left-24 md:left-30",
-            left: "bottom-48 lg:bottom-60 md:-bottom-2",
-            transform: "transform rotate-74 lg:-rotate-275 md:rotate-236 scale-[1.2] lg:scale-[1.2] md:scale-[1.0]"
+            top: "left-8 lg:left-24 md:left-12",
+            left: "-bottom-12 lg:bottom-60 md:-bottom-6",
+            transform: "transform -rotate-112 lg:-rotate-275 md:rotate-238 scale-[1.0] lg:scale-[1.2] md:scale-[0.9]"
           }
         },
         // Walkers Reserve (smallest)
@@ -173,11 +173,11 @@ export default function SeedbedCard({ className = "", beneficiaries = defaultBen
                   },
                   // Buena Vista (third largest) - move text left
                   {
-                    radius: 55,
-                    angle: Math.PI * 0.95,
+                    radius: 95,
+                    angle: Math.PI * 0.55,
                     fontSize: 12,
-                    width: 140,
-                    height: 170,
+                    width: 180,
+                    height: 200,
                     offsetX: 120, // Move left
                     offsetY: -58,
                     rotationOffset: 3.45

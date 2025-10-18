@@ -111,145 +111,145 @@ export default function EcosystemProjectCard({
   };
 
   // Handle snapshot minting
-  const handleMintSnapshot = async (amountInEth: string) => {
-    if (!seedId || beneficiaryIndex === undefined || !walletAddress) {
-      toast.error("Cannot mint snapshot", {
-        description: "Missing required data. Please try again.",
-      });
-      return;
-    }
+  // const handleMintSnapshot = async (amountInEth: string) => {
+  //   if (!seedId || beneficiaryIndex === undefined || !walletAddress) {
+  //     toast.error("Cannot mint snapshot", {
+  //       description: "Missing required data. Please try again.",
+  //     });
+  //     return;
+  //   }
 
-    setIsMinting(true);
+  //   setIsMinting(true);
 
-    try {
-      // Step 1: Get transaction data from backend with beneficiary index
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api";
-      const response = await fetch(
-        `${apiBaseUrl}/write/snapshots/mint/${seedId}?beneficiaryIndex=${beneficiaryIndex}`
-      );
-      const mintData: SnapshotMintResponse = await response.json();
+  //   try {
+  //     // Step 1: Get transaction data from backend with beneficiary index
+  //     const apiBaseUrl =
+  //       process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api";
+  //     const response = await fetch(
+  //       `${apiBaseUrl}/write/snapshots/mint/${seedId}?beneficiaryIndex=${beneficiaryIndex}`
+  //     );
+  //     const mintData: SnapshotMintResponse = await response.json();
 
-      if (!mintData.success) {
-        toast.error("Failed to prepare snapshot", {
-          description: "Please try again.",
-        });
-        setIsMinting(false);
-        return;
-      }
+  //     if (!mintData.success) {
+  //       toast.error("Failed to prepare snapshot", {
+  //         description: "Please try again.",
+  //       });
+  //       setIsMinting(false);
+  //       return;
+  //     }
 
-      toast.success("Transaction prepared", {
-        description: "Confirm the transaction in your wallet...",
-      });
+  //     toast.success("Transaction prepared", {
+  //       description: "Confirm the transaction in your wallet...",
+  //     });
 
-      // Smart amount handling: Use backend's exact wei if user hasn't changed the amount
-      let amountInWei: string;
-      const backendValueEth = mintData.data.valueEth || "0.011"; // Fallback to default
+  //     // Smart amount handling: Use backend's exact wei if user hasn't changed the amount
+  //     let amountInWei: string;
+  //     const backendValueEth = mintData.data.valueEth || "0.011"; // Fallback to default
 
-      if (amountInEth === backendValueEth) {
-        // User hasn't changed the amount → Use backend's exact wei value (no precision loss)
-        amountInWei = mintData.data.value;
-        console.log('🎯 [EcosystemCard] Using backend\'s exact wei value (no conversion):', amountInWei);
-      } else {
-        // User changed the amount → Convert their new value to wei
-        amountInWei = (parseFloat(amountInEth) * 1e18).toString();
-        console.log('🔄 [EcosystemCard] User changed amount, converting to wei:', amountInWei);
-      }
+  //     if (amountInEth === backendValueEth) {
+  //       // User hasn't changed the amount → Use backend's exact wei value (no precision loss)
+  //       amountInWei = mintData.data.value;
+  //       console.log('🎯 [EcosystemCard] Using backend\'s exact wei value (no conversion):', amountInWei);
+  //     } else {
+  //       // User changed the amount → Convert their new value to wei
+  //       amountInWei = (parseFloat(amountInEth) * 1e18).toString();
+  //       console.log('🔄 [EcosystemCard] User changed amount, converting to wei:', amountInWei);
+  //     }
 
-      // Step 2: Execute contract transaction using Privy's sendTransaction with gas sponsorship
-      const txResult = await sendTransaction(
-        {
-          to: mintData.data.contractAddress,
-          value: amountInWei, // USE USER'S AMOUNT, NOT BACKEND VALUE
-          data: encodeFunctionData({
-            abi: [
-              {
-                type: "function",
-                name: "mintSnapshot",
-                stateMutability: "payable",
-                inputs: [
-                  { name: "seedId", type: "uint256" },
-                  { name: "beneficiaryIndex", type: "uint256" },
-                  { name: "process", type: "string" },
-                  { name: "to", type: "address" },
-                  { name: "royaltyRecipient", type: "address" },
-                ],
-                outputs: [{ name: "", type: "uint256" }],
-              },
-            ],
-            functionName: "mintSnapshot",
-            args: [
-              BigInt(mintData.data.args.seedId),
-              BigInt(beneficiaryIndex),
-              mintData.data.processId,
-              walletAddress as `0x${string}`,
-              mintData.data.args.royaltyRecipient as `0x${string}`,
-            ],
-          })
-        },
-        {
-          sponsor: false // Enable gas sponsorship
-        }
-      );
+  //     // Step 2: Execute contract transaction using Privy's sendTransaction with gas sponsorship
+  //     const txResult = await sendTransaction(
+  //       {
+  //         to: mintData.data.contractAddress,
+  //         value: amountInWei, // USE USER'S AMOUNT, NOT BACKEND VALUE
+  //         data: encodeFunctionData({
+  //           abi: [
+  //             {
+  //               type: "function",
+  //               name: "mintSnapshot",
+  //               stateMutability: "payable",
+  //               inputs: [
+  //                 { name: "seedId", type: "uint256" },
+  //                 { name: "beneficiaryIndex", type: "uint256" },
+  //                 { name: "process", type: "string" },
+  //                 { name: "to", type: "address" },
+  //                 { name: "royaltyRecipient", type: "address" },
+  //               ],
+  //               outputs: [{ name: "", type: "uint256" }],
+  //             },
+  //           ],
+  //           functionName: "mintSnapshot",
+  //           args: [
+  //             BigInt(mintData.data.args.seedId),
+  //             BigInt(beneficiaryIndex),
+  //             mintData.data.processId,
+  //             walletAddress as `0x${string}`,
+  //             mintData.data.args.royaltyRecipient as `0x${string}`,
+  //           ],
+  //         })
+  //       },
+  //       {
+  //         sponsor: false // Enable gas sponsorship
+  //       }
+  //     );
 
-      const txHash = txResult.hash;
+  //     const txHash = txResult.hash;
 
-      // Step 4: Prepare webhook data using backend-provided data
-      const webhookData: WebhookData = {
-        contractAddress: mintData.data.contractAddress,
-        seedId: mintData.data.args.seedId,
-        snapshotId: mintData.data.snapshotId,
-        beneficiaryCode: mintData.data.beneficiaryCode || beneficiaryCode || "",
-        beneficiaryDistribution: mintData.data.beneficiaryDistribution || 0,
-        creator: walletAddress,
-        txHash: txHash,
-        timestamp: Math.floor(Date.now() / 1000),
-        blockNumber: mintData.data.blockNumber,
-        processId: mintData.data.processId,
-      };
+  //     // Step 4: Prepare webhook data using backend-provided data
+  //     const webhookData: WebhookData = {
+  //       contractAddress: mintData.data.contractAddress,
+  //       seedId: mintData.data.args.seedId,
+  //       snapshotId: mintData.data.snapshotId,
+  //       beneficiaryCode: mintData.data.beneficiaryCode || beneficiaryCode || "",
+  //       beneficiaryDistribution: mintData.data.beneficiaryDistribution || 0,
+  //       creator: walletAddress,
+  //       txHash: txHash,
+  //       timestamp: Math.floor(Date.now() / 1000),
+  //       blockNumber: mintData.data.blockNumber,
+  //       processId: mintData.data.processId,
+  //     };
 
-      toast.success("Transaction submitted", {
-        description: "Processing snapshot...",
-      });
+  //     toast.success("Transaction submitted", {
+  //       description: "Processing snapshot...",
+  //     });
 
-      // ❌ WEBHOOK CALL MOVED TO WAY-OF-FLOWERS PAGE
-      // The webhook will be called from the way-of-flowers page after routing
-      // to allow for proper waiting state with pulsing "Blooming" animation
+  //     // ❌ WEBHOOK CALL MOVED TO WAY-OF-FLOWERS PAGE
+  //     // The webhook will be called from the way-of-flowers page after routing
+  //     // to allow for proper waiting state with pulsing "Blooming" animation
 
-      // Store webhook data for way-of-flowers page to use (augment with beneficiaryName for display)
-      if (seedId) {
-        const toStore = { ...webhookData, beneficiaryName: title || undefined } as any;
-        localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(toStore));
-        console.log('🔗 Webhook data stored for way-of-flowers page:', seedId, toStore);
-      }
+  //     // Store webhook data for way-of-flowers page to use (augment with beneficiaryName for display)
+  //     if (seedId) {
+  //       const toStore = { ...webhookData, beneficiaryName: title || undefined } as any;
+  //       localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(toStore));
+  //       console.log('🔗 Webhook data stored for way-of-flowers page:', seedId, toStore);
+  //     }
 
-      setIsMinting(false);
-      setMintSuccess(true); // Mark as successful
-      toast.success("Snapshot minted successfully!", {
-        description: "Your ecosystem has been tended.",
-      });
+  //     setIsMinting(false);
+  //     setMintSuccess(true); // Mark as successful
+  //     toast.success("Snapshot minted successfully!", {
+  //       description: "Your ecosystem has been tended.",
+  //     });
 
-      // ✅ Route to way-of-flowers page immediately after successful transaction
-      console.log('🌸 Routing to way-of-flowers page for seed:', seedId);
-      setTimeout(() => {
-        router.push(`/way-of-flowers/${seedId}`);
-      }, 1500);
-    } catch (error) {
-      setIsMinting(false);
-      toast.error("Snapshot minting failed", {
-        description: "Please try again.",
-      });
-      console.error("Minting error:", error);
+  //     // ✅ Route to way-of-flowers page immediately after successful transaction
+  //     console.log('🌸 Routing to way-of-flowers page for seed:', seedId);
+  //     setTimeout(() => {
+  //       router.push(`/way-of-flowers/${seedId}`);
+  //     }, 1500);
+  //   } catch (error) {
+  //     setIsMinting(false);
+  //     toast.error("Snapshot minting failed", {
+  //       description: "Please try again.",
+  //     });
+  //     console.error("Minting error:", error);
 
-      // ✅ If BYPASS_SUCCESS_CHECK is true, route even on error (for testing)
-      if (BYPASS_SUCCESS_CHECK) {
-        console.log('⚠️ BYPASS MODE: Routing to way-of-flowers page despite error');
-        setTimeout(() => {
-          router.push(`/way-of-flowers/${seedId}`);
-        }, 1500);
-      }
-    }
-  };
+  //     // ✅ If BYPASS_SUCCESS_CHECK is true, route even on error (for testing)
+  //     if (BYPASS_SUCCESS_CHECK) {
+  //       console.log('⚠️ BYPASS MODE: Routing to way-of-flowers page despite error');
+  //       setTimeout(() => {
+  //         router.push(`/way-of-flowers/${seedId}`);
+  //       }, 1500);
+  //     }
+  //   }
+  // };
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">

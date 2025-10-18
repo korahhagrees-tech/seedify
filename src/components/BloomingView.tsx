@@ -236,7 +236,7 @@ export default function BloomingView({
                   src={currentImageSrc}
                   alt=""
                   fill
-                  className="object-cover scale-[1.18] mt-6"
+                  className="object-cover scale-[1.05] lg:scale-[1.05] md:scale-[1.05] mt-2 lg:-mt-2 md:-mt-2"
                   onError={(e) => {
                     console.log(
                       `🌸 [BloomingView IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`

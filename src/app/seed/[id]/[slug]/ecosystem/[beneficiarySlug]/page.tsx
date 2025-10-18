@@ -12,13 +12,21 @@ export default function EcosystemPage() {
   const [ecosystemData, setEcosystemData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [hasFetched, setHasFetched] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const seedId = params?.id as string;
   const beneficiarySlug = params?.beneficiarySlug as string;
 
   useEffect(() => {
     async function loadEcosystemData() {
+      // Prevent duplicate calls
+      if (isLoading || hasFetched) {
+        console.log('⏭️ Skipping duplicate ecosystem data load');
+        return;
+      }
+
       try {
+        setIsLoading(true);
         setError(null);
 
         console.log(
@@ -61,6 +69,7 @@ export default function EcosystemPage() {
           err instanceof Error ? err.message : "Failed to load ecosystem data"
         );
       } finally {
+        setIsLoading(false);
         setHasFetched(true);
       }
     }

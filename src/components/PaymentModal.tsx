@@ -21,6 +21,8 @@ import { encodeFunctionData } from "viem";
 import { SNAPSHOT_NFT_ABI, SNAP_FACTORY_ABI } from "@/lib/contracts";
 import { base } from "viem/chains";
 import WalletConnectionModal from "@/components/wallet/WalletConnectionModal";
+import { waitForTransactionReceipt } from "@wagmi/core";
+import { wagmiConfig } from "@/lib/wagmi/config";
 
 // Contract addresses for conditional ABI logic
 const SNAP_FACTORY_ADDRESS = "0x038cC19fF06F823B2037C7EFF239bE99aD99A01D"; // Uses mintSnapshot with royaltyRecipient
@@ -75,6 +77,7 @@ export default function PaymentModal({
   // Get ETH balance from wagmi
   const { data: balanceData } = useBalance({
     address: walletAddress as `0x${string}`,
+    chainId: base.id,
   });
 
   const balance = balanceData ? parseFloat(balanceData.formatted).toFixed(4) : '0.0000';
@@ -186,6 +189,19 @@ export default function PaymentModal({
           (currentActiveWallet.walletClientType && !['solana', 'metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect'].includes(currentActiveWallet.walletClientType));
         const isSolanaWallet = currentActiveWallet.walletClientType === 'solana';
         let txHash: string | undefined;
+        // const reciept = await waitForTransactionReceipt(config, { hash: txHash as `0x${string}` });
+        // const reciept = await fetch(`${process.env.RPC_URL}`, {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({
+        //     jsonrpc: '2.0',
+        //     id: `${txHash}`,
+        //     method: 'eth_getTransactionReceipt',
+        //     params: [txHash],
+        //   }),
+        // }).then(response => response.json()).then(data => data.result);
 
         console.log('🔍 Wallet detection:', {
           walletClientType: currentActiveWallet.walletClientType,
@@ -425,6 +441,7 @@ export default function PaymentModal({
               gas: undefined, // Let wallet estimate gas
             });
 
+
             toast.success('Transaction submitted! Waiting for confirmation...');
             console.log('✅ External wallet transaction hash:', txHash);
           } catch (error: any) {
@@ -433,7 +450,11 @@ export default function PaymentModal({
               toast.error('Transaction rejected');
             } else if (error?.message?.includes('No embedded or connected wallet found')) {
               toast.error('Wallet connection issue. Please reconnect your wallet.');
-            } else {
+            }
+            // else if (reciept.status === '0x0') {
+            //   toast.error('Transaction failed. Please try again.');
+            // }
+            else {
               toast.error('Transaction failed. Please try again.');
             }
             setIsProcessing(false);
@@ -441,30 +462,173 @@ export default function PaymentModal({
           }
         }
 
-        // Step 4: Call webhook with backend data + transaction hash
+        // Step 4: Verify transaction status using Alchemy API before proceeding
         if (txHash) {
-          const webhookData = {
-            contractAddress: mintData.data.contractAddress,
-            seedId: mintData.data.args.seedId,
-            snapshotId: mintData.data.snapshotId,
-            beneficiaryCode: mintData.data.beneficiaryCode || `BENEFICIARY-${beneficiaryIndex}`,
-            beneficiaryDistribution: mintData.data.beneficiaryDistribution || 0,
-            creator: currentActiveWallet.address,
-            txHash: txHash,
-            timestamp: Math.floor(Date.now() / 1000),
-            blockNumber: mintData.data.blockNumber,
-            processId: mintData.data.processId,
-          };
+          console.log('🔍 Verifying transaction status for hash:', txHash);
+          toast.info('Verifying transaction... Please wait.');
 
-          console.log('🔗 Webhook data:', JSON.stringify(webhookData, null, 2));
+          try {
+            // Use Moralis API for reliable transaction verification
+            let transactionData = null;
+            const maxAttempts = 12; // 12 attempts = ~1 minute max wait
+            let attempts = 0;
+            const startTime = Date.now();
+            const maxWaitTime = 120000; // 2 minutes maximum wait
 
-          // ❌ WEBHOOK CALL MOVED TO WAY-OF-FLOWERS PAGE
-          // The webhook will be called from the way-of-flowers page after routing
-          // to allow for proper waiting state with pulsing "Blooming" animation
-          // Store webhook data for way-of-flowers page to use
-          if (seedId) {
-            localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(webhookData));
-            console.log('🔗 Webhook data stored for way-of-flowers page:', seedId);
+            while (attempts < maxAttempts && !transactionData && (Date.now() - startTime) < maxWaitTime) {
+              try {
+                const apiKey = process.env.MORALIS_API_KEY;
+
+                const response = await fetch(`https://deep-index.moralis.io/api/v2.2/transaction/${txHash}?chain=base`, {
+                  method: 'GET',
+                  headers: {
+                    'accept': 'application/json',
+                    'X-API-Key': `${apiKey}`,
+                  },
+                });
+
+                if (response.ok) {
+                  const data = await response.json();
+                  console.log(`🔍 Moralis response:`, data);
+
+                  // Check if transaction is confirmed (has receipt_status)
+                  if (data.receipt_status !== undefined) {
+                    transactionData = data;
+                    break;
+                  } else {
+                    console.log(`⏳ Transaction not yet confirmed, waiting...`);
+                  }
+                } else {
+                  console.warn(`⚠️ Moralis API returned ${response.status}: ${response.statusText}`);
+                  if (response.status === 401) {
+                    console.warn('🔑 API key may be invalid or missing');
+                  } else if (response.status === 429) {
+                    console.warn('⏳ Rate limit exceeded, waiting longer...');
+                    await new Promise(resolve => setTimeout(resolve, 10000)); // Wait 10 seconds for rate limit
+                  }
+                }
+
+                // Wait 5 seconds before next attempt
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                attempts++;
+              } catch (fetchError) {
+                console.warn(`🔍 Moralis attempt ${attempts + 1} failed:`, fetchError);
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                attempts++;
+              }
+            }
+
+            // Check if we timed out
+            if (!transactionData && (Date.now() - startTime) >= maxWaitTime) {
+              console.error('❌ Transaction verification timed out after 2 minutes');
+              toast.error('Transaction verification timed out. Please check your wallet or try again.');
+              setIsProcessing(false);
+              return;
+            }
+
+            // Fallback to original RPC method if Moralis fails
+            if (!transactionData) {
+              console.warn('⚠️ Moralis API failed, trying fallback RPC method...');
+
+              try {
+                const response = await fetch(process.env.RPC_URL || '', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    jsonrpc: '2.0',
+                    id: `tx-${txHash}`,
+                    method: 'eth_getTransactionReceipt',
+                    params: [txHash],
+                  }),
+                });
+
+                const data = await response.json();
+                if (data.result) {
+                  console.log('✅ Fallback RPC method succeeded:', data.result);
+                  // Convert RPC receipt to Moralis-like format
+                  transactionData = {
+                    receipt_status: data.result.status,
+                    block_number: data.result.blockNumber,
+                    receipt_gas_used: data.result.gasUsed,
+                    gas_price: data.result.effectiveGasPrice,
+                  };
+                }
+              } catch (fallbackError) {
+                console.warn('⚠️ Fallback RPC method also failed:', fallbackError);
+              }
+            }
+
+            if (!transactionData) {
+              console.error('❌ All verification methods failed - cannot verify transaction status');
+              toast.error('Failed to verify transaction. Please check your wallet or try again.');
+              setIsProcessing(false);
+              return;
+            }
+
+            // Check transaction status if data is available
+            if (transactionData) {
+              const receiptStatus = transactionData.receipt_status;
+              console.log('🔍 Moralis receipt_status:', receiptStatus);
+              console.log('🔍 Full transaction data:', transactionData);
+
+              if (receiptStatus === "0") {
+                console.error('❌ Transaction failed (receipt_status: 0)');
+                toast.error('Transaction failed. Please try again.');
+                setIsProcessing(false);
+                return;
+              } else if (receiptStatus === "1") {
+                console.log('✅ Transaction successful (receipt_status: 1)');
+              } else {
+                console.warn('⚠️ Unknown transaction status:', receiptStatus, 'proceeding optimistically');
+              }
+            } else {
+              console.log('⚠️ No transaction data available, proceeding with optimistic flow');
+            }
+
+            // Transaction is confirmed successful, proceed with webhook data
+            const webhookData = {
+              contractAddress: mintData.data.contractAddress,
+              seedId: mintData.data.args.seedId,
+              snapshotId: mintData.data.snapshotId,
+              beneficiaryCode: mintData.data.beneficiaryCode || `BENEFICIARY-${beneficiaryIndex}`,
+              beneficiaryDistribution: mintData.data.beneficiaryDistribution || 0,
+              creator: currentActiveWallet.address,
+              txHash: txHash,
+              timestamp: Math.floor(Date.now() / 1000),
+              blockNumber: transactionData?.block_number || mintData.data.blockNumber,
+              processId: mintData.data.processId,
+              // Add transaction verification data from Moralis
+              transactionStatus: transactionData?.receipt_status || 'pending',
+              gasUsed: transactionData?.receipt_gas_used || '0',
+              effectiveGasPrice: transactionData?.gas_price || '0',
+              transactionFee: transactionData?.transaction_fee || '0',
+            };
+
+            console.log('🔗 Verified webhook data:', JSON.stringify(webhookData, null, 2));
+
+            // Store webhook data for way-of-flowers page to use
+            if (seedId) {
+              localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(webhookData));
+              console.log('🔗 Verified webhook data stored for way-of-flowers page:', seedId);
+            }
+
+            // Trigger wallet snapshots refresh if available
+            if (typeof window !== 'undefined' && (window as any).refreshWalletSnapshots) {
+              console.log('🔄 Triggering wallet snapshots refresh...');
+              try {
+                (window as any).refreshWalletSnapshots();
+              } catch (refreshError) {
+                console.warn('⚠️ Failed to refresh wallet snapshots:', refreshError);
+              }
+            }
+
+          } catch (verificationError) {
+            console.error('❌ Transaction verification failed:', verificationError);
+            toast.error('Failed to verify transaction. Please check your wallet or try again.');
+            setIsProcessing(false);
+            return;
           }
         }
 
