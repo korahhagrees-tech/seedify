@@ -250,10 +250,10 @@ export default function AmplifySeedModal({
           >
             {/* Modal with animated border transition and scaling */}
             <motion.div
-              className="bg-[#D9D9D9] p-6 border-3 border-dotted border-gray-600 shadow-xl scale-[0.5] lg:scale-[0.7] md:scale-[0.7]"
+              className="bg-[#D9D9D9] p-6 border-3 border-dotted border-gray-600 shadow-xl scale-[0.8] lg:scale-[0.7] md:scale-[0.7] w-[440px] lg:w-full md:w-full -ml-12 lg:-ml-0 md:-ml-0 -mt-12 lg:-mt-0 md:-mt-0"
               animate={{
                 borderRadius: currentState === 'communication'
-                  ? '120px 40px 40px 120px' // asymmetric: top-left large, others small
+                  ? '80px 80px 40px 120px' // asymmetric: top-left large, others small
                   : '40px 40px 40px 40px'   // uniform: all corners same
               }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -261,9 +261,9 @@ export default function AmplifySeedModal({
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors z-10"
+                className="absolute -top-12 right-8 w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors z-10"
               >
-                <span className="text-black text-xl font-bold">×</span>
+                <span className="text-black text-2xl font-bold">×</span>
               </button>
 
               {/* Header */}

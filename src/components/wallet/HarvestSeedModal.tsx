@@ -210,7 +210,7 @@ export default function HarvestSeedModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[0.7] md:scale-[0.7] scale-[0.5]"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[0.7] md:scale-[0.7] scale-[0.8] h-10 w-[440px] lg:w-full md:w-full -ml-8 lg:-ml-0 md:-ml-0 mt-92 lg:-mt-0 md:-mt-0"
           >
             {/* State 1: Disconnected Wallet */}
             {!authenticated ? (
@@ -250,7 +250,7 @@ export default function HarvestSeedModal({
               </div>
             ) : (
               /* State 2: Connected Wallet - Harvest Modal */
-              <div className="bg-white rounded-[40px] border-2 border-black border-dotted p-8 max-w-lg w-full mx-auto relative shadow-xl">
+              <div className="bg-[#D9D9D9] rounded-[40px] border-2 border-black border-dotted p-8 max-w-lg w-full mx-auto relative shadow-xl">
                 {/* Close Button */}
                 <button
                   onClick={onClose}
@@ -265,65 +265,69 @@ export default function HarvestSeedModal({
                 </h2>
 
                 {/* Wallet Details Section */}
-                <div className="bg-gray-100 rounded-[20px] p-4 mb-6">
-                  <p className="text-sm text-black font-medium mb-2">YOUR WALLET</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-base font-mono text-black">
-                        {formatAddress(walletAddress || '')}
-                      </span>
-                      <button
-                        onClick={copyToClipboard}
-                        className="flex items-center justify-center transition-colors"
-                      >
-                        <Image src={assets.copy} alt="Copy" width={12} height={12} className="w-4 h-4" />
-                      </button>
-                      {copied && <span className="text-xs text-green-600">Copied!</span>}
-                    </div>
-                    <div className="bg-white px-3 py-1 rounded-lg">
-                      <span className="text-base font-light text-gray-700">{balance} ETH</span>
+                <div className="bg-none rounded-[20px] p-4 mb-6">
+                  <div className="bg-white rounded-full p-2 w-95 mb-6 -ml-8">
+                    <p className="text-[11px] lg:text-[11px] md:text-[11px] text-nowrap text-black font-medium -mb-2 ml-4">YOUR WALLET</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="text-base font-mono text-black ml-4">
+                          {formatAddress(walletAddress || '')}
+                        </span>
+                        <button
+                          onClick={copyToClipboard}
+                          className="flex items-center justify-center transition-colors"
+                        >
+                          <Image src={assets.copy} alt="Copy" width={12} height={12} className="w-4 h-4" />
+                        </button>
+                        {copied && <span className="text-xs text-green-600">Copied!</span>}
+                      </div>
+                      <div className="bg-[#F1F2F9] px-3 py-1 rounded-lg">
+                        <span className="text-base font-light text-gray-700">{balance} ETH</span>
+                      </div>
                     </div>
                   </div>
 
                   {/* Email and Actions */}
-                  <div className="flex items-center gap-2 mt-3">
-                    <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
-                    <span className="text-sm text-black">{user?.email || formatAddress(walletAddress || '')}</span>
-                  </div>
+                  <div className="bg-[#cdc9c9] rounded-[40px] p-2 w-95 mb-6 -ml-8 -mt-8">
+                    <div className="flex items-center gap-2 mt-3">
+                      <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
+                      <span className="text-sm text-black">{user?.email || formatAddress(walletAddress || '')}</span>
+                    </div>
 
-                  <div className="flex gap-2 mt-3">
-                    <button
-                      onClick={handleAddFunds}
-                      className="px-4 py-1 border border-dotted border-gray-500 rounded-full text-sm text-black bg-gray-50 hover:bg-gray-100 transition-colors"
-                    >
-                      Add Funds
-                    </button>
-                    <button
-                      onClick={async () => {
-                        onClose();
-                        clearAppStorage();
-                        await logout();
-                        setTimeout(() => {
-                          window.location.href = "/";
-                        }, 100);
-                      }}
-                      className="flex items-center gap-2 px-4 py-1 text-sm text-black hover:text-gray-800 transition-colors"
-                    >
-                      <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
-                      Log out
-                    </button>
-                    <button
-                      onClick={handleWalletConnect}
-                      className="px-4 py-1 border border-dotted border-black rounded-full text-sm text-black bg-white hover:bg-gray-50 transition-colors"
-                    >
-                      Connect Account
-                    </button>
+                    <div className="flex gap-2 mt-3">
+                      <button
+                        onClick={async () => {
+                          onClose();
+                          clearAppStorage();
+                          await logout();
+                          setTimeout(() => {
+                            window.location.href = "/";
+                          }, 100);
+                        }}
+                        className="flex items-center gap-2 px-4 py-0 h-8 text-sm text-black hover:text-gray-800 transition-colors text-nowrap"
+                      >
+                        <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
+                        Log out
+                      </button>
+                      <button
+                        onClick={handleAddFunds}
+                        className="px-4 py-0 h-8 border border-dotted border-gray-500 rounded-full text-sm text-black bg-gray-50 hover:bg-gray-100 transition-colors text-nowrap"
+                      >
+                        Add Funds
+                      </button>
+                      <button
+                        onClick={handleWalletConnect}
+                        className="px-4 py-1 border border-dotted border-black rounded-full text-sm text-black bg-white hover:bg-gray-50 transition-colors"
+                      >
+                        Connect Account
+                      </button>
+                    </div>
                   </div>
                 </div>
 
                 {/* SeedId Current Maturation Overview Bar */}
                 <div className="bg-gray-100 rounded-full px-6 py-3 mb-6 border border-dotted border-gray-400">
-                  <p className="text-black text-center text-sm font-medium">
+                  <p className="text-black text-nowrap text-center text-sm font-medium">
                     Seed {seedId} current maturation overview.
                   </p>
                 </div>

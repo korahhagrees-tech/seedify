@@ -254,9 +254,9 @@ export default function SeedStewardStats({
         {/* Main dotted container */}
         <div className="relative mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-48 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
           {/* Section: Core Seed Metrics - Full width with 3x2 grid */}
-          <div className="flex z-50 items-center w-full justify-between mb-6 bg-gray-400 rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[0.8] mt-12" style={{ pointerEvents: 'auto' }}>
+          <div className="flex z-50 items-center w-full justify-between mb-6 bg-gray-400 rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[1.0] mt-12" style={{ pointerEvents: 'auto' }}>
             <div className="flex-1">
-              <div className="text-lg font-light scale-[0.6] lg:scale-[0.7] md:scale-[0.6] tracking-wide text-gray-900">
+              <div className="text-lg font-light scale-[0.6] lg:scale-[0.7] md:scale-[0.7] tracking-wide text-gray-900">
                 <p className="-ml-18">CORE SEED METRICS</p>
               </div>
             </div>
@@ -264,13 +264,14 @@ export default function SeedStewardStats({
               onClick={toggleInfoDropdown}
               onMouseDown={() => console.log('🖱️ INFO button mouse down')}
               onMouseUp={() => console.log('🖱️ INFO button mouse up')}
-              className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/70 text-gray-900 text-sm -ml-16 left-8 hover:bg-white/90 transition-colors cursor-pointer relative z-50 w-22"
+              className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/90 text-gray-900 text-sm -ml-16 left-0 hover:bg-white/90 transition-colors cursor-pointer relative w-22"
               style={{ pointerEvents: 'auto', position: 'relative' }}
             >
               INFO
               <motion.span
                 animate={{ rotate: isInfoDropdownOpen ? 180 : 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="ml-2"
               >
                 ▼
               </motion.span>
@@ -330,10 +331,10 @@ export default function SeedStewardStats({
             {/* Full width header with INFO button */}
 
             {/* Core metrics 3x2 grid - single background */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-3 gap-4 mb-6 scale-[1.0] lg:scale-[1.1] md:scale-[1.1]">
               {/* SEED NUMBER */}
-              <div className="text-center">
-                <div className="text-[10px] tracking-wide text-black/90 mb-2">
+              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   SEED NUMBER
                 </div>
                 <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
@@ -342,18 +343,18 @@ export default function SeedStewardStats({
               </div>
 
               {/* MINTED ON */}
-              <div className="text-center">
-                <div className="text-[10px] tracking-wide text-black/90 mb-2">
+              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   MINTED ON
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
+                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[10px] lg:text-[11px] md:text-[11px] text-gray-900 text-center">
                   {formatDate(stats.mintedOn)}
                 </div>
               </div>
 
               {/* SNAPSHOTS */}
-              <div className="text-center">
-                <div className="text-[10px] tracking-wide text-black/90 mb-2">
+              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   SNAPSHOTS
                 </div>
                 <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
@@ -363,30 +364,30 @@ export default function SeedStewardStats({
 
               {/* SNAPSHOT PRICE */}
               <div className="text-center">
-                <div className="text-[10px] tracking-wide text-black/90 mb-2">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   SNAPSHOT PRICE
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
+                <div className="bg-white/70 border-2 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
                   {parseFloat(stats.snapshotPrice).toFixed(5)} ETH
                 </div>
               </div>
 
               {/* SNAPSHOT SHARE */}
               <div className="text-center">
-                <div className="text-[10px] tracking-wide text-black/90 mb-2">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   SNAPSHOT SHARE
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
+                <div className="bg-white/70 border-2 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
                   {formatPercentage(stats.snapshotShare)}
                 </div>
               </div>
 
               {/* 20% SHARE VALUE */}
               <div className="text-center">
-                <div className="text-[10px] tracking-wide text-black/90 mb-2">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   20% SHARE VALUE
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
+                <div className="bg-white/70 border-2 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
                   {parseFloat(stats.twentyPercentShareValue).toFixed(3)} ETH
                 </div>
               </div>
@@ -394,9 +395,9 @@ export default function SeedStewardStats({
           </div>
 
           {/* Two separate sections below - always side by side */}
-          <div className="grid grid-cols-2 gap-2 mx-4 mb-6 scale-[0.9] lg:scale-[1.0] md:scale-[0.95]">
+          <div className="grid grid-cols-2 gap-2 mx-4 mb-6 scale-[1.0] lg:scale-[1.0] md:scale-[0.95]">
             {/* Left Card: NUTRIENT RESERVE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-gray-400/40 p-4">
+            <div className="rounded-[28px] bg-gray-400/40 p-4 -ml-4 w-52 scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
                 {/* NUTRIENT RESERVE TOTAL */}
                 <div className="text-center">
@@ -431,7 +432,7 @@ export default function SeedStewardStats({
             </div>
 
             {/* Right Card: HARVESTABLE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-gray-400/40 p-4">
+            <div className="rounded-[28px] bg-gray-400/40 p-4 w-40 ml-4 scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
                 {/* HARVESTABLE */}
                 <div className="text-center">

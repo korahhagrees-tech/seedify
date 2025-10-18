@@ -462,6 +462,50 @@ export default function PaymentModal({
           }
         }
 
+        // Step 4: Store webhook data and proceed (no transaction verification)
+        if (txHash) {
+          console.log('🔍 Transaction submitted with hash:', txHash);
+          toast.info('Transaction submitted! Proceeding...');
+
+          // Create webhook data without verification
+          const webhookData = {
+            contractAddress: mintData.data.contractAddress,
+            seedId: mintData.data.args.seedId,
+            snapshotId: mintData.data.snapshotId,
+            beneficiaryCode: mintData.data.beneficiaryCode || `BENEFICIARY-${beneficiaryIndex}`,
+            beneficiaryDistribution: mintData.data.beneficiaryDistribution || 0,
+            creator: currentActiveWallet.address,
+            txHash: txHash,
+            timestamp: Math.floor(Date.now() / 1000),
+            blockNumber: mintData.data.blockNumber,
+            processId: mintData.data.processId,
+            // Default transaction status since we're not verifying
+            transactionStatus: 'pending',
+            gasUsed: '0',
+            effectiveGasPrice: '0',
+            transactionFee: '0',
+          };
+
+          console.log('🔗 Webhook data:', JSON.stringify(webhookData, null, 2));
+
+          // Store webhook data for way-of-flowers page to use
+          if (seedId) {
+            localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(webhookData));
+            console.log('🔗 Webhook data stored for way-of-flowers page:', seedId);
+          }
+
+          // Trigger wallet snapshots refresh if available
+          if (typeof window !== 'undefined' && (window as any).refreshWalletSnapshots) {
+            console.log('🔄 Triggering wallet snapshots refresh...');
+            try {
+              (window as any).refreshWalletSnapshots();
+            } catch (refreshError) {
+              console.warn('⚠️ Failed to refresh wallet snapshots:', refreshError);
+            }
+          }
+        }
+
+        /* COMMENTED OUT: Moralis API transaction verification
         // Step 4: Verify transaction status using Alchemy API before proceeding
         if (txHash) {
           console.log('🔍 Verifying transaction status for hash:', txHash);
@@ -631,6 +675,7 @@ export default function PaymentModal({
             return;
           }
         }
+        */
 
         // Transaction completed successfully
         toast.success('Snapshot minted successfully!');
