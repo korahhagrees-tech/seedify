@@ -368,7 +368,7 @@ export default function WalletModal({
                   </span>
                   <button
                     onClick={handleSwitchWallet}
-                    className="w-[30%] lg:ml-2 md:ml-2 ml-20 px-2 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
+                    className="w-[30%] lg:ml-2 md:ml-2 ml-16 px-2 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
                   >
                     <span className="text-base scale-[1.05] font-light -mt-2">
                       {wallets.length > 1 ? "Switch" : "Change"}
