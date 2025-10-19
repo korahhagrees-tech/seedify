@@ -203,11 +203,11 @@ await fetch('/api/seed-created', {
 ✅ Show loading states  
 
 ### DON'T:
-❌ Call preparation endpoint on every keystroke  
-❌ Skip validation (use it for UX)  
-❌ Forget the webhook (breaks cache/analytics)  
-❌ Assume data is fresh (check timestamps)  
-❌ Ignore `canMint` flag  
+Call preparation endpoint on every keystroke  
+Skip validation (use it for UX)  
+Forget the webhook (breaks cache/analytics)  
+Assume data is fresh (check timestamps)  
+Ignore `canMint` flag  
 
 ---
 

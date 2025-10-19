@@ -25,7 +25,7 @@ export default function SeedDetailPage({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="min-h-screen w-full max-w-sm mx-auto lg:-mt-8 md:-mt-14 -mt-12 relative lg:scale-[1.0] md:scale-[0.95] scale-[1.0] overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="min-h-screen w-full max-w-sm mx-auto lg:-mt-8 md:-mt-14 -mt-12 relative lg:scale-[1.0] md:scale-[0.95] scale-[1.0] overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mb-40 lg:-mb-40 md:-mb-40">
       {/* Steward Label - positioned above the main content */}
       <div className="relative pt-4 pb-2 ml-2 lg:ml-4 md:ml-4 scale-[0.8] lg:scale-[1.0] md:scale-[0.95] z-10">
         <motion.div
@@ -105,7 +105,7 @@ export default function SeedDetailPage({
               <div className="text-[8px] font-light text-black mb-2 mt-1">
                 RAISED
               </div>
-              <div className="text-xl text-nowrap scale-[0.75] lg:scale-[0.65] md:scale-[0.65] -ml-3 lg:-ml-3 md:-ml-2 -mt-3 font-light text-black">
+              <div className="text-xl text-nowrap scale-[0.65] lg:scale-[0.65] md:scale-[0.65] -ml-3 lg:-ml-3 md:-ml-2 -mt-3 font-light text-black">
                 {parseFloat(seed.depositAmount).toFixed(4)}{" "}
                 <span className="text-xl">ETH</span>
               </div>
@@ -119,7 +119,7 @@ export default function SeedDetailPage({
               <div className="text-[8px] font-light text-black mb-2 mt-1">
                 SNAP PRICE
               </div>
-              <div className="text-xl text-nowrap scale-[0.75] lg:scale-[0.65] md:scale-[0.65] -ml-3 lg:-ml-2 md:-ml-2 -mt-3 font-light text-black">
+              <div className="text-xl text-nowrap scale-[0.65] lg:scale-[0.65] md:scale-[0.65] -ml-3 lg:-ml-2 md:-ml-2 -mt-3 font-light text-black">
                 {parseFloat(seed.snapshotPrice).toFixed(4)}{" "}
                 <span className="text-xl">ETH</span>
               </div>
@@ -130,10 +130,10 @@ export default function SeedDetailPage({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 }}
             >
-              <div className="text-[10px] font-light text-black mb-2 mt-1">
+              <div className="text-[9px] font-light text-black mb-2 mt-0">
                 EVOLUTIONS
               </div>
-              <div className="text-xl text-nowrap scale-[0.9] -ml-2 -mt-3 font-light text-black">
+              <div className="text-xl text-nowrap scale-[0.85] -ml-2 -mt-3 font-light text-black">
                 {seed.snapshotCount}
               </div>
             </motion.div>

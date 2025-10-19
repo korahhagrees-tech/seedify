@@ -58,6 +58,20 @@ export default function AudioPlayerModal({
 
   return (
     <>
+      {/* Hidden iframe - always rendered to keep audio playing */}
+      <div className={playerState === "orb" ? "block" : "hidden"}>
+        <iframe
+          ref={audioRef}
+          width="0"
+          height="0"
+          scrolling="no"
+          frameBorder="no"
+          allow="autoplay"
+          src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ff5500&auto_play=${isPlaying}&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
+          className="invisible absolute"
+        />
+      </div>
+
       {/* Modal State */}
       <AnimatePresence>
         {playerState === "modal" && (
@@ -95,10 +109,9 @@ export default function AudioPlayerModal({
                   </button>
                 </div>
 
-                {/* SoundCloud Embed */}
+                {/* SoundCloud Embed - Only show when modal is open */}
                 <div className="w-full bg-white rounded-[20px] overflow-hidden mt-8 scale-[0.9] lg:scale-[0.9] md:scale-[0.9]">
                   <iframe
-                    ref={audioRef}
                     width="100%"
                     height="180"
                     scrolling="no"

@@ -36,8 +36,8 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
           transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
         >
           <div className="bg-white border mt-4 text-nowrap border-black rounded-full px-4 py-1 text-center">
-            <div className="text-sm font-medium text-black">
-              STEWARD <span className="ml-2">{formatAddress(seed.owner)}</span>
+            <div className="text-sm text-nowrap font-medium text-black scale-[0.8] lg:scale-[1.0] md:scale-[0.9]">
+              <span className="-ml-8 lg:-ml-2 md:-ml-2">STEWARD</span> <span className="ml-8 lg:ml-2 md:ml-2">{formatAddress(seed.owner)}</span>
             </div>
           </div>
         </motion.div>
@@ -94,7 +94,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
           <div className="text-[10px] font-light text-black mb-2 mt-1">
             RAISED
           </div>
-          <div className="text-2xl text-nowrap scale-[0.7] lg:scale-[0.8] md:scale-[0.7] -ml-5 lg:-ml-2 md:-ml-2 -mt-4 font-light favorit-mono text-black/70">
+          <div className="text-2xl text-nowrap scale-[0.6] lg:scale-[0.8] md:scale-[0.7] -ml-5 lg:-ml-2 md:-ml-2 -mt-4 font-light favorit-mono text-black/70">
             {parseFloat(seed.depositAmount).toFixed(4)}{" "}
             <span className="text-xl">ETH</span>
           </div>
@@ -110,7 +110,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
           <div className="text-[10px] font-light text-black mb-2 mt-1">
             SNAP PRICE
           </div>
-          <div className="text-2xl text-nowrap scale-[0.7] lg:scale-[0.8] md:scale-[0.7] -ml-5 lg:-ml- md:-ml-3 -mt-4 font-light text-black/80">
+          <div className="text-2xl text-nowrap scale-[0.6] lg:scale-[0.8] md:scale-[0.7] -ml-5 lg:-ml- md:-ml-3 -mt-4 font-light text-black/80">
             {parseFloat(seed.snapshotPrice).toFixed(4)}{" "}
             <span className="text-xl">ETH</span>
           </div>

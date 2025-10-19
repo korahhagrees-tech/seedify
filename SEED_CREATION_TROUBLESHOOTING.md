@@ -38,7 +38,7 @@ console.log('Factory locked:', locked);
 
 ---
 
-## ❌ Common Errors & Solutions
+## Common Errors & Solutions
 
 ### 1. "Connect your wallet first"
 
@@ -524,7 +524,7 @@ export async function healthCheck() {
     });
     console.log('✅ SeedFactory: Online');
   } catch {
-    console.log('❌ SeedFactory: Offline');
+    console.log('SeedFactory: Offline');
   }
   
   // 2. Seed count

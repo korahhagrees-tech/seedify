@@ -79,7 +79,7 @@ export default function AmplifySeedModal({
       // User can switch to it via the wallet selector if needed
     },
     onError: (error) => {
-      console.error("❌ Wallet connection failed:", error);
+      console.error("Wallet connection failed:", error);
     },
   });
 

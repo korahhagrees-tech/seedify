@@ -60,7 +60,7 @@ export default function WalletModal({
       // User can switch to it via the wallet selector if needed
     },
     onError: (error) => {
-      console.error("❌ Wallet connection failed:", error);
+      console.error("Wallet connection failed:", error);
     },
   });
 
@@ -187,7 +187,7 @@ export default function WalletModal({
       }
       console.log(`✅ Successfully linked ${provider} account`);
     } catch (error) {
-      console.error(`❌ Failed to link ${provider} account:`, error);
+      console.error(`Failed to link ${provider} account:`, error);
     }
   };
 
@@ -196,7 +196,7 @@ export default function WalletModal({
       await linkEmail();
       console.log("✅ Successfully linked email account");
     } catch (error) {
-      console.error("❌ Failed to link email account:", error);
+      console.error("Failed to link email account:", error);
     }
   };
 
@@ -206,7 +206,7 @@ export default function WalletModal({
   //     await linkSms();
   //     console.log('✅ Successfully linked SMS account');
   //   } catch (error) {
-  //     console.error('❌ Failed to link SMS account:', error);
+  //     console.error('Failed to link SMS account:', error);
   //   }
   // };
 
@@ -215,7 +215,7 @@ export default function WalletModal({
       await linkPasskey();
       console.log("✅ Successfully linked passkey");
     } catch (error) {
-      console.error("❌ Failed to link passkey:", error);
+      console.error("Failed to link passkey:", error);
     }
   };
 
@@ -363,12 +363,12 @@ export default function WalletModal({
                     height={16}
                     className="w-4 h-4"
                   />
-                  <span className="text-sm text-black scale-[0.9] lg:scale-[1.0] md:scale-[0.95] -ml-4 lg:ml-0 md:-ml-2">
+                  <span className="text-sm text-black scale-[0.9] lg:scale-[1.0] md:scale-[0.95] -ml-1 lg:ml-0 md:-ml-2">
                     {displayEmail || (evmAddress ? formatAddress(evmAddress) : (activeWallet?.address || walletAddress || ""))}
                   </span>
                   <button
                     onClick={handleSwitchWallet}
-                    className="w-[30%] lg:ml-2 md:ml-2 -ml-2 px-2 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
+                    className="w-[30%] lg:ml-2 md:ml-2 ml-20 px-2 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
                   >
                     <span className="text-base scale-[1.05] font-light -mt-2">
                       {wallets.length > 1 ? "Switch" : "Change"}
@@ -401,7 +401,7 @@ export default function WalletModal({
                   onClick={onPrivyHome}
                   className="w-[32%] px-4 py-1 border-1 border-black rounded-full text-sm text-black hover:bg-gray-50 transition-colors -mt-14  h-6 peridia-display-light bg-[#E2E3F0]"
                 >
-                  <p className="-mt-1 text-nowrap -ml-2 lg:ml-0 md:-ml-2 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]">
+                  <p className="-mt-1 text-nowrap -ml-2 lg:ml-0 md:-ml-2 scale-[0.7] lg:scale-[1.0] md:scale-[0.8]">
                     P<span className="favorit-mono">rivy</span> H
                     <span className="favorit-mono">ome</span>
                   </p>

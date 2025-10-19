@@ -560,8 +560,8 @@ All endpoints return errors in this format:
 
 When `USE_MOCK_DATA=false`:
 - ✅ **ALL data comes from contracts or `projects.json`**
-- ❌ **NO fallbacks to mock/fake data**
-- ❌ **NO placeholder image URLs**
+- **NO fallbacks to mock/fake data**
+- **NO placeholder image URLs**
 - Returns `404` if seed doesn't exist
 - Returns empty array `[]` if no seeds found
 - Returns empty string `""` for images if not available from contract
@@ -1881,8 +1881,8 @@ All endpoints return errors in a consistent format:
 
 When `USE_MOCK_DATA=false` (production):
 - ✅ ALL data comes from smart contracts or `projects.json`
-- ❌ NO fallbacks to mock/fake data
-- ❌ NO placeholder image URLs
+- NO fallbacks to mock/fake data
+- NO placeholder image URLs
 - Returns `404` if resource doesn't exist
 - Returns empty array `[]` if no data found
 - Returns empty string `""` for images if not available

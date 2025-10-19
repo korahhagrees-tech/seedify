@@ -46,7 +46,7 @@ export default function WalletConnectionModal({
       onSuccess?.();
     },
     onError: (error) => {
-      console.error("❌ Wallet connection failed:", error);
+      console.error("Wallet connection failed:", error);
     },
   });
 

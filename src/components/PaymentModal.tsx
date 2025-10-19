@@ -329,7 +329,7 @@ export default function PaymentModal({
             txHash = txResult.hash;
             console.log('✅ Embedded wallet transaction hash:', txHash);
           } catch (embeddedError) {
-            console.error('❌ Embedded wallet transaction failed:', embeddedError);
+            console.error('Embedded wallet transaction failed:', embeddedError);
             toast.error('Transaction failed. Please try again or switch to an external wallet.');
             setIsProcessing(false);
             return;
@@ -445,7 +445,7 @@ export default function PaymentModal({
             toast.success('Transaction submitted! Waiting for confirmation...');
             console.log('✅ External wallet transaction hash:', txHash);
           } catch (error: any) {
-            console.error('❌ External wallet transaction failed:', error);
+            console.error('External wallet transaction failed:', error);
             if (error?.code === 4001 || error?.message?.includes('User rejected')) {
               toast.error('Transaction rejected');
             } else if (error?.message?.includes('No embedded or connected wallet found')) {
@@ -491,7 +491,7 @@ export default function PaymentModal({
                     transactionStatus = statusData.transaction;
                     break;
                   } else if (status === 'reverted') {
-                    console.error('❌ Transaction reverted:', statusData.transaction.revertReason);
+                    console.error('Transaction reverted:', statusData.transaction.revertReason);
                     toast.error('Transaction failed and reverted. Please try again.');
                     setIsProcessing(false);
                     return; // Exit early - do not proceed with routing or API calls
@@ -503,14 +503,14 @@ export default function PaymentModal({
               
               attempts++;
             } catch (error) {
-              console.warn(`⚠️ Status check attempt ${attempts + 1} failed:`, error);
+              console.warn(`Status check attempt ${attempts + 1} failed:`, error);
               attempts++;
             }
           }
 
           // Check if we timed out without getting a success status
           if (!transactionStatus) {
-            console.error('❌ Transaction verification timed out');
+            console.error('Transaction verification timed out');
             toast.error('Transaction verification timed out. Please check your wallet.');
             setIsProcessing(false);
             return; // Exit early - do not proceed
@@ -549,7 +549,7 @@ export default function PaymentModal({
             try {
               (window as any).refreshWalletSnapshots();
             } catch (refreshError) {
-              console.warn('⚠️ Failed to refresh wallet snapshots:', refreshError);
+              console.warn('Failed to refresh wallet snapshots:', refreshError);
             }
           }
         }
@@ -592,7 +592,7 @@ export default function PaymentModal({
                     console.log(`⏳ Transaction not yet confirmed, waiting...`);
                   }
                 } else {
-                  console.warn(`⚠️ Moralis API returned ${response.status}: ${response.statusText}`);
+                  console.warn(`Moralis API returned ${response.status}: ${response.statusText}`);
                   if (response.status === 401) {
                     console.warn('🔑 API key may be invalid or missing');
                   } else if (response.status === 429) {
@@ -613,7 +613,7 @@ export default function PaymentModal({
 
             // Check if we timed out
             if (!transactionData && (Date.now() - startTime) >= maxWaitTime) {
-              console.error('❌ Transaction verification timed out after 2 minutes');
+              console.error('Transaction verification timed out after 2 minutes');
               toast.error('Transaction verification timed out. Please check your wallet or try again.');
               setIsProcessing(false);
               return;
@@ -621,7 +621,7 @@ export default function PaymentModal({
 
             // Fallback to original RPC method if Moralis fails
             if (!transactionData) {
-              console.warn('⚠️ Moralis API failed, trying fallback RPC method...');
+              console.warn('Moralis API failed, trying fallback RPC method...');
 
               try {
                 const response = await fetch(process.env.RPC_URL || '', {
@@ -649,12 +649,12 @@ export default function PaymentModal({
                   };
                 }
               } catch (fallbackError) {
-                console.warn('⚠️ Fallback RPC method also failed:', fallbackError);
+                console.warn('Fallback RPC method also failed:', fallbackError);
               }
             }
 
             if (!transactionData) {
-              console.error('❌ All verification methods failed - cannot verify transaction status');
+              console.error('All verification methods failed - cannot verify transaction status');
               toast.error('Failed to verify transaction. Please check your wallet or try again.');
               setIsProcessing(false);
               return;
@@ -667,17 +667,17 @@ export default function PaymentModal({
               console.log('🔍 Full transaction data:', transactionData);
 
               if (receiptStatus === "0") {
-                console.error('❌ Transaction failed (receipt_status: 0)');
+                console.error('Transaction failed (receipt_status: 0)');
                 toast.error('Transaction failed. Please try again.');
                 setIsProcessing(false);
                 return;
               } else if (receiptStatus === "1") {
                 console.log('✅ Transaction successful (receipt_status: 1)');
               } else {
-                console.warn('⚠️ Unknown transaction status:', receiptStatus, 'proceeding optimistically');
+                console.warn('Unknown transaction status:', receiptStatus, 'proceeding optimistically');
               }
             } else {
-              console.log('⚠️ No transaction data available, proceeding with optimistic flow');
+              console.log('No transaction data available, proceeding with optimistic flow');
             }
 
             // Transaction is confirmed successful, proceed with webhook data
@@ -713,12 +713,12 @@ export default function PaymentModal({
               try {
                 (window as any).refreshWalletSnapshots();
               } catch (refreshError) {
-                console.warn('⚠️ Failed to refresh wallet snapshots:', refreshError);
+                console.warn('Failed to refresh wallet snapshots:', refreshError);
               }
             }
 
           } catch (verificationError) {
-            console.error('❌ Transaction verification failed:', verificationError);
+            console.error('Transaction verification failed:', verificationError);
             toast.error('Failed to verify transaction. Please check your wallet or try again.');
             setIsProcessing(false);
             return;
@@ -736,7 +736,7 @@ export default function PaymentModal({
           console.log('🎯 [PaymentModal] Calling onConfirm with amount:', amountInput);
           onConfirm(amountInput);
         } else {
-          console.log('⚠️ [PaymentModal] No onConfirm callback provided');
+          console.log('[PaymentModal] No onConfirm callback provided');
         }
       } else {
         // For non-snapshot minting, just call the callback
@@ -802,13 +802,13 @@ export default function PaymentModal({
                   {/* Price and Allocation */}
                   <div className="flex items-start gap-4 mb-6">
                     {/* Price */}
-                    <div className="bg-white rounded-full px-4 py-4 border-1 border-black/40 flex-none scale-[0.6] -ml-8 -mt-8 w-[165px]">
+                    <div className="bg-white rounded-full px-4 py-4 border-1 border-black/40 flex-none scale-[0.4] lg:scale-[0.6] md:scale-[0.6] -ml-8 -mt-8 w-[165px]">
                       <div className="text-black text-[12px] font-light text-center items-center uppercase -mt-4 mb-1">PRICE</div>
                       <div className="text-black text-2xl font-light break-all whitespace-normal leading-tight">{amountInput} ETH</div>
                     </div>
 
                     {/* Allocation Breakdown */}
-                    <div className="flex-1 -ml-22 scale-[0.6] -mt-6">
+                    <div className="flex-1 -ml-24 lg:-ml-22 md:-ml-22 scale-[0.5] lg:scale-[0.65] md:scale-[0.65] -mt-6">
                       <div className="text-black text-base text-nowrap favorit-mono font-medium uppercase -mt-1">
                         50% SENT TO SELECTED ECOSYSTEM
                       </div>

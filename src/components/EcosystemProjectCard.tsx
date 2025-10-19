@@ -212,7 +212,7 @@ export default function EcosystemProjectCard({
   //       description: "Processing snapshot...",
   //     });
 
-  //     // ❌ WEBHOOK CALL MOVED TO WAY-OF-FLOWERS PAGE
+  //     // WEBHOOK CALL MOVED TO WAY-OF-FLOWERS PAGE
   //     // The webhook will be called from the way-of-flowers page after routing
   //     // to allow for proper waiting state with pulsing "Blooming" animation
 

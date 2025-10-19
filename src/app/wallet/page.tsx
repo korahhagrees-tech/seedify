@@ -70,19 +70,74 @@ const mockStewardSeeds = [
   },
 ];
 
+// --- Helper functions outside component for cache access ---
+const getInitialCachedSnapshots = (walletAddress: string | null): any[] => {
+  console.log('🚀 [WALLET INIT] getInitialCachedSnapshots called with walletAddress:', walletAddress);
+  
+  if (typeof window === 'undefined') {
+    console.log('[WALLET INIT] Server-side render, returning empty array');
+    return [];
+  }
+  
+  if (!walletAddress) {
+    console.log('[WALLET INIT] No wallet address, returning empty array');
+    return [];
+  }
+  
+  const cacheKey = `snapshots_cache_${walletAddress.toLowerCase()}`;
+  
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    
+    if (!cached) {
+      console.log('[WALLET INIT] No cached data found in localStorage for key:', cacheKey);
+      return [];
+    }
+    
+    const cacheData = JSON.parse(cached);
+    const isExpired = Date.now() - cacheData.timestamp > 60 * 60 * 2 * 1000; // 2 hours
+    
+    if (isExpired) {
+      console.log('⏰ [WALLET INIT] Cache expired, clearing and returning empty array');
+      localStorage.removeItem(cacheKey);
+      return [];
+    }
+    
+    console.log('✅ [WALLET INIT] Loaded cached snapshots from localStorage:', cacheData.snapshots?.length || 0, 'snapshots');
+    return cacheData.snapshots || [];
+  } catch (error) {
+    console.warn('⚠️ [WALLET INIT] Failed to parse cached snapshots:', error);
+    return [];
+  }
+};
+
 export default function WalletPage() {
   const router = useRouter();
   const { logout, walletAddress } = useAuth();
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
-  const [tendedEcosystems, setTendedEcosystems] = useState<any[]>([]);
+
+  // Initialize state with cached data using lazy initialization
+  const [allSnapshots, setAllSnapshots] = useState<any[]>(() => {
+    // This runs synchronously during initial render
+    return getInitialCachedSnapshots(walletAddress);
+  });
+  
+  const [tendedEcosystems, setTendedEcosystems] = useState<any[]>(() => {
+    const cached = getInitialCachedSnapshots(walletAddress);
+    return cached.slice(0, 5); // First page
+  });
+  
+  const [hasMoreSnapshots, setHasMoreSnapshots] = useState(() => {
+    const cached = getInitialCachedSnapshots(walletAddress);
+    return cached.length > 5;
+  });
+  
   const [stewardSeeds, setStewardSeeds] = useState<any[]>([]);
   const [beneficiaryLinks, setBeneficiaryLinks] = useState<Map<number, string>>(new Map());
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [hasMoreSnapshots, setHasMoreSnapshots] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [allSnapshots, setAllSnapshots] = useState<any[]>([]);
   const [snapshotsPerPage] = useState(5); // Show 5 snapshots per page
 
   // Share modal state
@@ -93,12 +148,24 @@ export default function WalletPage() {
     beneficiaryCode?: string;
   } | null>(null);
 
-  // Debug wallet address
+  // Debug wallet address and load cache when wallet address becomes available
   useEffect(() => {
     console.log('🔍 [WALLET] Current walletAddress:', walletAddress);
-  }, [walletAddress]);
+    console.log('🔍 [WALLET] Current state - allSnapshots.length:', allSnapshots.length, 'tendedEcosystems.length:', tendedEcosystems.length);
+    
+    // If wallet address just became available and we don't have data yet, try loading from cache
+    if (walletAddress && allSnapshots.length === 0) {
+      const cachedSnapshots = getInitialCachedSnapshots(walletAddress);
+      if (cachedSnapshots.length > 0) {
+        console.log('⚡ [WALLET] Wallet address now available, loading cache immediately');
+        setAllSnapshots(cachedSnapshots);
+        setTendedEcosystems(cachedSnapshots.slice(0, snapshotsPerPage));
+        setHasMoreSnapshots(cachedSnapshots.length > snapshotsPerPage);
+      }
+    }
+  }, [walletAddress, allSnapshots.length, tendedEcosystems.length, snapshotsPerPage]);
 
-  // --- Enhanced cookie helpers for caching ---
+  // --- Enhanced localStorage helpers for caching ---
   const getCookie = (name: string): string | null => {
     if (typeof document === 'undefined') return null;
     const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
@@ -109,41 +176,60 @@ export default function WalletPage() {
     document.cookie = `${name}=${encodeURIComponent(value)}; Max-Age=${maxAgeSeconds}; Path=/; SameSite=Lax`;
   };
 
-  // Cache snapshots data in cookies
+  // Cache snapshots data in localStorage (much faster than cookies)
   const cacheSnapshots = (snapshots: any[], address: string) => {
+    if (typeof window === 'undefined') return;
+    
     const cacheKey = `snapshots_cache_${address.toLowerCase()}`;
     const cacheData = {
       snapshots,
       timestamp: Date.now(),
       version: '1.0'
     };
-    setCookie(cacheKey, JSON.stringify(cacheData), 60 * 60 * 2); // 2 hours cache
+    
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+      console.log('💾 [WALLET] Cached', snapshots.length, 'snapshots to localStorage');
+    } catch (error) {
+      console.warn('⚠️ [WALLET] Failed to cache snapshots to localStorage:', error);
+    }
   };
 
   const getCachedSnapshots = (address: string): any[] | null => {
+    if (typeof window === 'undefined') return null;
+    
     const cacheKey = `snapshots_cache_${address.toLowerCase()}`;
-    const cached = getCookie(cacheKey);
-    if (!cached) return null;
-
+    
     try {
+      const cached = localStorage.getItem(cacheKey);
+      if (!cached) return null;
+
       const cacheData = JSON.parse(cached);
       const isExpired = Date.now() - cacheData.timestamp > 60 * 60 * 2 * 1000; // 2 hours
-      if (isExpired) return null;
+      
+      if (isExpired) {
+        localStorage.removeItem(cacheKey);
+        return null;
+      }
+      
       return cacheData.snapshots || [];
-    } catch {
+    } catch (error) {
+      console.warn('⚠️ [WALLET] Failed to get cached snapshots:', error);
       return null;
     }
   };
 
   // Check if we need to refresh data (new snapshot minted)
   const shouldRefreshSnapshots = (address: string): boolean => {
+    if (typeof window === 'undefined') return true;
+    
     const lastCheckKey = `snapshots_last_check_${address.toLowerCase()}`;
-    const lastCheck = getCookie(lastCheckKey);
+    const lastCheck = localStorage.getItem(lastCheckKey);
     const now = Date.now();
 
     // Refresh if never checked or more than 5 minutes since last check
     if (!lastCheck || now - parseInt(lastCheck) > 5 * 60 * 1000) {
-      setCookie(lastCheckKey, String(now), 60 * 10); // 10 minutes
+      localStorage.setItem(lastCheckKey, String(now));
       return true;
     }
     return false;
@@ -235,24 +321,14 @@ export default function WalletPage() {
     let cancelled = false;
     const load = async () => {
       if (!walletAddress) {
-        console.log('❌ [WALLET] No wallet address available');
+        console.log('[WALLET] No wallet address available');
         return;
       }
 
       console.log('🔗 [WALLET] Starting to load wallet data for address:', walletAddress);
 
-      // Check cache first
-      const cachedSnapshots = getCachedSnapshots(walletAddress);
+      // Check if we need to refresh (cache may already be loaded in state)
       const shouldRefresh = shouldRefreshSnapshots(walletAddress);
-
-      if (cachedSnapshots && !shouldRefresh) {
-        console.log('✅ [WALLET] Using cached snapshots');
-        setAllSnapshots(cachedSnapshots);
-        const startIndex = 0;
-        const endIndex = currentPage * snapshotsPerPage;
-        setTendedEcosystems(cachedSnapshots.slice(startIndex, endIndex));
-        setHasMoreSnapshots(cachedSnapshots.length > snapshotsPerPage);
-      }
 
       try {
         // Fetch user's seeds from /users/{address}/seeds endpoint for StewardSeedCard (with ETag cookies)
@@ -280,21 +356,35 @@ export default function WalletPage() {
             const newEtag = seedsResponse.headers.get('ETag');
             if (newEtag) setCookie(seedsEtagCookieKey, newEtag, 60 * 60); // 1 hour
           } else {
-            console.log('❌ [WALLET] No seeds found or API failed:', seedsData);
+            console.log('[WALLET] No seeds found or API failed:', seedsData);
             if (!cancelled) {
               setStewardSeeds([]);
             }
           }
         } else {
-          console.error('❌ [WALLET] Seeds API request failed with status:', seedsResponse.status);
+          console.error('[WALLET] Seeds API request failed with status:', seedsResponse.status);
           if (!cancelled) {
             setStewardSeeds([]);
           }
         }
 
-        // Only fetch snapshots if not using cache or need refresh
-        if (!cachedSnapshots || shouldRefresh) {
-          console.log('🔄 [WALLET] Fetching fresh snapshots data');
+        // Check if we have valid cached data
+        const cachedSnapshots = getCachedSnapshots(walletAddress);
+        const hasCachedData = cachedSnapshots && cachedSnapshots.length > 0;
+        
+        // If we have cached data and don't need to refresh, use it
+        if (hasCachedData && !shouldRefresh) {
+          console.log('✅ [WALLET] Using cached data, skipping API fetch (', cachedSnapshots.length, 'snapshots)');
+          if (!cancelled && allSnapshots.length === 0) {
+            // Only update state if we don't already have data (avoid unnecessary re-renders)
+            const reversedSnapshots = cachedSnapshots; // Already reversed in cache
+            setAllSnapshots(reversedSnapshots);
+            setTendedEcosystems(reversedSnapshots.slice(0, snapshotsPerPage));
+            setHasMoreSnapshots(reversedSnapshots.length > snapshotsPerPage);
+          }
+        } else {
+          // Fetch fresh data if no cache or need refresh
+          console.log('🔄 [WALLET] Fetching fresh snapshots data (hasCachedData:', hasCachedData, 'shouldRefresh:', shouldRefresh, ')');
 
           // Fetch user's snapshots from /users/{address}/snapshots endpoint for TendedEcosystem (with ETag + throttle)
           const snapshotsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSnapshots(walletAddress)}`;
@@ -453,7 +543,7 @@ export default function WalletPage() {
               if (newSnapsEtag) setCookie(snapsEtagCookieKey, newSnapsEtag, 60 * 10); // 10 minutes
               setCookie(snapsLastCookieKey, String(Date.now()), 60 * 10);
             } else {
-              console.log('❌ [WALLET] No snapshots found or API failed:', snapshotsData);
+              console.log('[WALLET] No snapshots found or API failed:', snapshotsData);
               if (!cancelled) {
                 setAllSnapshots([]);
                 setTendedEcosystems([]);
@@ -464,7 +554,7 @@ export default function WalletPage() {
             // 304 or throttled
             console.log('✅ [WALLET] Using existing snapshots (304/throttled).');
           }
-        }
+        } // End of else block for fresh data fetch
       } catch (_e) {
         console.error('Failed to load wallet data:', _e);
         if (!cancelled) {
@@ -535,12 +625,16 @@ export default function WalletPage() {
 
     console.log('🔄 [WALLET] Refreshing snapshots data');
 
-    // Clear cache to force fresh fetch
+    // Clear localStorage cache to force fresh fetch
     const addressKey = walletAddress.toLowerCase();
     const cacheKey = `snapshots_cache_${addressKey}`;
     const lastCheckKey = `snapshots_last_check_${addressKey}`;
-    document.cookie = `${cacheKey}=; Max-Age=0; Path=/; SameSite=Lax`;
-    document.cookie = `${lastCheckKey}=; Max-Age=0; Path=/; SameSite=Lax`;
+    
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(cacheKey);
+      localStorage.removeItem(lastCheckKey);
+      console.log('🗑️ [WALLET] Cleared localStorage cache');
+    }
 
     // Reset pagination
     setCurrentPage(1);
@@ -552,7 +646,9 @@ export default function WalletPage() {
     const shouldRefresh = shouldRefreshSnapshots(walletAddress);
     if (shouldRefresh) {
       // Force refresh by clearing the last check time
-      document.cookie = `${lastCheckKey}=; Max-Age=0; Path=/; SameSite=Lax`;
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(lastCheckKey);
+      }
     }
   };
 
