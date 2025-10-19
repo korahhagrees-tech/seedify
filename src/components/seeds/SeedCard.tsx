@@ -35,7 +35,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
         >
-          <div className="bg-white border mt-4 text-nowrap border-black rounded-full px-4 py-1 text-center w-42">
+          <div className="bg-white border mt-5 text-nowrap border-black rounded-full px-4 py-0 text-center w-42">
             <div className="text-sm text-nowrap font-medium text-black scale-[0.68] lg:scale-[0.8] md:scale-[0.8]">
               <span className="-ml-10 lg:-ml-5 md:-ml-6 text-nowrap">STEWARD</span> <span className="ml-8 lg:ml-2 md:ml-2 text-nowrap">{formatAddress(seed.owner)}</span>
             </div>
@@ -43,7 +43,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
         </motion.div>
 
         {/* Seed Label Badge - positioned on the card */}
-        <div className="absolute top-3 -left-4 z-[5]">
+        <div className="absolute top-1 -left-4 z-[5] scale-[0.8] lg:scale-[1.0] md:scale-[0.9]">
           <span className="bg-white border border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
             {seed.label.toUpperCase()}
           </span>
@@ -51,7 +51,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
 
         {/* Main Image Card */}
         <motion.div
-          className="relative w-full h-[420px] rounded-[40px] overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow"
+          className="relative w-full h-[353px] rounded-[57px] overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-shadow"
           onClick={onClick}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
@@ -83,7 +83,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
       </div>
 
       {/* Info Buttons - Responsive grid */}
-      <div className="grid grid-cols-3 gap-2 mt-6 mb-6">
+      <div className="grid grid-cols-3 gap-2 mt-6 mb-8">
         {/* Raised Button */}
         <motion.div
           className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center"

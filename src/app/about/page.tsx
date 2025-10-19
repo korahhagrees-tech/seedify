@@ -224,7 +224,7 @@ export default function About() {
                         <p>Biodiversity project curation:		Sarah Baxendell ~ Art Ecology</p>
                         <p>Smart Contracts:				Adriano Guerrera</p>
                         <p>Graphic Design:				Roxy Zeiher</p>
-                        <p>dApp: 						Maa Lee</p>
+                        <p>dApp: 						Lydia Ahenkorah</p>
                         <p>Exhibition Text:				{`Chen ‘Stanley’ Qiufan`}</p>
                         <p>Exhibition Text Recording:			Dr Penny Oxi Pëng</p>
                       </p>

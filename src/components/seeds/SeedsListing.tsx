@@ -107,7 +107,7 @@ export default function SeedsListing({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="text-sm text-nowrap scale-[0.8] lg:scale-[1.0] md:scale-[0.9] font-light text-gray-900 text-center -mt-6 lg:-mt-4 md:-mt-4 -mb-4"
+            className="text-sm text-nowrap scale-[0.8] lg:scale-[1.0] md:scale-[0.9] font-light text-gray-900 text-center -mt-7 lg:-mt-4 md:-mt-4 -mb-4"
           >
             {hasScrolled ? "CLICK ON THE SEED YOU WISH TO EVOLVE" : "WELCOME TO THE GARDEN"}
           </motion.h1>
