@@ -50,8 +50,6 @@ export default function StoryPanel({ text, onBack, title, author, audioUrl, onAu
         <div className="max-h-[520px] overflow-y-auto pr-1 text-xs tracking-tight [scrollbar-width:none] [&::-webkit-scrollbar]:hidden leading-relaxed text-black/90">
           <p className="whitespace-pre-line">{text}</p>
         </div>
-
-        {/* Audio modal handled at page level for full-screen backdrop */}
       </div>
     </motion.div>
   );
