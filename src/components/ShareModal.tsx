@@ -67,7 +67,7 @@ export default function ShareModal({
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      toast.success("Image downloaded successfully!");
+      // toast.success("Image downloaded successfully!");
     } catch (error) {
       console.error("Download failed:", error);
       // Fallback: open the image in a new tab so the user can save it manually
@@ -79,9 +79,9 @@ export default function ShareModal({
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        toast.info("Opened image in a new tab. Use Save to download.");
+        // toast.info("Opened image in a new tab. Use Save to download.");
       } catch (_e) {
-        toast.error("Failed to download image");
+        // toast.error("Failed to download image");
       }
     }
   };
@@ -107,7 +107,7 @@ export default function ShareModal({
             files: [file],
           });
 
-          toast.success("Shared successfully!");
+          // toast.success("Shared successfully!");
         } else {
           // Fallback if file sharing not supported - use currentImageSrc
           const response2 = await fetch(currentImageSrc);
@@ -119,7 +119,7 @@ export default function ShareModal({
             }),
           ]);
 
-          toast.success("Image copied to clipboard!");
+          // toast.success("Image copied to clipboard!");
         }
       } else {
         // Fallback for desktop: copy image to clipboard - use currentImageSrc
@@ -132,16 +132,16 @@ export default function ShareModal({
           }),
         ]);
 
-        toast.success("Image copied to clipboard!");
+        // toast.success("Image copied to clipboard!");
       }
     } catch (error) {
       console.error("Share failed:", error);
       // Final fallback: copy the image URL as text
       try {
         await navigator.clipboard.writeText(currentImageSrc);
-        toast.success("Image link copied to clipboard!");
+        // toast.success("Image link copied to clipboard!");
       } catch (_e) {
-        toast.error("Failed to share image");
+        // toast.error("Failed to share image");
       }
     }
   };
@@ -151,10 +151,10 @@ export default function ShareModal({
     try {
       // Copy the actual image URL, not the page URL
       await navigator.clipboard.writeText(currentImageSrc);
-      toast.success("Link copied to clipboard!");
+      // toast.success("Link copied to clipboard!");
     } catch (error) {
       console.error("Copy link failed:", error);
-      toast.error("Failed to copy link");
+      // toast.error("Failed to copy link");
     }
   };
 

@@ -307,7 +307,7 @@ export default function StewardMint({
                 </div>
 
                 {/* Choose four beneficiaries text */}
-                <div className="-mt-8 text-black font-bold text-base lg:scale-[0.55] md:scale-[0.55] scale-[0.6]">
+                <div className="-mt-8 text-black font-bold text-base lg:scale-[0.55] md:scale-[0.55] scale-[0.45]">
                   <Image
                     src={assets.chooseBeneficiary}
                     alt="Choose four beneficiaries"

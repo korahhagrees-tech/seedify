@@ -727,7 +727,7 @@ export default function PaymentModal({
         */
 
         // Transaction completed successfully
-        toast.success('Snapshot minted successfully!');
+        // toast.success('Snapshot minted successfully!');
 
         // Close payment modal and call callback
         console.log('🎯 [PaymentModal] Transaction completed, calling onConfirm callback');

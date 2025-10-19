@@ -370,10 +370,10 @@ export default function WalletModal({
                     onClick={handleSwitchWallet}
                     className="w-[30%] lg:ml-2 md:ml-2 ml-16 px-2 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
                   >
-                    <span className="text-base scale-[1.05] font-light -mt-2">
+                    <span className="text-base scale-[0.8] lg:scale-[1.1] md:scale-[1.05] font-light -mt-2">
                       {wallets.length > 1 ? "Switch" : "Change"}
                     </span>
-                    <span className="text-base scale-[1.05] font-light -mt-2 -mb-1">
+                    <span className="text-base scale-[0.8] lg:scale-[1.1] md:scale-[1.05] font-light -mt-2 -mb-1">
                       {wallets.length > 1 ? "Wallet" : "Address"}
                     </span>
                   </button>
@@ -401,7 +401,7 @@ export default function WalletModal({
                   onClick={onPrivyHome}
                   className="w-[32%] px-4 py-1 border-1 border-black rounded-full text-sm text-black hover:bg-gray-50 transition-colors -mt-14  h-6 peridia-display-light bg-[#E2E3F0]"
                 >
-                  <p className="-mt-1 text-nowrap -ml-2 lg:ml-0 md:-ml-2 scale-[0.7] lg:scale-[1.0] md:scale-[0.8]">
+                  <p className="-mt-1 text-nowrap -ml-2 lg:ml-0 md:-ml-2 scale-[0.5] lg:scale-[1.0] md:scale-[0.8]">
                     P<span className="favorit-mono">rivy</span> H
                     <span className="favorit-mono">ome</span>
                   </p>

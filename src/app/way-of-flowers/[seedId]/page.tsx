@@ -80,7 +80,7 @@ export default function WayOfFlowers({
 
         setImageGenerationData(imageData);
         setIsWaitingForImage(false);
-        toast.success('Image generation completed!');
+        // toast.success('Image generation completed!');
 
         // Clean up webhook data
         // Keep data around until navigation completes; do cleanup later if needed
