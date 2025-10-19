@@ -371,10 +371,10 @@ export default function WalletModal({
                     className="w-[30%] lg:ml-2 md:ml-2 ml-16 px-2 py-1 border border-gray-400 rounded-full text-base text-black hover:bg-gray-50 transition-colors peridia-display-light bg-[#E2E3F0] flex flex-col mt-3 scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
                   >
                     <span className="text-base scale-[0.8] lg:scale-[1.1] md:scale-[1.05] font-light -mt-2">
-                      {wallets.length > 1 ? "Switch" : "Change"}
+                      {wallets.length > 1 ? "Change" : "Change"}
                     </span>
                     <span className="text-base scale-[0.8] lg:scale-[1.1] md:scale-[1.05] font-light -mt-2 -mb-1">
-                      {wallets.length > 1 ? "Wallet" : "Address"}
+                      {wallets.length > 1 ? "Address" : "Address"}
                     </span>
                   </button>
                 </div>
@@ -412,7 +412,7 @@ export default function WalletModal({
                     className="w-full px-4 py-2 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors peridia-display text-nowrap"
                   >
                     <span className="-ml-2 lg:ml-0 md:-ml-2">
-                      Connect Account
+                      W <span className="favorit-mono">allet</span> C<span className="favorit-mono">onnect</span>
                     </span>
                   </button>
                 </div>
