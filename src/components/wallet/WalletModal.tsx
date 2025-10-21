@@ -401,7 +401,7 @@ export default function WalletModal({
                   onClick={onPrivyHome}
                   className="w-[32%] px-4 py-1 border-1 border-black rounded-full text-sm text-black hover:bg-gray-50 transition-colors -mt-14  h-6 peridia-display-light bg-[#E2E3F0] wallet-modal-privy-button"
                 >
-                  <p className="-mt-1 text-nowrap -ml-2 lg:ml-0 md:-ml-2 scale-[0.5] lg:scale-[1.0] md:scale-[0.8]">
+                  <p className="-mt-1 text-nowrap -ml-2 lg:ml-0 md:-ml-2 scale-[2.5] lg:scale-[1.0] md:scale-[0.8] wallet-modal-privy-button-small">
                     P<span className="favorit-mono">rivy</span> H
                     <span className="favorit-mono">ome</span>
                   </p>

@@ -565,17 +565,12 @@ html, body {
     width: 28%;
     padding: 0.25rem 0.75rem;
     height: 24px;
-    font-size: 0.4rem;
     margin-top: -0.75rem;
   }
 
   .wallet-modal-privy-button-small {
-    width: 28%;
-    padding: 0.25rem 0.75rem;
-    height: 24px;
-    font-size: 2.4rem;
+    font-size: 4.4rem;
     transform: scale(1.4);
-    margin-top: -0.75rem;
   }
 
   .wallet-modal-privy-button p {
