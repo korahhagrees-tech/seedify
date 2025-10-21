@@ -567,7 +567,7 @@ export default function WalletPage() {
     return () => {
       cancelled = true;
     };
-  }, [walletAddress]);
+  }, [walletAddress, allSnapshots]);
 
   // Scroll-based pagination
   useEffect(() => {
@@ -658,7 +658,7 @@ export default function WalletPage() {
     return () => {
       delete (window as any).refreshWalletSnapshots;
     };
-  }, [walletAddress]);
+  }, [walletAddress, refreshSnapshots]);
 
   const handleLogout = async () => {
     setIsWalletModalOpen(false);

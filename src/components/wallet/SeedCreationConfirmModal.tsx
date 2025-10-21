@@ -229,14 +229,14 @@ export default function SeedCreationConfirmModal({
                   </div>
                   <div className="border-t border-gray-400 pt-2 mt-2"></div>
                   <div className="flex justify-between text-base scale-[0.8] lg:scale-[1.15] md:scale-[1.1]">
-                    <span className="text-black font-bold text-nowrap scale-[0.6] lg:scale-[0.8] md:scale-[0.8]">YOU'RE PAYING:</span>
+                    <span className="text-black font-bold text-nowrap scale-[0.6] lg:scale-[0.8] md:scale-[0.8]">{`YOU'RE PAYING:`}</span>
                     <span className="text-black font-bold text-nowrap scale-[0.6] lg:scale-[0.8] md:scale-[0.8] -ml-4 lg:-ml-4 md:-ml-5">{payableAmount} ETH</span>
                   </div>
                 </div>
                 <div className="mt-2 text-xs text-gray-600">
                   <p><strong>Seed Price:</strong> Base cost to create the seed NFT</p>
                   <p><strong>Snapshot Price:</strong> Price others pay to mint snapshots from your seed</p>
-                  <p><strong>You're Paying:</strong> Total ETH you're sending with this transaction</p>
+                  <p><strong>{`You're Paying:`}</strong> {`Total ETH you're sending with this transaction`}</p>
                 </div>
               </div>
 
