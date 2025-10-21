@@ -467,9 +467,9 @@ export default function StewardMint({
           {/* Optional wallet address display (render-only, no gating) */}
           {walletAddress && (
             <div className="text-center mb-2">
-              <div className="inline-block px-3 py-1 rounded-full bg-white/70 text-black text-xs font-mono">
+              {/* <div className="inline-block px-3 py-1 rounded-full bg-white/70 text-black text-xs font-mono">
                 {walletAddress}
-              </div>
+              </div> */}
             </div>
           )}
 
