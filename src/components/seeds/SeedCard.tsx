@@ -62,7 +62,7 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
           transition={{ duration: 0.3, delay: index * 0.1 + 0.25 }}
         >
           <div className="bg-white border mt-5 text-nowrap border-black rounded-full px-4 py-0 text-center w-42 seed-card-steward-label">
-            <div className="text-sm text-nowrap font-medium text-black scale-[0.68] lg:scale-[0.8] md:scale-[0.8]">
+            <div className="text-sm text-nowrap font-medium text-black scale-[0.68] lg:scale-[0.8] md:scale-[0.8] seed-card-steward-label-small">
               <span className="-ml-10 lg:-ml-5 md:-ml-6 text-nowrap">STEWARD</span> <span className="ml-8 lg:ml-2 md:ml-2 text-nowrap">{formatAddress(seed.owner)}</span>
             </div>
           </div>
