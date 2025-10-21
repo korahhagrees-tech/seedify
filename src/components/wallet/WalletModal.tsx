@@ -361,7 +361,7 @@ export default function WalletModal({
                     alt="Email"
                     width={16}
                     height={16}
-                    className="w-4 h-4"
+                    className="w-4 h-4 wallet-modal-email-image"
                   />
                   <span className="text-sm text-black scale-[0.9] lg:scale-[1.0] md:scale-[0.95] -ml-1 lg:ml-0 md:-ml-2">
                     {displayEmail || (evmAddress ? formatAddress(evmAddress) : (activeWallet?.address || walletAddress || ""))}
@@ -399,7 +399,7 @@ export default function WalletModal({
               <div className="space-y-3 mb-6 -mt-9">
                 <button
                   onClick={onPrivyHome}
-                  className="w-[32%] px-4 py-1 border-1 border-black rounded-full text-sm text-black hover:bg-gray-50 transition-colors -mt-14  h-6 peridia-display-light bg-[#E2E3F0]"
+                  className="w-[32%] px-4 py-1 border-1 border-black rounded-full text-sm text-black hover:bg-gray-50 transition-colors -mt-14  h-6 peridia-display-light bg-[#E2E3F0] wallet-modal-privy-button"
                 >
                   <p className="-mt-1 text-nowrap -ml-2 lg:ml-0 md:-ml-2 scale-[0.5] lg:scale-[1.0] md:scale-[0.8]">
                     P<span className="favorit-mono">rivy</span> H

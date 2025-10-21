@@ -25,7 +25,7 @@ export default function SeedDetailPage({
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="min-h-screen w-full max-w-sm mx-auto lg:-mt-8 md:-mt-14 -mt-12 relative lg:scale-[1.0] md:scale-[0.95] scale-[1.0] overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mb-40 lg:-mb-40 md:-mb-40">
+    <div className="min-h-screen w-full max-w-sm mx-auto lg:-mt-8 md:-mt-14 -mt-12 relative lg:scale-[1.0] md:scale-[0.95] scale-[1.0] overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mb-40 lg:-mb-40 md:-mb-40 seed-detail-container">
       {/* Steward Label - positioned above the main content */}
       <div className="relative pt-4 pb-2 ml-2 lg:ml-4 md:ml-4 scale-[0.8] lg:scale-[1.0] md:scale-[0.95] z-10">
         <motion.div
@@ -34,8 +34,8 @@ export default function SeedDetailPage({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.25 }}
         >
-          <div className="bg-white border text-nowrap border-black rounded-full px-4 py-1 text-center">
-            <div className="text-sm font-medium text-black">
+          <div className="bg-white border text-nowrap border-black rounded-full px-4 py-1 text-center seed-detail-steward-label">
+            <div className="text-sm font-medium text-black seed-detail-steward-label-small">
               STEWARD{" "}
               <span className="ml-2">
                 {seed?.owner ? formatAddress(seed.owner) : "Unknown"}
@@ -55,7 +55,7 @@ export default function SeedDetailPage({
         {/* Seed Label Badge */}
         <div className="relative mb-4">
           <div className="absolute top-2 -left-2 lg:-left-4 md:-left-4 z-10 scale-[0.8] lg:scale-[1.0] md:scale-[0.95]">
-            <span className="bg-white border border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow">
+            <span className="bg-white border border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow seed-detail-badge">
               {seed.label.toUpperCase()}
             </span>
           </div>
@@ -64,7 +64,7 @@ export default function SeedDetailPage({
         {/* Seed Image Section */}
         <div className="mt-8 mb-6 px-2 lg:px-0 md:px-0 z-10">
           <motion.div
-            className="relative w-full h-[350px] lg:h-[400px] md:h-[400px] rounded-[40px] overflow-hidden mx-auto"
+            className="relative w-full h-[350px] lg:h-[400px] md:h-[400px] rounded-[40px] overflow-hidden mx-auto seed-detail-image"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -94,46 +94,46 @@ export default function SeedDetailPage({
         </div>
 
         {/* Metrics pills */}
-        <div className="mb-6 px-2 lg:px-0 md:px-0">
+        <div className="mb-6 px-2 lg:px-0 md:px-0 seed-detail-stats">
           <div className="grid grid-cols-3 gap-1 lg:gap-2 md:gap-2">
             <motion.div
-              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center"
+              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center seed-detail-stat-item"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.4 }}
             >
-              <div className="text-[8px] font-light text-black mb-2 mt-1">
+              <div className="text-[8px] font-light text-black mb-2 mt-1 seed-detail-stat-label">
                 RAISED
               </div>
-              <div className="text-xl text-nowrap scale-[0.65] lg:scale-[0.65] md:scale-[0.65] -ml-3 lg:-ml-3 md:-ml-2 -mt-3 font-light text-black">
+              <div className="text-xl text-nowrap scale-[0.65] lg:scale-[0.65] md:scale-[0.65] -ml-3 lg:-ml-3 md:-ml-2 -mt-3 font-light text-black seed-detail-stat-value">
                 {parseFloat(seed.depositAmount).toFixed(4)}{" "}
                 <span className="text-xl">ETH</span>
               </div>
             </motion.div>
             <motion.div
-              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center"
+              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center seed-detail-stat-item"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.45 }}
             >
-              <div className="text-[8px] font-light text-black mb-2 mt-1">
+              <div className="text-[8px] font-light text-black mb-2 mt-1 seed-detail-stat-label">
                 SNAP PRICE
               </div>
-              <div className="text-xl text-nowrap scale-[0.65] lg:scale-[0.65] md:scale-[0.65] -ml-3 lg:-ml-2 md:-ml-2 -mt-3 font-light text-black">
+              <div className="text-xl text-nowrap scale-[0.65] lg:scale-[0.65] md:scale-[0.65] -ml-3 lg:-ml-2 md:-ml-2 -mt-3 font-light text-black seed-detail-stat-value">
                 {parseFloat(seed.snapshotPrice).toFixed(4)}{" "}
                 <span className="text-xl">ETH</span>
               </div>
             </motion.div>
             <motion.div
-              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center"
+              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center seed-detail-stat-item"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 }}
             >
-              <div className="text-[9px] font-light text-black mb-2 mt-0">
+              <div className="text-[9px] font-light text-black mb-2 mt-0 seed-detail-stat-label">
                 EVOLUTIONS
               </div>
-              <div className="text-xl text-nowrap scale-[0.85] -ml-2 -mt-3 font-light text-black">
+              <div className="text-xl text-nowrap scale-[0.85] -ml-2 -mt-3 font-light text-black seed-detail-stat-value">
                 {seed.snapshotCount}
               </div>
             </motion.div>
