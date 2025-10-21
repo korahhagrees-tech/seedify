@@ -246,7 +246,7 @@ export default function WayOfFlowers({
 
   return (
     <div className="min-h-screen w-full">
-      <WayOfFlowersCard
+      <WayOfFlowersCard 
         backgroundImageUrl={backgroundImageUrl}
         seedEmblemUrl={wayOfFlowersData.seedEmblemUrl}
         firstText={wayOfFlowersData.firstText}

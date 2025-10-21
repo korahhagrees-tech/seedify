@@ -254,7 +254,7 @@ export default function SeedStewardStats({
         {/* Main dotted container */}
         <div className="relative mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-48 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
           {/* Section: Core Seed Metrics - Full width with 3x2 grid */}
-          <div className="flex z-50 items-center w-full justify-between mb-6 bg-gray-400 rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[1.0] mt-12" style={{ pointerEvents: 'auto' }}>
+          <div className="flex z-50 items-center w-full justify-between mb-6 bg-[#E2E3F0B2] rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[1.0] mt-12" style={{ pointerEvents: 'auto' }}>
             <div className="flex-1">
               <div className="text-lg font-light scale-[0.6] lg:scale-[0.7] md:scale-[0.7] tracking-wide text-gray-900">
                 <p className="-ml-18">CORE SEED METRICS</p>
@@ -327,7 +327,7 @@ export default function SeedStewardStats({
             )}
           </AnimatePresence>
 
-          <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
+          <div className="rounded-[28px] bg-[#E2E3F0B2] m-4 p-6">
             {/* Full width header with INFO button */}
 
             {/* Core metrics 3x2 grid - single background */}
@@ -397,7 +397,7 @@ export default function SeedStewardStats({
           {/* Two separate sections below - always side by side */}
           <div className="grid grid-cols-2 gap-2 mx-4 mb-6 scale-[1.0] lg:scale-[1.0] md:scale-[0.95]">
             {/* Left Card: NUTRIENT RESERVE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-gray-400/40 p-4 -ml-4 w-52 scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
+            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 -ml-4 w-52 scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
                 {/* NUTRIENT RESERVE TOTAL */}
                 <div className="text-center">
@@ -432,7 +432,7 @@ export default function SeedStewardStats({
             </div>
 
             {/* Right Card: HARVESTABLE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-gray-400/40 p-4 w-40 ml-4 scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
+            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 w-40 ml-4 scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
                 {/* HARVESTABLE */}
                 <div className="text-center">
@@ -520,7 +520,7 @@ export default function SeedStewardStats({
 
             <div className="grid grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.1] md:scale-[1.1] -ml-3 lg:-ml-3 md:-ml-3">
               {/* Left Card: Impact Details */}
-              <div className="rounded-[28px] bg-gray-400/40 p-4 h-45">
+              <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 h-45">
                 <div className="space-y-4">
                   {/* IMMEDIATE IMPACT */}
                   <div className="">
@@ -575,7 +575,7 @@ export default function SeedStewardStats({
                   <div className="text-[10px] text-white text-nowrap mb-1">
                     OVERALL ACCUMULATED YIELD
                   </div>
-                  <div className="w-38 h-15 bg-gray-400/40 rounded-lg p-2">
+                  <div className="w-38 h-15 bg-[#E2E3F0B2] rounded-lg p-2">
                     <div className="rounded-full px-2 -mt-4 py-2 text-[16px] text-center text-gray-900">
                       {parseFloat(stats.overallAccumulatedYield).toFixed(6)} ETH
                     </div>
@@ -603,7 +603,7 @@ export default function SeedStewardStats({
               <span className="text-gray-900 -ml-2">▼</span>
             </div>
           </div>
-          <div className="rounded-[28px] bg-gray-400/40 m-4 p-6">
+          <div className="rounded-[28px] bg-[#e2e3f081] m-4 p-6">
 
             <div className="space-y-4">
               {stats.beneficiaries && stats.beneficiaries.length > 0 ? (
@@ -624,8 +624,8 @@ export default function SeedStewardStats({
                           onError={() => setImageError(true)}
                         />
                       </div>
-                      <div className="flex-1 border text-nowrap border-black rounded-full bg-white/80 text-center text-gray-900 text-sm w-45 py-1 -ml-12">
-                        <p className="text-nowrap scale-[0.8] lg:scale-[0.5] md:scale-[0.8]-ml-4 left-4">{beneficiary.name}</p>
+                      <div className="flex-1 border text-nowrap border-black rounded-full bg-white/80 text-center text-gray-900 text-sm w-45 py-1 -ml-12 lg:w-45 md:w-48">
+                        <p className="text-nowrap text-[8px] lg:text-[10px] md:text-[9px] scale-[0.8] lg:scale-[0.5] md:scale-[0.95]-ml-2 lg:-ml-2 md:ml-6 -left-4">{beneficiary.name}</p>
                       </div>
                     </div>
 
@@ -633,29 +633,67 @@ export default function SeedStewardStats({
                     <div className="grid grid-cols-1 gap-2">
                       {/* First row: BENEFIT SHARE and #SNAPSHOTS with GARDEN */}
                       <div className="grid grid-cols-3 gap-2">
-                        <Pill
-                          label="BENEFIT SHARE"
-                          value={`${beneficiary.benefitShare}%`}
-                        />
-                        <Pill
-                          label="#SNAPSHOTS"
-                          value={`${beneficiary.snapshotCount}`}
-                          trailing={`GAIN ${parseFloat(beneficiary.snapshotsGain).toFixed(6)} ETH`}
-                        />
-                        <Pill label="GARDEN" value={`${parseFloat(beneficiary.garden).toFixed(6)} ETH`} />
+                        {/* BENEFIT SHARE */}
+                        <div className="rounded-[20px] p-2 flex flex-col">
+                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left">
+                            BENEFIT SHARE
+                          </div>
+                          <div className="bg-white/70 rounded-full px-2 py-1 text-gray-900 text-[10px] text-center">
+                            {beneficiary.benefitShare}%
+                          </div>
+                        </div>
+
+                        {/* #SNAPSHOTS */}
+                        <div className="rounded-[20px] p-2">
+                          <div className="bg-white/70 border-2 border-dashed border-black rounded-tl-[10px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-[9px] text-black/80 tracking-wide uppercase text-center">
+                            #SNAPSHOTS GAIN
+                            {parseFloat(beneficiary.snapshotsGain).toFixed(6)} ETH
+                          </div>
+                          <div className="bg-white/70 border-2 border-dashed border-black rounded-full px-2 py-1 text-gray-900 text-[10px] text-center mt-1">
+                            {beneficiary.snapshotCount}
+                          </div>
+                          {/* <div className="bg-white/70 border-2 border-dashed border-black rounded-tl-[80px] rounded-tr-[30px] rounded-bl-[10px] rounded-br-[30px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1">
+                          </div> */}
+                        </div>
+
+                        {/* GARDEN */}
+                        <div className="rounded-[20px] p-2">
+                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-right">
+                            UNCLAIMED
+                          </div>
+                          <div className="text-gray-900 text-[10px] text-right">
+                            {parseFloat(beneficiary.unclaimed).toFixed(6)} ETH
+                          </div>
+                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left">
+                            GARDEN
+                          </div>
+                          <div className="bg-white/70 border-2 border-dashed border-black rounded-full px-2 py-1 text-gray-900 text-[10px] text-center">
+                            {parseFloat(beneficiary.garden).toFixed(6)} ETH
+                          </div>
+                        </div>
                       </div>
 
                       {/* Second row: YIELD SHARE and UNCLAIMED */}
                       <div className="grid grid-cols-2 gap-2">
-                        <Pill
-                          label="YIELD SHARE"
-                          value={`${parseFloat(beneficiary.yieldShare).toFixed(6)} ETH`}
-                        />
-                        <Pill
-                          label="UNCLAIMED"
-                          value={`${parseFloat(beneficiary.unclaimed).toFixed(6)} ETH`}
-                          trailing={`${parseFloat(beneficiary.claimed).toFixed(6)} ETH CLAIMED`}
-                        />
+                        {/* YIELD SHARE */}
+                        <div className="rounded-[20px] p-2">
+                          <div className="bg-white/70 border-2 border-dashed border-black rounded-l-[20px] rounded-r-[5px] px-2 py-1 text-[9px] text-black/80 tracking-wide uppercase text-center">
+                            YIELD SHARE
+                          <div className="text-gray-900 text-[10px] text-center mt-1">
+                            {parseFloat(beneficiary.yieldShare).toFixed(6)} ETH
+                          </div>
+                          </div>
+                        </div>
+
+                        {/* UNCLAIMED */}
+                        <div className="rounded-[20px] p-2">
+                          <div className="bg-white/70 border-2 border-dashed border-black rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[5px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1">
+                            {parseFloat(beneficiary.claimed).toFixed(6)} ETH
+                          </div>
+                          <div className="bg-white/70 border-2 border-dashed border-black rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[5px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1">
+                            CLAIMED
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -686,30 +724,3 @@ export default function SeedStewardStats({
   );
 }
 
-function Pill({
-  label,
-  value,
-  trailing,
-}: {
-  label: string;
-  value: string;
-  trailing?: string;
-}) {
-  return (
-    <div className="bg-gray-400/40 rounded-[20px] p-2">
-      <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase">
-        {label}
-      </div>
-      <div className="flex flex-col gap-1">
-        <div className="bg-white/80 border-2 border-dashed border-black rounded-full px-2 py-1.5 text-gray-900 text-[10px] text-center">
-          {value}
-        </div>
-        {trailing && (
-          <div className="bg-white/60 border-1 border-black rounded-full px-2 py-1 text-[9px] text-gray-900 text-center">
-            {trailing}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
