@@ -13,10 +13,36 @@ interface SeedCardProps {
 }
 
 export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
-  const [imageError, setImageError] = useState(false);
+  const [currentImageSrc, setCurrentImageSrc] = useState(
+    seed.seedImageUrl && seed.seedImageUrl.length > 0
+      ? seed.seedImageUrl
+      : `https://d17wy07434ngk.cloudfront.net/seed${seed.id}/seed.png`
+  );
+  const [imageErrorCount, setImageErrorCount] = useState(0);
+
+  const FALLBACK_IMAGES = [
+    seed.seedImageUrl && seed.seedImageUrl.length > 0 ? seed.seedImageUrl : null,
+    `https://d17wy07434ngk.cloudfront.net/seed${seed.id}/seed.png`, // CloudFront with seedId
+    "https://d17wy07434ngk.cloudfront.net/seed1/seed.png", // Final fallback
+  ].filter(Boolean) as string[];
 
   const handleImageLoad = () => {
-    console.log("🌸 [IMAGE] Successfully loaded:", seed.seedImageUrl);
+    console.log("🌸 [IMAGE] Successfully loaded:", currentImageSrc);
+  };
+
+  const handleImageError = () => {
+    const nextIndex = imageErrorCount + 1;
+    
+    if (nextIndex < FALLBACK_IMAGES.length) {
+      console.log(
+        `🌸 [IMAGE] Error loading image (attempt ${nextIndex}/${FALLBACK_IMAGES.length}), trying fallback:`,
+        FALLBACK_IMAGES[nextIndex]
+      );
+      setCurrentImageSrc(FALLBACK_IMAGES[nextIndex]);
+      setImageErrorCount(nextIndex);
+    } else {
+      console.log("🌸 [IMAGE] All fallbacks exhausted, showing final fallback");
+    }
   };
 
   return (
@@ -58,25 +84,12 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
         >
           {/* Seed Image - fills the entire rounded container */}
           <Image
-            src={
-              imageError
-                ? "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
-                : seed.seedImageUrl && seed.seedImageUrl.length > 0
-                  ? seed.seedImageUrl
-                  : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
-            }
+            src={currentImageSrc}
             alt=""
             fill
             className="object-cover"
             onLoad={handleImageLoad}
-            onError={(e) => {
-              if (!imageError) {
-                console.log(
-                  "🌸 [IMAGE] Error loading seed image (403 or network issue), using CloudFront fallback"
-                );
-                setImageError(true);
-              }
-            }}
+            onError={handleImageError}
             priority={index < 2}
           />
         </motion.div>

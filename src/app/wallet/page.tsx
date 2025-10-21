@@ -703,7 +703,7 @@ export default function WalletPage() {
         </div>
         {/* Steward Seeds Section (always show; defaults to mock if backend empty) */}
         {stewardSeeds.length > 0 && (
-          <div className="space-y-8 mb-10 scale-[0.8] lg:scale-[1.0] md:scale-[1.0] -ml-10">
+          <div className="space-y-8 -mb-2 lg:mb-6 md:mb-6 scale-[0.8] lg:scale-[1.0] md:scale-[1.0] -ml-10">
             {stewardSeeds.map((seed, index) => {
               // Generate slug from seed label for routing
               const seedSlug =
@@ -735,8 +735,9 @@ export default function WalletPage() {
           </motion.div>
         ) : (
           /* Tended Ecosystems List */
-          <div className="space-y-4 mb-20 mt-6 z-50 lg:mt-6 md:mt-6">
-            {tendedEcosystems.map((snapshot, index) => {
+          <>
+            <div className="space-y-4 mb-20 mt-6 z-50 lg:mt-6 md:mt-6">
+              {tendedEcosystems.map((snapshot, index) => {
               const codeFromIndex = getCodeForIndex(snapshot.beneficiaryIndex);
               const emblem = codeToSeedEmblemPath(codeFromIndex);
               return (
@@ -758,8 +759,23 @@ export default function WalletPage() {
                   seedSlug={`seed-${snapshot.seedId}`}
                 />
               );
-            })}
-          </div>
+              })}
+            </div>
+
+            {/* Mint Button at Bottom */}
+            {walletAddress && (
+              <div className="-mt-10 mb-16 flex justify-center">
+                <motion.button
+                  onClick={() => router.push(`/wallet/mint/${walletAddress}`)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-4 rounded-full border-3 border-dotted border-gray-600 bg-white/80 backdrop-blur-sm text-black text-lg font-medium peridia-display tracking-widest shadow-lg hover:bg-white hover:shadow-xl transition-all duration-300"
+                >
+                  CREATE NEW SEED
+                </motion.button>
+              </div>
+            )}
+          </>
         )}
       </div>
 

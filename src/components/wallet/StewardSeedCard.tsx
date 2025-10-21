@@ -20,6 +20,34 @@ export default function StewardSeedCard({
   index = 0,
 }: StewardSeedCardProps) {
   const [tendedEcosystems] = useState(mockTendedEcosystems);
+  const [currentImageSrc, setCurrentImageSrc] = useState(
+    seed.seedImageUrl && seed.seedImageUrl.length > 0
+      ? seed.seedImageUrl
+      : `https://d17wy07434ngk.cloudfront.net/seed${seed.id}/seed.png`
+  );
+  const [imageErrorCount, setImageErrorCount] = useState(0);
+
+  const FALLBACK_IMAGES = [
+    seed.seedImageUrl && seed.seedImageUrl.length > 0 ? seed.seedImageUrl : null,
+    `https://d17wy07434ngk.cloudfront.net/seed${seed.id}/seed.png`, // CloudFront with seedId
+    "https://d17wy07434ngk.cloudfront.net/seed1/seed.png", // Final fallback
+  ].filter(Boolean) as string[];
+
+  const handleImageError = () => {
+    const nextIndex = imageErrorCount + 1;
+    
+    if (nextIndex < FALLBACK_IMAGES.length) {
+      console.log(
+        `🌸 [IMAGE] Error loading steward seed image (attempt ${nextIndex}/${FALLBACK_IMAGES.length}), trying fallback:`,
+        FALLBACK_IMAGES[nextIndex]
+      );
+      setCurrentImageSrc(FALLBACK_IMAGES[nextIndex]);
+      setImageErrorCount(nextIndex);
+    } else {
+      console.log("🌸 [IMAGE] All fallbacks exhausted for steward seed, showing final fallback");
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -28,48 +56,34 @@ export default function StewardSeedCard({
       className="mb-6"
     >
       {/* Gradient bar with emblem and steward message */}
-      <div className="relative mb-6 -mt-5 overflow-hidden scale-[0.75] lg:scale-[1.0] pt-6 pb-2 md:scale-[1.0]">
-        <div className="w-[460px] rounded-full py-3 pl-16 pr-14 ml-4 lg:-ml-8 md:ml-0 -mt-1 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.75] lg:scale-[0.8] md:scale-[0.8]">
-          <span className="text-sm text-center text-gray-800 -ml-3">
+      <div className="relative mb-6 -mt-12 lg:-mt-8 md:-mt-8 overflow-hidden scale-[1.1] lg:scale-[1.0] pt-6 pb-2 md:scale-[1.0]">
+        <div className="w-[490px] lg:w-[480px] md:w-[480px] rounded-full py-1 pl-16 pr-14 -ml-8 lg:-ml-1 md:ml-0 mt-2 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.75] lg:scale-[0.8] md:scale-[0.8]">
+          <span className="text-sm text-center text-nowrap text-gray-800 ml-2 lg:ml-1 md:-ml-1">
             {`Thank You for Being the Steward of ${seed.label?.toUpperCase()}`}
           </span>
         </div>
-        <div className="absolute left-0 top-11 -translate-y-1/2 w-12 h-12 z-10 rounded-full border-3 border-dotted border-black bg-gray-200 flex items-center justify-center shadow">
+        <div className="absolute left-4 lg:left-8 md:left-8 top-11 lg:top-12 md:top-12 -translate-y-1/2 w-14 h-14 lg:w-12 md:w-12 lg:h-12 md:h-12 z-10 rounded-full border-3 border-dotted border-black bg-gray-200 flex items-center justify-center shadow">
           <Image
             src={tendedEcosystems[index].seedEmblemUrl}
             alt="Steward emblem"
             width={22}
             height={22}
-            className="w-8 h-8"
+            className="w-8 h-8 lg:w-8 md:w-8 lg:h-8 md:h-8"
           />
         </div>
       </div>
 
       {/* Main content */}
       <div className="px-6">
-        <div className="flex gap-8 items-start -ml-4">
+        <div className="flex gap-8 items-start -ml-1 scale-[1.05] lg:scale-[0.95] md:scale-[0.95] -mt-2 lg:-mt-6 md:-mt-6">
           {/* Large image on the left */}
           <div className="relative w-[230px] h-[230px] rounded-[60px] overflow-hidden flex-shrink-0">
             <Image
-              src={
-                seed.seedImageUrl && seed.seedImageUrl.length > 0
-                  ? seed.seedImageUrl
-                  : "/seeds/01__GRG.png"
-              }
+              src={currentImageSrc}
               alt=""
               fill
               className="object-cover"
-              onError={(e) => {
-                console.log(
-                  "🌸 [IMAGE] Error loading steward seed image, using placeholder"
-                );
-                const target = e.target as HTMLImageElement;
-                if (
-                  target.src !== `${window.location.origin}/seeds/01__GRG.png`
-                ) {
-                  target.src = "/seeds/01__GRG.png";
-                }
-              }}
+              onError={handleImageError}
             />
           </div>
 

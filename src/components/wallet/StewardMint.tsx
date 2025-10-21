@@ -8,11 +8,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { assets } from "@/lib/assets";
 import { useWaitForTransactionReceipt } from "wagmi";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { API_CONFIG } from "@/lib/api/config";
 import { useSendTransaction } from "@privy-io/react-auth";
 import { encodeFunctionData, parseEther } from "viem";
 import { toast } from "sonner";
+import SeedCreationConfirmModal from "./SeedCreationConfirmModal";
 
 interface StewardMintProps {
   backgroundImageUrl: string;
@@ -62,7 +63,9 @@ export default function StewardMint({
     3: null,
     4: null
   });
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { sendTransaction } = useSendTransaction();
 
   // Close modal when clicking outside
@@ -191,6 +194,235 @@ export default function StewardMint({
     }
   }, [txHash]);
 
+  // Handle confirmation from modal with editable snapshot price and payable amount
+  const handleConfirmMint = async (snapshotPrice: string, payableAmount: string) => {
+    try {
+      setShowConfirmModal(false);
+      
+      console.log('🌱 [MINT] Confirming mint with values:', {
+        snapshotPrice,
+        payableAmount,
+        snapshotPriceType: typeof snapshotPrice,
+        payableAmountType: typeof payableAmount
+      });
+      
+      if (!userEvmAddress || !prepareData) {
+        toast.error('Missing required data');
+        return;
+      }
+
+      // Collect 4 beneficiary indices
+      const indices = [1, 2, 3, 4]
+        .map((slot) => selectedBySlot[slot]?.index)
+        .filter((v) => typeof v === 'number') as number[];
+      
+      if (indices.length !== 4) {
+        toast.error('Please select four beneficiaries');
+        return;
+      }
+
+      const contractAddress = prepareData.contractAddress as `0x${string}`;
+      const location = 'berlin';
+
+      const createSeedABI = [
+        {
+          type: 'function',
+          name: 'createSeed',
+          stateMutability: 'payable',
+          inputs: [
+            { name: 'seedReceiver', type: 'address' },
+            { name: 'snapshotPrice', type: 'uint256' },
+            { name: 'location', type: 'string' },
+            { name: 'beneficiaryIndexList', type: 'uint256[4]' }
+          ],
+          outputs: [{ name: 'seedId', type: 'uint256' }]
+        }
+      ] as const;
+
+      // ✅ CRITICAL: Convert snapshot price from ETH to wei
+      const snapshotPriceWei = parseEther(snapshotPrice);
+      
+      console.log('🔍 [MINT] Snapshot price conversion:', {
+        inputEth: snapshotPrice,
+        outputWei: snapshotPriceWei.toString(),
+        exampleCheck: `${snapshotPrice} ETH = ${snapshotPriceWei.toString()} wei`
+      });
+
+      const data = encodeFunctionData({
+        abi: createSeedABI as any,
+        functionName: 'createSeed',
+        args: [
+          userEvmAddress as `0x${string}`,
+          snapshotPriceWei, // ✅ Now using user's editable value in wei
+          location,
+          [
+            BigInt(indices[0]),
+            BigInt(indices[1]),
+            BigInt(indices[2]),
+            BigInt(indices[3])
+          ]
+        ]
+      });
+
+      // ✅ CRITICAL: Use the user's payable amount directly as a string
+      // No conversion, no parseEther, just pass the value as the user entered it
+      console.log('🔍 [MINT] Using payable amount directly:', {
+        payableAmount,
+        payableAmountType: typeof payableAmount
+      });
+      
+      // Pass the payable amount directly as a string - no conversion needed
+      const valueToSend = parseEther(payableAmount);
+      
+      console.log('🔍 [MINT] Transaction details:', {
+        to: contractAddress,
+        value: valueToSend,
+        payableAmountEth: payableAmount,
+        breakdown: {
+          snapshotPriceEth: snapshotPrice,
+          seedPriceEth: prepareData.seedPrice,
+          userPayableEth: payableAmount
+        },
+        snapshotPriceWei: snapshotPriceWei.toString(),
+        beneficiaries: indices
+      });
+      
+      toast.info('Please confirm transaction in your wallet...');
+      
+      console.log('🔍 [MINT] About to send transaction:', {
+        to: contractAddress,
+        value: valueToSend,
+        valueLength: valueToSend,
+        dataLength: data.length
+      });
+
+      const tx = await sendTransaction(
+        {
+          to: contractAddress,
+          value: valueToSend,
+          data
+        },
+        {
+          sponsor: false,
+          uiOptions: {
+            description: `Create a seed (cost ${payableAmount} ETH)`,
+            buttonText: 'Create Seed',
+            transactionInfo: {
+              title: 'Seed Creation',
+              action: 'Create New Seed',
+              contractInfo: {
+                name: 'Way of Flowers Seed Factory',
+                url: 'https://wayofflowers.com'
+              }
+            },
+            successHeader: 'Seed Created!',
+            successDescription: 'Your seed has been successfully created on the blockchain.'
+          },
+          address: userEvmAddress
+        }
+      );
+
+          console.log('✅ [MINT] Transaction hash:', tx.hash);
+          toast.success('Seed creation transaction submitted!');
+          setTxHash(tx.hash);
+          
+          // Step 4: Verify transaction status before proceeding
+          console.log('🔍 [MINT] Verifying transaction status for hash:', tx.hash);
+          toast.info('Verifying transaction... Please wait.');
+
+          // Poll transaction status with retries
+          let transactionStatus = null;
+          const maxAttempts = 20; // 20 attempts = ~2 minutes max wait
+          let attempts = 0;
+          const apiBaseUrl = API_CONFIG.baseUrl || process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+
+          while (attempts < maxAttempts && !transactionStatus) {
+            try {
+              await new Promise(resolve => setTimeout(resolve, 6000)); // Wait 6 seconds between attempts
+              
+              const statusResponse = await fetch(`${apiBaseUrl}/transactions/${tx.hash}/status`);
+              
+              if (statusResponse.ok) {
+                const statusData = await statusResponse.json();
+                console.log('🔍 [MINT] Transaction status response:', statusData);
+
+                if (statusData.success && statusData.transaction) {
+                  const status = statusData.transaction.status;
+                  
+                  if (status === 'success') {
+                    console.log('✅ [MINT] Transaction confirmed as successful');
+                    transactionStatus = statusData.transaction;
+                    break;
+                  } else if (status === 'reverted') {
+                    console.error('❌ [MINT] Transaction reverted:', statusData.transaction.revertReason);
+                    toast.error('Transaction failed and reverted. Please try again.');
+                    setTransactionStatus("failed");
+                    return; // Exit early - do not proceed with routing
+                  } else {
+                    console.log('⏳ [MINT] Transaction status pending, continuing to poll...');
+                  }
+                }
+              }
+              
+              attempts++;
+            } catch (error) {
+              console.warn(`⚠️ [MINT] Status check attempt ${attempts + 1} failed:`, error);
+              attempts++;
+            }
+          }
+
+          // Check if we timed out without getting a success status
+          if (!transactionStatus) {
+            console.error('❌ [MINT] Transaction verification timed out');
+            toast.error('Transaction verification timed out. Please check your wallet.');
+            setTransactionStatus("failed");
+            return; // Exit early - do not proceed
+          }
+
+          // Transaction verified as successful, call webhook
+          try {
+            const base = API_CONFIG.baseUrl || process.env.NEXT_PUBLIC_API_BASE_URL || '';
+            await fetch(`${base}/seed-created`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                creator: userEvmAddress,
+                recipient: userEvmAddress,
+                snapshotPrice: snapshotPrice,
+                beneficiaries: indices,
+                txHash: tx.hash,
+                timestamp: Math.floor(Date.now() / 1000),
+                // Add verified transaction data
+                transactionStatus: transactionStatus.status,
+                gasUsed: transactionStatus.gasUsed || '0',
+                effectiveGasPrice: transactionStatus.effectiveGasPrice || '0',
+                blockNumber: transactionStatus.blockNumber || '0'
+              })
+            });
+            console.log('✅ [MINT] Webhook called successfully');
+          } catch (webhookError) {
+            console.warn('⚠️ [MINT] Webhook call failed:', webhookError);
+          }
+
+          // Transaction completed successfully - route to wallet page
+          console.log('🎉 [MINT] Seed creation completed successfully!');
+          toast.success('Seed created successfully! Redirecting to wallet...');
+          
+          // Route to wallet page
+          setTimeout(() => {
+            router.push('/wallet');
+          }, 2000); // Give user time to see success message
+      
+    } catch (error: any) {
+      console.error('❌ [MINT] Transaction failed:', error);
+      if (error?.message?.includes('User rejected')) {
+        toast.error('Transaction rejected');
+      } else {
+        toast.error(error?.message || 'Transaction failed. Please try again.');
+      }
+    }
+  };
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-black/50 backdrop-blur-lg">
       {/* Background image with light glass transparency (no heavy blur) */}
@@ -235,9 +467,9 @@ export default function StewardMint({
           {/* Optional wallet address display (render-only, no gating) */}
           {walletAddress && (
             <div className="text-center mb-2">
-              {/* <div className="inline-block px-3 py-1 rounded-full bg-white/70 text-black text-xs font-mono">
+              <div className="inline-block px-3 py-1 rounded-full bg-white/70 text-black text-xs font-mono">
                 {walletAddress}
-              </div> */}
+              </div>
             </div>
           )}
 
@@ -374,7 +606,9 @@ export default function StewardMint({
                     <p className="text-black text-nowrap text-sm">Thank you for becoming a <span className="peridia-display-light">Seed Steward.</span></p>
                   </div>
                   <div className="text-black lg:text-[13px] md:text-[13px] text-[11px] scale-[1.1] lg:scale-[1.0] md:scale-[1.0] -mt-2 lg:-mt-1 md:-mt-1">
-                    <p className="">Your support weaves verified conservation with synthetic botanical intelligence, creating digital flora that blooms <p>through authentic environmental care.</p></p>
+                    <p className="">
+                      Your support weaves verified conservation with synthetic botanical intelligence, creating digital flora that blooms <p>through authentic environmental care.</p>
+                      </p>
                   </div>
                 </div>
               </div>
@@ -395,113 +629,66 @@ export default function StewardMint({
                   }}
                 >
                   <button
-                    onClick={async () => {
-                      try {
-                        if (prepareLoading) {
-                          toast.info('Loading mint data...');
-                          return;
-                        }
-                        if (prepareError || !prepareData) {
-                          toast.error('Minting data unavailable');
-                          return;
-                        }
-                        if (prepareData.seedCapReached) {
-                          toast.error('Seed cap reached.');
-                          return;
-                        }
-                        if (!prepareData.canMint) {
-                          toast.error(prepareData.isLocked ? 'Factory locked. You are not authorized to create seeds.' : 'You are not authorized to create seeds.');
-                          return;
-                        }
-                        if (!userEvmAddress) {
-                          toast.info('Connect an EVM wallet to continue');
-                          return;
-                        }
-                        // Collect 4 beneficiary indices
-                        const indices = [1, 2, 3, 4].map((slot) => selectedBySlot[slot]?.index).filter((v) => typeof v === 'number') as number[];
-                        if (indices.length !== 4) {
-                          toast.error('Please select four beneficiaries');
-                          return;
-                        }
+                    onClick={() => {
+                      // Pre-flight checks before showing modal
+                      console.log('🌱 [MINT] Mint button clicked');
 
-                        const contractAddress = prepareData.contractAddress as `0x${string}`;
-                        const snapshotPriceEth = prepareData.defaultSnapshotPrice || '0.011';
-                        const totalMinimumCostEth = prepareData.totalMinimumCost || snapshotPriceEth;
-                        const location = 'berlin'; // default; could be user input later
-
-                        const createSeedABI = [
-                          {
-                            type: 'function',
-                            name: 'createSeed',
-                            stateMutability: 'payable',
-                            inputs: [
-                              { name: 'seedReceiver', type: 'address' },
-                              { name: 'snapshotPrice', type: 'uint256' },
-                              { name: 'location', type: 'string' },
-                              { name: 'beneficiaryIndexList', type: 'uint256[4]' }
-                            ],
-                            outputs: [{ name: 'seedId', type: 'uint256' }]
-                          }
-                        ] as const;
-
-                        const data = encodeFunctionData({
-                          abi: createSeedABI as any,
-                          functionName: 'createSeed',
-                          args: [
-                            userEvmAddress as `0x${string}`,
-                            parseEther(snapshotPriceEth),
-                            location,
-                            [
-                              BigInt(indices[0]),
-                              BigInt(indices[1]),
-                              BigInt(indices[2]),
-                              BigInt(indices[3])
-                            ]
-                          ]
-                        });
-
-                        const tx = await sendTransaction(
-                          {
-                            to: contractAddress,
-                            value: parseEther(totalMinimumCostEth).toString(),
-                            data
-                          },
-                          {
-                            sponsor: true,
-                            uiOptions: {
-                              description: `Create a seed (min cost ${totalMinimumCostEth} ETH)`
-                            }
-                          }
-                        );
-
-                        toast.success('Transaction submitted');
-
-                        // Optionally call seed-created webhook (without seedId until parsed elsewhere)
-                        try {
-                          const base = API_CONFIG.baseUrl || process.env.NEXT_PUBLIC_API_BASE_URL || '';
-                          await fetch(`${base}/seed-created`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                              creator: userEvmAddress,
-                              recipient: userEvmAddress,
-                              snapshotPrice: snapshotPriceEth,
-                              beneficiaries: indices,
-                              txHash: tx.hash,
-                              timestamp: Math.floor(Date.now() / 1000)
-                            })
-                          });
-                        } catch { }
-                      } catch (e: any) {
-                        console.error(e);
-                        toast.error(e?.message || 'Failed to create seed');
+                      if (prepareLoading) {
+                        toast.info('Loading mint data...');
+                        return;
                       }
+                      if (prepareError || !prepareData) {
+                        toast.error('Minting data unavailable');
+                        return;
+                      }
+                      if (prepareData.seedCapReached) {
+                        toast.error('Seed cap reached.');
+                        return;
+                      }
+                      if (!prepareData.canMint) {
+                        toast.error(prepareData.isLocked ? 'Factory locked. You are not authorized to create seeds.' : 'You are not authorized to create seeds.');
+                        return;
+                      }
+                      if (!userEvmAddress) {
+                        toast.info('Connect an EVM wallet to continue');
+                        return;
+                      }
+                      
+                      // Check 4 beneficiaries selected
+                      const indices = [1, 2, 3, 4]
+                        .map((slot) => selectedBySlot[slot]?.index)
+                        .filter((v) => typeof v === 'number') as number[];
+                      
+                      if (indices.length !== 4) {
+                        toast.error('Please select four beneficiaries');
+                        return;
+                      }
+
+                      // All checks passed - open confirmation modal
+                      setShowConfirmModal(true);
                     }}
                     className="mt-46 mb-9 px-8 py-3 rounded-full border-2 border-dotted border-white/70 text-white text-xl font-medium bg-transparent hover:bg-white/20 transition-all duration-300 peridia-display"
                   >
                     <p className="text-white text-2xl scale-[0.8] lg:scale-[1.2] md:scale-[0.9] font-medium">MINT</p>
                   </button>
                 </motion.div>
+
+                {/* Confirmation Modal */}
+                <div className="-mt-10 lg:-mt-10 md:-mt-55">
+                  <SeedCreationConfirmModal
+                    isOpen={showConfirmModal}
+                    onClose={() => setShowConfirmModal(false)}
+                    onConfirm={handleConfirmMint}
+                    selectedBeneficiaries={[1, 2, 3, 4]
+                      .map((slot) => selectedBySlot[slot])
+                      .filter((b): b is Beneficiary => b !== null)}
+                    recipientAddress={userEvmAddress || ''}
+                    seedPrice={prepareData?.seedPrice || '0'}
+                    seedFee={prepareData?.seedFee || '0'}
+                    totalCost={prepareData?.totalMinimumCost || '0'}
+                    defaultSnapshotPrice={prepareData?.defaultSnapshotPrice || '0.011'}
+                  />
+                </div>
 
                 {/* Buttons based on transaction status */}
                 <AnimatePresence>
@@ -579,7 +766,7 @@ export default function StewardMint({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ type: "spring", duration: 0.5 }}
-              className="beneficiary-modal relative w-full max-w-2xl mx-4 max-h-[80vh] bg-white/95 backdrop-blur-lg scale-[0.8] lg:scale-[0.8] md:scale-[0.8] rounded-3xl border-4 border-dotted border-black/60 shadow-2xl overflow-hidden"
+              className="beneficiary-modal relative w-full max-w-2xl mx-4 max-h-[80vh] bg-white/95 backdrop-blur-lg scale-[0.8] lg:scale-[0.8] md:scale-[0.8] rounded-3xl border-4 border-dotted border-black/60 shadow-2xl overflow-hidden -mt-24 lg:-mt-24 md:-mt-44"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
