@@ -174,7 +174,7 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
         if (chosen) {
           console.log('🔍 [AUTH] Auto-setting EVM wallet as active:', chosen.address);
           setActiveWallet(chosen as any);
-        } else {
+    } else {
           console.log('🔍 [AUTH] No EVM wallet available to set active (only non-EVM wallets present).');
         }
       }
@@ -244,7 +244,7 @@ interface AuthProviderProps {
 export default function AuthProvider({ children }: AuthProviderProps) {
   const appId = getPrivyAppId();
   const clientId = getPrivyClientId();
-
+  
   return (
     <PrivyProvider appId={appId} clientId={clientId} config={privyConfig}>
       <QueryClientProvider client={queryClient}>

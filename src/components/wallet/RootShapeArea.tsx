@@ -131,9 +131,9 @@ export default function RootShapeArea({
         {showStoryButton ? (
           <button
             onClick={handleStory}
-            className="absolute left-1/2 -translate-x-1/2 top-[18%] px-6 py-0 h-8 rounded-full bg-[#F0ECF3] shadow peridia-display border-3 border-black/70 border-dotted"
+            className="absolute left-1/2 -translate-x-1/2 top-[18%] px-3 py-0 h-8 rounded-full bg-[#F0ECF3] shadow peridia-display border-3 border-black/70 border-dotted"
           >
-            <span className="text-lg">Story</span>
+            <span className="text-[14px] lg:text-[16px] md:text-[16px] font-light">Story</span>
           </button>
         ) : (
           <button
@@ -153,23 +153,23 @@ export default function RootShapeArea({
         {/* Substrate - mid bridge */}
         <button
           onClick={handleSubstrate}
-          className="absolute left-36 -translate-x-1/2 top-[45%] px-6 -py-1 text-xs rounded-full bg-white/75 border-2 border-dotted scale-[1.0] peridia-display border-black/70 shadow leading-relaxed"
+          className="absolute left-36 -translate-x-1/2 top-[45%] px-1 -py-1 text-xs rounded-full bg-white/75 border-4 border-dotted scale-[1.0] peridia-display border-black/70 shadow leading-relaxed"
         >
-          <span className="text-lg">Substrate</span>
+          <div className="text-lg scale-[0.8] lg:scale-[0.8] md:scale-[0.8] tracking-wider">Substrate</div>
         </button>
 
         {/* Wallet - left lobe */}
         <button
           onClick={handleWallet}
-          className="absolute left-[12%] bottom-[18%] px-4 py-1 h-6 text-xs rounded-full bg-[#F0ECF3] border-2 border-dotted scale-[1.3] border-black/70 shadow"
+          className="absolute left-[5%] bottom-[18%] px-4 py-4 h-6 text-xs rounded-full bg-[#F0ECF3] border-2 border-dotted scale-[1.0] lg:scale-[1.1] md:scale-[1.1] border-black/70 shadow"
         >
-          <span className="-mt-2">Wallet</span>
+          <div className="-mt-2 scale-[0.8] lg:scale-[0.95] md:scale-[0.95]">Wallet</div>
         </button>
 
         {/* Explore - base pod (bigger pill) */}
         <button
           onClick={handleExploreGarden}
-          className="absolute right-[8%] bottom-[12%] px-4 w-[42%] h-14 py-1 rounded-full bg-white/75 border-1 border-black/70 shadow scale-[0.8] peridia-display"
+          className="absolute right-[3%] bottom-[16%] px-4 w-[42%] h-14 py-1 rounded-full bg-white/75 border-1 border-black/70 shadow scale-[0.95] lg:scale-[1.02] md:scale-[1.02] peridia-display"
         >
           <span className="text-lg">Explore </span>
           <p className="text-lg -mt-2">the Garden</p>

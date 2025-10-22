@@ -46,6 +46,7 @@ export default function AudioPlayerModal({
     setPlayerState("orb");
     setIsPlaying(true);
     // Don't reset audioInitialized - keep the audio state
+    console.log('🎵 Transitioning to orb state - audio should continue');
   };
 
   const handleStopPlaying = () => {
@@ -63,6 +64,22 @@ export default function AudioPlayerModal({
 
   return (
     <>
+      {/* Hidden iframe for background audio - always present when audio is initialized */}
+      {audioInitialized && (
+        <div className="invisible absolute">
+          <iframe
+            ref={hiddenAudioRef}
+            width="0"
+            height="0"
+            scrolling="no"
+            frameBorder="no"
+            allow="autoplay"
+            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ff5500&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
+            className="invisible absolute"
+          />
+        </div>
+      )}
+
       {/* Modal State */}
       <AnimatePresence>
         {playerState === "modal" && (
@@ -109,7 +126,7 @@ export default function AudioPlayerModal({
                     scrolling="no"
                     frameBorder="no"
                     allow="autoplay"
-                    src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ff5500&auto_play=${isPlaying}&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
+                    src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ff5500&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
                   />
                 </div>
               </div>
@@ -165,21 +182,6 @@ export default function AudioPlayerModal({
         )}
       </AnimatePresence>
 
-      {/* Hidden iframe for background audio - only when in orb state */}
-      {playerState === "orb" && (
-        <div className="invisible absolute">
-          <iframe
-            ref={hiddenAudioRef}
-            width="0"
-            height="0"
-            scrolling="no"
-            frameBorder="no"
-            allow="autoplay"
-            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ff5500&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
-            className="invisible absolute"
-          />
-        </div>
-      )}
 
       {/* Floating Orb State */}
       <AnimatePresence>
