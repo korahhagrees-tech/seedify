@@ -65,7 +65,7 @@ export default function SeedDetailPage({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.25 }}
         >
-          <div className="bg-white border text-nowrap border-black rounded-full px-4 py-1 text-center seed-detail-steward-label">
+          <div className="bg-white border text-nowrap border-black rounded-full px-4 py-0 lg:py-1 md:py-1 text-center seed-detail-steward-label">
             <div className="text-sm font-medium text-black seed-detail-steward-label-small">
               STEWARD{" "}
               <span className="ml-2">
@@ -151,7 +151,7 @@ export default function SeedDetailPage({
               <div className="text-[9px] font-light text-black mb-2 mt-0 seed-detail-stat-label">
                 EVOLUTIONS
               </div>
-              <div className="text-xl text-nowrap scale-[0.85] -ml-2 -mt-3 font-light text-black seed-detail-stat-value">
+              <div className="text-xl text-nowrap scale-[0.85] -ml-2 -mt-3 font-light text-black seed-detail-stat-value seed-detail-stat-value-small">
                 {seed.snapshotCount}
               </div>
             </motion.div>
