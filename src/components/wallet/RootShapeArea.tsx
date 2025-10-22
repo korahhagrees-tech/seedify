@@ -163,7 +163,7 @@ export default function RootShapeArea({
           onClick={handleWallet}
           className="absolute left-[5%] bottom-[18%] px-4 py-4 h-6 text-xs rounded-full bg-[#F0ECF3] border-2 border-dotted scale-[1.0] lg:scale-[1.1] md:scale-[1.1] border-black/70 shadow"
         >
-          <div className="-mt-2 scale-[0.8] lg:scale-[0.95] md:scale-[0.95]">Wallet</div>
+          <div className="-mt-2 scale-[0.9] lg:scale-[0.95] md:scale-[0.95]">Wallet</div>
         </button>
 
         {/* Explore - base pod (bigger pill) */}
