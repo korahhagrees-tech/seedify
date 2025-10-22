@@ -708,7 +708,7 @@ export default function SeedStewardStats({
         </div>
 
         {/* Footer root shape */}
-        <div className="fixed -bottom-1 left-0 right-0 z-30 pt-4 scale-[1.1]">
+        <div className="fixed -bottom-1 left-0 right-0 z-30 pt-4 scale-[1.0]">
           <div className="max-w-md mx-auto px-4">
             <RootShapeArea
               onWallet={() => { }}
