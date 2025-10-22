@@ -259,7 +259,7 @@ export default function About() {
       </div>
 
       {/* Fixed Root Shape Area with glass effect */}
-      <div className="fixed -bottom-1 left-0 right-0 z-30 pt-2 scale-[0.95] lg:scale-[0.9] md:scale-[0.96]">
+      <div className="fixed -bottom-1 left-0 right-0 z-30 pt-2 scale-[0.65] lg:scale-[0.9] md:scale-[0.96]">
       <div className="absolute inset-0 bg-white/80 backdrop-blur-xs backdrop-opacity-1 rounded-t-3xl -top-8 z-0 scale-[1.0] mt-12" />
         <div className="max-w-sm mx-auto px-3">
           <RootShapeArea
