@@ -77,7 +77,7 @@ export default function EcosystemPage() {
     if (seedId && beneficiarySlug) {
       loadEcosystemData();
     }
-  }, [seedId, beneficiarySlug, hasFetched]);
+  }, [seedId, beneficiarySlug, hasFetched, isLoading]);
 
   if (hasFetched && (error || !ecosystemData)) {
     return (

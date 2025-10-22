@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { assets } from "@/lib/assets";
@@ -567,7 +567,7 @@ export default function WalletPage() {
     return () => {
       cancelled = true;
     };
-  }, [walletAddress, allSnapshots]);
+  }, [walletAddress, allSnapshots, currentPage, snapshotsPerPage]);
 
   // Scroll-based pagination
   useEffect(() => {
@@ -620,7 +620,7 @@ export default function WalletPage() {
   };
 
   // Function to refresh snapshots data (called when new snapshot is minted)
-  const refreshSnapshots = async () => {
+  const refreshSnapshots = useCallback(async () => {
     if (!walletAddress) return;
 
     console.log('🔄 [WALLET] Refreshing snapshots data');
@@ -650,7 +650,7 @@ export default function WalletPage() {
         localStorage.removeItem(lastCheckKey);
       }
     }
-  };
+  }, [walletAddress]);
 
   // Expose refresh function globally for other components to call
   useEffect(() => {
