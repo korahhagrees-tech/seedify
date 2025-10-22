@@ -57,7 +57,7 @@ export default function StewardSeedCard({
     >
       {/* Gradient bar with emblem and steward message */}
       <div className="relative mb-6 -mt-12 lg:-mt-8 md:-mt-8 overflow-hidden scale-[1.1] lg:scale-[1.0] pt-6 pb-2 md:scale-[1.0]">
-        <div className="w-[480px] lg:w-[480px] md:w-[480px] rounded-full py-1 pl-16 pr-14 -ml-8 lg:-ml-1 md:ml-0 mt-2 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.75] lg:scale-[0.8] md:scale-[0.8]">
+        <div className="w-[460px] lg:w-[480px] md:w-[480px] rounded-full py-1 pl-16 pr-14 -ml-8 lg:-ml-1 md:ml-0 mt-2 bg-gradient-to-r from-gray-200 via-white to-gray-200 border-1 border-black scale-[0.75] lg:scale-[0.8] md:scale-[0.8]">
           <span className="text-sm text-center text-nowrap text-gray-800 ml-2 lg:ml-1 md:-ml-1">
             {`Thank You for Being the Steward of ${seed.label?.toUpperCase()}`}
           </span>
