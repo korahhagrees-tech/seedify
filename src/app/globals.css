@@ -416,7 +416,7 @@ html, body {
   .seed-detail-stat-label {
     font-size: 0.4rem;
     margin-bottom: 0.375rem;
-    margin-top: 0.25rem;
+    margin-top: -1.05rem;
   }
   
   .seed-detail-stat-value {

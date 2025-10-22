@@ -134,10 +134,10 @@ export default function SeedDetailPage({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.45 }}
             >
-              <div className="text-[8px] font-light text-black mb-2 mt-1 seed-detail-stat-label">
+              <div className="text-[8px] font-light text-black -mb-2 lg:mb-2 md:mb-2 mt-1 seed-detail-stat-label">
                 SNAP PRICE
               </div>
-              <div className="text-xl text-nowrap scale-[0.65] lg:scale-[0.65] md:scale-[0.65] -ml-3 lg:-ml-2 md:-ml-2 -mt-3 font-light text-black seed-detail-stat-value">
+              <div className="text-xl text-nowrap scale-[0.65] lg:scale-[0.65] md:scale-[0.65] -ml-3 lg:-ml-2 md:-ml-2 -mt-3 lg:-mt-3 md:-mt-3 font-light text-black seed-detail-stat-value">
                 {parseFloat(seed.snapshotPrice).toFixed(4)}{" "}
                 <span className="text-xl">ETH</span>
               </div>
@@ -148,7 +148,7 @@ export default function SeedDetailPage({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 }}
             >
-              <div className="text-[9px] font-light text-black mb-2 mt-0 seed-detail-stat-label">
+              <div className="text-[9px] font-light text-black mb-2 mt-0 lg:mt-0 md:mt-1 seed-detail-stat-label">
                 EVOLUTIONS
               </div>
               <div className="text-xl text-nowrap scale-[0.85] -ml-2 -mt-3 font-light text-black seed-detail-stat-value seed-detail-stat-value-small">
