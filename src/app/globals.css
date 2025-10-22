@@ -421,14 +421,14 @@ html, body {
   
   .seed-detail-stat-value {
     font-size: 1.4rem;
-    transform: scale(0.85);
+    transform: scale(0.65);
     margin-left: -1rem;
     margin-top: -0.7rem;
   }
 
   .seed-detail-stat-value-small {
     font-size: 1.4rem;
-    transform: scale(0.75);
+    transform: scale(0.55);
     margin-left: -0.3rem;
   }
   

@@ -259,7 +259,7 @@ export default function About() {
       </div>
 
       {/* Fixed Root Shape Area with glass effect */}
-      <div className="fixed -bottom-1 left-0 right-0 z-30 pt-2 scale-[1.0]">
+      <div className="fixed -bottom-1 left-0 right-0 z-30 pt-2 scale-[0.98]">
         <div className="max-w-sm mx-auto px-3">
           <RootShapeArea
             onSubstrate={() => { }} // Commented out - onSubstrate={handleSubstrateClick}
