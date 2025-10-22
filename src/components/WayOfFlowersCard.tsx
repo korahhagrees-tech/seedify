@@ -122,7 +122,7 @@ export default function WayOfFlowersCard({
 
           {/* Main card */}
           <motion.div
-            className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-4 border-dotted border-white/70 h-[750px]"
+            className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-4 border-dotted border-white/70 h-[650px] lg:h-[750px] md:h-[750px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -133,17 +133,17 @@ export default function WayOfFlowersCard({
                 src="/Blooming.svg"
                 alt="Blooming frame"
                 fill
-                className="object-contain scale-[1.0] lg:mt-0 md:-mt-2 -mt-15"
+                className="object-contain scale-[1.0] lg:mt-0 md:-mt-2 -mt-5"
                 priority
               />
             </div>
             {/* Header window + dots (match EcosystemProjectCard layout, white dots) */}
             <div className="relative h-28">
               {/* Four small solid white circles */}
-              <div className="absolute top-12 left-6 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
-              <div className="absolute top-32 left-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
-              <div className="absolute top-12 right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
-              <div className="absolute -bottom-4 right-0 -translate-x-1/2 translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute top-22 lg:top-12 md:top-22 -mt-12 left-6 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute top-38 lg:top-32 md:top-44 -mt-12 left-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute top-22 lg:top-12 md:top-22 -mt-12 right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white" />
+              <div className="absolute bottom-1 lg:-bottom-4 md:-bottom-5 -mt-12 right-0 -translate-x-1/2 translate-y-1/2 w-6 h-6 rounded-full bg-white" />
             </div>
 
             {/* Content positioned on the card */}
@@ -161,7 +161,7 @@ export default function WayOfFlowersCard({
                     alt=""
                     width={60}
                     height={60}
-                    className="lg:w-37 md:w-37 w-30 lg:h-37 md:h-37 h-30 -mt-14 mb-6"
+                    className="lg:w-37 md:w-32 w-26 lg:h-37 md:h-32 h-26 -mt-14 mb-8 lg:mb-6 md:mb-11"
                     onError={(e) => {
                       console.log(
                         "🌸 [IMAGE] Error loading seed emblem, using placeholder"
@@ -178,7 +178,7 @@ export default function WayOfFlowersCard({
                 </div>
 
                 {/* Three text lines */}
-                <div className="-space-y-1 lg:mt-1 md:-mt-2 -mt-2 text-black font-medium text-base lg:scale-[0.9] md:scale-[0.9] scale-[0.75]">
+                <div className="-space-y-1 lg:mt-1 md:-mt-2 -mt-1 text-black font-medium text-base lg:scale-[0.9] md:scale-[0.9] scale-[0.7]">
                   <div>{firstText}</div>
                   <div>{secondText}</div>
                   <div className="text-nowrap">{thirdText}</div>
@@ -186,8 +186,8 @@ export default function WayOfFlowersCard({
               </div>
 
               {/* Main quote section (no background, over SVG shape) */}
-              <div className="mb-8 -px-12 lg:scale-[1.05] md:scale-[1.05] scale-[1.1] lg:mt-2 -mt-1 md:mt-4">
-                <p className="text-black text-left lg:text-[15px] md:text-[15px] text-[13px] leading-tight peridia-display-light tracking-wider">
+              <div className="mb-8 -px-12 lg:scale-[1.05] md:scale-[1.05] scale-[1.0] lg:mt-2 -mt-1 md:mt-4">
+                <p className="text-black text-left lg:text-[15px] md:text-[15px] text-[12px] leading-tight peridia-display-light tracking-wider">
                   {`"${mainQuote}"`}{" "}
                   <span className="text-black/70 mt-3 text-xs favorit-mono font-bold text-center">
                     {author}

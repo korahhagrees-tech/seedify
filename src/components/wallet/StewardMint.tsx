@@ -207,7 +207,7 @@ export default function StewardMint({
       });
       
       if (!userEvmAddress || !prepareData) {
-        toast.error('Missing required data');
+        // toast.error('Missing required data');
         return;
       }
 
@@ -217,7 +217,7 @@ export default function StewardMint({
         .filter((v) => typeof v === 'number') as number[];
       
       if (indices.length !== 4) {
-        toast.error('Please select four beneficiaries');
+        // toast.error('Please select four beneficiaries');
         return;
       }
 
@@ -287,7 +287,7 @@ export default function StewardMint({
         beneficiaries: indices
       });
       
-      toast.info('Please confirm transaction in your wallet...');
+      // toast.info('Please confirm transaction in your wallet...');
       
       console.log('🔍 [MINT] About to send transaction:', {
         to: contractAddress,
@@ -323,12 +323,12 @@ export default function StewardMint({
       );
 
           console.log('✅ [MINT] Transaction hash:', tx.hash);
-          toast.success('Seed creation transaction submitted!');
+          // toast.success('Seed creation transaction submitted!');
           setTxHash(tx.hash);
           
           // Step 4: Verify transaction status before proceeding
           console.log('🔍 [MINT] Verifying transaction status for hash:', tx.hash);
-          toast.info('Verifying transaction... Please wait.');
+          // toast.info('Verifying transaction... Please wait.');
 
           // Poll transaction status with retries
           let transactionStatus = null;
@@ -355,7 +355,7 @@ export default function StewardMint({
                     break;
                   } else if (status === 'reverted') {
                     console.error('❌ [MINT] Transaction reverted:', statusData.transaction.revertReason);
-                    toast.error('Transaction failed and reverted. Please try again.');
+                    // toast.error('Transaction failed and reverted. Please try again.');
                     setTransactionStatus("failed");
                     return; // Exit early - do not proceed with routing
                   } else {
@@ -374,7 +374,7 @@ export default function StewardMint({
           // Check if we timed out without getting a success status
           if (!transactionStatus) {
             console.error('❌ [MINT] Transaction verification timed out');
-            toast.error('Transaction verification timed out. Please check your wallet.');
+            // toast.error('Transaction verification timed out. Please check your wallet.');
             setTransactionStatus("failed");
             return; // Exit early - do not proceed
           }
@@ -406,7 +406,7 @@ export default function StewardMint({
 
           // Transaction completed successfully - route to wallet page
           console.log('🎉 [MINT] Seed creation completed successfully!');
-          toast.success('Seed created successfully! Redirecting to wallet...');
+          // toast.success('Seed created successfully! Redirecting to wallet...');
           
           // Route to wallet page
           setTimeout(() => {
@@ -416,9 +416,9 @@ export default function StewardMint({
     } catch (error: any) {
       console.error('❌ [MINT] Transaction failed:', error);
       if (error?.message?.includes('User rejected')) {
-        toast.error('Transaction rejected');
+        // toast.error('Transaction rejected');
       } else {
-        toast.error(error?.message || 'Transaction failed. Please try again.');
+        // toast.error(error?.message || 'Transaction failed. Please try again.');
       }
     }
   };
@@ -559,7 +559,7 @@ export default function StewardMint({
                       onClick={() => handleBeneficiaryClick(1)}
                       className="w-full px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden -ml-4"
                     >
-                      <span className="block text-center truncate whitespace-nowrap">
+                      <span className="block text-center truncate whitespace-nowrap scale-[0.8] lg:scale-[1.0] md:scale-[1.0] -ml-8 lg:-ml-4 md:-ml-4">
                         {labelForSlot(1)}
                       </span>
                     </button>
@@ -571,7 +571,7 @@ export default function StewardMint({
                       onClick={() => handleBeneficiaryClick(2)}
                       className="w-full px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden ml-4"
                     >
-                      <span className="block text-center truncate whitespace-nowrap">
+                      <span className="block text-center truncate whitespace-nowrap scale-[0.8] lg:scale-[1.0] md:scale-[1.0] -ml-8 lg:-ml-4 md:-ml-4">
                         {labelForSlot(2)}
                       </span>
                     </button>
@@ -583,7 +583,7 @@ export default function StewardMint({
                       onClick={() => handleBeneficiaryClick(3)}
                       className="w-full px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden -ml-4"
                     >
-                      <span className="block text-center truncate whitespace-nowrap">
+                      <span className="block text-center truncate whitespace-nowrap scale-[0.8] lg:scale-[1.0] md:scale-[1.0] -ml-8 lg:-ml-4 md:-ml-4">
                         {labelForSlot(3)}
                       </span>
                     </button>
@@ -595,7 +595,7 @@ export default function StewardMint({
                       onClick={() => handleBeneficiaryClick(4)}
                       className="w-full px-8 py-0 rounded-full border-2 border-dotted border-black/70 bg-[#F0ECF3] text-black text-sm font-medium peridia-display-light hover:bg-white/90 transition-colors overflow-hidden ml-4"
                     >
-                      <span className="block text-center truncate whitespace-nowrap">
+                      <span className="block text-center truncate whitespace-nowrap scale-[0.8] lg:scale-[1.0] md:scale-[1.0] -ml-8 lg:-ml-4 md:-ml-4">
                         {labelForSlot(4)}
                       </span>
                     </button>
@@ -634,23 +634,23 @@ export default function StewardMint({
                       console.log('🌱 [MINT] Mint button clicked');
 
                       if (prepareLoading) {
-                        toast.info('Loading mint data...');
+                        // toast.info('Loading mint data...');
                         return;
                       }
                       if (prepareError || !prepareData) {
-                        toast.error('Minting data unavailable');
+                        // toast.error('Minting data unavailable');
                         return;
                       }
                       if (prepareData.seedCapReached) {
-                        toast.error('Seed cap reached.');
+                        // toast.error('Seed cap reached.');
                         return;
                       }
                       if (!prepareData.canMint) {
-                        toast.error(prepareData.isLocked ? 'Factory locked. You are not authorized to create seeds.' : 'You are not authorized to create seeds.');
+                        // toast.error(prepareData.isLocked ? 'Factory locked. You are not authorized to create seeds.' : 'You are not authorized to create seeds.');
                         return;
                       }
                       if (!userEvmAddress) {
-                        toast.info('Connect an EVM wallet to continue');
+                        // toast.info('Connect an EVM wallet to continue');
                         return;
                       }
                       
@@ -660,7 +660,7 @@ export default function StewardMint({
                         .filter((v) => typeof v === 'number') as number[];
                       
                       if (indices.length !== 4) {
-                        toast.error('Please select four beneficiaries');
+                        // toast.error('Please select four beneficiaries');
                         return;
                       }
 

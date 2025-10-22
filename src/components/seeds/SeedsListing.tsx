@@ -116,7 +116,7 @@ export default function SeedsListing({
 
       {/* Seeds Grid */}
       <motion.div
-        className="px-4 pb-4 space-y-8 -mt-10 lg:-mt-8 md:-mt-8 scale-[0.95]"
+        className="px-4 pb-4 space-y-2 lg:space-y-8 md:space-y-8 -mt-10 lg:-mt-8 md:-mt-8 scale-[0.95]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.4 }}
@@ -141,7 +141,7 @@ export default function SeedsListing({
 
       {/* Disconnect Button at Bottom */}
       <motion.div
-        className="px-4 pb-6"
+        className="px-4 pb-6 -mt-22 lg:-mt-22 md:-mt-22"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.6 }}
@@ -149,7 +149,7 @@ export default function SeedsListing({
         <Button
           variant="ghost"
           onClick={globalLogout}
-          className="w-full text-gray-600 underline hover:text-gray-800 -mt-12"
+          className="w-full text-gray-600 underline hover:text-gray-800 -mt-22 lg:-mt-22 md:-mt-22"
         >
           Disconnect
         </Button>

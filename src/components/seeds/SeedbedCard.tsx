@@ -244,10 +244,10 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
         // El Globo (largest)
         {
           position: {
-            top: "-top-10 md:-top-17 lg:-top-8",
-            left: "left-7 md:left-3 lg:left-8",
-            width: "w-[130px] md:w-[147px] lg:w-[128px]",
-            height: "h-[136px] md:h-[147px] lg:h-[128px]",
+            top: "-top-7 md:-top-17 lg:-top-8",
+            left: "left-5 md:left-3 lg:left-8",
+            width: "w-[126px] md:w-[147px] lg:w-[128px]",
+            height: "h-[126px] md:h-[147px] lg:h-[128px]",
             transform: "transform -rotate-4"
           },
           labelPosition: {
@@ -260,7 +260,7 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
         {
           position: {
             top: "lg:bottom-24 bottom-30 md:bottom-27",
-            left: "lg:-right-4 -right-2 md:-right-9",
+            left: "lg:-right-4 -right-4 md:-right-9",
             width: "w-26 md:w-32 lg:w-32",
             height: "h-26 md:h-32 lg:h-32",
             transform: "transform rotate-6"
@@ -275,7 +275,7 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
         {
           position: {
             top: "lg:bottom-24 bottom-27 md:bottom-24",
-            left: "-left-1 lg:-left-3 md:-left-8",
+            left: "-left-3 lg:-left-3 md:-left-8",
             width: "w-22 md:w-26 lg:w-28",
             height: "h-22 md:h-26 lg:h-28",
             transform: "transform -rotate-6"
@@ -289,8 +289,8 @@ export function SeedbedCard2({ className = "", beneficiaries = defaultBeneficiar
         // Walkers Reserve (smallest)
         {
           position: {
-            top: "top-4 md:-top-2 lg:top-4",
-            left: "right-5 lg:right-6 md:-right-1",
+            top: "top-5 md:-top-2 lg:top-4",
+            left: "right-4 lg:right-6 md:-right-1",
             width: "w-10 md:w-12 lg:w-10",
             height: "h-10 md:h-12 lg:h-10",
             transform: "transform rotate-12"

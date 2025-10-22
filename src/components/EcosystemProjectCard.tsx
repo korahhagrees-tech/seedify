@@ -99,7 +99,7 @@ export default function EcosystemProjectCard({
     setMintSuccess(true);
 
     // PaymentModal now handles the transaction, so we just show success
-    toast.success('Snapshot minted successfully!', { description: 'Your ecosystem has been tended.' });
+    // toast.success('Snapshot minted successfully!', { description: 'Your ecosystem has been tended.' });
 
     // ✅ Route to way-of-flowers page after successful mint (waiting for image generation)
     console.log('🌸 [EcosystemCard] Routing to way-of-flowers page for seed:', seedId);

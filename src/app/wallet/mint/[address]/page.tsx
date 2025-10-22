@@ -115,16 +115,16 @@ export default function MintPage() {
   };
 
   // Show loading state while Privy initializes
-  if (!privyReady) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="text-center">
-          <div className="text-white text-xl mb-4 peridia-display">Initializing...</div>
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
-        </div>
-      </div>
-    );
-  }
+  // if (!privyReady) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen bg-[url('/gradient.png')] bg-cover bg-center">
+  //       <div className="text-center">
+  //         <div className="text-white text-xl mb-4 peridia-display"></div>
+  //         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <StewardMint

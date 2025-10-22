@@ -113,7 +113,7 @@ export default function PaymentModal({
         });
       } catch (error) {
         console.error('Failed to fund wallet:', error);
-        toast.error('Failed to open funding flow');
+        // toast.error('Failed to open funding flow');
       }
     }
   };
@@ -124,12 +124,12 @@ export default function PaymentModal({
     try {
       // Defensive readiness/authentication checks (no flow changes)
       if (!ready) {
-        toast.info('Setting up wallet... Please wait.');
+        // toast.info('Setting up wallet... Please wait.');
         setIsProcessing(false);
         return;
       }
       if (!authenticated) {
-        toast.info('Please connect your wallet to continue.');
+        // toast.info('Please connect your wallet to continue.');
         setIsProcessing(false);
         setShowWalletConnection(true);
         return;
@@ -138,7 +138,7 @@ export default function PaymentModal({
       // Use activeWallet from context (Zustand store), fallback to first wallet
       const currentActiveWallet = activeWallet || wallets[0];
       if (!currentActiveWallet) {
-        toast.error("No active wallet found. Please connect your wallet.");
+        // toast.error("No active wallet found. Please connect your wallet.");
         setIsProcessing(false);
         return;
       }
@@ -151,7 +151,7 @@ export default function PaymentModal({
         const mintData = await response.json();
 
         if (!mintData.success) {
-          toast.error('Failed to prepare snapshot transaction');
+          // toast.error('Failed to prepare snapshot transaction');
           setIsProcessing(false);
           return;
         }
@@ -220,7 +220,7 @@ export default function PaymentModal({
 
         if (isSolanaWallet) {
           // For Solana wallets, use useSignAndSendTransaction
-          toast.error('Solana wallets not supported for this transaction');
+          // toast.error('Solana wallets not supported for this transaction');
           setIsProcessing(false);
           return;
         } else if (isEmbeddedWallet) {
@@ -330,7 +330,7 @@ export default function PaymentModal({
             console.log('✅ Embedded wallet transaction hash:', txHash);
           } catch (embeddedError) {
             console.error('Embedded wallet transaction failed:', embeddedError);
-            toast.error('Transaction failed. Please try again or switch to an external wallet.');
+            // toast.error('Transaction failed. Please try again or switch to an external wallet.');
             setIsProcessing(false);
             return;
           }
@@ -341,7 +341,7 @@ export default function PaymentModal({
           console.log('🔄 Using external wallet flow (MetaMask, Coinbase, etc.)');
           // For external EVM wallets (MetaMask, Coinbase, etc.) or fallback for any EVM wallet
           // This will trigger the wallet's native transaction modal
-          toast.info('Please confirm the transaction in your wallet...');
+          // toast.info('Please confirm the transaction in your wallet...');
 
           try {
             // Determine which contract we're interacting with
@@ -442,20 +442,20 @@ export default function PaymentModal({
             });
 
 
-            toast.success('Transaction submitted! Waiting for confirmation...');
+            // toast.success('Transaction submitted! Waiting for confirmation...');
             console.log('✅ External wallet transaction hash:', txHash);
           } catch (error: any) {
             console.error('External wallet transaction failed:', error);
             if (error?.code === 4001 || error?.message?.includes('User rejected')) {
-              toast.error('Transaction rejected');
+              // toast.error('Transaction rejected');
             } else if (error?.message?.includes('No embedded or connected wallet found')) {
-              toast.error('Wallet connection issue. Please reconnect your wallet.');
+              // toast.error('Wallet connection issue. Please reconnect your wallet.');
             }
             // else if (reciept.status === '0x0') {
             //   toast.error('Transaction failed. Please try again.');
             // }
             else {
-              toast.error('Transaction failed. Please try again.');
+              // toast.error('Transaction failed. Please try again.');
             }
             setIsProcessing(false);
             return;
@@ -465,7 +465,7 @@ export default function PaymentModal({
         // Step 4: Verify transaction status before proceeding
         if (txHash) {
           console.log('🔍 Transaction submitted with hash:', txHash);
-          toast.info('Verifying transaction... Please wait.');
+          // toast.info('Verifying transaction... Please wait.');
 
           // Poll transaction status with retries
           let transactionStatus = null;
@@ -492,7 +492,7 @@ export default function PaymentModal({
                     break;
                   } else if (status === 'reverted') {
                     console.error('Transaction reverted:', statusData.transaction.revertReason);
-                    toast.error('Transaction failed and reverted. Please try again.');
+                    // toast.error('Transaction failed and reverted. Please try again.');
                     setIsProcessing(false);
                     return; // Exit early - do not proceed with routing or API calls
                   } else {
@@ -511,7 +511,7 @@ export default function PaymentModal({
           // Check if we timed out without getting a success status
           if (!transactionStatus) {
             console.error('Transaction verification timed out');
-            toast.error('Transaction verification timed out. Please check your wallet.');
+            // toast.error('Transaction verification timed out. Please check your wallet.');
             setIsProcessing(false);
             return; // Exit early - do not proceed
           }
@@ -746,7 +746,7 @@ export default function PaymentModal({
       }
     } catch (error) {
       console.error('Transaction failed:', error);
-      toast.error('Transaction failed. Please try again.');
+      // toast.error('Transaction failed. Please try again.');
     } finally {
       setIsProcessing(false);
     }
@@ -840,14 +840,14 @@ export default function PaymentModal({
                     onClick={async () => {
                       try {
                         if (authenticated) {
-                          toast.success('Wallet already connected');
+                          // toast.success('Wallet already connected');
                         } else {
                           // Actually trigger wallet connection
                           await login();
-                          toast.success('Wallet connected successfully!');
+                          // toast.success('Wallet connected successfully!');
                         }
                       } catch (error) {
-                        toast.error('Failed to connect wallet');
+                        // toast.error('Failed to connect wallet');
                         console.error('Wallet connection error:', error);
                       }
                     }}

@@ -123,12 +123,12 @@ export default function HarvestSeedModal({
 
     try {
       if (!ready) {
-        toast.info('Setting up wallet... Please wait.');
+        // toast.info('Setting up wallet... Please wait.');
         setIsProcessing(false);
         return;
       }
       if (!authenticated) {
-        toast.info('Please connect your wallet to continue.');
+        // toast.info('Please connect your wallet to continue.');
         setIsProcessing(false);
         setShowWalletConnection(true);
         return;
@@ -136,7 +136,7 @@ export default function HarvestSeedModal({
       // Use activeWallet from context (Zustand store), fallback to first wallet
       const currentActiveWallet = activeWallet || wallets[0];
       if (!currentActiveWallet) {
-        toast.error("No active wallet found. Please connect your wallet.");
+        // toast.error("No active wallet found. Please connect your wallet.");
         setIsProcessing(false);
         return;
       }
@@ -147,7 +147,7 @@ export default function HarvestSeedModal({
 
     } catch (error) {
       console.error('Harvest failed:', error);
-      toast.error('Harvest failed. Please try again.');
+      // toast.error('Harvest failed. Please try again.');
       setIsProcessing(false);
     }
   };
@@ -158,17 +158,17 @@ export default function HarvestSeedModal({
     try {
       // Defensive checks for wallet functionality
       if (!ready) {
-        toast.info('Setting up wallet... Please wait.');
+        // toast.info('Setting up wallet... Please wait.');
         setIsProcessing(false);
         return;
       }
       if (!authenticated) {
-        toast.info('Please connect your wallet to continue.');
+        // toast.info('Please connect your wallet to continue.');
         setIsProcessing(false);
         return;
       }
       if (!activeWallet) {
-        toast.error("No active wallet found. Please connect your wallet.");
+        // toast.error("No active wallet found. Please connect your wallet.");
         setIsProcessing(false);
         return;
       }
@@ -177,13 +177,13 @@ export default function HarvestSeedModal({
       console.log('Withdrawing:', withdrawalAmount);
 
       // For now, just show success
-      toast.success('Withdrawal processed successfully!');
+      // toast.success('Withdrawal processed successfully!');
       setShowWithdrawalModal(false);
       onClose();
 
     } catch (error) {
       console.error('Withdrawal failed:', error);
-      toast.error('Withdrawal failed. Please try again.');
+      // toast.error('Withdrawal failed. Please try again.');
     } finally {
       setIsProcessing(false);
     }
@@ -233,13 +233,13 @@ export default function HarvestSeedModal({
                   onClick={async () => {
                     try {
                       if (authenticated) {
-                        toast.success('Wallet already connected');
+                        // toast.success('Wallet already connected');
                       } else {
                         await login();
-                        toast.success('Wallet connected successfully!');
+                        // toast.success('Wallet connected successfully!');
                       }
                     } catch (error) {
-                      toast.error('Failed to connect wallet');
+                      // toast.error('Failed to connect wallet');
                       console.error('Wallet connection error:', error);
                     }
                   }}

@@ -44,10 +44,10 @@ export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData, seed
   // Use backgroundImage
   const backgroundImageUrl = projectData.backgroundImage;
 
-  // Get seedEmblemUrl from wayOfFlowersData if available
-  const seedEmblemUrl = typeof seedData?.wayOfFlowersData?.seedEmblemUrl === 'string'
-    ? seedData.wayOfFlowersData.seedEmblemUrl
-    : undefined;
+  // Construct seedEmblemUrl using beneficiary code with underscores
+  // Convert beneficiary code from "01-GRG" to "01__GRG" format
+  const beneficiaryCodeWithUnderscores = beneficiary.code.replace('-', '__');
+  const seedEmblemUrl = `/seeds/${beneficiaryCodeWithUnderscores}.png`;
 
   return {
     title,

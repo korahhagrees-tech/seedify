@@ -134,15 +134,15 @@ export default function SeedStewardStats({
 
     // Defensive checks for wallet functionality
     if (!ready) {
-      toast.info('Setting up wallet... Please wait.');
+      // toast.info('Setting up wallet... Please wait.');
       return;
     }
     if (!authenticated) {
-      toast.info('Please connect your wallet to continue.');
+      // toast.info('Please connect your wallet to continue.');
       return;
     }
     if (!activeWallet) {
-      toast.error("No active wallet found. Please connect your wallet.");
+      // toast.error("No active wallet found. Please connect your wallet.");
       return;
     }
 
@@ -157,15 +157,15 @@ export default function SeedStewardStats({
 
     // Defensive checks for wallet functionality
     if (!ready) {
-      toast.info('Setting up wallet... Please wait.');
+      // toast.info('Setting up wallet... Please wait.');
       return;
     }
     if (!authenticated) {
-      toast.info('Please connect your wallet to continue.');
+      // toast.info('Please connect your wallet to continue.');
       return;
     }
     if (!activeWallet) {
-      toast.error("No active wallet found. Please connect your wallet.");
+      // toast.error("No active wallet found. Please connect your wallet.");
       return;
     }
 

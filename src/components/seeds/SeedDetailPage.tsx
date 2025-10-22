@@ -23,6 +23,37 @@ export default function SeedDetailPage({
   onPlantSeed,
 }: SeedDetailPageProps) {
   const [imageError, setImageError] = useState(false);
+  const [imageErrorCount, setImageErrorCount] = useState(0);
+
+  // Three-tier fallback system for seed images
+  const getCurrentImageSrc = () => {
+    // Tier 1: Original backend URL
+    if (imageErrorCount === 0 && seed.seedImageUrl && seed.seedImageUrl.length > 0) {
+      return seed.seedImageUrl;
+    }
+    
+    // Tier 2: CloudFront URL with seed ID
+    if (imageErrorCount === 1) {
+      return `https://d17wy07434ngk.cloudfront.net/seed${seed.id}/seed.png`;
+    }
+    
+    // Tier 3: Universal fallback
+    return "https://d17wy07434ngk.cloudfront.net/seed1/seed.png";
+  };
+
+  const handleImageError = () => {
+    if (imageErrorCount < 2) {
+      console.log(
+        `🌸 [IMAGE] Error loading seed detail image (tier ${imageErrorCount + 1}), trying next fallback`
+      );
+      setImageErrorCount(prev => prev + 1);
+    } else {
+      console.log(
+        "🌸 [IMAGE] All fallbacks exhausted, using final fallback"
+      );
+      setImageError(true);
+    }
+  };
 
   return (
     <div className="min-h-screen w-full max-w-sm mx-auto lg:-mt-8 md:-mt-14 -mt-12 relative lg:scale-[1.0] md:scale-[0.95] scale-[1.0] overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mb-40 lg:-mb-40 md:-mb-40 seed-detail-container">
@@ -71,24 +102,11 @@ export default function SeedDetailPage({
           >
             {/* Seed Image */}
             <Image
-              src={
-                imageError
-                  ? "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
-                  : seed.seedImageUrl && seed.seedImageUrl.length > 0
-                    ? seed.seedImageUrl
-                    : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
-              }
+              src={getCurrentImageSrc()}
               alt=""
               fill
               className="object-cover"
-              onError={(e) => {
-                if (!imageError) {
-                  console.log(
-                    "🌸 [IMAGE] Error loading seed detail image (403 or network issue), using CloudFront fallback"
-                  );
-                  setImageError(true);
-                }
-              }}
+              onError={handleImageError}
             />
           </motion.div>
         </div>

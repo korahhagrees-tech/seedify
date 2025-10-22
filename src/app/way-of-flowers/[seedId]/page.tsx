@@ -20,6 +20,7 @@ export default function WayOfFlowers({
   const searchParams = useSearchParams();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [ecosystemBackgroundUrl, setEcosystemBackgroundUrl] = useState<string>("");
+  const [ecosystemSeedEmblemUrl, setEcosystemSeedEmblemUrl] = useState<string>("");
 
   // Image generation state management
   const [isWaitingForImage, setIsWaitingForImage] = useState(false);
@@ -171,6 +172,10 @@ export default function WayOfFlowers({
           if (ecosystem.backgroundImageUrl) {
             setEcosystemBackgroundUrl(ecosystem.backgroundImageUrl);
           }
+          
+          if (ecosystem.seedEmblemUrl) {
+            setEcosystemSeedEmblemUrl(ecosystem.seedEmblemUrl);
+          }
         }
       } catch (err) {
         console.error("Error loading ecosystem background:", err);
@@ -243,12 +248,16 @@ export default function WayOfFlowers({
   // Use ecosystem background if available, otherwise fallback to original
   const backgroundImageUrl =
     ecosystemBackgroundUrl || wayOfFlowersData.backgroundImageUrl;
+  
+  // Use ecosystem seed emblem if available, otherwise fallback to original
+  const seedEmblemUrl =
+    ecosystemSeedEmblemUrl || wayOfFlowersData.seedEmblemUrl;
 
   return (
     <div className="min-h-screen w-full">
       <WayOfFlowersCard 
         backgroundImageUrl={backgroundImageUrl}
-        seedEmblemUrl={wayOfFlowersData.seedEmblemUrl}
+        seedEmblemUrl={seedEmblemUrl}
         firstText={wayOfFlowersData.firstText}
         secondText={wayOfFlowersData.secondText}
         thirdText={wayOfFlowersData.thirdText}
