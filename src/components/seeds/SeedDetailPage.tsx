@@ -58,7 +58,7 @@ export default function SeedDetailPage({
   return (
     <div className="min-h-screen w-full max-w-sm mx-auto lg:-mt-8 md:-mt-14 -mt-12 relative lg:scale-[1.0] md:scale-[0.95] scale-[1.0] overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mb-40 lg:-mb-40 md:-mb-40 seed-detail-container">
       {/* Steward Label - positioned above the main content */}
-      <div className="relative pt-4 pb-2 ml-2 lg:ml-4 md:ml-4 scale-[0.8] lg:scale-[1.0] md:scale-[0.95] z-10">
+      <div className="relative pt-4 pb-2 ml-2 lg:ml-4 md:ml-4 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] z-10">
         <motion.div
           className="absolute top-14 lg:top-14 md:top-10 left-1/2 -translate-x-1/2 z-10"
           initial={{ opacity: 0, y: 10 }}
@@ -85,7 +85,7 @@ export default function SeedDetailPage({
       >
         {/* Seed Label Badge */}
         <div className="relative mb-4">
-          <div className="absolute top-2 -left-2 lg:-left-4 md:-left-4 z-10 scale-[0.8] lg:scale-[1.0] md:scale-[0.95]">
+          <div className="absolute top-2 -left-2 lg:-left-4 md:-left-4 z-10 scale-[0.8] lg:scale-[0.9] md:scale-[0.8]">
             <span className="bg-white border border-black text-black px-3 py-1 rounded-full text-sm font-medium shadow seed-detail-badge">
               {seed.label.toUpperCase()}
             </span>
