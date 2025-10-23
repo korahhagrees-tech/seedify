@@ -112,7 +112,7 @@ export default function SeedDetailPage({
         </div>
 
         {/* Metrics pills */}
-        <div className="mb-6 px-2 lg:px-0 md:px-0 seed-detail-stats">
+        <div className="mb-12 lg:mb-6 md:mb-6 px-2 lg:px-0 md:px-0 seed-detail-stats">
           <div className="grid grid-cols-3 gap-1 lg:gap-2 md:gap-2">
             <motion.div
               className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center seed-detail-stat-item"
