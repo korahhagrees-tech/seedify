@@ -475,7 +475,7 @@ export default function StewardMint({
 
           {/* Main card */}
           <motion.div
-            className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-4 border-dotted border-white/70 h-[580px] lg:h-[750px] md:h-[750px]"
+            className="relative bg-transparent rounded-[40px] shadow-2xl overflow-hidden border-4 border-dotted border-white/70 h-[590px] lg:h-[750px] md:h-[750px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -486,7 +486,7 @@ export default function StewardMint({
                 src="/Blooming.svg"
                 alt="Blooming frame"
                 fill
-                className="object-contain lg:scale-[1.0] md:scale-[1.0] scale-[1.05] lg:-mt-2 md:-mt-2 mt-4"
+                className="object-contain lg:scale-[1.0] md:scale-[1.0] scale-[1.1] lg:-mt-2 md:-mt-2 mt-6"
                 priority
               />
             </div>
@@ -539,7 +539,7 @@ export default function StewardMint({
                 </div>
 
                 {/* Choose four beneficiaries text */}
-                <div className="-mt-8 text-black font-bold text-base lg:scale-[0.55] md:scale-[0.55] scale-[0.45]">
+                <div className="-mt-6 lg:-mt-8 md:-mt-8 text-black font-bold text-base lg:scale-[0.55] md:scale-[0.55] scale-[0.55]">
                   <Image
                     src={assets.chooseBeneficiary}
                     alt="Choose four beneficiaries"
@@ -551,7 +551,7 @@ export default function StewardMint({
               </div>
 
               {/* Four individual beneficiary dropdowns section */}
-              <div className="-mb-14 lg:-mb-30 md:-mb-16 -px-12 lg:scale-[0.98] md:scale-[0.95] scale-[0.90] lg:mt-1 md:-mt-1 -mt-3">
+              <div className="-mb-16 lg:-mb-30 md:-mb-16 -px-12 lg:scale-[0.98] md:scale-[0.95] scale-[0.90] lg:mt-1 md:-mt-1 -mt-1">
                 <div className="grid grid-cols-2 gap-4 mt-12 lg:mt-14 md:mt-12 mb-9">
                   {/* Beneficiary 01 */}
                   <div className="relative">
@@ -667,9 +667,9 @@ export default function StewardMint({
                       // All checks passed - open confirmation modal
                       setShowConfirmModal(true);
                     }}
-                    className="mt-46 mb-9 px-8 py-3 rounded-full border-2 border-dotted border-white/70 text-white text-xl font-medium bg-transparent hover:bg-white/20 transition-all duration-300 peridia-display"
+                    className="mt-48 lg:mt-44 md:mt-44 mb-9 px-8 py-3 rounded-full border-2 border-dotted border-white/70 text-white text-xl font-medium bg-transparent hover:bg-white/20 transition-all duration-300 peridia-display scale-[0.7] lg:scale-[1.0] md:scale-[1.0]"
                   >
-                    <p className="text-white text-2xl scale-[0.8] lg:scale-[1.2] md:scale-[0.9] font-medium">MINT</p>
+                    <p className="text-white text-2xl scale-[1.1] lg:scale-[1.2] md:scale-[0.9] font-medium">MINT</p>
                   </button>
                 </motion.div>
 
