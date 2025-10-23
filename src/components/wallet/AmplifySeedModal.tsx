@@ -25,7 +25,7 @@ import { toast } from "sonner";
 
 interface AmplifySeedModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onCloseAction: () => void;
   seedId?: string;
   stats?: {
     totalValue: string;
@@ -44,7 +44,7 @@ interface AmplifySeedModalProps {
 
 export default function AmplifySeedModal({
   isOpen,
-  onClose,
+  onCloseAction,
   seedId = "1",
   stats = {
     totalValue: "1.633 ETH",
@@ -172,7 +172,7 @@ export default function AmplifySeedModal({
 
     // TODO: Implement extend cultivation logic
     console.log("Extending cultivation with amount:", contributionAmount);
-    onClose();
+    onCloseAction();
   };
 
   const handleSwitchWallet = () => {
@@ -198,7 +198,7 @@ export default function AmplifySeedModal({
     try {
       // TODO: Implement logout logic
       console.log("Logging out user");
-      onClose();
+      onCloseAction();
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -244,7 +244,7 @@ export default function AmplifySeedModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/10 z-40 backdrop-blur-xs"
-            onClick={onClose}
+            onClick={onCloseAction}
           />
 
           {/* Modal */}
@@ -269,7 +269,7 @@ export default function AmplifySeedModal({
             >
               {/* Close Button */}
               <button
-                onClick={onClose}
+                onClick={onCloseAction}
                 className="absolute -top-12 right-8 w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors z-10"
               >
                 <span className="text-black text-2xl font-bold">×</span>

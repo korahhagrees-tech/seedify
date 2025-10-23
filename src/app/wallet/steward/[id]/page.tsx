@@ -28,7 +28,6 @@ export default function StewardStatsRoute() {
       if (!id) return;
 
       try {
-
         // Fetch seed data
         const s = await fetchSeedById(id);
         setSeed(s || null);
@@ -58,12 +57,12 @@ export default function StewardStatsRoute() {
 
   // Modal handlers
   const handleAmplifyClick = () => {
-    console.log('🌱 Amplify button clicked from page level');
+    console.log("🌱 Amplify button clicked from page level");
     setIsAmplifyModalOpen(true);
   };
 
   const handleHarvestClick = () => {
-    console.log('🌾 Harvest button clicked from page level');
+    console.log("🌾 Harvest button clicked from page level");
     setIsHarvestModalOpen(true);
   };
 
@@ -98,20 +97,34 @@ export default function StewardStatsRoute() {
       {stats && (
         <AmplifySeedModal
           isOpen={isAmplifyModalOpen}
-          onClose={() => setIsAmplifyModalOpen(false)}
+          onCloseAction={() => setIsAmplifyModalOpen(false)}
           seedId={stats.seedId.toString()}
           stats={{
-            totalValue: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
-            fundsCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
-            snapRewards: `${parseFloat(stats.absoluteNutrientYield).toFixed(3)} ETH`,
+            totalValue: `${parseFloat(stats.nutrientReserveTotal).toFixed(
+              3
+            )} ETH`,
+            fundsCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(
+              3
+            )} ETH`,
+            snapRewards: `${parseFloat(stats.absoluteNutrientYield).toFixed(
+              3
+            )} ETH`,
             numSnaps: stats.totalSnapshots.toString(),
-            totalFundings: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
-            yearlyFunding: `${parseFloat(stats.immediateImpact).toFixed(3)} ETH`,
-            allSeedsTotal: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+            totalFundings: `${parseFloat(stats.nutrientReserveTotal).toFixed(
+              3
+            )} ETH`,
+            yearlyFunding: `${parseFloat(stats.immediateImpact).toFixed(
+              3
+            )} ETH`,
+            allSeedsTotal: `${parseFloat(stats.nutrientReserveTotal).toFixed(
+              3
+            )} ETH`,
             snapsPercentage: formatPercentage(stats.snapshotShare),
             currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
             maturationDate: formatDate(stats.maturationDate),
-            prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
+            prematurePenalty: `${parseFloat(
+              stats.earlyHarvestFee.amount
+            ).toFixed(3)} ETH`,
           }}
         />
       )}
@@ -123,12 +136,18 @@ export default function StewardStatsRoute() {
           onClose={() => setIsHarvestModalOpen(false)}
           seedId={stats.seedId.toString()}
           stats={{
-            nutrientReserve: `${parseFloat(stats.nutrientReserveTotal).toFixed(3)} ETH`,
+            nutrientReserve: `${parseFloat(stats.nutrientReserveTotal).toFixed(
+              3
+            )} ETH`,
             mintingDate: formatDate(stats.mintedOn),
-            totalCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(3)} ETH`,
+            totalCommitted: `${parseFloat(stats.highestSeedDeposit).toFixed(
+              3
+            )} ETH`,
             currentClaimable: `${parseFloat(stats.harvestable).toFixed(3)} ETH`,
             maturationDate: formatDate(stats.maturationDate),
-            prematurePenalty: `${parseFloat(stats.earlyHarvestFee.amount).toFixed(3)} ETH`
+            prematurePenalty: `${parseFloat(
+              stats.earlyHarvestFee.amount
+            ).toFixed(3)} ETH`,
           }}
         />
       )}

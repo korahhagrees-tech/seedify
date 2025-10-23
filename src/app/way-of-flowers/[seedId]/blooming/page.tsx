@@ -119,12 +119,12 @@ export default function BloomingPage({
       {/* Wallet Modal */}
       <WalletModal
         isOpen={isWalletModalOpen}
-        onClose={handleWalletModalClose}
-        onLogout={handleLogout}
-        onAddFunds={() => {}}
-        onExportKey={() => {}}
-        onSwitchWallet={() => {}}
-        onPrivyHome={() => router.push("https://home.privy.io/login")}
+        onCloseAction={handleWalletModalClose}
+        onLogoutAction={handleLogout}
+        onAddFundsAction={() => {}}
+        onExportKeyAction={() => {}}
+        onSwitchWalletAction={() => {}}
+        onPrivyHomeAction={() => router.push("https://home.privy.io/login")}
       />
 
       {/* Share Modal */}

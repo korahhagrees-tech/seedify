@@ -401,12 +401,12 @@ export default function About() {
       {/* Wallet Modal */}
       <WalletModal
         isOpen={isWalletModalOpen}
-        onClose={handleWalletModalClose}
-        onLogout={handleLogout}
-        onAddFunds={handleAddFunds}
-        onExportKey={handleExportKey}
-        onSwitchWallet={handleSwitchWallet}
-        onPrivyHome={handlePrivyHome}
+        onCloseAction={handleWalletModalClose}
+        onLogoutAction={handleLogout}
+        onAddFundsAction={handleAddFunds}
+        onExportKeyAction={handleExportKey}
+        onSwitchWalletAction={handleSwitchWallet}
+        onPrivyHomeAction={handlePrivyHome}
       />
 
       {/* Audio Player Modal */}

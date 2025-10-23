@@ -62,17 +62,17 @@ export default function SeedDetailPage({
   return (
     <div className="min-h-screen w-full max-w-sm mx-auto lg:-mt-8 md:-mt-14 -mt-12 relative lg:scale-[1.0] md:scale-[0.95] scale-[1.0] overflow-x-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mb-40 lg:-mb-40 md:-mb-40 seed-detail-container">
       {/* Steward Label - positioned above the main content */}
-      <div className="relative pt-4 pb-2 ml-2 lg:ml-4 md:ml-4 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] z-10">
+      <div className="relative pt-4 pb-2 z-10">
         <motion.div
-          className="absolute top-14 lg:top-14 md:top-10 left-1/2 -translate-x-1/2 z-10 max-w-[90vw]"
+          className="absolute top-14 lg:top-14 md:top-10 left-1/2 -translate-x-1/2 z-10 w-full flex justify-center px-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.25 }}
         >
-          <div className="bg-white border border-black rounded-full px-4 py-0 lg:py-1 md:py-1 text-center seed-detail-steward-label">
-            <div className="text-sm font-medium text-black seed-detail-steward-label-small">
+          <div className="bg-white border border-black rounded-full px-3 sm:px-4 py-1 text-center seed-detail-steward-label scale-[0.8] lg:scale-[0.8] md:scale-[0.8]">
+            <div className="text-xs sm:text-sm font-medium text-black seed-detail-steward-label-small whitespace-nowrap">
               STEWARD{" "}
-              <span className="ml-2 break-all">
+              <span className="ml-1 sm:ml-2">
                 {seed?.owner ? formatAddress(seed.owner) : "Unknown"}
               </span>
             </div>
@@ -119,43 +119,41 @@ export default function SeedDetailPage({
         <div className="mb-12 lg:mb-6 md:mb-6 px-2 lg:px-0 md:px-0 seed-detail-stats">
           <div className="grid grid-cols-3 gap-1 lg:gap-2 md:gap-2">
             <motion.div
-              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center seed-detail-stat-item overflow-hidden"
+              className="bg-white border border-black rounded-full px-1 lg:px-3 md:px-3 py-4 lg:py-2 md:py-2 text-center h-[70px] lg:h-[50px] md:h-[50px] flex flex-col justify-center seed-detail-stat-item"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.4 }}
             >
-              <div className="text-[8px] font-light text-black mb-2 mt-1 seed-detail-stat-label">
+              <div className="text-[8px] lg:text-[8px] md:text-[8px] font-light text-black mb-2 lg:mb-1 md:mb-1 seed-detail-stat-label">
                 RAISED
               </div>
-              <div className="text-base lg:text-xl md:text-lg font-light text-black seed-detail-stat-value truncate px-1">
-                {parseFloat(seed.depositAmount).toFixed(4)}{" "}
-                <span className="text-sm lg:text-base md:text-base">ETH</span>
+              <div className="text-[8px] lg:text-xs md:text-xs font-light text-black seed-detail-stat-value">
+                {parseFloat(seed.depositAmount).toFixed(4)} ETH
               </div>
             </motion.div>
             <motion.div
-              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center seed-detail-stat-item overflow-hidden"
+              className="bg-white border border-black rounded-full px-1 lg:px-3 md:px-3 py-4 lg:py-2 md:py-2 text-center h-[70px] lg:h-[50px] md:h-[50px] flex flex-col justify-center seed-detail-stat-item"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.45 }}
             >
-              <div className="text-[8px] font-light text-black -mb-2 lg:mb-2 md:mb-2 mt-1 seed-detail-stat-label">
+              <div className="text-[8px] lg:text-[8px] md:text-[8px] font-light text-black mb-2 lg:mb-1 md:mb-1 seed-detail-stat-label">
                 SNAP PRICE
               </div>
-              <div className="text-base lg:text-xl md:text-lg font-light text-black seed-detail-stat-value truncate px-1">
-                {parseFloat(seed.snapshotPrice).toFixed(4)}{" "}
-                <span className="text-sm lg:text-base md:text-base">ETH</span>
+              <div className="text-[8px] lg:text-xs md:text-xs font-light text-black seed-detail-stat-value">
+                {parseFloat(seed.snapshotPrice).toFixed(4)} ETH
               </div>
             </motion.div>
             <motion.div
-              className="bg-white border border-black rounded-full p-3 text-center h-[40px] flex flex-col justify-center seed-detail-stat-item overflow-hidden"
+              className="bg-white border border-black rounded-full px-1 lg:px-3 md:px-3 py-4 lg:py-2 md:py-2 text-center h-[70px] lg:h-[50px] md:h-[50px] flex flex-col justify-center seed-detail-stat-item"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.5 }}
             >
-              <div className="text-[9px] font-light text-black mb-2 mt-0 lg:mt-0 md:mt-1 seed-detail-stat-label">
+              <div className="text-[8px] lg:text-[8px] md:text-[8px] font-light text-black mb-2 lg:mb-1 md:mb-1 seed-detail-stat-label">
                 EVOLUTIONS
               </div>
-              <div className="text-lg lg:text-xl md:text-xl font-light text-black seed-detail-stat-value seed-detail-stat-value-small">
+              <div className="text-[8px] lg:text-xs md:text-xs font-light text-black seed-detail-stat-value">
                 {seed.snapshotCount}
               </div>
             </motion.div>

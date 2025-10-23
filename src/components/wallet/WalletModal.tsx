@@ -24,20 +24,20 @@ import { base } from "viem/chains";
 
 interface WalletModalProps {
   isOpen: boolean;
-  onClose: () => void;
-  onLogout: () => void;
-  onAddFunds: () => void;
-  onExportKey: () => void;
-  onSwitchWallet: () => void;
-  onPrivyHome: () => void;
+  onCloseAction: () => void;
+  onLogoutAction: () => void;
+  onAddFundsAction: () => void;
+  onExportKeyAction: () => void;
+  onSwitchWalletAction: () => void;
+  onPrivyHomeAction: () => void;
   onWalletConnect?: () => void;
 }
 
 export default function WalletModal({
   isOpen,
-  onClose,
-  onLogout,
-  onPrivyHome,
+  onCloseAction,
+  onLogoutAction,
+  onPrivyHomeAction,
 }: WalletModalProps) {
   const {
     user,
@@ -220,7 +220,7 @@ export default function WalletModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/10 z-40 backdrop-blur-xs"
-            onClick={onClose}
+            onClick={onCloseAction}
           />
 
           {/* Modal */}
@@ -333,7 +333,7 @@ export default function WalletModal({
               {/* Action Buttons */}
               <div className="space-y-3 mb-6 -mt-9">
                 <button
-                  onClick={onPrivyHome}
+                  onClick={onPrivyHomeAction}
                   className="w-[32%] px-4 py-1 border-1 border-black rounded-full text-sm text-black hover:bg-gray-50 transition-colors -mt-14  h-6 peridia-display-light bg-[#E2E3F0] wallet-modal-privy-button"
                 >
                   <p className="-mt-1 text-nowrap -ml-2 lg:ml-0 md:-ml-2 scale-[2.5] lg:scale-[1.0] md:scale-[0.8] wallet-modal-privy-button-small">
@@ -410,7 +410,7 @@ export default function WalletModal({
               {/* Log out */}
               <div className="flex items-center gap-2">
                 <button
-                  onClick={onLogout}
+                  onClick={onLogoutAction}
                   className="flex items-center gap-2 text-sm text-black hover:text-gray-800 transition-colors -mb-12"
                 >
                   <Image
