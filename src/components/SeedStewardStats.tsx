@@ -631,70 +631,106 @@ export default function SeedStewardStats({
 
                     {/* Row of stats - responsive grid */}
                     <div className="grid grid-cols-1 gap-2">
-                      {/* First row: BENEFIT SHARE and #SNAPSHOTS with GARDEN */}
-                      <div className="grid grid-cols-3 gap-2">
+                      {/* First row: BENEFIT SHARE, SNAPSHOTS GAIN, UNCLAIMED (4 items) */}
+                      <div className="grid grid-cols-4 gap-2">
                         {/* BENEFIT SHARE */}
                         <div className="rounded-[20px] p-2 flex flex-col">
                           <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left">
-                            BENEFIT SHARE
+                            BENEFIT
                           </div>
-                          <div className="bg-white/70 rounded-full px-2 py-1 text-gray-900 text-[10px] text-center">
-                            {beneficiary.benefitShare}%
+                          <div className="flex items-center justify-between">
+                            <div className="text-[9px] text-black/80 tracking-wide uppercase text-right -mt-6 lg:-mt-6 md:-mt-2 ml-2 lg:ml-2 md:ml-3">
+                              SHARE
+                            </div>
+                            <div className="bg-white/70 rounded-full rounded-tl-[40px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] px-3 py-1 text-gray-900 text-[10px] text-center -mt-5 lg:-mt-5 md:-mt-5">
+                            <div className="mt-1">
+                              {beneficiary.benefitShare}%
+                              </div>
+                            </div>
                           </div>
                         </div>
 
                         {/* #SNAPSHOTS */}
-                        <div className="rounded-[20px] p-2">
-                          <div className="bg-white/70 border-2 border-dashed border-black rounded-tl-[10px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-[9px] text-black/80 tracking-wide uppercase text-center">
-                            #SNAPSHOTS GAIN
-                            {parseFloat(beneficiary.snapshotsGain).toFixed(6)} ETH
+                        <div className="bg-white/70 border-2 border-dotted border-black rounded-[20px] rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] p-2 h-[55%] flex flex-col w-[150px] lg:w-[150px] md:w-[150px] scale-[0.5] lg:scale-[0.7] md:scale-[0.7] ml-6">
+                            <div className="text-[12px] text-black/80 mb-1 tracking-wide uppercase text-left -mt-6 lg:-mt-6 md:-mt-2 -ml-2 lg:-ml-2 md:-ml-2">
+                              #SNAPSHOTS
+                            </div>
+                          <div className="flex items-center justify-between">
+                            <div className="text-[12px] text-black/80 tracking-wide uppercase text-right -mt-10 lg:-mt-10 md:-mt-2 ml-2 lg:ml-6 md:ml-8">
+                              GAIN
+                            </div>
+                            <div className=" px-2 py-1 text-gray-900 text-[10px] text-center -mt-5 lg:-mt-5 md:-mt-5 text-nowrap scale-[0.8] lg:scale-[0.8] md:scale-[1.05]">
+                              {parseFloat(beneficiary.snapshotsGain).toFixed(6)} 
+                              </div>
+                                <span className="text-[8px] lg:text-[6px] md:text-[3px]-mt-2 lg:-mt-2 md:-mt-6 -ml-1 lg:-ml-1 md:-ml-1">ETH</span>
+                            </div>
                           </div>
-                          <div className="bg-white/70 border-2 border-dashed border-black rounded-full px-2 py-1 text-gray-900 text-[10px] text-center mt-1">
+                          <div className="bg-white/70 rounded-tl-[30px] rounded-br-[30px] px-1 w-[70%] py-1 text-gray-900 text-[20px] text-center -mt-1 lg:-mt-1 md:-mt-1 scale-[0.5] lg:scale-[0.6] md:scale-[0.7] -ml-1 lg:-ml-30 md:-ml-16">
+                          <div className="scale-[0.8] lg:scale-[0.8] md:scale-[0.8] mt-4 lg:mt-4 md:mt-10 -ml-1 lg:-ml-1 md:-ml-4">
                             {beneficiary.snapshotCount}
+                            </div>
                           </div>
-                          {/* <div className="bg-white/70 border-2 border-dashed border-black rounded-tl-[80px] rounded-tr-[30px] rounded-bl-[10px] rounded-br-[30px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1">
-                          </div> */}
-                        </div>
 
-                        {/* GARDEN */}
-                        <div className="rounded-[20px] p-2">
-                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-right">
+                        {/* UNCLAIMED */}
+                        <div className="rounded-[20px] p-2 bg-[#B7B7B799] rounded-tl-[20px] rounded-tr-[5px] rounded-bl-[20px] rounded-br-[20px] h-[28%] mt-4 lg:mt-4 md:mt-4">
+                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-right -mt-6 lg:-mt-6 md:-mt-4 ml-2 lg:ml-2 md:ml-3">
                             UNCLAIMED
                           </div>
-                          <div className="text-gray-900 text-[10px] text-right">
-                            {parseFloat(beneficiary.unclaimed).toFixed(6)} ETH
+                          <div className="text-gray-900 text-[10px] text-right scale-[0.8] lg:scale-[0.8] md:scale-[0.8]">
+                            {parseFloat(beneficiary.unclaimed).toFixed(6)} 
+                            <span className="text-[8px] lg:text-[6px] md:text-[3px]-mt-2 lg:-mt-2 md:-mt-8 -ml-1 lg:-ml-1 md:ml-0">ETH</span>
                           </div>
-                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left">
-                            GARDEN
-                          </div>
-                          <div className="bg-white/70 border-2 border-dashed border-black rounded-full px-2 py-1 text-gray-900 text-[10px] text-center">
-                            {parseFloat(beneficiary.garden).toFixed(6)} ETH
-                          </div>
+                        </div>
+
+                        {/* Empty 4th column for spacing */}
+                        <div className="rounded-[20px] p-2">
                         </div>
                       </div>
 
-                      {/* Second row: YIELD SHARE and UNCLAIMED */}
+                      {/* Second row: GARDEN and YIELD SHARE */}
                       <div className="grid grid-cols-2 gap-2">
-                        {/* YIELD SHARE */}
+                        {/* GARDEN */}
                         <div className="rounded-[20px] p-2">
-                          <div className="bg-white/70 border-2 border-dashed border-black rounded-l-[20px] rounded-r-[5px] px-2 py-1 text-[9px] text-black/80 tracking-wide uppercase text-center">
-                            YIELD SHARE
-                          <div className="text-gray-900 text-[10px] text-center mt-1">
-                            {parseFloat(beneficiary.yieldShare).toFixed(6)} ETH
+                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left -mt-6 lg:-mt-6 md:-mt-20 -ml-2 lg:-ml-2 md:-ml-2">
+                            GARDEN
+                          </div>
+                          <div className="bg-white/70 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-gray-900 text-[10px] text-center w-[60%] text-nowrap">
+                          <div className="bg-white/50 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-4 py-1 text-gray-900 text-[10px] text-center w-[80px] h-[20px] border-2 border-dotted border-black -ml-1">
+                            <span className="text-[8px] lg:text-[6px] md:text-[3px]-mt-4 lg:-mt-2 md:-mt-12 -ml-1 lg:-ml-1 md:-ml-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8]">{parseFloat(beneficiary.garden).toFixed(6)} ETH</span>
                           </div>
                           </div>
                         </div>
 
-                        {/* UNCLAIMED */}
-                        <div className="rounded-[20px] p-2">
-                          <div className="bg-white/70 border-2 border-dashed border-black rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[5px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1">
+                        {/* YIELD SHARE */}
+                        <div className="p-2 flex flex-col">
+                          <div className="bg-white/70 border-2 border-dotted border-black rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] rounded-full px-2 py-0 text-gray-900 text-[10px] text-center h-[85%] w-[80%] -ml-14 lg:-ml-22 md:-ml-8 -mt-6 lg:-mt-6 md:-mt-18 scale-[0.8] lg:scale-[0.8] md:scale-[0.9]">
+                            <div className="text-[10px] text-black/80 mb-1 tracking-wide uppercase text-left -ml-2 lg:-ml-2 md:-ml-1">
+                              YIELD
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="text-[10px] text-black/80 tracking-wide uppercase text-left -mt-6 lg:-mt-6 md:-mt-2 -ml-2 lg:-ml-2 md:-ml-1">
+                                SHARE
+                              </div>
+                              <div className="-mt-5 lg:-mt-5 md:-mt-5 scale-[0.8] lg:scale-[0.8] md:scale-[1.05]">
+                                {parseFloat(beneficiary.yieldShare).toFixed(6)} 
+                                <span className="text-[6px] lg:text-[6px] md:text-[2px]-mt-2 lg:-mt-2 md:mt-2 -ml-1 lg:-ml-1 md:ml-0">ETH</span>
+                              </div>
+                            </div>
+                          </div>
+                      {/* Third row: CLAIMED */}
+                      <div className="grid grid-cols-1 gap-2">
+                        <div className="rounded-[20px] p-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] ml-4 lg:ml-4 md:ml-2 -mt-2 lg:-mt-2 md:mt-2">
+                          <div className="bg-[#D3C9DE66] border-2 border-dotted border-black rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[5px] px-8 py-1 text-gray-900 text-[9px] text-center mt-1">
                             {parseFloat(beneficiary.claimed).toFixed(6)} ETH
                           </div>
-                          <div className="bg-white/70 border-2 border-dashed border-black rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[5px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1">
+                          <div className="bg-[#D3C9DE66] rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1 lg:mt-1 md:-mt-2">
                             CLAIMED
                           </div>
                         </div>
                       </div>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 ))
