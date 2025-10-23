@@ -36,6 +36,12 @@ interface EcosystemProjectCardProps {
   beneficiaryCode?: string; // Add beneficiary code for snapshot minting
   beneficiaryIndex?: number; // Add beneficiary index for contract call
   snapshotPrice?: string; // Add snapshot price for dynamic payment modal
+  // New: Additional project data fields
+  climate?: string;
+  nativeFlora?: string;
+  creditType?: string;
+  technologyIntegration?: string;
+  communityInnovation?: string;
 }
 
 /**
@@ -43,7 +49,7 @@ interface EcosystemProjectCardProps {
  * matching the provided reference UI. Includes an inverted switch for
  * toggling short vs extended content and a rounded CTA button.
  * 
- * ✅ BYPASS_SUCCESS_CHECK FLAG:
+ *  BYPASS_SUCCESS_CHECK FLAG:
  * - Set to TRUE: Always route to blooming page (even on failures) - for testing
  * - Set to FALSE: Only route on actual successful mint - for production
  */
@@ -61,6 +67,11 @@ export default function EcosystemProjectCard({
   beneficiaryCode,
   beneficiaryIndex,
   snapshotPrice,
+  climate,
+  nativeFlora,
+  creditType,
+  technologyIntegration,
+  communityInnovation,
 }: EcosystemProjectCardProps) {
   // Switch controls whether to show extended text (additive to short text)
   const [showExtended, setShowExtended] = useState(false);
@@ -72,7 +83,7 @@ export default function EcosystemProjectCard({
   const { walletAddress } = useAuth();
   const { sendTransaction } = useSendTransaction();
 
-  // ✅ BYPASS FLAG: Set to true to skip success check and always route to blooming page
+  //  BYPASS FLAG: Set to true to skip success check and always route to blooming page
   // Set to false for normal behavior (only route on actual success)
   const BYPASS_SUCCESS_CHECK = false;
 
@@ -89,8 +100,8 @@ export default function EcosystemProjectCard({
 
   // Handle payment confirmation from modal
   const handlePaymentConfirm = async (amount: string) => {
-    console.log('🎯 [EcosystemCard] handlePaymentConfirm called with amount:', amount);
-    console.log('🎯 [EcosystemCard] seedId:', seedId);
+    console.log(' [EcosystemCard] handlePaymentConfirm called with amount:', amount);
+    console.log(' [EcosystemCard] seedId:', seedId);
 
     setPaymentAmount(amount);
     setShowPaymentModal(false);
@@ -101,10 +112,10 @@ export default function EcosystemProjectCard({
     // PaymentModal now handles the transaction, so we just show success
     // toast.success('Snapshot minted successfully!', { description: 'Your ecosystem has been tended.' });
 
-    // ✅ Route to way-of-flowers page after successful mint (waiting for image generation)
-    console.log('🌸 [EcosystemCard] Routing to way-of-flowers page for seed:', seedId);
+    //  Route to way-of-flowers page after successful mint (waiting for image generation)
+    console.log(' [EcosystemCard] Routing to way-of-flowers page for seed:', seedId);
     setTimeout(() => {
-      console.log('🌸 [EcosystemCard] Executing router.push now...');
+      console.log(' [EcosystemCard] Executing router.push now...');
       router.push(`/way-of-flowers/${seedId}`);
     }, 1500); // Small delay to let user see success toast
   };
@@ -148,11 +159,11 @@ export default function EcosystemProjectCard({
   //     if (amountInEth === backendValueEth) {
   //       // User hasn't changed the amount → Use backend's exact wei value (no precision loss)
   //       amountInWei = mintData.data.value;
-  //       console.log('🎯 [EcosystemCard] Using backend\'s exact wei value (no conversion):', amountInWei);
+  //       console.log(' [EcosystemCard] Using backend\'s exact wei value (no conversion):', amountInWei);
   //     } else {
   //       // User changed the amount → Convert their new value to wei
   //       amountInWei = (parseFloat(amountInEth) * 1e18).toString();
-  //       console.log('🔄 [EcosystemCard] User changed amount, converting to wei:', amountInWei);
+  //       console.log(' [EcosystemCard] User changed amount, converting to wei:', amountInWei);
   //     }
 
   //     // Step 2: Execute contract transaction using Privy's sendTransaction with gas sponsorship
@@ -219,7 +230,7 @@ export default function EcosystemProjectCard({
   //     if (seedId) {
   //       const toStore = { ...webhookData, beneficiaryName: title || undefined } as any;
   //       localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(toStore));
-  //       console.log('🔗 Webhook data stored for way-of-flowers page:', seedId, toStore);
+  //       console.log(' Webhook data stored for way-of-flowers page:', seedId, toStore);
   //     }
 
   //     setIsMinting(false);
@@ -228,8 +239,8 @@ export default function EcosystemProjectCard({
   //       description: "Your ecosystem has been tended.",
   //     });
 
-  //     // ✅ Route to way-of-flowers page immediately after successful transaction
-  //     console.log('🌸 Routing to way-of-flowers page for seed:', seedId);
+  //     //  Route to way-of-flowers page immediately after successful transaction
+  //     console.log(' Routing to way-of-flowers page for seed:', seedId);
   //     setTimeout(() => {
   //       router.push(`/way-of-flowers/${seedId}`);
   //     }, 1500);
@@ -240,9 +251,9 @@ export default function EcosystemProjectCard({
   //     });
   //     console.error("Minting error:", error);
 
-  //     // ✅ If BYPASS_SUCCESS_CHECK is true, route even on error (for testing)
+  //     //  If BYPASS_SUCCESS_CHECK is true, route even on error (for testing)
   //     if (BYPASS_SUCCESS_CHECK) {
-  //       console.log('⚠️ BYPASS MODE: Routing to way-of-flowers page despite error');
+  //       console.log(' BYPASS MODE: Routing to way-of-flowers page despite error');
   //       setTimeout(() => {
   //         router.push(`/way-of-flowers/${seedId}`);
   //       }, 1500);
@@ -265,7 +276,7 @@ export default function EcosystemProjectCard({
         priority
         onError={(e) => {
           console.log(
-            "🌸 [IMAGE] Error loading background image, using placeholder"
+            " [IMAGE] Error loading background image, using placeholder"
           );
           const target = e.target as HTMLImageElement;
           if (target.src !== `${window.location.origin}/seeds/01__GRG.png`) {
@@ -434,6 +445,40 @@ export default function EcosystemProjectCard({
             >
               {/* Short text - always visible */}
               <div className="mb-50 lg:mb-20 md:mb-20 whitespace-pre-line">{shortText}</div>
+              
+              {/* Additional project data fields */}
+              <div className="mb-50 lg:mb-20 md:mb-20 space-y-2">
+                {climate && (
+                  <div>
+                    <div className="font-bold text-black">Climate:</div>
+                    <div className="text-black/80">{climate}</div>
+                  </div>
+                )}
+                {nativeFlora && (
+                  <div>
+                    <div className="font-bold text-black">Native Flora:</div>
+                    <div className="text-black/80">{nativeFlora}</div>
+                  </div>
+                )}
+                {creditType && (
+                  <div>
+                    <div className="font-bold text-black">Credit Type:</div>
+                    <div className="text-black/80">{creditType}</div>
+                  </div>
+                )}
+                {technologyIntegration && (
+                  <div>
+                    <div className="font-bold text-black">Technology Integration:</div>
+                    <div className="text-black/80">{technologyIntegration}</div>
+                  </div>
+                )}
+                {communityInnovation && (
+                  <div>
+                    <div className="font-bold text-black">Community Innovation:</div>
+                    <div className="text-black/80">{communityInnovation}</div>
+                  </div>
+                )}
+              </div>
 
               {/* Extended text - completely hidden/shown like old code */}
               {showExtended && (

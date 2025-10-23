@@ -64,6 +64,12 @@ export function beneficiaryToEcosystemProject(beneficiary: BeneficiaryData, seed
     seedEmblemUrl,
     seedId: seedData?.id,
     snapshotPrice: seedData?.snapshotPrice, // Add snapshot price from seed data
+    // New: Additional project data fields
+    climate: projectData.climate,
+    nativeFlora: projectData.nativeFlora,
+    creditType: projectData.creditType,
+    technologyIntegration: projectData.technologyIntegration,
+    communityInnovation: projectData.communityInnovation,
   };
 }
 

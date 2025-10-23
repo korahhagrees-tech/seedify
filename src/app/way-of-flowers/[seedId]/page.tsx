@@ -44,7 +44,7 @@ export default function WayOfFlowers({
     }
     webhookInFlightRef.current = true;
     try {
-      console.log('🔗 Calling webhook from way-of-flowers page:', webhookData);
+      console.log(' Calling webhook from way-of-flowers page:', webhookData);
 
       const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
       const response = await fetch(`${apiBaseUrl}/snapshot-minted`, {
@@ -58,7 +58,7 @@ export default function WayOfFlowers({
       }
 
       const webhookResult = await response.json();
-      console.log('✅ Webhook response:', webhookResult);
+      console.log(' Webhook response:', webhookResult);
 
       // Process webhook response
       if (webhookResult.success && webhookResult.data) {
@@ -136,7 +136,7 @@ export default function WayOfFlowers({
       if (webhookDataString) {
         // We have webhook data from transaction → Start webhook call
         setIsWaitingForImage(true);
-        console.log('🔄 Starting webhook call from way-of-flowers page');
+        console.log(' Starting webhook call from way-of-flowers page');
 
         try {
           const webhookData = JSON.parse(webhookDataString);
@@ -154,7 +154,7 @@ export default function WayOfFlowers({
   }, [searchParams, seedId, callWebhookForImageGeneration]);
 
 
-  // Fetch ecosystem background image
+  // Fetch ecosystem background image and seed emblem
   useEffect(() => {
     async function loadEcosystemBackground() {
       try {
@@ -162,7 +162,7 @@ export default function WayOfFlowers({
         const seed = await fetchSeedById(seedId);
 
         if (seed && seed.beneficiaries && seed.beneficiaries.length > 0) {
-          // Use the first beneficiary's background image
+          // Use the first beneficiary's background image and seed emblem
           const firstBeneficiary = seed.beneficiaries[0];
           const ecosystem = beneficiaryToEcosystemProject(
             firstBeneficiary,
@@ -174,6 +174,7 @@ export default function WayOfFlowers({
           }
           
           if (ecosystem.seedEmblemUrl) {
+            console.log('🌱 [WayOfFlowers] Setting ecosystem seed emblem:', ecosystem.seedEmblemUrl);
             setEcosystemSeedEmblemUrl(ecosystem.seedEmblemUrl);
           }
         }
@@ -181,11 +182,12 @@ export default function WayOfFlowers({
         console.error("Error loading ecosystem background:", err);
         // Fallback to original background if ecosystem fails
         setEcosystemBackgroundUrl(wayOfFlowersData.backgroundImageUrl);
+        setEcosystemSeedEmblemUrl(wayOfFlowersData.seedEmblemUrl);
       }
     }
 
     loadEcosystemBackground();
-  }, [seedId, wayOfFlowersData.backgroundImageUrl]);
+  }, [seedId, wayOfFlowersData.backgroundImageUrl, wayOfFlowersData.seedEmblemUrl]);
 
   const handleExploreClick = () => {
     // Navigate to blooming page with validated image data

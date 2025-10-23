@@ -94,7 +94,7 @@ export default function SeedStewardStats({
   );
 
   const handleImageLoad = () => {
-    console.log("🌸 [IMAGE] Successfully loaded:", seed.seedImageUrl);
+    console.log(" [IMAGE] Successfully loaded:", seed.seedImageUrl);
   };
 
   // Helper function to convert wei to ETH
@@ -123,9 +123,9 @@ export default function SeedStewardStats({
   const toggleInfoDropdown = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('🔄 Toggle info dropdown clicked - BEFORE:', isInfoDropdownOpen);
+    console.log(' Toggle info dropdown clicked - BEFORE:', isInfoDropdownOpen);
     setIsInfoDropdownOpen(!isInfoDropdownOpen);
-    console.log('🔄 Toggle info dropdown clicked - AFTER:', !isInfoDropdownOpen);
+    console.log(' Toggle info dropdown clicked - AFTER:', !isInfoDropdownOpen);
   };
 
   // Open Amplify Modal
@@ -252,7 +252,7 @@ export default function SeedStewardStats({
         </div>
 
         {/* Main dotted container */}
-        <div className="relative mx-4 mb-36 rounded-[60px] scale-[0.9] -mt-48 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
+        <div className="relative mx-4 mb-36 rounded-[60px] lg:scale-[1.0] md:scale-[1.0] scale-[1.0] -mt-48 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
           {/* Section: Core Seed Metrics - Full width with 3x2 grid */}
           <div className="flex z-50 items-center w-full justify-between mb-6 bg-[#E2E3F0B2] rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[1.0] mt-12" style={{ pointerEvents: 'auto' }}>
             <div className="flex-1">
@@ -708,7 +708,7 @@ export default function SeedStewardStats({
         </div>
 
         {/* Footer root shape */}
-        <div className="fixed -bottom-1 left-0 right-0 z-30 pt-4 scale-[1.0]">
+        <div className="fixed -bottom-1 left-0 right-0 z-30 pt-4 scale-[0.98] lg:scale-[1.08] md:scale-[1.08]">
           <div className="max-w-md mx-auto px-4">
             <RootShapeArea
               onWallet={() => { }}

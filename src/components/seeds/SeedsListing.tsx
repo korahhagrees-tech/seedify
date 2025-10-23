@@ -133,7 +133,7 @@ export default function SeedsListing({
         </AnimatePresence>
 
         {seeds.length === 0 && (
-          <div className="text-center py-12">
+          <div className="text-center py-12 mb-8">
             <p className="text-gray-500">No seeds found in the garden.</p>
           </div>
         )}
@@ -149,7 +149,7 @@ export default function SeedsListing({
         <Button
           variant="ghost"
           onClick={globalLogout}
-          className="w-full text-gray-600 underline hover:text-gray-800 -mt-22 lg:-mt-22 md:-mt-22"
+          className="w-full text-gray-600 underline hover:text-gray-800 -mt-16 lg:-mt-22 md:-mt-22"
         >
           Disconnect
         </Button>

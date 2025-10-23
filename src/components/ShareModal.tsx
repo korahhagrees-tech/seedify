@@ -202,7 +202,7 @@ export default function ShareModal({
                   className="object-cover"
                   onError={(e) => {
                     console.log(
-                      `🌸 [ShareModal IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
+                      ` [ShareModal IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
                     );
 
                     const newErrorCount = imageErrorCount + 1;
@@ -210,7 +210,7 @@ export default function ShareModal({
 
                     // Prevent infinite retry loops
                     if (newErrorCount > 3) {
-                      console.log("🌸 [ShareModal IMAGE] Max retries reached, using final fallback");
+                      console.log(" [ShareModal IMAGE] Max retries reached, using final fallback");
                       setCurrentImageSrc(FALLBACK_IMAGES[0]);
                       return;
                     }
@@ -218,7 +218,7 @@ export default function ShareModal({
                     // Try fallback images in sequence
                     if (newErrorCount <= FALLBACK_IMAGES.length) {
                       const fallbackSrc = FALLBACK_IMAGES[newErrorCount - 1];
-                      console.log(`🌸 [ShareModal IMAGE] Trying fallback: ${fallbackSrc}`);
+                      console.log(` [ShareModal IMAGE] Trying fallback: ${fallbackSrc}`);
                       setCurrentImageSrc(fallbackSrc);
                     } else {
                       // Use first fallback as final fallback

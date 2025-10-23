@@ -26,6 +26,12 @@ export interface BeneficiaryProjectData {
   moreDetails: string;
   backgroundImage: string;
   readMoreLink?: string;
+  // New: Additional project data fields
+  climate?: string;
+  nativeFlora?: string;
+  creditType?: string;
+  technologyIntegration?: string;
+  communityInnovation?: string;
 }
 
 export interface BeneficiaryData {

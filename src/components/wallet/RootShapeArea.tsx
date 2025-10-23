@@ -161,7 +161,7 @@ export default function RootShapeArea({
         {/* Wallet - left lobe */}
         <button
           onClick={handleWallet}
-          className="absolute left-[5%] bottom-[18%] px-4 py-4 h-6 text-xs rounded-full bg-[#F0ECF3] border-2 border-dotted scale-[1.0] lg:scale-[1.1] md:scale-[1.1] border-black/70 shadow"
+          className="absolute left-[5%] lg:left-[10%] md:left-[10%] bottom-[18%] px-4 py-4 h-6 text-xs rounded-full bg-[#F0ECF3] border-2 border-dotted scale-[1.0] lg:scale-[1.1] md:scale-[1.1] border-black/70 shadow"
         >
           <div className="-mt-2 scale-[0.9] lg:scale-[0.95] md:scale-[0.95]">Wallet</div>
         </button>
@@ -169,7 +169,7 @@ export default function RootShapeArea({
         {/* Explore - base pod (bigger pill) */}
         <button
           onClick={handleExploreGarden}
-          className="absolute right-[3%] bottom-[16%] px-4 w-[42%] h-14 py-1 rounded-full bg-white/75 border-1 border-black/70 shadow scale-[0.95] lg:scale-[1.02] md:scale-[1.02] peridia-display"
+          className="absolute right-[3%] lg:right-[8%] md:right-[8%] bottom-[16%] px-4 w-[42%] h-14 py-1 rounded-full bg-white/75 border-1 border-black/70 shadow scale-[0.95] lg:scale-[1.02] md:scale-[1.02] peridia-display"
         >
           <span className="text-lg">Explore </span>
           <p className="text-lg -mt-2">the Garden</p>

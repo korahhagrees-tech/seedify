@@ -103,10 +103,10 @@ const getInitialCachedSnapshots = (walletAddress: string | null): any[] => {
       return [];
     }
     
-    console.log('✅ [WALLET INIT] Loaded cached snapshots from localStorage:', cacheData.snapshots?.length || 0, 'snapshots');
+    console.log(' [WALLET INIT] Loaded cached snapshots from localStorage:', cacheData.snapshots?.length || 0, 'snapshots');
     return cacheData.snapshots || [];
   } catch (error) {
-    console.warn('⚠️ [WALLET INIT] Failed to parse cached snapshots:', error);
+    console.warn(' [WALLET INIT] Failed to parse cached snapshots:', error);
     return [];
   }
 };
@@ -191,7 +191,7 @@ export default function WalletPage() {
       localStorage.setItem(cacheKey, JSON.stringify(cacheData));
       console.log('💾 [WALLET] Cached', snapshots.length, 'snapshots to localStorage');
     } catch (error) {
-      console.warn('⚠️ [WALLET] Failed to cache snapshots to localStorage:', error);
+      console.warn(' [WALLET] Failed to cache snapshots to localStorage:', error);
     }
   };
 
@@ -214,7 +214,7 @@ export default function WalletPage() {
       
       return cacheData.snapshots || [];
     } catch (error) {
-      console.warn('⚠️ [WALLET] Failed to get cached snapshots:', error);
+      console.warn(' [WALLET] Failed to get cached snapshots:', error);
       return null;
     }
   };
@@ -325,7 +325,7 @@ export default function WalletPage() {
         return;
       }
 
-      console.log('🔗 [WALLET] Starting to load wallet data for address:', walletAddress);
+      console.log(' [WALLET] Starting to load wallet data for address:', walletAddress);
 
       // Check if we need to refresh (cache may already be loaded in state)
       const shouldRefresh = shouldRefreshSnapshots(walletAddress);
@@ -334,7 +334,7 @@ export default function WalletPage() {
         // Fetch user's seeds from /users/{address}/seeds endpoint for StewardSeedCard (with ETag cookies)
         const addressKey = walletAddress.toLowerCase();
         const seedsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSeeds(walletAddress)}`;
-        console.log('🔗 [WALLET] Fetching seeds from:', seedsUrl);
+        console.log(' [WALLET] Fetching seeds from:', seedsUrl);
         const seedsEtagCookieKey = `seeds_etag_${addressKey}`;
         const seedsPrevEtag = getCookie(seedsEtagCookieKey);
         const seedsResponse = await fetch(seedsUrl, {
@@ -343,13 +343,13 @@ export default function WalletPage() {
         console.log('📊 [WALLET] Seeds API Response status:', seedsResponse.status);
 
         if (seedsResponse.status === 304) {
-          console.log('✅ [WALLET] Seeds not modified (ETag). Skipping state update.');
+          console.log(' [WALLET] Seeds not modified (ETag). Skipping state update.');
         } else if (seedsResponse.ok) {
           const seedsData = await seedsResponse.json();
           console.log('📊 [WALLET] Seeds API Response data:', seedsData);
 
           if (seedsData.success && seedsData.seeds && seedsData.seeds.length > 0) {
-            console.log('✅ [WALLET] Loaded seeds:', seedsData.seeds);
+            console.log(' [WALLET] Loaded seeds:', seedsData.seeds);
             if (!cancelled) {
               setStewardSeeds(seedsData.seeds);
             }
@@ -374,7 +374,7 @@ export default function WalletPage() {
         
         // If we have cached data and don't need to refresh, use it
         if (hasCachedData && !shouldRefresh) {
-          console.log('✅ [WALLET] Using cached data, skipping API fetch (', cachedSnapshots.length, 'snapshots)');
+          console.log(' [WALLET] Using cached data, skipping API fetch (', cachedSnapshots.length, 'snapshots)');
           if (!cancelled && allSnapshots.length === 0) {
             // Only update state if we don't already have data (avoid unnecessary re-renders)
             const reversedSnapshots = cachedSnapshots; // Already reversed in cache
@@ -384,11 +384,11 @@ export default function WalletPage() {
           }
         } else {
           // Fetch fresh data if no cache or need refresh
-          console.log('🔄 [WALLET] Fetching fresh snapshots data (hasCachedData:', hasCachedData, 'shouldRefresh:', shouldRefresh, ')');
+          console.log(' [WALLET] Fetching fresh snapshots data (hasCachedData:', hasCachedData, 'shouldRefresh:', shouldRefresh, ')');
 
           // Fetch user's snapshots from /users/{address}/snapshots endpoint for TendedEcosystem (with ETag + throttle)
           const snapshotsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSnapshots(walletAddress)}`;
-          console.log('🔗 [WALLET] Final snapshots URL:', snapshotsUrl);
+          console.log(' [WALLET] Final snapshots URL:', snapshotsUrl);
           const snapsEtagCookieKey = `snaps_etag_${addressKey}`;
           const snapsLastCookieKey = `snaps_last_${addressKey}`;
           const prevSnapsEtag = getCookie(snapsEtagCookieKey);
@@ -421,7 +421,7 @@ export default function WalletPage() {
             console.log('📊 [WALLET] API Response data:', snapshotsData);
 
             if (snapshotsData.success && snapshotsData.snapshots.length > 0) {
-              console.log('✅ [WALLET] Loaded snapshots:', snapshotsData.snapshots);
+              console.log(' [WALLET] Loaded snapshots:', snapshotsData.snapshots);
               console.log('🔍 [WALLET] First snapshot structure:', snapshotsData.snapshots[0]);
 
               // Enrich snapshots with seed and beneficiary data
@@ -536,7 +536,7 @@ export default function WalletPage() {
 
                 // Cache the data
                 cacheSnapshots(reversedSnapshots, walletAddress);
-                console.log('✅ [WALLET] Enriched snapshots (newest first):', reversedSnapshots);
+                console.log(' [WALLET] Enriched snapshots (newest first):', reversedSnapshots);
               }
 
               const newSnapsEtag = snapshotsResponse.headers.get('ETag');
@@ -552,7 +552,7 @@ export default function WalletPage() {
             }
           } else {
             // 304 or throttled
-            console.log('✅ [WALLET] Using existing snapshots (304/throttled).');
+            console.log(' [WALLET] Using existing snapshots (304/throttled).');
           }
         } // End of else block for fresh data fetch
       } catch (_e) {
@@ -623,7 +623,7 @@ export default function WalletPage() {
   const refreshSnapshots = useCallback(async () => {
     if (!walletAddress) return;
 
-    console.log('🔄 [WALLET] Refreshing snapshots data');
+    console.log(' [WALLET] Refreshing snapshots data');
 
     // Clear localStorage cache to force fresh fetch
     const addressKey = walletAddress.toLowerCase();

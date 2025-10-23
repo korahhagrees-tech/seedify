@@ -38,13 +38,13 @@ export default function StewardSeedCard({
     
     if (nextIndex < FALLBACK_IMAGES.length) {
       console.log(
-        `🌸 [IMAGE] Error loading steward seed image (attempt ${nextIndex}/${FALLBACK_IMAGES.length}), trying fallback:`,
+        ` [IMAGE] Error loading steward seed image (attempt ${nextIndex}/${FALLBACK_IMAGES.length}), trying fallback:`,
         FALLBACK_IMAGES[nextIndex]
       );
       setCurrentImageSrc(FALLBACK_IMAGES[nextIndex]);
       setImageErrorCount(nextIndex);
     } else {
-      console.log("🌸 [IMAGE] All fallbacks exhausted for steward seed, showing final fallback");
+      console.log(" [IMAGE] All fallbacks exhausted for steward seed, showing final fallback");
     }
   };
 

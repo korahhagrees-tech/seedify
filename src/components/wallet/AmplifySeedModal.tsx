@@ -74,7 +74,7 @@ export default function AmplifySeedModal({
   const privy = usePrivy(); // Get Privy instance for export functionality
   const { connectWallet } = useConnectWallet({
     onSuccess: ({ wallet }) => {
-      console.log("✅ Wallet connected successfully:", wallet);
+      console.log(" Wallet connected successfully:", wallet);
       // The newly connected wallet will automatically be available in the wallets array
       // User can switch to it via the wallet selector if needed
     },

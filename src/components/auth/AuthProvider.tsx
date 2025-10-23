@@ -202,7 +202,7 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
         console.log('🔍 [AUTH] Skipping Wagmi setActiveWallet for non-EVM wallet:', (wallet as any).chainType);
       }
     } catch (err) {
-      console.warn('⚠️ [AUTH] Failed to set Wagmi active wallet (likely non-EVM):', err);
+      console.warn(' [AUTH] Failed to set Wagmi active wallet (likely non-EVM):', err);
     }
   };
 

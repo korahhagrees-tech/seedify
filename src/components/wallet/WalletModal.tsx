@@ -55,7 +55,7 @@ export default function WalletModal({
   const privy = usePrivy(); // Get Privy instance for export functionality
   const { connectWallet } = useConnectWallet({
     onSuccess: ({ wallet }) => {
-      console.log("✅ Wallet connected successfully:", wallet);
+      console.log(" Wallet connected successfully:", wallet);
       // The newly connected wallet will automatically be available in the wallets array
       // User can switch to it via the wallet selector if needed
     },
@@ -185,7 +185,7 @@ export default function WalletModal({
         default:
           console.warn("Unknown social provider:", provider);
       }
-      console.log(`✅ Successfully linked ${provider} account`);
+      console.log(` Successfully linked ${provider} account`);
     } catch (error) {
       console.error(`Failed to link ${provider} account:`, error);
     }
@@ -194,7 +194,7 @@ export default function WalletModal({
   const handleLinkEmail = async () => {
     try {
       await linkEmail();
-      console.log("✅ Successfully linked email account");
+      console.log(" Successfully linked email account");
     } catch (error) {
       console.error("Failed to link email account:", error);
     }
@@ -204,7 +204,7 @@ export default function WalletModal({
   // const handleLinkSms = async () => {
   //   try {
   //     await linkSms();
-  //     console.log('✅ Successfully linked SMS account');
+  //     console.log(' Successfully linked SMS account');
   //   } catch (error) {
   //     console.error('Failed to link SMS account:', error);
   //   }
@@ -213,7 +213,7 @@ export default function WalletModal({
   const handleLinkPasskey = async () => {
     try {
       await linkPasskey();
-      console.log("✅ Successfully linked passkey");
+      console.log(" Successfully linked passkey");
     } catch (error) {
       console.error("Failed to link passkey:", error);
     }

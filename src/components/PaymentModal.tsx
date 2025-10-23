@@ -163,11 +163,11 @@ export default function PaymentModal({
         if (amountInput === backendValueEth) {
           // User hasn't changed the amount → Use backend's exact wei value (no precision loss)
           amountInWei = mintData.data.value;
-          console.log('🎯 Using backend\'s exact wei value (no conversion):', amountInWei);
+          console.log(' Using backend\'s exact wei value (no conversion):', amountInWei);
         } else {
           // User changed the amount → Convert their new value to wei
           amountInWei = (parseFloat(amountInput) * 1e18).toString();
-          console.log('🔄 User changed amount, converting to wei:', amountInWei);
+          console.log(' User changed amount, converting to wei:', amountInWei);
         }
 
         // Debug: Log the backend data we received
@@ -224,7 +224,7 @@ export default function PaymentModal({
           setIsProcessing(false);
           return;
         } else if (isEmbeddedWallet) {
-          console.log('🔄 Using embedded wallet flow for email/social login wallet');
+          console.log(' Using embedded wallet flow for email/social login wallet');
 
           // Determine which contract we're interacting with
           const contractAddress = mintData.data.contractAddress.toLowerCase();
@@ -264,7 +264,7 @@ export default function PaymentModal({
               BigInt(beneficiaryIndex),
               mintData.data.processId,
               currentActiveWallet.address as `0x${string}`,
-              mintData.data.args.royaltyRecipient as `0x${string}` // ✅ Use actual royaltyRecipient from backend
+              mintData.data.args.royaltyRecipient as `0x${string}` //  Use actual royaltyRecipient from backend
             ];
           } else {
             // SnapshotNFT ABI - uses value and projectCode
@@ -327,7 +327,7 @@ export default function PaymentModal({
             );
 
             txHash = txResult.hash;
-            console.log('✅ Embedded wallet transaction hash:', txHash);
+            console.log(' Embedded wallet transaction hash:', txHash);
           } catch (embeddedError) {
             console.error('Embedded wallet transaction failed:', embeddedError);
             // toast.error('Transaction failed. Please try again or switch to an external wallet.');
@@ -338,7 +338,7 @@ export default function PaymentModal({
 
         // If embedded wallet failed or this is an external wallet, use external wallet flow
         if (!txHash) {
-          console.log('🔄 Using external wallet flow (MetaMask, Coinbase, etc.)');
+          console.log(' Using external wallet flow (MetaMask, Coinbase, etc.)');
           // For external EVM wallets (MetaMask, Coinbase, etc.) or fallback for any EVM wallet
           // This will trigger the wallet's native transaction modal
           // toast.info('Please confirm the transaction in your wallet...');
@@ -390,7 +390,7 @@ export default function PaymentModal({
                 BigInt(beneficiaryIndex),
                 mintData.data.processId,
                 currentActiveWallet.address as `0x${string}`,
-                mintData.data.args.royaltyRecipient as `0x${string}` // ✅ Use actual royaltyRecipient from backend
+                mintData.data.args.royaltyRecipient as `0x${string}` //  Use actual royaltyRecipient from backend
               ];
 
               valueToSend = BigInt(amountInWei); // SnapFactory is payable
@@ -443,7 +443,7 @@ export default function PaymentModal({
 
 
             // toast.success('Transaction submitted! Waiting for confirmation...');
-            console.log('✅ External wallet transaction hash:', txHash);
+            console.log(' External wallet transaction hash:', txHash);
           } catch (error: any) {
             console.error('External wallet transaction failed:', error);
             if (error?.code === 4001 || error?.message?.includes('User rejected')) {
@@ -487,7 +487,7 @@ export default function PaymentModal({
                   const status = statusData.transaction.status;
                   
                   if (status === 'success') {
-                    console.log('✅ Transaction confirmed as successful');
+                    console.log(' Transaction confirmed as successful');
                     transactionStatus = statusData.transaction;
                     break;
                   } else if (status === 'reverted') {
@@ -535,17 +535,17 @@ export default function PaymentModal({
             transactionFee: '0',
           };
 
-          console.log('🔗 Verified data for snapshot-minted:', JSON.stringify(webhookData, null, 2));
+          console.log(' Verified data for snapshot-minted:', JSON.stringify(webhookData, null, 2));
 
           // Store webhook data for way-of-flowers page to use
           if (seedId) {
             localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(webhookData));
-            console.log('🔗 Webhook data stored for way-of-flowers page:', seedId);
+            console.log(' Webhook data stored for way-of-flowers page:', seedId);
           }
 
           // Trigger wallet snapshots refresh if available
           if (typeof window !== 'undefined' && (window as any).refreshWalletSnapshots) {
-            console.log('🔄 Triggering wallet snapshots refresh...');
+            console.log(' Triggering wallet snapshots refresh...');
             try {
               (window as any).refreshWalletSnapshots();
             } catch (refreshError) {
@@ -639,7 +639,7 @@ export default function PaymentModal({
 
                 const data = await response.json();
                 if (data.result) {
-                  console.log('✅ Fallback RPC method succeeded:', data.result);
+                  console.log(' Fallback RPC method succeeded:', data.result);
                   // Convert RPC receipt to Moralis-like format
                   transactionData = {
                     receipt_status: data.result.status,
@@ -672,7 +672,7 @@ export default function PaymentModal({
                 setIsProcessing(false);
                 return;
               } else if (receiptStatus === "1") {
-                console.log('✅ Transaction successful (receipt_status: 1)');
+                console.log(' Transaction successful (receipt_status: 1)');
               } else {
                 console.warn('Unknown transaction status:', receiptStatus, 'proceeding optimistically');
               }
@@ -699,17 +699,17 @@ export default function PaymentModal({
               transactionFee: transactionData?.transaction_fee || '0',
             };
 
-            console.log('🔗 Verified webhook data:', JSON.stringify(webhookData, null, 2));
+            console.log(' Verified webhook data:', JSON.stringify(webhookData, null, 2));
 
             // Store webhook data for way-of-flowers page to use
             if (seedId) {
               localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(webhookData));
-              console.log('🔗 Verified webhook data stored for way-of-flowers page:', seedId);
+              console.log(' Verified webhook data stored for way-of-flowers page:', seedId);
             }
 
             // Trigger wallet snapshots refresh if available
             if (typeof window !== 'undefined' && (window as any).refreshWalletSnapshots) {
-              console.log('🔄 Triggering wallet snapshots refresh...');
+              console.log(' Triggering wallet snapshots refresh...');
               try {
                 (window as any).refreshWalletSnapshots();
               } catch (refreshError) {
@@ -730,10 +730,10 @@ export default function PaymentModal({
         // toast.success('Snapshot minted successfully!');
 
         // Close payment modal and call callback
-        console.log('🎯 [PaymentModal] Transaction completed, calling onConfirm callback');
+        console.log(' [PaymentModal] Transaction completed, calling onConfirm callback');
         onClose();
         if (onConfirm) {
-          console.log('🎯 [PaymentModal] Calling onConfirm with amount:', amountInput);
+          console.log(' [PaymentModal] Calling onConfirm with amount:', amountInput);
           onConfirm(amountInput);
         } else {
           console.log('[PaymentModal] No onConfirm callback provided');

@@ -116,6 +116,11 @@ export default function EcosystemPage() {
         beneficiaryCode={ecosystemData.beneficiaryCode}
         beneficiaryIndex={ecosystemData.beneficiaryIndex}
         snapshotPrice={ecosystemData.snapshotPrice}
+        climate={ecosystemData.climate}
+        nativeFlora={ecosystemData.nativeFlora}
+        creditType={ecosystemData.creditType}
+        technologyIntegration={ecosystemData.technologyIntegration}
+        communityInnovation={ecosystemData.communityInnovation}
       />
     </div>
   );

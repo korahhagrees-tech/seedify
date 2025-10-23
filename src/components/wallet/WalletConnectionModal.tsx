@@ -40,9 +40,9 @@ export default function WalletConnectionModal({
   }, [wallets]);
   const { connectWallet } = useConnectWallet({
     onSuccess: ({ wallet }) => {
-      console.log("✅ Wallet connected successfully:", wallet);
-      console.log("✅ New wallet address:", wallet.address);
-      console.log("✅ New wallet type:", wallet.walletClientType);
+      console.log(" Wallet connected successfully:", wallet);
+      console.log(" New wallet address:", wallet.address);
+      console.log(" New wallet type:", wallet.walletClientType);
       onSuccess?.();
     },
     onError: (error) => {

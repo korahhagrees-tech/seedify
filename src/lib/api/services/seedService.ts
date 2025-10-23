@@ -42,7 +42,7 @@ function convertBackendSeedToFrontend(backendSeed: any): Seed {
  * Fetch all seeds (Garden Data)
  */
 export async function fetchGardenData(): Promise<GardenDataResponse> {
-  console.log('🌸 [SEED-SERVICE] Fetching garden data from:', API_CONFIG.baseUrl);
+  console.log(' [SEED-SERVICE] Fetching garden data from:', API_CONFIG.baseUrl);
 
   try {
     const response = await apiClient.get<SeedsResponse>(API_ENDPOINTS.seeds);
@@ -54,7 +54,7 @@ export async function fetchGardenData(): Promise<GardenDataResponse> {
     // Convert backend seeds to frontend format
     const seeds = response.seeds.map(convertBackendSeedToFrontend);
 
-    console.log('🌸 [SEED-SERVICE] Successfully fetched', seeds.length, 'seeds');
+    console.log(' [SEED-SERVICE] Successfully fetched', seeds.length, 'seeds');
 
     return {
       success: true,
@@ -62,7 +62,7 @@ export async function fetchGardenData(): Promise<GardenDataResponse> {
       timestamp: response.timestamp
     };
   } catch (error) {
-    console.error('🌸 [SEED-SERVICE] Error fetching garden data:', error);
+    console.error(' [SEED-SERVICE] Error fetching garden data:', error);
     throw error;
   }
 }
@@ -71,7 +71,7 @@ export async function fetchGardenData(): Promise<GardenDataResponse> {
  * Fetch seed by ID
  */
 export async function fetchSeedById(id: string): Promise<Seed | null> {
-  console.log('🌸 [SEED-SERVICE] Fetching seed by ID:', id);
+  console.log(' [SEED-SERVICE] Fetching seed by ID:', id);
 
   try {
     const response = await apiClient.get<SeedResponse>(API_ENDPOINTS.seedById(id));
@@ -88,10 +88,10 @@ export async function fetchSeedById(id: string): Promise<Seed | null> {
       seed.story = getSeedStory(id);
     }
 
-    console.log('🌸 [SEED-SERVICE] Successfully fetched seed:', id);
+    console.log(' [SEED-SERVICE] Successfully fetched seed:', id);
     return seed;
   } catch (error) {
-    console.error('🌸 [SEED-SERVICE] Error fetching seed:', error);
+    console.error(' [SEED-SERVICE] Error fetching seed:', error);
     throw error;
   }
 }
@@ -100,13 +100,13 @@ export async function fetchSeedById(id: string): Promise<Seed | null> {
  * Fetch seed count
  */
 export async function fetchSeedCount(): Promise<number> {
-  console.log('🌸 [SEED-SERVICE] Fetching seed count...');
+  console.log(' [SEED-SERVICE] Fetching seed count...');
 
   try {
     const response = await apiClient.get<CountResponse>(API_ENDPOINTS.seedsCount);
     return response.count;
   } catch (error) {
-    console.error('🌸 [SEED-SERVICE] Error fetching seed count:', error);
+    console.error(' [SEED-SERVICE] Error fetching seed count:', error);
     throw error;
   }
 }
@@ -136,7 +136,7 @@ export function getStoryData(seedId: string) {
  * Fetch seed stats by ID
  */
 export async function fetchSeedStats(seedId: string): Promise<any> {
-  console.log('🌸 [SEED-SERVICE] Fetching seed stats for ID:', seedId);
+  console.log(' [SEED-SERVICE] Fetching seed stats for ID:', seedId);
 
   try {
     const response = await apiClient.get<{ success: boolean; stats: any; timestamp?: number }>(
@@ -147,10 +147,10 @@ export async function fetchSeedStats(seedId: string): Promise<any> {
       throw new APIError('Invalid seed stats response format');
     }
 
-    console.log('🌸 [SEED-SERVICE] Successfully fetched seed stats for:', seedId);
+    console.log(' [SEED-SERVICE] Successfully fetched seed stats for:', seedId);
     return response.stats;
   } catch (error) {
-    console.error('🌸 [SEED-SERVICE] Error fetching seed stats:', error);
+    console.error(' [SEED-SERVICE] Error fetching seed stats:', error);
     throw error;
   }
 }

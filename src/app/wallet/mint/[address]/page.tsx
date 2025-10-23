@@ -84,19 +84,19 @@ export default function MintPage() {
 
     // Priority 1: Use walletAddress from Zustand store
     if (walletAddress && typeof walletAddress === 'string' && walletAddress.startsWith('0x')) {
-      console.log('✅ [MINT] Using walletAddress from Zustand:', walletAddress);
+      console.log(' [MINT] Using walletAddress from Zustand:', walletAddress);
       return walletAddress;
     }
     
     // Priority 2: Use activeWallet address
     if (activeWallet?.address && typeof activeWallet.address === 'string' && activeWallet.address.startsWith('0x')) {
-      console.log('✅ [MINT] Using activeWallet.address:', activeWallet.address);
+      console.log(' [MINT] Using activeWallet.address:', activeWallet.address);
       return activeWallet.address;
     }
     
     // Priority 3: Use URL param address (the user's address we're minting for)
     if (address && typeof address === 'string' && address.startsWith('0x')) {
-      console.log('⚠️ [MINT] Falling back to URL param address:', address);
+      console.log(' [MINT] Falling back to URL param address:', address);
       return address;
     }
     

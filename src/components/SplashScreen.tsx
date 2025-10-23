@@ -88,7 +88,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
 
         {/* Wallet Connect Button with animation */}
         <motion.div
-          className="absolute left-1/2 -translate-x-1/2 bottom-8 md:bottom-5 lg:bottom-8"
+          className="absolute left-1/2 -translate-x-1/2 bottom-4 md:bottom-5 lg:bottom-8"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}

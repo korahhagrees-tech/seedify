@@ -239,7 +239,7 @@ export default function StewardMint({
         }
       ] as const;
 
-      // ✅ CRITICAL: Convert snapshot price from ETH to wei
+      //  CRITICAL: Convert snapshot price from ETH to wei
       const snapshotPriceWei = parseEther(snapshotPrice);
       
       console.log('🔍 [MINT] Snapshot price conversion:', {
@@ -253,7 +253,7 @@ export default function StewardMint({
         functionName: 'createSeed',
         args: [
           userEvmAddress as `0x${string}`,
-          snapshotPriceWei, // ✅ Now using user's editable value in wei
+          snapshotPriceWei, //  Now using user's editable value in wei
           location,
           [
             BigInt(indices[0]),
@@ -264,7 +264,7 @@ export default function StewardMint({
         ]
       });
 
-      // ✅ CRITICAL: Use the user's payable amount directly as a string
+      //  CRITICAL: Use the user's payable amount directly as a string
       // No conversion, no parseEther, just pass the value as the user entered it
       console.log('🔍 [MINT] Using payable amount directly:', {
         payableAmount,
@@ -322,7 +322,7 @@ export default function StewardMint({
         }
       );
 
-          console.log('✅ [MINT] Transaction hash:', tx.hash);
+          console.log(' [MINT] Transaction hash:', tx.hash);
           // toast.success('Seed creation transaction submitted!');
           setTxHash(tx.hash);
           
@@ -350,7 +350,7 @@ export default function StewardMint({
                   const status = statusData.transaction.status;
                   
                   if (status === 'success') {
-                    console.log('✅ [MINT] Transaction confirmed as successful');
+                    console.log(' [MINT] Transaction confirmed as successful');
                     transactionStatus = statusData.transaction;
                     break;
                   } else if (status === 'reverted') {
@@ -366,7 +366,7 @@ export default function StewardMint({
               
               attempts++;
             } catch (error) {
-              console.warn(`⚠️ [MINT] Status check attempt ${attempts + 1} failed:`, error);
+              console.warn(` [MINT] Status check attempt ${attempts + 1} failed:`, error);
               attempts++;
             }
           }
@@ -399,9 +399,9 @@ export default function StewardMint({
                 blockNumber: transactionStatus.blockNumber || '0'
               })
             });
-            console.log('✅ [MINT] Webhook called successfully');
+            console.log(' [MINT] Webhook called successfully');
           } catch (webhookError) {
-            console.warn('⚠️ [MINT] Webhook call failed:', webhookError);
+            console.warn(' [MINT] Webhook call failed:', webhookError);
           }
 
           // Transaction completed successfully - route to wallet page
@@ -438,7 +438,7 @@ export default function StewardMint({
         priority
         onError={(e) => {
           console.log(
-            "🌸 [IMAGE] Error loading WayOfFlowers background image, using placeholder"
+            " [IMAGE] Error loading WayOfFlowers background image, using placeholder"
           );
           const target = e.target as HTMLImageElement;
           if (target.src !== `${window.location.origin}/project_images/01__GRG.png`) {
@@ -524,7 +524,7 @@ export default function StewardMint({
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         console.log(
-                          "🌸 [IMAGE] Error loading beneficiary image, using placeholder"
+                          " [IMAGE] Error loading beneficiary image, using placeholder"
                         );
                         const target = e.target as HTMLImageElement;
                         if (

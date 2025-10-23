@@ -14,6 +14,7 @@ import {
 import WalletModal from "@/components/wallet/WalletModal";
 import ShareModal from "@/components/ShareModal";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { fetchSeedById, beneficiaryToEcosystemProject } from "@/lib/api";
 
 export default function BloomingPage({
   params,
@@ -29,6 +30,7 @@ export default function BloomingPage({
 
   const [isWalletModalOpen, setIsWalletModalOpen] = React.useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = React.useState(false);
+  const [ecosystemSeedEmblemUrl, setEcosystemSeedEmblemUrl] = useState<string>("");
 
   // Extract image data from URL params
   const snapshotImageUrl = searchParams.get("snapshotImageUrl");
@@ -59,6 +61,36 @@ export default function BloomingPage({
   const handleShare = (clickPosition: { x: number; y: number }) => {
     setIsShareModalOpen(true);
   };
+
+  // Fetch ecosystem seed emblem using beneficiary code
+  useEffect(() => {
+    async function loadEcosystemSeedEmblem() {
+      try {
+        // Fetch the seed by ID to get beneficiaries
+        const seed = await fetchSeedById(seedId);
+
+        if (seed && seed.beneficiaries && seed.beneficiaries.length > 0) {
+          // Use the first beneficiary's seed emblem
+          const firstBeneficiary = seed.beneficiaries[0];
+          const ecosystem = beneficiaryToEcosystemProject(
+            firstBeneficiary,
+            seed
+          );
+
+          if (ecosystem.seedEmblemUrl) {
+            console.log('🌱 [BloomingPage] Setting ecosystem seed emblem:', ecosystem.seedEmblemUrl);
+            setEcosystemSeedEmblemUrl(ecosystem.seedEmblemUrl);
+          }
+        }
+      } catch (err) {
+        console.error("Error loading ecosystem seed emblem:", err);
+        // Fallback to original seed emblem if ecosystem fails
+        setEcosystemSeedEmblemUrl(eco.seedEmblemUrl);
+      }
+    }
+
+    loadEcosystemSeedEmblem();
+  }, [seedId, eco.seedEmblemUrl]);
 
   // Resolve beneficiary name (query > localStorage > API by code > ecosystem title fallback)
   const [beneficiaryName, setBeneficiaryName] = useState<string>(beneficiaryNameParam || "");
@@ -97,12 +129,15 @@ export default function BloomingPage({
     }
   }, [beneficiaryNameParam, beneficiaryCode, seedId, eco.title]);
 
+  // Use ecosystem seed emblem if available, otherwise fallback to original
+  const seedEmblemUrl = ecosystemSeedEmblemUrl || eco.seedEmblemUrl;
+
   return (
     <>
       <BloomingView
         backgroundImageUrl={backgroundImageUrl}
         beneficiary={beneficiaryName}
-        seedEmblemUrl={eco.seedEmblemUrl}
+        seedEmblemUrl={seedEmblemUrl}
         snapshotImageUrl={snapshotImageUrl || undefined}
         seedImageUrl={eco.backgroundImageUrl}
         storyText={wof.mainQuote}
