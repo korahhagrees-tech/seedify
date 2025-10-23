@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface AudioPlayerModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onCloseAction: () => void;
   audioUrl: string;
   title?: string;
 }
@@ -15,9 +15,9 @@ type PlayerState = "modal" | "orb" | "closed";
 
 export default function AudioPlayerModal({
   isOpen,
-  onClose,
+  onCloseAction,
   audioUrl,
-  title = "Audio Player"
+  title = "Audio Player",
 }: AudioPlayerModalProps) {
   const [playerState, setPlayerState] = useState<PlayerState>("modal");
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -47,14 +47,14 @@ export default function AudioPlayerModal({
     setPlayerState("orb");
     setIsPlaying(true);
     // Don't reset audioInitialized - keep the audio state
-    console.log('🎵 Transitioning to orb state - audio should continue');
+    console.log("🎵 Transitioning to orb state - audio should continue");
   };
 
   const handleStopPlaying = () => {
     setShowConfirmDialog(false);
     setPlayerState("closed");
     setIsPlaying(false);
-    onClose();
+    onCloseAction();
   };
 
   const handleOrbClick = () => {
@@ -75,7 +75,9 @@ export default function AudioPlayerModal({
             scrolling="no"
             frameBorder="no"
             allow="autoplay"
-            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ff5500&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
+            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(
+              audioUrl
+            )}&color=%23ff5500&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
             className="invisible absolute"
           />
         </div>
@@ -112,8 +114,18 @@ export default function AudioPlayerModal({
                     onClick={handleModalDismiss}
                     className="text-gray-600 hover:text-gray-900"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -127,7 +139,9 @@ export default function AudioPlayerModal({
                     scrolling="no"
                     frameBorder="no"
                     allow="autoplay"
-                    src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(audioUrl)}&color=%23ff5500&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
+                    src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(
+                      audioUrl
+                    )}&color=%23ff5500&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
                   />
                 </div>
               </div>
@@ -183,7 +197,6 @@ export default function AudioPlayerModal({
         )}
       </AnimatePresence>
 
-
       {/* Floating Orb State */}
       <AnimatePresence>
         {playerState === "orb" && (
@@ -200,17 +213,26 @@ export default function AudioPlayerModal({
               <motion.div
                 animate={{
                   scale: [1, 1.2, 1],
-                  opacity: [0.7, 1, 0.7]
+                  opacity: [0.7, 1, 0.7],
                 }}
                 transition={{
                   duration: 1.5,
                   repeat: Infinity,
-                  ease: "easeInOut"
+                  ease: "easeInOut",
                 }}
                 className="absolute inset-0 rounded-full bg-white/30"
               />
-              <svg className="w-8 h-8 text-white relative z-10" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 3v18m-4-13v8m8-8v8m-12-5v2m16-2v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <svg
+                className="w-8 h-8 text-white relative z-10"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 3v18m-4-13v8m8-8v8m-12-5v2m16-2v2"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
             </div>
           </motion.button>
@@ -219,4 +241,3 @@ export default function AudioPlayerModal({
     </>
   );
 }
-

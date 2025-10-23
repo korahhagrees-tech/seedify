@@ -9,7 +9,7 @@ import { assets } from "@/lib/assets";
 
 interface ShareModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onCloseAction: () => void;
   imageUrl: string;
   beneficiaryName?: string;
   beneficiaryCode?: string;
@@ -25,14 +25,16 @@ const FALLBACK_IMAGES = [
 
 export default function ShareModal({
   isOpen,
-  onClose,
+  onCloseAction,
   imageUrl,
   beneficiaryName,
   beneficiaryCode,
   clickPosition,
 }: ShareModalProps) {
   const [canUseNativeShare, setCanUseNativeShare] = useState(false);
-  const [currentImageSrc, setCurrentImageSrc] = useState(imageUrl || FALLBACK_IMAGES[0]);
+  const [currentImageSrc, setCurrentImageSrc] = useState(
+    imageUrl || FALLBACK_IMAGES[0]
+  );
   const [imageErrorCount, setImageErrorCount] = useState(0);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export default function ShareModal({
   const handleDownload = async () => {
     try {
       // Convert base64 to blob - use currentImageSrc
-      const response = await fetch(currentImageSrc, { credentials: 'omit' });
+      const response = await fetch(currentImageSrc, { credentials: "omit" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
       const blob = await response.blob();
@@ -72,10 +74,10 @@ export default function ShareModal({
       console.error("Download failed:", error);
       // Fallback: open the image in a new tab so the user can save it manually
       try {
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = currentImageSrc;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -102,8 +104,9 @@ export default function ShareModal({
         if (navigator.canShare({ files: [file] })) {
           await navigator.share({
             title: "Way of Flowers Snapshot",
-            text: `Check out my contribution to ${beneficiaryName || "regenerative ecosystem"
-              }!`,
+            text: `Check out my contribution to ${
+              beneficiaryName || "regenerative ecosystem"
+            }!`,
             files: [file],
           });
 
@@ -168,7 +171,7 @@ export default function ShareModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/60 z-50"
-            onClick={onClose}
+            onClick={onCloseAction}
           />
 
           {/* Modal - Centered like WalletModal */}
@@ -182,7 +185,7 @@ export default function ShareModal({
             <div className="bg-white rounded-[40px] border-2 border-dotted border-black p-6 relative shadow-2xl">
               {/* Close Button */}
               <button
-                onClick={onClose}
+                onClick={onCloseAction}
                 className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors z-10"
               >
                 <span className="text-black text-2xl font-bold">×</span>
@@ -202,7 +205,9 @@ export default function ShareModal({
                   className="object-cover"
                   onError={(e) => {
                     console.log(
-                      `🌸 [ShareModal IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
+                      `🌸 [ShareModal IMAGE] Error loading image (attempt ${
+                        imageErrorCount + 1
+                      }), trying fallback`
                     );
 
                     const newErrorCount = imageErrorCount + 1;
@@ -210,7 +215,9 @@ export default function ShareModal({
 
                     // Prevent infinite retry loops
                     if (newErrorCount > 3) {
-                      console.log("🌸 [ShareModal IMAGE] Max retries reached, using final fallback");
+                      console.log(
+                        "🌸 [ShareModal IMAGE] Max retries reached, using final fallback"
+                      );
                       setCurrentImageSrc(FALLBACK_IMAGES[0]);
                       return;
                     }
@@ -218,7 +225,9 @@ export default function ShareModal({
                     // Try fallback images in sequence
                     if (newErrorCount <= FALLBACK_IMAGES.length) {
                       const fallbackSrc = FALLBACK_IMAGES[newErrorCount - 1];
-                      console.log(`🌸 [ShareModal IMAGE] Trying fallback: ${fallbackSrc}`);
+                      console.log(
+                        `🌸 [ShareModal IMAGE] Trying fallback: ${fallbackSrc}`
+                      );
                       setCurrentImageSrc(fallbackSrc);
                     } else {
                       // Use first fallback as final fallback

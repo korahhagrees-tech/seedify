@@ -21,7 +21,7 @@ import {
 import { useBalance } from "wagmi";
 import { useSetActiveWallet } from "@privy-io/wagmi";
 import { base } from "viem/chains";
-import { toast } from 'sonner';
+import { toast } from "sonner";
 
 interface AmplifySeedModalProps {
   isOpen: boolean;
@@ -57,14 +57,23 @@ export default function AmplifySeedModal({
     snapsPercentage: "12.5%",
     currentClaimable: "0.753 ETH",
     maturationDate: "02/09/2029",
-    prematurePenalty: "2.067 ETH"
-  }
+    prematurePenalty: "2.067 ETH",
+  },
 }: AmplifySeedModalProps) {
-  const { user, walletAddress, wallets: contextWallets, activeWallet, linkedAccounts, setActiveWallet: contextSetActiveWallet } = useAuth();
+  const {
+    user,
+    walletAddress,
+    wallets: contextWallets,
+    activeWallet,
+    linkedAccounts,
+    setActiveWallet: contextSetActiveWallet,
+  } = useAuth();
   const [copied, setCopied] = useState(false);
   const [showWalletSelector, setShowWalletSelector] = useState(false);
   const [showAddFunds, setShowAddFunds] = useState(false);
-  const [currentState, setCurrentState] = useState<'communication' | 'payment'>('communication');
+  const [currentState, setCurrentState] = useState<"communication" | "payment">(
+    "communication"
+  );
   const [contributionAmount, setContributionAmount] = useState("0.011");
 
   // Use Privy hooks for wallet management
@@ -143,7 +152,7 @@ export default function AmplifySeedModal({
   };
 
   const handleContinue = () => {
-    setCurrentState('payment');
+    setCurrentState("payment");
   };
 
   const handleExtendCultivation = () => {
@@ -162,7 +171,7 @@ export default function AmplifySeedModal({
     }
 
     // TODO: Implement extend cultivation logic
-    console.log('Extending cultivation with amount:', contributionAmount);
+    console.log("Extending cultivation with amount:", contributionAmount);
     onClose();
   };
 
@@ -188,10 +197,10 @@ export default function AmplifySeedModal({
   const handleLogout = async () => {
     try {
       // TODO: Implement logout logic
-      console.log('Logging out user');
+      console.log("Logging out user");
       onClose();
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     }
   };
 
@@ -219,7 +228,6 @@ export default function AmplifySeedModal({
       }
     }
   };
-
 
   const formatAddress = (address: string) => {
     return formatWalletAddress(address);
@@ -252,9 +260,10 @@ export default function AmplifySeedModal({
             <motion.div
               className="bg-[#D9D9D9] p-6 border-3 border-dotted border-gray-600 shadow-xl scale-[0.8] lg:scale-[0.7] md:scale-[0.7] w-[440px] lg:w-full md:w-full -ml-12 lg:-ml-0 md:-ml-0 -mt-12 lg:-mt-0 md:-mt-0"
               animate={{
-                borderRadius: currentState === 'communication'
-                  ? '80px 80px 40px 120px' // asymmetric: top-left large, others small
-                  : '40px 40px 40px 40px'   // uniform: all corners same
+                borderRadius:
+                  currentState === "communication"
+                    ? "80px 80px 40px 120px" // asymmetric: top-left large, others small
+                    : "40px 40px 40px 40px", // uniform: all corners same
               }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
@@ -274,12 +283,13 @@ export default function AmplifySeedModal({
               </div>
 
               {/* State 1: Communication */}
-              {currentState === 'communication' && (
+              {currentState === "communication" && (
                 <>
                   {/* Introductory Text */}
                   <div className="mb-6">
                     <p className="text-sm text-black leading-relaxed text-center">
-                      abundant nutrient reserves bloom into longterm nurture of our shared habitats & the humans who tend to them for us
+                      abundant nutrient reserves bloom into longterm nurture of
+                      our shared habitats & the humans who tend to them for us
                     </p>
                   </div>
 
@@ -296,51 +306,75 @@ export default function AmplifySeedModal({
                     <div className="text-center">
                       <p className="text-xs text-gray-600 mb-2">TOTAL VALUE</p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.totalValue}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.totalValue}
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-gray-600 mb-2">FUNDS COMMITTED</p>
+                      <p className="text-xs text-gray-600 mb-2">
+                        FUNDS COMMITTED
+                      </p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.fundsCommitted}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.fundsCommitted}
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
                       <p className="text-xs text-gray-600 mb-2">SNAP REWARDS</p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.snapRewards}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.snapRewards}
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
                       <p className="text-xs text-gray-600 mb-2">#SNAPS</p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.numSnaps}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.numSnaps}
+                        </span>
                       </div>
                     </div>
 
                     {/* Row 2 */}
                     <div className="text-center">
-                      <p className="text-xs text-gray-600 mb-2">TOTAL FUNDINGS</p>
+                      <p className="text-xs text-gray-600 mb-2">
+                        TOTAL FUNDINGS
+                      </p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.totalFundings}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.totalFundings}
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-gray-600 mb-2">YEARLY FUNDING</p>
+                      <p className="text-xs text-gray-600 mb-2">
+                        YEARLY FUNDING
+                      </p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.yearlyFunding}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.yearlyFunding}
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-gray-600 mb-2">ALL SEEDS TOTAL</p>
+                      <p className="text-xs text-gray-600 mb-2">
+                        ALL SEEDS TOTAL
+                      </p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.allSeedsTotal}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.allSeedsTotal}
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
                       <p className="text-xs text-gray-600 mb-2">SNAPS%</p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.snapsPercentage}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.snapsPercentage}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -348,13 +382,16 @@ export default function AmplifySeedModal({
                   {/* Informational Card */}
                   <div className="bg-white rounded-[20px] px-6 py-4 mb-6 border border-dotted border-gray-400">
                     <p className="text-sm text-black leading-relaxed text-center">
-                      abundant nutrient reserves bloom into longterm nurture of our shared habitats & the humans who tend to them for us
+                      abundant nutrient reserves bloom into longterm nurture of
+                      our shared habitats & the humans who tend to them for us
                     </p>
                   </div>
 
                   {/* Continue Button */}
                   <div className="text-center">
-                    <p className="text-xs text-gray-600 mb-2">ADD NUTRIENTS TO YOUR SEED</p>
+                    <p className="text-xs text-gray-600 mb-2">
+                      ADD NUTRIENTS TO YOUR SEED
+                    </p>
                     <button
                       onClick={handleContinue}
                       className="bg-white border-2 border-dotted border-black text-black text-sm font-medium py-3 px-8 rounded-full hover:bg-gray-100 transition-colors"
@@ -366,33 +403,55 @@ export default function AmplifySeedModal({
               )}
 
               {/* State 2: Payment */}
-              {currentState === 'payment' && (
+              {currentState === "payment" && (
                 <>
                   {/* Wallet Section */}
                   <div className="bg-white rounded-[20px] p-4 mb-6 border border-dotted border-gray-400">
-                    <p className="text-sm text-black font-medium mb-2">YOUR WALLET</p>
+                    <p className="text-sm text-black font-medium mb-2">
+                      YOUR WALLET
+                    </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <span className="text-base font-mono text-black">
-                          {formatAddress(walletAddress || '')}
+                          {formatAddress(walletAddress || "")}
                         </span>
                         <button
                           onClick={copyToClipboard}
                           className="flex items-center justify-center transition-colors"
                         >
-                          <Image src={assets.copy} alt="Copy" width={12} height={12} className="w-4 h-4" />
+                          <Image
+                            src={assets.copy}
+                            alt="Copy"
+                            width={12}
+                            height={12}
+                            className="w-4 h-4"
+                          />
                         </button>
-                        {copied && <span className="text-xs text-green-600">Copied!</span>}
+                        {copied && (
+                          <span className="text-xs text-green-600">
+                            Copied!
+                          </span>
+                        )}
                       </div>
                       <div className="bg-gray-100 px-3 py-1 rounded-lg">
-                        <span className="text-base font-light text-gray-700">{balance} ETH</span>
+                        <span className="text-base font-light text-gray-700">
+                          {balance} ETH
+                        </span>
                       </div>
                     </div>
 
                     {/* Email and Actions */}
                     <div className="flex items-center gap-2 mt-3">
-                      <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
-                      <span className="text-sm text-black">{user?.email || formatAddress(walletAddress || '')}</span>
+                      <Image
+                        src={assets.email}
+                        alt="Email"
+                        width={16}
+                        height={16}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-black">
+                        {user?.email || formatAddress(walletAddress || "")}
+                      </span>
                     </div>
 
                     <div className="flex gap-2 mt-3">
@@ -406,7 +465,13 @@ export default function AmplifySeedModal({
                         onClick={handleLogout}
                         className="flex items-center gap-2 px-4 py-1 text-sm text-black hover:text-gray-800 transition-colors"
                       >
-                        <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
+                        <Image
+                          src={assets.logout}
+                          alt="Logout"
+                          width={16}
+                          height={16}
+                          className="w-4 h-4"
+                        />
                         Log out
                       </button>
                       <button
@@ -421,13 +486,16 @@ export default function AmplifySeedModal({
                   {/* Introductory Text */}
                   <div className="mb-6">
                     <p className="text-sm text-black leading-relaxed">
-                      abundant nutrient reserves bloom into longterm nurture of our shared habitats & the humans tending them generously
+                      abundant nutrient reserves bloom into longterm nurture of
+                      our shared habitats & the humans tending them generously
                     </p>
                   </div>
 
                   {/* Contribution Section */}
                   <div className="mb-6">
-                    <label className="block text-sm text-gray-600 mb-2">CONTRIBUTION AMOUNT</label>
+                    <label className="block text-sm text-gray-600 mb-2">
+                      CONTRIBUTION AMOUNT
+                    </label>
                     <input
                       type="text"
                       value={contributionAmount}
@@ -445,27 +513,41 @@ export default function AmplifySeedModal({
                     >
                       Extend Cultivation
                     </button>
-                    <p className="text-xs text-gray-600 mt-2">INCREASE SEED VESTING VALUE</p>
+                    <p className="text-xs text-gray-600 mt-2">
+                      INCREASE SEED VESTING VALUE
+                    </p>
                   </div>
 
                   {/* Stats Row (3 Metrics) */}
                   <div className="grid grid-cols-3 gap-4 mb-6">
                     <div className="text-center">
-                      <p className="text-xs text-gray-600 mb-2">CURRENT CLAIMABLE</p>
+                      <p className="text-xs text-gray-600 mb-2">
+                        CURRENT CLAIMABLE
+                      </p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.currentClaimable}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.currentClaimable}
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-gray-600 mb-2">MATURATION DATE</p>
+                      <p className="text-xs text-gray-600 mb-2">
+                        MATURATION DATE
+                      </p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.maturationDate}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.maturationDate}
+                        </span>
                       </div>
                     </div>
                     <div className="text-center">
-                      <p className="text-xs text-gray-600 mb-2">PREMATURE PENALTY</p>
+                      <p className="text-xs text-gray-600 mb-2">
+                        PREMATURE PENALTY
+                      </p>
                       <div className="bg-white rounded-lg px-3 py-2 border border-dotted border-gray-400">
-                        <span className="text-sm font-medium text-black">{stats.prematurePenalty}</span>
+                        <span className="text-sm font-medium text-black">
+                          {stats.prematurePenalty}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -486,8 +568,8 @@ export default function AmplifySeedModal({
       {/* Wallet Selector Modal */}
       <WalletSelector
         isOpen={showWalletSelector}
-        onClose={() => setShowWalletSelector(false)}
-        onWalletSelect={handleWalletSelect}
+        onCloseAction={() => setShowWalletSelector(false)}
+        onWalletSelectAction={handleWalletSelect}
         currentWalletId={walletAddress || ""}
       />
 

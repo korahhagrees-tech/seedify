@@ -61,10 +61,12 @@ export default function BloomingPage({
   };
 
   // Resolve beneficiary name (query > localStorage > API by code > ecosystem title fallback)
-  const [beneficiaryName, setBeneficiaryName] = useState<string>(beneficiaryNameParam || "");
+  const [beneficiaryName, setBeneficiaryName] = useState<string>(
+    beneficiaryNameParam || ""
+  );
 
   useEffect(() => {
-    let name = beneficiaryNameParam || '';
+    let name = beneficiaryNameParam || "";
     if (!name) {
       try {
         const stored = localStorage.getItem(`webhook_data_${seedId}`);
@@ -72,7 +74,7 @@ export default function BloomingPage({
           const parsed = JSON.parse(stored);
           if (parsed?.beneficiaryName) name = parsed.beneficiaryName;
         }
-      } catch { }
+      } catch {}
     }
 
     const setFromEco = () => {
@@ -82,9 +84,11 @@ export default function BloomingPage({
     if (name) {
       setBeneficiaryName(name);
     } else if (beneficiaryCode) {
-      fetch('https://seedify-backend.up.railway.app/api/beneficiaries')
-        .then(r => r.ok ? r.json() : Promise.reject(new Error(String(r.status))))
-        .then(data => {
+      fetch("https://seedify-backend.up.railway.app/api/beneficiaries")
+        .then((r) =>
+          r.ok ? r.json() : Promise.reject(new Error(String(r.status)))
+        )
+        .then((data) => {
           const match = Array.isArray(data?.beneficiaries)
             ? data.beneficiaries.find((b: any) => b.code === beneficiaryCode)
             : null;
@@ -117,16 +121,16 @@ export default function BloomingPage({
         isOpen={isWalletModalOpen}
         onClose={handleWalletModalClose}
         onLogout={handleLogout}
-        onAddFunds={() => { }}
-        onExportKey={() => { }}
-        onSwitchWallet={() => { }}
+        onAddFunds={() => {}}
+        onExportKey={() => {}}
+        onSwitchWallet={() => {}}
         onPrivyHome={() => router.push("https://home.privy.io/login")}
       />
 
       {/* Share Modal */}
       <ShareModal
         isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
+        onCloseAction={() => setIsShareModalOpen(false)}
         imageUrl={snapshotImageUrl || eco.backgroundImageUrl || ""}
         beneficiaryName={beneficiaryName}
         beneficiaryCode={beneficiaryCode || undefined}

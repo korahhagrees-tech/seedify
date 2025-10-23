@@ -14,9 +14,13 @@ interface TendedEcosystemProps {
   seedImageUrl: string;
   userContribution: string;
   ecosystemCompost: string;
-  onReadMore: () => void;
-  onTendAgain: () => void;
-  onShare?: (data: { imageUrl: string; beneficiaryName: string; beneficiaryCode?: string }) => void;
+  onReadMoreAction: () => void;
+  onTendAgainAction: () => void;
+  onShare?: (data: {
+    imageUrl: string;
+    beneficiaryName: string;
+    beneficiaryCode?: string;
+  }) => void;
   index?: number;
   beneficiarySlug?: string;
   seedId?: string;
@@ -31,8 +35,8 @@ export default function TendedEcosystem({
   seedImageUrl,
   userContribution,
   ecosystemCompost,
-  onReadMore,
-  onTendAgain,
+  onReadMoreAction,
+  onTendAgainAction,
   onShare,
   index = 0,
   beneficiarySlug,
@@ -42,7 +46,9 @@ export default function TendedEcosystem({
 }: TendedEcosystemProps) {
   const router = useRouter();
   const [imageErrorCount, setImageErrorCount] = useState(0);
-  const [currentImageSrc, setCurrentImageSrc] = useState(seedImageUrl || "/seeds/01__GRG.png");
+  const [currentImageSrc, setCurrentImageSrc] = useState(
+    seedImageUrl || "/seeds/01__GRG.png"
+  );
 
   // Reset image state when seedImageUrl prop changes
   useEffect(() => {
@@ -62,7 +68,7 @@ export default function TendedEcosystem({
         seedSlug,
         beneficiarySlug,
       });
-      onTendAgain(); // Fallback to original handler
+      onTendAgainAction(); // Fallback to original handler
     }
   };
 
@@ -72,7 +78,7 @@ export default function TendedEcosystem({
       onShare({
         imageUrl: currentImageSrc,
         beneficiaryName: beneficiaryName,
-        beneficiaryCode: beneficiaryCode
+        beneficiaryCode: beneficiaryCode,
       });
     }
   };
@@ -119,7 +125,9 @@ export default function TendedEcosystem({
               className="object-cover"
               onError={(e) => {
                 console.log(
-                  `🌸 [IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
+                  `🌸 [IMAGE] Error loading image (attempt ${
+                    imageErrorCount + 1
+                  }), trying fallback`
                 );
 
                 const newErrorCount = imageErrorCount + 1;
@@ -127,8 +135,12 @@ export default function TendedEcosystem({
 
                 // Prevent infinite retry loops
                 if (newErrorCount > 3) {
-                  console.log("🌸 [IMAGE] Max retries reached, using final fallback");
-                  setCurrentImageSrc("https://d17wy07434ngk.cloudfront.net/seed1/seed.png");
+                  console.log(
+                    "🌸 [IMAGE] Max retries reached, using final fallback"
+                  );
+                  setCurrentImageSrc(
+                    "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
+                  );
                   return;
                 }
 
@@ -136,7 +148,7 @@ export default function TendedEcosystem({
                 const fallbackImages = [
                   "https://d17wy07434ngk.cloudfront.net/seed1/seed.png",
                   "https://d17wy07434ngk.cloudfront.net/seed2/seed.png",
-                  "https://d17wy07434ngk.cloudfront.net/seed3/seed.png"
+                  "https://d17wy07434ngk.cloudfront.net/seed3/seed.png",
                 ];
 
                 if (newErrorCount <= fallbackImages.length) {
@@ -145,7 +157,9 @@ export default function TendedEcosystem({
                   setCurrentImageSrc(fallbackSrc);
                 } else {
                   // Use a simple placeholder
-                  setCurrentImageSrc("https://d17wy07434ngk.cloudfront.net/seed1/seed.png");
+                  setCurrentImageSrc(
+                    "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
+                  );
                 }
               }}
             />
@@ -188,7 +202,7 @@ export default function TendedEcosystem({
             {/* Action Buttons - Stacked vertically */}
             <div className="space-y-3 pt-2">
               <button
-                onClick={onReadMore}
+                onClick={onReadMoreAction}
                 className="w-full px-4 py-1 text-base border-1 border-black rounded-full hover:bg-gray-50 transition-colors peridia-display leading-relaxed"
               >
                 Read More
@@ -203,7 +217,6 @@ export default function TendedEcosystem({
           </div>
         </div>
       </div>
-
     </motion.div>
   );
 }

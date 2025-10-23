@@ -8,15 +8,15 @@ import { useState } from "react";
 
 interface StewardSeedCardProps {
   seed: Seed;
-  onTendSeed: () => void;
-  onExplore: () => void;
+  onTendSeedAction: () => void;
+  onExploreAction: () => void;
   index?: number;
 }
 
 export default function StewardSeedCard({
   seed,
-  onTendSeed,
-  onExplore,
+  onTendSeedAction,
+  onExploreAction,
   index = 0,
 }: StewardSeedCardProps) {
   const [tendedEcosystems] = useState(mockTendedEcosystems);
@@ -28,14 +28,16 @@ export default function StewardSeedCard({
   const [imageErrorCount, setImageErrorCount] = useState(0);
 
   const FALLBACK_IMAGES = [
-    seed.seedImageUrl && seed.seedImageUrl.length > 0 ? seed.seedImageUrl : null,
+    seed.seedImageUrl && seed.seedImageUrl.length > 0
+      ? seed.seedImageUrl
+      : null,
     `https://d17wy07434ngk.cloudfront.net/seed${seed.id}/seed.png`, // CloudFront with seedId
     "https://d17wy07434ngk.cloudfront.net/seed1/seed.png", // Final fallback
   ].filter(Boolean) as string[];
 
   const handleImageError = () => {
     const nextIndex = imageErrorCount + 1;
-    
+
     if (nextIndex < FALLBACK_IMAGES.length) {
       console.log(
         `🌸 [IMAGE] Error loading steward seed image (attempt ${nextIndex}/${FALLBACK_IMAGES.length}), trying fallback:`,
@@ -44,7 +46,9 @@ export default function StewardSeedCard({
       setCurrentImageSrc(FALLBACK_IMAGES[nextIndex]);
       setImageErrorCount(nextIndex);
     } else {
-      console.log("🌸 [IMAGE] All fallbacks exhausted for steward seed, showing final fallback");
+      console.log(
+        "🌸 [IMAGE] All fallbacks exhausted for steward seed, showing final fallback"
+      );
     }
   };
 
@@ -110,14 +114,14 @@ export default function StewardSeedCard({
 
             <div className="space-y-3 max-w-sm scale-[0.7] -ml-6">
               <button
-                onClick={onTendSeed}
+                onClick={onTendSeedAction}
                 className="w-full px-10 py-1 text-2xl border-1 border-black rounded-full hover:bg-gray-50 transition-colors peridia-display leading-relaxed text-nowrap"
               >
                 T<span className="text-nowrap favorit-mono">end </span>S
                 <span className="text-nowrap favorit-mono">eed</span>
               </button>
               <button
-                onClick={onExplore}
+                onClick={onExploreAction}
                 className="w-full px-6 py-1 text-2xl border-4 border-black rounded-full border-dotted hover:bg-gray-50 bg-gray-200 transition-colors peridia-display leading-relaxed"
               >
                 E<span className="text-nowrap favorit-mono">xplore</span>

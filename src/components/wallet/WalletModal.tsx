@@ -37,13 +37,15 @@ export default function WalletModal({
   isOpen,
   onClose,
   onLogout,
-  onAddFunds,
-  onExportKey,
-  onSwitchWallet,
   onPrivyHome,
-  onWalletConnect,
 }: WalletModalProps) {
-  const { user, walletAddress, wallets: contextWallets, activeWallet, linkedAccounts, setActiveWallet: contextSetActiveWallet } = useAuth();
+  const {
+    user,
+    walletAddress,
+    wallets: contextWallets,
+    activeWallet,
+    setActiveWallet: contextSetActiveWallet,
+  } = useAuth();
   const [copied, setCopied] = useState(false);
   const [showWalletSelector, setShowWalletSelector] = useState(false);
   const [showAddFunds, setShowAddFunds] = useState(false);
@@ -79,10 +81,14 @@ export default function WalletModal({
   } = usePrivy();
   // Determine an EVM address (if available) for wagmi balance calls
   const evmAddress: `0x${string}` | undefined =
-    (activeWallet && (activeWallet as any).chainType === 'ethereum' && activeWallet.address?.startsWith('0x')
+    (activeWallet &&
+    (activeWallet as any).chainType === "ethereum" &&
+    activeWallet.address?.startsWith("0x")
       ? (activeWallet.address as `0x${string}`)
       : undefined) ||
-    (walletAddress && walletAddress.startsWith('0x') ? (walletAddress as `0x${string}`) : undefined);
+    (walletAddress && walletAddress.startsWith("0x")
+      ? (walletAddress as `0x${string}`)
+      : undefined);
 
   const { data: balanceData } = useBalance({
     address: evmAddress,
@@ -108,9 +114,11 @@ export default function WalletModal({
   });
 
   // Safely derive an email to display from Privy user object
-  const displayEmail = (user as any)?.email?.address ||
+  const displayEmail =
+    (user as any)?.email?.address ||
     (Array.isArray((user as any)?.linkedAccounts)
-      ? (user as any).linkedAccounts.find((a: any) => a.type === 'email')?.address
+      ? (user as any).linkedAccounts.find((a: any) => a.type === "email")
+          ?.address
       : undefined);
 
   const balance = balanceData
@@ -162,44 +170,6 @@ export default function WalletModal({
     });
   };
 
-  const handleLinkSocialAccount = async (
-    provider: "google" | "twitter" | "discord" | "github" | "apple"
-  ) => {
-    try {
-      switch (provider) {
-        case "google":
-          await linkGoogle();
-          break;
-        case "twitter":
-          await linkTwitter();
-          break;
-        case "discord":
-          await linkDiscord();
-          break;
-        case "github":
-          await linkGithub();
-          break;
-        case "apple":
-          await linkApple();
-          break;
-        default:
-          console.warn("Unknown social provider:", provider);
-      }
-      console.log(`✅ Successfully linked ${provider} account`);
-    } catch (error) {
-      console.error(`Failed to link ${provider} account:`, error);
-    }
-  };
-
-  const handleLinkEmail = async () => {
-    try {
-      await linkEmail();
-      console.log("✅ Successfully linked email account");
-    } catch (error) {
-      console.error("Failed to link email account:", error);
-    }
-  };
-
   // Note: SMS linking is not available in the current Privy interface
   // const handleLinkSms = async () => {
   //   try {
@@ -209,15 +179,6 @@ export default function WalletModal({
   //     console.error('Failed to link SMS account:', error);
   //   }
   // };
-
-  const handleLinkPasskey = async () => {
-    try {
-      await linkPasskey();
-      console.log("✅ Successfully linked passkey");
-    } catch (error) {
-      console.error("Failed to link passkey:", error);
-    }
-  };
 
   const handleWalletSelect = (wallet: any) => {
     // Use context's setActiveWallet which syncs with Zustand store and wagmi
@@ -241,37 +202,6 @@ export default function WalletModal({
         // Fallback to modal if needed
         setShowAddFunds(true);
       }
-    }
-  };
-
-  const handleExportKey = async () => {
-    try {
-      if (!activeWallet) {
-        console.error('No active wallet to export');
-        return;
-      }
-
-      // Check if this is an embedded wallet (only embedded wallets can export private keys)
-      const isEmbedded = activeWallet.walletClientType === 'privy' ||
-        activeWallet.connectorType === 'embedded';
-
-      if (!isEmbedded) {
-        console.log('External wallets manage their own private keys');
-        alert('External wallets (like MetaMask) manage their own private keys. Please export from your wallet directly.');
-        return;
-      }
-
-      // For embedded wallets, use Privy's exportWallet function
-      if (privy?.exportWallet) {
-        await privy.exportWallet({ address: activeWallet.address });
-        console.log('Private key export initiated for embedded wallet');
-      } else {
-        console.error('Privy exportWallet function not available');
-        alert('Private key export is not available for this wallet type.');
-      }
-    } catch (error) {
-      console.error('Error exporting private key:', error);
-      alert('Failed to export private key. Please try again.');
     }
   };
 
@@ -323,7 +253,9 @@ export default function WalletModal({
                       className="flex items-center justify-center transition-colors scale-[0.75] lg:scale-[1.0] md:scale-[0.8]"
                     >
                       <span className="text-base font-mono text-black">
-                        {evmAddress ? formatAddress(evmAddress) : (activeWallet?.address || walletAddress || "")}
+                        {evmAddress
+                          ? formatAddress(evmAddress)
+                          : activeWallet?.address || walletAddress || ""}
                       </span>
                       <Image
                         src={assets.copy}
@@ -364,7 +296,10 @@ export default function WalletModal({
                     className="w-4 h-4 wallet-modal-email-image"
                   />
                   <span className="text-sm text-black scale-[0.9] lg:scale-[1.0] md:scale-[0.95] -ml-1 lg:ml-0 md:-ml-2">
-                    {displayEmail || (evmAddress ? formatAddress(evmAddress) : (activeWallet?.address || walletAddress || ""))}
+                    {displayEmail ||
+                      (evmAddress
+                        ? formatAddress(evmAddress)
+                        : activeWallet?.address || walletAddress || "")}
                   </span>
                   <button
                     onClick={handleSwitchWallet}
@@ -412,7 +347,8 @@ export default function WalletModal({
                     className="w-full px-4 py-2 border-3 border-dotted border-black rounded-full text-sm text-black bg-[#E2E3F0] hover:bg-gray-50 transition-colors peridia-display text-nowrap"
                   >
                     <span className="-ml-2 lg:ml-0 md:-ml-2">
-                      W <span className="favorit-mono">allet</span> C<span className="favorit-mono">onnect</span>
+                      W <span className="favorit-mono">allet</span> C
+                      <span className="favorit-mono">onnect</span>
                     </span>
                   </button>
                 </div>
@@ -510,8 +446,8 @@ export default function WalletModal({
       {/* Wallet Selector Modal */}
       <WalletSelector
         isOpen={showWalletSelector}
-        onClose={() => setShowWalletSelector(false)}
-        onWalletSelect={handleWalletSelect}
+        onCloseAction={() => setShowWalletSelector(false)}
+        onWalletSelectAction={handleWalletSelect}
         currentWalletId={walletAddress || ""}
       />
 
