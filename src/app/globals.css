@@ -2,7 +2,8 @@
 @import "tw-animate-css";
 
 /* Prevent horizontal scrolling on mobile */
-html, body {
+html,
+body {
   overflow-x: hidden;
   max-width: 100vw;
 }
@@ -124,41 +125,44 @@ html, body {
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'FavoritMono', sans-serif;
+    font-family: "FavoritMono", sans-serif;
   }
 }
 
 @font-face {
-  font-family: 'PeridiaDisplay';
-  src: local('PeridiaDisplay'), url('/fonts/PeridiaDisplay-Regular.woff2') format('woff2');
+  font-family: "PeridiaDisplay";
+  src: local("PeridiaDisplay"),
+    url("/fonts/PeridiaDisplay-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'PeridiaDisplay Light';
-  src: local('PeridiaDisplay Light'), url('/fonts/PeridiaDisplay-Light.woff2') format('woff2');
+  font-family: "PeridiaDisplay Light";
+  src: local("PeridiaDisplay Light"),
+    url("/fonts/PeridiaDisplay-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'FavoritMono';
-  src: local('FavoritMono'), url('/fonts/ABCFavoritMono-Light.woff2') format('woff2');
+  font-family: "FavoritMono";
+  src: local("FavoritMono"),
+    url("/fonts/ABCFavoritMono-Light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
 }
 
 .peridia-display {
-  font-family: 'PeridiaDisplay', sans-serif;
+  font-family: "PeridiaDisplay", sans-serif;
 }
 
 .peridia-display-light {
-  font-family: 'PeridiaDisplay Light', sans-serif;
+  font-family: "PeridiaDisplay Light", sans-serif;
 }
 
 .favorit-mono {
-  font-family: 'FavoritMono', sans-serif;
+  font-family: "FavoritMono", sans-serif;
 }
 
 .scrollbar-hide {
@@ -177,12 +181,12 @@ html, body {
   .seed-card-container {
     padding: 0.2rem;
   }
-  
+
   .seed-card-image {
     height: 280px;
     border-radius: 40px;
   }
-  
+
   .seed-card-steward-label {
     font-size: 0.2rem;
     padding: 0.1rem 0.8rem;
@@ -190,38 +194,38 @@ html, body {
     margin-top: 1.2rem;
     scale: 0.6;
   }
-  
+
   .seed-card-badge {
     font-size: 0.6rem;
     padding: 0.25rem 0.5rem;
     top: 0.25rem;
     left: -0.75rem;
   }
-  
+
   .seed-card-stats {
     gap: 0.25rem;
     margin-top: 1rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .seed-card-stat-item {
     padding: 0.5rem;
     height: 32px;
   }
-  
+
   .seed-card-stat-label {
     font-size: 0.5rem;
     margin-bottom: 0.25rem;
     margin-top: 0.125rem;
   }
-  
+
   .seed-card-stat-value {
     font-size: 2rem;
     transform: scale(0.5);
     margin-left: -1rem;
     margin-top: -0.75rem;
   }
-  
+
   .seed-card-stat-value span {
     font-size: 0.75rem;
   }
@@ -231,52 +235,52 @@ html, body {
     padding: 0.25rem;
     margin-top: -0.5rem;
   }
-  
+
   .seed-detail-image {
     height: 280px;
     border-radius: 35px;
     margin-top: 0.5rem;
     margin-bottom: 1rem;
   }
-  
+
   .seed-detail-steward-label {
     font-size: 0.5rem;
     padding: 0.25rem 0.5rem;
     width: 10rem;
     margin-top: 0.8rem;
   }
-  
+
   .seed-detail-badge {
     font-size: 0.5rem;
     padding: 0.25rem 0.5rem;
     top: 0.25rem;
     left: -0.5rem;
   }
-  
+
   .seed-detail-stats {
     gap: 0.25rem;
     margin-top: 0.75rem;
     margin-bottom: 1rem;
   }
-  
+
   .seed-detail-stat-item {
     padding: 0.5rem;
     height: 30px;
   }
-  
+
   .seed-detail-stat-label {
     font-size: 0.4rem;
     margin-bottom: 0.25rem;
     margin-top: 0.125rem;
   }
-  
+
   .seed-detail-stat-value {
     font-size: 1.2rem;
     transform: scale(0.5);
     margin-left: -0.75rem;
     margin-top: -0.5rem;
   }
-  
+
   .seed-detail-stat-value span {
     font-size: 0.6rem;
   }
@@ -308,12 +312,12 @@ html, body {
   .seed-card-container {
     padding: 0.75rem;
   }
-  
+
   .seed-card-image {
     height: 320px;
     border-radius: 50px;
   }
-  
+
   .seed-card-steward-label {
     font-size: 0.7rem;
     padding: 0.375rem 0.75rem;
@@ -329,38 +333,38 @@ html, body {
     margin-top: -0.6rem;
     margin-left: -1.4rem;
   }
-  
+
   .seed-card-badge {
     font-size: 0.7rem;
     padding: 0.375rem 0.75rem;
     top: 0.5rem;
     left: -1rem;
   }
-  
+
   .seed-card-stats {
     gap: 0.375rem;
     margin-top: 1.25rem;
     margin-bottom: 1.75rem;
   }
-  
+
   .seed-card-stat-item {
     padding: 0.75rem;
     height: 36px;
   }
-  
+
   .seed-card-stat-label {
     font-size: 0.6rem;
     margin-bottom: 0.375rem;
     margin-top: 0.25rem;
   }
-  
+
   .seed-card-stat-value {
     font-size: 1.25rem;
     transform: scale(0.96);
     margin-left: -1.25rem;
     margin-top: -0.875rem;
   }
-  
+
   .seed-card-stat-value span {
     font-size: 0.9rem;
   }
@@ -370,14 +374,14 @@ html, body {
     padding: 0.5rem;
     margin-top: -2.85rem;
   }
-  
+
   .seed-detail-image {
     height: 350px;
     border-radius: 45px;
     margin-top: 0.75rem;
     margin-bottom: 1.25rem;
   }
-  
+
   .seed-detail-steward-label {
     font-size: 0.1rem;
     padding: 0.1rem 5.45rem;
@@ -388,43 +392,42 @@ html, body {
   }
 
   .seed-detail-steward-label-small {
-    font-size: 0.8rem;
-    padding: 0.2rem 0.5rem;
     width: 10rem;
-    transform: scale(0.85);
     margin-top: -0.2rem;
-    margin-left: -6rem;
+    margin-left: -5rem;
+    font-size: 0.8rem;
+    transform: scale(0.85);
   }
-  
+
   .seed-detail-badge {
     font-size: 0.7rem;
     padding: 0.375rem 0.75rem;
     top: 0.5rem;
     left: -1rem;
   }
-  
+
   .seed-detail-stats {
     gap: 0.375rem;
     margin-top: 1rem;
     margin-bottom: 1.25rem;
   }
-  
+
   .seed-detail-stat-item {
     padding: 0.75rem;
-    height: 35px;
+    height: 70px;
   }
-  
+
   .seed-detail-stat-label {
     font-size: 0.4rem;
     margin-bottom: 0.375rem;
     margin-top: 0.8rem;
   }
-  
+
   .seed-detail-stat-value {
-    font-size: 1.4rem;
-    transform: scale(0.75);
-    margin-left: -1rem;
-    margin-top: -0.7rem;
+    font-size: 0.8rem;
+    transform: none;
+    margin-left: 0;
+    margin-top: 0;
   }
 
   .seed-detail-stat-value-small {
@@ -432,9 +435,9 @@ html, body {
     transform: scale(0.65);
     margin-left: -0.3rem;
   }
-  
+
   .seed-detail-stat-value span {
-    font-size: 1.0rem;
+    font-size: 1rem;
   }
 
   /* WalletModal Styles */
@@ -459,55 +462,72 @@ html, body {
   }
 }
 
+/* 767px to 367px - Reduce height slightly, increase font size */
+@media screen and (max-width: 767px) and (min-width: 367px) {
+  .seed-detail-stat-item {
+    height: 55px;
+  }
+
+  .seed-detail-stat-value {
+    font-size: 0.8rem;
+  }
+}
+
+/* Below 367px - Use same height as 767px */
+@media screen and (max-width: 367px) {
+  .seed-detail-stat-item {
+    height: 55px;
+  }
+}
 
 @media screen and (max-width: 375px) and (max-height: 812px) {
   .seed-card-container {
     padding: 0.5rem;
   }
-  
+
   .seed-card-image {
     height: 300px;
     border-radius: 45px;
   }
-  
+
   .seed-card-steward-label {
     font-size: 0.6rem;
     padding: 0.3rem 0.6rem;
     width: 10rem;
     margin-top: 0.8rem;
   }
-  
+
   .seed-card-badge {
     font-size: 0.65rem;
     padding: 0.3rem 0.6rem;
     top: 0.4rem;
     left: -0.8rem;
   }
-  
+
   .seed-card-stats {
     gap: 0.3rem;
     margin-top: 1rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .seed-card-stat-item {
     padding: 0.6rem;
     height: 34px;
   }
-  
+
   .seed-card-stat-label {
     font-size: 0.55rem;
     margin-bottom: 0.3rem;
     margin-top: 0.2rem;
   }
-  
+
   .seed-card-stat-value {
     font-size: 3.1rem;
     transform: scale(0.55);
     margin-left: -1.1rem;
     margin-top: -0.8rem;
   }
-  
+
   .seed-card-stat-value span {
     font-size: 0.8rem;
   }
@@ -517,52 +537,52 @@ html, body {
     padding: 0.375rem;
     margin-top: -0.375rem;
   }
-  
+
   .seed-detail-image {
     height: 320px;
     border-radius: 40px;
     margin-top: 0.625rem;
     margin-bottom: 1rem;
   }
-  
+
   .seed-detail-steward-label {
     font-size: 0.65rem;
     padding: 0.3rem 0.6rem;
     width: 9.5rem;
     margin-top: 0.875rem;
   }
-  
+
   .seed-detail-badge {
     font-size: 0.65rem;
     padding: 0.3rem 0.6rem;
     top: 0.4rem;
     left: -0.8rem;
   }
-  
+
   .seed-detail-stats {
     gap: 0.3rem;
     margin-top: 0.875rem;
     margin-bottom: 1rem;
   }
-  
+
   .seed-detail-stat-item {
     padding: 0.6rem;
     height: 32px;
   }
-  
+
   .seed-detail-stat-label {
     font-size: 0.5rem;
     margin-bottom: 0.3rem;
     margin-top: 0.2rem;
   }
-  
+
   .seed-detail-stat-value {
-    font-size: 1.3rem;
+    /* font-size: 1.3rem; */
     transform: scale(0.6);
     margin-left: -0.9rem;
     margin-top: -0.65rem;
   }
-  
+
   .seed-detail-stat-value span {
     font-size: 0.75rem;
   }
@@ -592,4 +612,3 @@ html, body {
     margin-left: -0.25rem;
   }
 }
-

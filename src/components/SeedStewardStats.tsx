@@ -252,7 +252,7 @@ export default function SeedStewardStats({
         </div>
 
         {/* Main dotted container */}
-        <div className="relative mx-4 mb-36 rounded-[60px] lg:scale-[1.0] md:scale-[1.0] scale-[1.0] -mt-48 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
+        <div className="relative mx-4 mb-48 rounded-[60px] lg:scale-[1.0] md:scale-[1.0] scale-[1.0] -mt-22 lg:-mt-22 md:-mt-22 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
           {/* Section: Core Seed Metrics - Full width with 3x2 grid */}
           <div className="flex z-50 items-center w-full justify-between mb-6 bg-[#E2E3F0B2] rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[1.0] mt-12" style={{ pointerEvents: 'auto' }}>
             <div className="flex-1">
@@ -597,7 +597,7 @@ export default function SeedStewardStats({
           {/* Section: Detailed Data of Your Stewarded Ecosystems - Full width with background */}
           <div className="-mb-2">
             <div className="flex items-center bg-gradient-to-r from-gray-300/80 to-white/70 text-center justify-center rounded-full px-4 py-0">
-              <span className="text-nowrap tracking-wide text-gray-900 favorit-mono text-[14px] -ml-3 scale-[0.9] lg:scale-[0.9] md:scale-[0.9]">
+              <span className="text-nowrap tracking-wide text-gray-900 favorit-mono text-[12px] lg:text-[14px] md:text-[14px] scale-[0.9] lg:scale-[0.9] md:scale-[0.9] -ml-8 lg:-ml-2 md:-ml-2">
                 DETAILED DATA OF YOUR STEWARDED ECOSYSTEMS
               </span>
               <span className="text-gray-900 -ml-2">▼</span>
@@ -613,7 +613,7 @@ export default function SeedStewardStats({
                     className=""
                   >
                     {/* Title bar */}
-                    <div className="flex items-center gap-3 mb-3">
+                    <div className="flex items-center gap-3 mb-3 scale-[1.2] lg:scale-[1.25] md:scale-[1.25]">
                       <div className="w-10 h-10 rounded-full border-3 border-dotted border-black bg-white overflow-hidden flex-shrink-0 relative">
                         <Image
                           src={`/seeds/0${beneficiary.index + 1}__${beneficiary.code.split('-')[1]}.png`}
@@ -625,7 +625,7 @@ export default function SeedStewardStats({
                         />
                       </div>
                       <div className="flex-1 border text-nowrap border-black rounded-full bg-white/80 text-center text-gray-900 text-sm w-45 py-1 -ml-12 lg:w-45 md:w-48">
-                        <p className="text-nowrap text-[8px] lg:text-[10px] md:text-[9px] scale-[0.8] lg:scale-[0.5] md:scale-[0.95]-ml-2 lg:-ml-2 md:ml-6 -left-4">{beneficiary.name}</p>
+                        <p className="text-nowrap text-[8px] lg:text-[10px] md:text-[9px] scale-[0.8] lg:scale-[0.85] md:scale-[0.95] ml-4 lg:ml-4 md:ml-8 -left-4">{beneficiary.name}</p>
                       </div>
                     </div>
 
