@@ -64,7 +64,7 @@ export default function SeedDetailPage({
       {/* Steward Label - positioned above the main content */}
       <div className="relative pt-4 pb-2 z-10">
         <motion.div
-          className="absolute top-11 lg:top-14 md:top-10 left-[55%] lg:left-1/2 md:left-1/2 -translate-x-1/2 z-10 w-full flex justify-center px-4"
+          className="absolute top-11 lg:top-10 md:top-10 left-[55%] lg:left-1/2 md:left-1/2 -translate-x-1/2 z-10 w-full flex justify-center px-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.25 }}
