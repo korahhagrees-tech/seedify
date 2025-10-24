@@ -71,6 +71,20 @@ export default function SeedStewardStats({
   const { scrollYProgress } = useScroll();
   const [imageError, setImageError] = useState(false);
   const [isInfoDropdownOpen, setIsInfoDropdownOpen] = useState(false);
+  
+  // Three-tier image fallback system (from SeedCard)
+  const [currentImageSrc, setCurrentImageSrc] = useState(
+    seed.seedImageUrl && seed.seedImageUrl.length > 0
+      ? seed.seedImageUrl
+      : `https://d17wy07434ngk.cloudfront.net/seed${seed.id}/seed.png`
+  );
+  const [imageErrorCount, setImageErrorCount] = useState(0);
+
+  const FALLBACK_IMAGES = [
+    seed.seedImageUrl && seed.seedImageUrl.length > 0 ? seed.seedImageUrl : null,
+    `https://d17wy07434ngk.cloudfront.net/seed${seed.id}/seed.png`, // CloudFront with seedId
+    "https://d17wy07434ngk.cloudfront.net/seed1/seed.png", // Final fallback
+  ].filter(Boolean) as string[];
 
   // Wallet-related hooks for defensive checks
   const { ready, authenticated } = usePrivy();
@@ -94,7 +108,22 @@ export default function SeedStewardStats({
   );
 
   const handleImageLoad = () => {
-    console.log(" [IMAGE] Successfully loaded:", seed.seedImageUrl);
+    console.log(" [IMAGE] Successfully loaded:", currentImageSrc);
+  };
+
+  const handleImageError = () => {
+    const nextIndex = imageErrorCount + 1;
+    
+    if (nextIndex < FALLBACK_IMAGES.length) {
+      console.log(
+        ` [IMAGE] Error loading image (attempt ${nextIndex}/${FALLBACK_IMAGES.length}), trying fallback:`,
+        FALLBACK_IMAGES[nextIndex]
+      );
+      setCurrentImageSrc(FALLBACK_IMAGES[nextIndex]);
+      setImageErrorCount(nextIndex);
+    } else {
+      console.log(" [IMAGE] All fallbacks exhausted, showing final fallback");
+    }
   };
 
   // Helper function to convert wei to ETH
@@ -209,18 +238,12 @@ export default function SeedStewardStats({
                 className="relative overflow-hidden shadow-xl bg-white mx-auto"
               >
                 <Image
-                  src={
-                    imageError
-                      ? "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
-                      : seed.seedImageUrl && seed.seedImageUrl.length > 0
-                        ? seed.seedImageUrl
-                        : "https://d17wy07434ngk.cloudfront.net/seed1/seed.png"
-                  }
+                  src={currentImageSrc}
                   alt={""}
                   fill
                   className="object-cover"
                   onLoad={handleImageLoad}
-                  onError={() => setImageError(true)}
+                  onError={handleImageError}
                 />
               </motion.div>
 
@@ -238,12 +261,20 @@ export default function SeedStewardStats({
                 {links?.openseaUrl && (
                   <Link
                     href={links.openseaUrl}
-                    className="px-4 py-0 text-nowrap rounded-full border-3 border-dotted border-gray-700 bg-gradient-to-r from-gray-200/90 to-white/90 text-gray-900 peridia-display text-sm text-center shadow-lg"
+                    className="px-4 py-0 text-nowrap rounded-full border-3 border-dotted border-gray-700 bg-gradient-to-r from-gray-200/90 to-white/90 text-gray-900 peridia-display text-sm text-center shadow-lg hover:from-gray-300/90 hover:to-white/90 transition-colors cursor-pointer z-30"
+                    onClick={(e) => e.stopPropagation()}
                   >
                     View Opensea
                   </Link>
                 )}
-                <button className="px-6 py-2 rounded-full border-3 border-dashed border-white/80 bg-purple-200/90 text-gray-900 peridia-display text-sm shadow-lg">
+                <button 
+                  className="px-6 py-2 rounded-full border-3 border-dashed border-white/80 bg-purple-200/90 text-gray-900 peridia-display text-sm shadow-lg hover:bg-purple-300/90 transition-colors cursor-pointer z-30"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Customise Display clicked');
+                  }}
+                >
                   Customise Display
                 </button>
               </motion.div>
@@ -254,7 +285,7 @@ export default function SeedStewardStats({
         {/* Main dotted container */}
         <div className="relative mx-4 mb-48 rounded-[60px] lg:scale-[1.0] md:scale-[1.0] scale-[1.0] -mt-22 lg:-mt-22 md:-mt-22 border-3 border-dotted border-black/70 bg-black/10 backdrop-blur-md">
           {/* Section: Core Seed Metrics - Full width with 3x2 grid */}
-          <div className="flex z-50 items-center w-full justify-between mb-6 bg-[#E2E3F0B2] rounded-full scale-[0.8] lg:scale-[1.0] md:scale-[1.0] mt-12" style={{ pointerEvents: 'auto' }}>
+          <div className="flex z-50 items-center w-full justify-between mb-6 bg-[#E2E3F0B2] rounded-full scale-[1.0] lg:scale-[1.0] md:scale-[1.0] mt-12" style={{ pointerEvents: 'auto' }}>
             <div className="flex-1">
               <div className="text-lg font-light scale-[0.6] lg:scale-[0.7] md:scale-[0.7] tracking-wide text-gray-900">
                 <p className="-ml-18">CORE SEED METRICS</p>
@@ -327,7 +358,7 @@ export default function SeedStewardStats({
             )}
           </AnimatePresence>
 
-          <div className="rounded-[28px] bg-[#E2E3F0B2] m-4 p-6">
+          <div className="rounded-[28px] bg-[#E2E3F0B2] m-4 p-6 py-0">
             {/* Full width header with INFO button */}
 
             {/* Core metrics 3x2 grid - single background */}
@@ -337,38 +368,23 @@ export default function SeedStewardStats({
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   SEED NUMBER
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
-                  {stats.seedNumber}
+                <div className="bg-white/70 border-3 border-dotted border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
+                  <div className="text-nowrap scale-[1.2] lg:scale-[0.9] md:scale-[0.85]">
+                    {stats.seedNumber}
+                  </div>
                 </div>
               </div>
 
-              {/* MINTED ON */}
-              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
-                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
-                  MINTED ON
-                </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[10px] lg:text-[11px] md:text-[11px] text-gray-900 text-center">
-                  {formatDate(stats.mintedOn)}
-                </div>
-              </div>
 
               {/* SNAPSHOTS */}
               <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   SNAPSHOTS
                 </div>
-                <div className="bg-white/70 border-2 border-dashed border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
-                  {stats.totalSnapshots}
-                </div>
-              </div>
-
-              {/* SNAPSHOT PRICE */}
-              <div className="text-center">
-                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
-                  SNAPSHOT PRICE
-                </div>
-                <div className="bg-white/70 border-2 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
-                  {parseFloat(stats.snapshotPrice).toFixed(5)} ETH
+                <div className="bg-white/70 border-3 border-dotted border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
+                  <div className="text-nowrap scale-[1.2] lg:scale-[0.9] md:scale-[0.85]">
+                    {stats.totalSnapshots}
+                  </div>
                 </div>
               </div>
 
@@ -377,13 +393,36 @@ export default function SeedStewardStats({
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   SNAPSHOT SHARE
                 </div>
-                <div className="bg-white/70 border-2 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
+                <div className="bg-white/70 border-3 border-dotted border-black/70 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
                   {formatPercentage(stats.snapshotShare)}
                 </div>
               </div>
 
+              {/* MINTED ON */}
+              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0] -mt-2 lg:-mt-2 md:-mt-2 mb-2 lg:mb-2 md:mb-2">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
+                  MINTED ON
+                </div>
+                <div className="bg-white/70 rounded-full px-1 py-2 text-[10px] lg:text-[11px] md:text-[11px] text-gray-900 text-center">
+                  {formatDate(stats.mintedOn)}
+                </div>
+              </div>
+
+              {/* SNAPSHOT PRICE */}
+              <div className="text-center -mt-2 lg:-mt-2 md:-mt-2 mb-2 lg:mb-2 md:mb-2">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
+                  SNAPSHOT PRICE
+                </div>
+                <div className="bg-white/70 border-2 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center text-nowrap">
+                  <div className="text-nowrap scale-[0.85] lg:scale-[0.9] md:scale-[0.85]">
+                    {parseFloat(stats.snapshotPrice).toFixed(5)} ETH
+                  </div>
+                </div>
+              </div>
+
+
               {/* 20% SHARE VALUE */}
-              <div className="text-center">
+              <div className="text-center -mt-2 lg:-mt-2 md:-mt-2 mb-2 lg:mb-2 md:mb-2">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   20% SHARE VALUE
                 </div>
@@ -397,7 +436,7 @@ export default function SeedStewardStats({
           {/* Two separate sections below - always side by side */}
           <div className="grid grid-cols-2 gap-2 mx-4 mb-6 scale-[1.0] lg:scale-[1.0] md:scale-[0.95]">
             {/* Left Card: NUTRIENT RESERVE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 -ml-4 w-52 scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
+            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 -ml-6 lg:-ml-4 md:-ml-4 w-52 scale-[0.85] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
                 {/* NUTRIENT RESERVE TOTAL */}
                 <div className="text-center">
@@ -432,7 +471,7 @@ export default function SeedStewardStats({
             </div>
 
             {/* Right Card: HARVESTABLE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 w-40 ml-4 scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
+            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 w-40 ml-2 lg:ml-4 md:ml-4 scale-[0.85] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
                 {/* HARVESTABLE */}
                 <div className="text-center">
@@ -474,8 +513,13 @@ export default function SeedStewardStats({
               <div className="flex-1">
                 {/* Button with scalloped edges and border */}
                 <button
-                  onClick={handleAmplifyClick}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleAmplifyClick();
+                  }}
                   className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors cursor-pointer z-40"
+                  style={{ pointerEvents: 'auto' }}
                 >
                   Amplify Impact
                 </button>
@@ -492,8 +536,13 @@ export default function SeedStewardStats({
               <div className="flex-1">
                 {/* Button with scalloped edges and border */}
                 <button
-                  onClick={handleHarvestClick}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleHarvestClick();
+                  }}
                   className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors cursor-pointer z-40"
+                  style={{ pointerEvents: 'auto' }}
                 >
                   Harvest
                 </button>
@@ -518,13 +567,13 @@ export default function SeedStewardStats({
           </div>
           <div className="rounded-[28px] m-4 p-6">
 
-            <div className="grid grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.1] md:scale-[1.1] -ml-3 lg:-ml-3 md:-ml-3">
+            <div className="grid grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.1] md:scale-[1.1] -ml-3 lg:-ml-3 md:-ml-3 -mt-10 lg:-mt-10 md:-mt-10">
               {/* Left Card: Impact Details */}
-              <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 h-45">
+              <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 h-45 w-45 lg:w-45 md:w-45 scale-[1.0] lg:scale-[1.0] md:scale-[1.0] -ml-8 lg:-ml-4 md:-ml-4">
                 <div className="space-y-4">
                   {/* IMMEDIATE IMPACT */}
                   <div className="">
-                    <div className="text-[12px] text-black/80 mb-0">
+                    <div className="text-[12px] text-black/80 mb-0 text-nowrap">
                       IMMEDIATE IMPACT
                     </div>
                     <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-3 py-1 text-sm text-center text-gray-900 text-nowrap">
@@ -539,7 +588,7 @@ export default function SeedStewardStats({
 
                   {/* LONGTERM IMPACT */}
                   <div className="">
-                    <div className="text-[12px] text-black/80 mb-0">
+                    <div className="text-[12px] text-black/80 mb-0 text-nowrap">
                       LONGTERM IMPACT
                     </div>
                     <div className="bg-white/80 rounded-full border-2 border-dashed border-black px-3 py-1 text-sm text-center text-gray-900 text-nowrap">
@@ -556,33 +605,53 @@ export default function SeedStewardStats({
 
               {/* Right Card: Actions & Yield */}
               <div className="rounded-[28px] p-4">
-                <div className="flex flex-col justify-between h-full">
+                <div className="flex flex-col justify-between h-full scale-[1.05] lg:scale-[1.1] md:scale-[1.1] mt-2 lg:mt-2 md:mt-2">
                   {/* Action Buttons */}
                   <div className="space-y-3 mb-4 -mt-4">
-                    <button className="px-3 w-38 py-1 text-nowrap rounded-full bg-white/70 text-gray-900 peridia-display text-sm">
-                      <Link href="https://app.regen.network/profiles/daa2cbf0-6a5a-11f0-ae30-0afffa81c869/projects">
-                        View Certificates
-                      </Link>
+                    <button 
+                      className="px-3 w-38 py-1 text-nowrap rounded-full bg-white/70 text-gray-900 peridia-display text-sm hover:bg-white/80 transition-colors cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open("https://app.regen.network/profiles/daa2cbf0-6a5a-11f0-ae30-0afffa81c869/projects", "_blank");
+                      }}
+                      style={{ pointerEvents: 'auto' }}
+                    >
+                      View Certificates
                     </button>
-                    <button className="w-38 px-3 py-1 rounded-full bg-white/70 text-gray-900 peridia-display text-sm">
-                      <Link href="https://basescan.org/address/0x9142A61188e829BF924CeffF27e8ed8111700C9B">
-                        Scan Blockchain
-                      </Link>
+                    <button 
+                      className="w-38 px-3 py-1 rounded-full bg-white/70 text-gray-900 peridia-display text-sm hover:bg-white/80 transition-colors cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open("https://basescan.org/address/0x9142A61188e829BF924CeffF27e8ed8111700C9B", "_blank");
+                      }}
+                      style={{ pointerEvents: 'auto' }}
+                    >
+                      Scan Blockchain
                     </button>
                   </div>
 
                   {/* OVERALL ACCUMULATED YIELD */}
-                  <div className="text-[10px] text-white text-nowrap mb-1">
+                  <div className="text-[10px] text-white text-nowrap mb-1 -mt-2 lg:-mt-2 md:-mt-2">
                     OVERALL ACCUMULATED YIELD
                   </div>
-                  <div className="w-38 h-15 bg-[#E2E3F0B2] rounded-lg p-2">
+                  <div className="w-38 h-15 bg-[#E2E3F0B2] rounded-xl p-2">
                     <div className="rounded-full px-2 -mt-4 py-2 text-[16px] text-center text-gray-900">
                       {parseFloat(stats.overallAccumulatedYield).toFixed(6)} ETH
                     </div>
 
                     {/* Distribute Yield Button */}
                     <div className="-mt-5">
-                      <button className="w-38 -ml-2 px-6 py-1 rounded-full border-4 border-dotted border-gray-300 text-nowrap bg-white/80 text-gray-900 peridia-display text-sm mt-4">
+                      <button 
+                        className="w-38 -ml-2 px-6 py-1 rounded-full border-4 border-dotted border-gray-300 text-nowrap bg-white/80 text-gray-900 peridia-display text-sm mt-4 hover:bg-white/90 transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          console.log('Distribute Yield clicked');
+                        }}
+                        style={{ pointerEvents: 'auto' }}
+                      >
                         <p className="text-nowrap scale-[0.8] lg:scale-[1.0] md:scale-[0.8]">
                           <span className="peridia-display">D</span>istribute <span className="peridia-display">Y</span>ield
                         </p>
@@ -610,11 +679,11 @@ export default function SeedStewardStats({
                 stats.beneficiaries.map((beneficiary, index) => (
                   <div
                     key={`${beneficiary.index}-${beneficiary.code}`}
-                    className=""
+                    className="-mb-20 lg:-mb-20 md:-mb-20"
                   >
                     {/* Title bar */}
-                    <div className="flex items-center gap-3 mb-3 scale-[1.2] lg:scale-[1.25] md:scale-[1.25]">
-                      <div className="w-10 h-10 rounded-full border-3 border-dotted border-black bg-white overflow-hidden flex-shrink-0 relative">
+                    <div className="flex items-center gap-3 mb-3 scale-[1.3] lg:scale-[1.25] md:scale-[1.25] relative top-0 bottom-auto">
+                      <div className="w-10 h-10 rounded-full border-3 border-dotted border-black bg-white overflow-hidden flex-shrink-0 relative top-0 bottom-auto z-50">
                         <Image
                           src={`/seeds/0${beneficiary.index + 1}__${beneficiary.code.split('-')[1]}.png`}
                           alt={beneficiary.name}
@@ -624,7 +693,7 @@ export default function SeedStewardStats({
                           onError={() => setImageError(true)}
                         />
                       </div>
-                      <div className="flex-1 border text-nowrap border-black rounded-full bg-white/80 text-center text-gray-900 text-sm w-45 py-1 -ml-12 lg:w-45 md:w-48">
+                      <div className="flex-1 border text-nowrap border-black rounded-full bg-white/80 text-center text-gray-900 text-sm w-45 py-1 -ml-12 lg:w-45 md:w-48 relative top-0 bottom-auto">
                         <p className="text-nowrap text-[8px] lg:text-[10px] md:text-[9px] scale-[0.8] lg:scale-[0.85] md:scale-[0.95] ml-4 lg:ml-4 md:ml-8 -left-4">{beneficiary.name}</p>
                       </div>
                     </div>
@@ -634,16 +703,16 @@ export default function SeedStewardStats({
                       {/* First row: BENEFIT SHARE, SNAPSHOTS GAIN, UNCLAIMED (4 items) */}
                       <div className="grid grid-cols-4 gap-2">
                         {/* BENEFIT SHARE */}
-                        <div className="rounded-[20px] p-2 flex flex-col">
-                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left">
+                        <div className="rounded-[20px] p-2 flex flex-col -ml-4 lg:-ml-4 md:-ml-4 relative top-0 bottom-auto">
+                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left relative top-0 bottom-auto">
                             BENEFIT
                           </div>
-                          <div className="flex items-center justify-between">
-                            <div className="text-[9px] text-black/80 tracking-wide uppercase text-right -mt-6 lg:-mt-6 md:-mt-2 ml-2 lg:ml-2 md:ml-3">
+                          <div className="flex items-center justify-between relative top-0 bottom-auto">
+                            <div className="text-[9px] text-black/80 tracking-wide uppercase text-right -mt-3 lg:-mt-3 md:-mt-3 ml-2 lg:ml-2 md:ml-3 relative top-0 bottom-auto">
                               SHARE
                             </div>
-                            <div className="bg-white/70 rounded-full rounded-tl-[40px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] px-3 py-1 text-gray-900 text-[10px] text-center -mt-5 lg:-mt-5 md:-mt-5">
-                            <div className="mt-1">
+                            <div className="bg-white/70 rounded-full rounded-tl-[40px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] px-3 py-1 text-gray-900 text-[10px] text-center -mt-5 lg:-mt-5 md:-mt-5 relative top-0 bottom-auto">
+                            <div className="mt-1 relative top-0 bottom-auto">
                               {beneficiary.benefitShare}%
                               </div>
                             </div>
@@ -651,34 +720,34 @@ export default function SeedStewardStats({
                         </div>
 
                         {/* #SNAPSHOTS */}
-                        <div className="bg-white/70 border-2 border-dotted border-black rounded-[20px] rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] p-2 h-[55%] flex flex-col w-[150px] lg:w-[150px] md:w-[150px] scale-[0.5] lg:scale-[0.7] md:scale-[0.7] ml-6">
-                            <div className="text-[12px] text-black/80 mb-1 tracking-wide uppercase text-left -mt-6 lg:-mt-6 md:-mt-2 -ml-2 lg:-ml-2 md:-ml-2">
+                        <div className="bg-white/70 border-2 border-dotted border-black rounded-[20px] rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] p-2 h-[75%] lg:h-[60%] md:h-[55%] flex flex-col w-[180px] lg:w-[150px] md:w-[150px] scale-[0.6] lg:scale-[0.8] md:scale-[0.7] -ml-2 lg:ml-2 md:-ml-2 relative top-0 bottom-auto z-50">
+                            <div className="text-[14px] lg:text-[12px] md:text-[12px] text-black/80 mb-1 tracking-wide uppercase text-left -mt-2 lg:-mt-2 md:-mt-2 -ml-2 lg:-ml-2 md:-ml-2 relative top-0 bottom-auto">
                               #SNAPSHOTS
                             </div>
-                          <div className="flex items-center justify-between">
-                            <div className="text-[12px] text-black/80 tracking-wide uppercase text-right -mt-10 lg:-mt-10 md:-mt-2 ml-2 lg:ml-6 md:ml-8">
+                          <div className="flex items-center justify-between relative top-0 bottom-auto">
+                            <div className="text-[14px] lg:text-[12px] md:text-[12px] text-black/80 tracking-wide uppercase text-right -mt-3 lg:-mt-3 md:-mt-2 ml-9 lg:ml-8 md:ml-8 relative top-0 bottom-auto">
                               GAIN
                             </div>
-                            <div className=" px-2 py-1 text-gray-900 text-[10px] text-center -mt-5 lg:-mt-5 md:-mt-5 text-nowrap scale-[0.8] lg:scale-[0.8] md:scale-[1.05]">
+                            <div className=" px-2 py-1 text-gray-900 text-[18px] lg:text-[10px] md:text-[10px] text-center -mt-5 lg:-mt-5 md:-mt-5 text-nowrap scale-[0.8] lg:scale-[1.1] md:scale-[1.05] -ml-1 lg:-ml-1 md:-ml-1 relative top-0 bottom-auto">
                               {parseFloat(beneficiary.snapshotsGain).toFixed(6)} 
                               </div>
-                                <span className="text-[8px] lg:text-[6px] md:text-[3px]-mt-2 lg:-mt-2 md:-mt-6 -ml-1 lg:-ml-1 md:-ml-1">ETH</span>
+                                <span className="text-[8px] lg:text-[6px] md:text-[3px] -mt-8 lg:-mt-2 md:-mt-6 -ml-4 lg:-ml-4 md:-ml-1 relative -top-2 lg:-top-4 md:-top-4 bottom-auto">ETH</span>
                             </div>
                           </div>
-                          <div className="bg-white/70 rounded-tl-[30px] rounded-br-[30px] px-1 w-[70%] py-1 text-gray-900 text-[20px] text-center -mt-1 lg:-mt-1 md:-mt-1 scale-[0.5] lg:scale-[0.6] md:scale-[0.7] -ml-1 lg:-ml-30 md:-ml-16">
-                          <div className="scale-[0.8] lg:scale-[0.8] md:scale-[0.8] mt-4 lg:mt-4 md:mt-10 -ml-1 lg:-ml-1 md:-ml-4">
-                            {beneficiary.snapshotCount}
-                            </div>
+                          <div className="bg-white/70 rounded-tl-[30px] rounded-br-[30px] rounded-bl-[4px] rounded-tr-[4px] px-1 w-[90%] lg:w-[70%] md:w-[70%] py-1 text-gray-900 text-[20px] text-center -mt-1 lg:-mt-1 md:-mt-1 scale-[0.5] lg:scale-[0.6] md:scale-[0.7] -ml-16 lg:-ml-22 md:-ml-16 relative top-0 bottom-auto">
+                            <div className="scale-[0.8] lg:scale-[0.8] md:scale-[0.8] mt-6 lg:mt-6 md:mt-10 -ml-1 lg:-ml-1 md:-ml-4 relative top-2 bottom-auto">
+                              {beneficiary.snapshotCount}
+                              </div>
                           </div>
 
                         {/* UNCLAIMED */}
-                        <div className="rounded-[20px] p-2 bg-[#B7B7B799] rounded-tl-[20px] rounded-tr-[5px] rounded-bl-[20px] rounded-br-[20px] h-[28%] mt-4 lg:mt-4 md:mt-4">
-                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-right -mt-6 lg:-mt-6 md:-mt-4 ml-2 lg:ml-2 md:ml-3">
+                        <div className="rounded-[20px] p-2 bg-[#B7B7B799] rounded-tl-[20px] rounded-tr-[5px] rounded-bl-[20px] rounded-br-[20px] h-[32%] mt-4 lg:mt-4 md:mt-4 relative top-0 bottom-auto scale-[0.8] lg:scale-[1.15] md:scale-[0.95]">
+                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-right -mt-6 lg:-mt-6 md:-mt-4 ml-2 lg:ml-2 md:ml-3 relative top-2 lg:top-2 md:top-2 bottom-auto">
                             UNCLAIMED
                           </div>
-                          <div className="text-gray-900 text-[10px] text-right scale-[0.8] lg:scale-[0.8] md:scale-[0.8]">
+                          <div className="text-gray-900 text-[10px] text-right scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative top-1 bottom-auto">
                             {parseFloat(beneficiary.unclaimed).toFixed(6)} 
-                            <span className="text-[8px] lg:text-[6px] md:text-[3px]-mt-2 lg:-mt-2 md:-mt-8 -ml-1 lg:-ml-1 md:ml-0">ETH</span>
+                            <span className="text-[8px] lg:text-[7px] md:text-[3px] -mt-2 lg:mt-2 md:-mt-8 ml-0 lg:ml-0 md:ml-0 relative -top-1 bottom-auto">ETH</span>
                           </div>
                         </div>
 
@@ -688,49 +757,50 @@ export default function SeedStewardStats({
                       </div>
 
                       {/* Second row: GARDEN and YIELD SHARE */}
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-2 gap-2 relative top-0 bottom-auto">
                         {/* GARDEN */}
-                        <div className="rounded-[20px] p-2">
-                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left -mt-6 lg:-mt-6 md:-mt-20 -ml-2 lg:-ml-2 md:-ml-2">
+                        <div className="rounded-[20px] p-2 relative -top-10 lg:-top-10 md:-top-10 bottom-auto -left-3 lg:-left-3 md:-left-3">
+                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left -mt-6 lg:-mt-6 md:-mt-20 -ml-2 lg:-ml-2 md:-ml-2 relative top-0 lg:top-0 md:top-0 bottom-auto">
                             GARDEN
                           </div>
-                          <div className="bg-white/70 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-gray-900 text-[10px] text-center w-[60%] text-nowrap">
-                          <div className="bg-white/50 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-4 py-1 text-gray-900 text-[10px] text-center w-[80px] h-[20px] border-2 border-dotted border-black -ml-1">
-                            <span className="text-[8px] lg:text-[6px] md:text-[3px]-mt-4 lg:-mt-2 md:-mt-12 -ml-1 lg:-ml-1 md:-ml-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8]">{parseFloat(beneficiary.garden).toFixed(6)} ETH</span>
+                          <div className="bg-white/70 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-gray-900 text-[10px] text-center w-[75%] lg:w-[60%] md:w-[60%] text-nowrap relative top-0 bottom-auto">
+                          <div className="bg-white/50 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-4 py-1 text-gray-900 text-[10px] text-center w-[80px] lg:w-[84px] md:w-[84px] h-[20px] border-1 border-dotted border-black -ml-1 lg:-ml-1.5 md:-ml-2 relative top-1 lg:top-1 md:top-1 bottom-auto">
+                            <span className="text-[9px] lg:text-[10px] md:text-[10px] -mt-4 lg:-mt-2 md:-mt-12 -ml-3 lg:-ml-1 md:-ml-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative -top-1 lg:-top-1 md:-top-1 bottom-auto">{parseFloat(beneficiary.garden).toFixed(6)} 
+                              <span className="text-[8px] lg:text-[7px] md:text-[3px] -mt-4 lg:-mt-2 md:-mt-12 ml-1 lg:ml-0 md:ml-0 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span></span>
                           </div>
                           </div>
                         </div>
 
                         {/* YIELD SHARE */}
-                        <div className="p-2 flex flex-col">
-                          <div className="bg-white/70 border-2 border-dotted border-black rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] rounded-full px-2 py-0 text-gray-900 text-[10px] text-center h-[85%] w-[80%] -ml-14 lg:-ml-22 md:-ml-8 -mt-6 lg:-mt-6 md:-mt-18 scale-[0.8] lg:scale-[0.8] md:scale-[0.9]">
-                            <div className="text-[10px] text-black/80 mb-1 tracking-wide uppercase text-left -ml-2 lg:-ml-2 md:-ml-1">
+                        <div className="p-2 flex flex-col relative -top-8 lg:-top-8 md:-top-8 bottom-auto left-4 lg:left-3 md:left-3">
+                          <div className="bg-white/70 border-2 border-dotted border-black rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] rounded-full px-2 py-0 text-gray-900 text-[10px] text-center h-[80%] lg:h-[90%] md:h-[90%] w-[92%] lg:w-[70%] md:w-[70%] -ml-14 lg:-ml-16 md:-ml-8 -mt-6 lg:-mt-6 md:-mt-18 scale-[0.8] lg:scale-[1.05] md:scale-[0.9] relative top-0 bottom-auto">
+                            <div className="text-[10px] lg:text-[11px] md:text-[11px] text-black/80 mb-1 tracking-wide uppercase text-left -ml-2 lg:-ml-2 md:-ml-1 relative top-0 bottom-auto">
                               YIELD
                             </div>
-                            <div className="flex items-center justify-between">
-                              <div className="text-[10px] text-black/80 tracking-wide uppercase text-left -mt-6 lg:-mt-6 md:-mt-2 -ml-2 lg:-ml-2 md:-ml-1">
+                            <div className="flex items-center justify-between relative top-0 bottom-auto">
+                              <div className="text-[10px] text-black/80 tracking-wide uppercase text-left -mt-2 lg:-mt-2 md:-mt-2 -ml-2 lg:-ml-2 md:-ml-1 relative top-0 bottom-auto">
                                 SHARE
                               </div>
-                              <div className="-mt-5 lg:-mt-5 md:-mt-5 scale-[0.8] lg:scale-[0.8] md:scale-[1.05]">
+                              <div className="-mt-5 lg:-mt-5 md:-mt-5 scale-[0.95] lg:scale-[0.95] md:scale-[1.05] relative top-0 bottom-auto left-1 lg:left-1 md:left-1">
                                 {parseFloat(beneficiary.yieldShare).toFixed(6)} 
-                                <span className="text-[6px] lg:text-[6px] md:text-[2px]-mt-2 lg:-mt-2 md:mt-2 -ml-1 lg:-ml-1 md:ml-0">ETH</span>
+                                <span className="text-[7px] lg:text-[6px] md:text-[2px] -mt-12 lg:-mt-2 md:mt-2 ml-0 lg:ml-0 md:ml-0 relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span>
                               </div>
                             </div>
                           </div>
-                      {/* Third row: CLAIMED */}
-                      <div className="grid grid-cols-1 gap-2">
-                        <div className="rounded-[20px] p-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] ml-4 lg:ml-4 md:ml-2 -mt-2 lg:-mt-2 md:mt-2">
-                          <div className="bg-[#D3C9DE66] border-2 border-dotted border-black rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[5px] px-8 py-1 text-gray-900 text-[9px] text-center mt-1">
-                            {parseFloat(beneficiary.claimed).toFixed(6)} ETH
-                          </div>
-                          <div className="bg-[#D3C9DE66] rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1 lg:mt-1 md:-mt-2">
-                            CLAIMED
+                          {/* Third row: CLAIMED */}
+                          <div className="grid grid-cols-1 gap-2 relative top-0 bottom-auto">
+                            <div className="rounded-[20px] p-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] ml-4 lg:ml-4 md:ml-2 -mt-2 lg:-mt-2 md:mt-2 relative -top-10 lg:-top-10 md:-top-10 left-4 lg:left-6 md:left-6 bottom-auto">
+                              <div className="bg-[#D3C9DE66] border-2 border-dotted border-black rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[5px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1 relative top-2 bottom-auto">
+                                {parseFloat(beneficiary.claimed).toFixed(6)} 
+                                <span className="text-[7px] lg:text-[6px] md:text-[2px] -mt-12 lg:-mt-2 md:mt-2 ml-0 lg:-ml-1 md:ml-0 relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span>
+                              </div>
+                              <div className="bg-[#D3C9DE66] rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1 lg:mt-1 md:-mt-2 relative top-0 bottom-auto">
+                                CLAIMED
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                        </div>
-                      </div>
-
                     </div>
                   </div>
                 ))

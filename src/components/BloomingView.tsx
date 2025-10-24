@@ -321,7 +321,7 @@ export default function BloomingView({
         </div>
 
         {/* Root shape area */}
-        <div className="relative mt-18 lg:mt-12">
+        <div className="relative mt-22 lg:mt-12">
           <RootShapeArea
             onStory={onStory}
             onSubstrate={handleSubstrate}
