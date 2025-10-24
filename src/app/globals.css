@@ -413,14 +413,14 @@ body {
   }
 
   .seed-detail-stat-item {
-    padding: 0.75rem;
-    height: 70px;
+    padding: 0.4rem 0.75rem;
+    height: 50px;
   }
 
   .seed-detail-stat-label {
     font-size: 0.4rem;
-    margin-bottom: 0.375rem;
-    margin-top: 0.8rem;
+    margin-bottom: 0.15rem;
+    margin-top: 0.2rem;
   }
 
   .seed-detail-stat-value {
@@ -462,10 +462,29 @@ body {
   }
 }
 
+/* Desktop view - Reduce height for larger screens */
+@media screen and (min-width: 829px) {
+  .seed-detail-stat-item {
+    height: 42px;
+    padding: 0.3rem 0.75rem;
+  }
+
+  .seed-detail-stat-label {
+    margin-bottom: 0.1rem;
+    margin-top: 0.15rem;
+  }
+}
+
 /* 767px to 367px - Reduce height slightly, increase font size */
 @media screen and (max-width: 767px) and (min-width: 367px) {
   .seed-detail-stat-item {
-    height: 55px;
+    height: 45px;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .seed-detail-stat-label {
+    margin-bottom: 0.1rem;
+    margin-top: 0.15rem;
   }
 
   .seed-detail-stat-value {
@@ -476,7 +495,13 @@ body {
 /* Below 367px - Use same height as 767px */
 @media screen and (max-width: 367px) {
   .seed-detail-stat-item {
-    height: 55px;
+    height: 45px;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .seed-detail-stat-label {
+    margin-bottom: 0.1rem;
+    margin-top: 0.15rem;
   }
 }
 

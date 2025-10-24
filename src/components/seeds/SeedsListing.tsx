@@ -42,8 +42,8 @@ export default function SeedsListing({
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const loadSeeds = async () => {
@@ -109,7 +109,9 @@ export default function SeedsListing({
             transition={{ duration: 0.3 }}
             className="text-sm text-nowrap scale-[0.8] lg:scale-[1.0] md:scale-[0.9] font-light text-gray-900 text-center -mt-7 lg:-mt-4 md:-mt-4 -mb-4"
           >
-            {hasScrolled ? "CLICK ON THE SEED YOU WISH TO EVOLVE" : "WELCOME TO THE GARDEN"}
+            {hasScrolled
+              ? "CLICK ON THE SEED YOU WISH TO EVOLVE"
+              : "WELCOME TO THE GARDEN"}
           </motion.h1>
         </AnimatePresence>
       </motion.div>
@@ -133,7 +135,7 @@ export default function SeedsListing({
         </AnimatePresence>
 
         {seeds.length === 0 && (
-          <div className="text-center py-12">
+          <div className="text-center py-12 mt-16 mb-12">
             <p className="text-gray-500">No seeds found in the garden.</p>
           </div>
         )}
@@ -141,7 +143,7 @@ export default function SeedsListing({
 
       {/* Disconnect Button at Bottom */}
       <motion.div
-        className="px-4 pb-6 -mt-22 lg:-mt-22 md:-mt-22"
+        className="px-4 pb-6 mt-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.6 }}
@@ -149,7 +151,7 @@ export default function SeedsListing({
         <Button
           variant="ghost"
           onClick={globalLogout}
-          className="w-full text-gray-600 underline hover:text-gray-800 -mt-22 lg:-mt-22 md:-mt-22"
+          className="w-full text-gray-600 underline hover:text-gray-800"
         >
           Disconnect
         </Button>
