@@ -365,7 +365,7 @@ export default function SeedStewardStats({
             <div className="grid grid-cols-3 gap-4 mb-6 scale-[1.0] lg:scale-[1.1] md:scale-[1.1]">
               {/* SEED NUMBER */}
               <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
-                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2 mt-2 lg:mt-2 md:mt-2">
                   SEED NUMBER
                 </div>
                 <div className="bg-white/70 border-3 border-dotted border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
@@ -378,7 +378,7 @@ export default function SeedStewardStats({
 
               {/* SNAPSHOTS */}
               <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
-                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2 mt-2 lg:mt-2 md:mt-2">
                   SNAPSHOTS
                 </div>
                 <div className="bg-white/70 border-3 border-dotted border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
@@ -390,7 +390,7 @@ export default function SeedStewardStats({
 
               {/* SNAPSHOT SHARE */}
               <div className="text-center">
-                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
+                <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2 mt-2 lg:mt-2 md:mt-2">
                   SNAPSHOT SHARE
                 </div>
                 <div className="bg-white/70 border-3 border-dotted border-black/70 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
@@ -399,7 +399,7 @@ export default function SeedStewardStats({
               </div>
 
               {/* MINTED ON */}
-              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0] -mt-2 lg:-mt-2 md:-mt-2 mb-2 lg:mb-2 md:mb-2">
+              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0] -mt-2 lg:-mt-2 md:-mt-2 mb-4 lg:mb-4 md:mb-4">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   MINTED ON
                 </div>
@@ -409,7 +409,7 @@ export default function SeedStewardStats({
               </div>
 
               {/* SNAPSHOT PRICE */}
-              <div className="text-center -mt-2 lg:-mt-2 md:-mt-2 mb-2 lg:mb-2 md:mb-2">
+              <div className="text-center -mt-2 lg:-mt-2 md:-mt-2 mb-4 lg:mb-4 md:mb-4">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   SNAPSHOT PRICE
                 </div>
@@ -422,7 +422,7 @@ export default function SeedStewardStats({
 
 
               {/* 20% SHARE VALUE */}
-              <div className="text-center -mt-2 lg:-mt-2 md:-mt-2 mb-2 lg:mb-2 md:mb-2">
+              <div className="text-center -mt-2 lg:-mt-2 md:-mt-2 mb-4 lg:mb-4 md:mb-4">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   20% SHARE VALUE
                 </div>
@@ -436,7 +436,7 @@ export default function SeedStewardStats({
           {/* Two separate sections below - always side by side */}
           <div className="grid grid-cols-2 gap-2 mx-4 mb-6 scale-[1.0] lg:scale-[1.0] md:scale-[0.95]">
             {/* Left Card: NUTRIENT RESERVE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 -ml-6 lg:-ml-4 md:-ml-4 w-52 scale-[0.85] lg:scale-[1.0] md:scale-[1.0]">
+            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 -ml-6 lg:-ml-1 md:-ml-4 w-52 scale-[0.85] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
                 {/* NUTRIENT RESERVE TOTAL */}
                 <div className="text-center">
@@ -471,7 +471,7 @@ export default function SeedStewardStats({
             </div>
 
             {/* Right Card: HARVESTABLE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 w-40 ml-2 lg:ml-4 md:ml-4 scale-[0.85] lg:scale-[1.0] md:scale-[1.0]">
+            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 w-40 ml-2 lg:ml-8 md:ml-4 scale-[0.85] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
                 {/* HARVESTABLE */}
                 <div className="text-center">
@@ -567,7 +567,7 @@ export default function SeedStewardStats({
           </div>
           <div className="rounded-[28px] m-4 p-6">
 
-            <div className="grid grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.1] md:scale-[1.1] -ml-3 lg:-ml-3 md:-ml-3 -mt-10 lg:-mt-10 md:-mt-10">
+            <div className="grid grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.05] md:scale-[1.05] -ml-3 lg:-ml-1 md:-ml-1 -mt-10 lg:-mt-6 md:-mt-6">
               {/* Left Card: Impact Details */}
               <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 h-45 w-45 lg:w-45 md:w-45 scale-[1.0] lg:scale-[1.0] md:scale-[1.0] -ml-8 lg:-ml-4 md:-ml-4">
                 <div className="space-y-4">
