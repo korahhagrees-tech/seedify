@@ -94,11 +94,12 @@ export default function SeedStewardStats({
   const radius = useTransform(scrollYProgress, [0, 0.2], [60, 999]);
   const width = useTransform(scrollYProgress, [0, 0.2], [900, 120]);
   const height = useTransform(scrollYProgress, [0, 0.2], [380, 120]);
+  const translateX = useTransform(scrollYProgress, [0, 0.2], [0, -150]);
 
   // Button animations - start at top-right of image, drop down to right side
   const buttonScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
-  const buttonTranslateX = useTransform(scrollYProgress, [0, 0.2], [0, -60]);
-  const buttonTranslateY = useTransform(scrollYProgress, [0, 0.2], [0, -80]);
+  const buttonTranslateX = useTransform(scrollYProgress, [0, 0.2], [0, 10]);
+  const buttonTranslateY = useTransform(scrollYProgress, [0, 0.2], [0, -10]);
   const buttonRight = useTransform(scrollYProgress, [0, 0.2], [0, 12]);
   const buttonOpacity = useTransform(
     scrollYProgress,
@@ -239,7 +240,8 @@ export default function SeedStewardStats({
                   scale,
                   borderRadius: radius,
                   width: width,
-                  height: height
+                  height: height,
+                  translateX: translateX
                 }}
                 className="relative overflow-hidden shadow-xl bg-white mx-auto"
               >
@@ -375,7 +377,7 @@ export default function SeedStewardStats({
             {/* Core metrics 3x2 grid - single background */}
             <div className="grid grid-cols-3 gap-4 mb-6 scale-[1.0] lg:scale-[1.1] md:scale-[1.1]">
               {/* SEED NUMBER */}
-              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
+              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0] relative left-0 right-auto">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2 mt-2 lg:mt-2 md:mt-2">
                   SEED NUMBER
                 </div>
@@ -388,7 +390,7 @@ export default function SeedStewardStats({
 
 
               {/* SNAPSHOTS */}
-              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0]">
+              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0] relative left-0 right-auto">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2 mt-2 lg:mt-2 md:mt-2">
                   SNAPSHOTS
                 </div>
@@ -400,7 +402,7 @@ export default function SeedStewardStats({
               </div>
 
               {/* SNAPSHOT SHARE */}
-              <div className="text-center">
+              <div className="text-center relative left-0 right-auto">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2 mt-2 lg:mt-2 md:mt-2">
                   SNAPSHOT SHARE
                 </div>
@@ -412,7 +414,7 @@ export default function SeedStewardStats({
               </div>
 
               {/* MINTED ON */}
-              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0] -mt-2 lg:-mt-2 md:-mt-2 mb-4 lg:mb-4 md:mb-4">
+              <div className="text-center scale-[0.9] lg:scale-[1.0] md:scale-[1.0] -mt-2 lg:-mt-2 md:-mt-2 mb-4 lg:mb-4 md:mb-4 relative left-0 right-auto">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   MINTED ON
                 </div>
@@ -424,7 +426,7 @@ export default function SeedStewardStats({
               </div>
 
               {/* SNAPSHOT PRICE */}
-              <div className="text-center -mt-2 lg:-mt-2 md:-mt-2 mb-4 lg:mb-4 md:mb-4">
+              <div className="text-center -mt-2 lg:-mt-2 md:-mt-2 mb-4 lg:mb-4 md:mb-4 relative left-0 right-auto">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   SNAPSHOT PRICE
                 </div>
@@ -437,7 +439,7 @@ export default function SeedStewardStats({
 
 
               {/* 20% SHARE VALUE */}
-              <div className="text-center -mt-2 lg:-mt-2 md:-mt-2 mb-4 lg:mb-4 md:mb-4">
+              <div className="text-center -mt-2 lg:-mt-2 md:-mt-2 mb-4 lg:mb-4 md:mb-4 relative left-0 right-auto">
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2">
                   20% SHARE VALUE
                 </div>
@@ -841,7 +843,7 @@ export default function SeedStewardStats({
         </div>
 
         {/* Footer root shape */}
-        <div className="fixed -bottom-4 lg:-bottom-3 md:-bottom-3 left-0 right-0 z-30 pt-4 scale-[0.99] lg:scale-[1.08] md:scale-[1.08]">
+        <div className="fixed -bottom-4 lg:-bottom-2 md:-bottom-2 left-0 right-0 z-30 pt-4 scale-[0.99] lg:scale-[1.08] md:scale-[1.08]">
           <div className="max-w-md mx-auto px-4">
             <RootShapeArea
               onWallet={() => { }}
