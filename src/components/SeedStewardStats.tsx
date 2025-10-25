@@ -306,7 +306,7 @@ export default function SeedStewardStats({
             onMouseUp={() => console.log('INFO div mouse up')}
             onTouchStart={() => console.log('INFO div touch start')}
             onTouchEnd={() => console.log('INFO div touch end')}
-            className="flex items-center gap-1 px-4 py-2 rounded-full bg-[#D3C9DE] text-black text-sm hover:bg-[#D3C9DE]/80 transition-colors cursor-pointer absolute -right-2 lg:-right-2 md:-right-2 top-19 lg:top-21 md:top-21 z-50 scale-[0.8] lg:scale-[1.0] md:scale-[0.8]"
+            className="flex items-center gap-1 px-4 py-2 rounded-full bg-[#D3C9DE] text-black text-sm hover:bg-[#D3C9DE]/80 transition-colors cursor-pointer absolute -right-2 lg:-right-2 md:-right-2 top-19 lg:top-21 md:top-21 z-50 scale-[0.8] lg:scale-[0.8] md:scale-[0.8]"
             style={{ pointerEvents: 'auto', minWidth: '60px', minHeight: '32px' }}
           >
             INFO
@@ -379,8 +379,8 @@ export default function SeedStewardStats({
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2 mt-2 lg:mt-2 md:mt-2">
                   SEED NUMBER
                 </div>
-                <div className="bg-white/70 border-3 border-dotted border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
-                  <div className="text-nowrap scale-[1.2] lg:scale-[0.9] md:scale-[0.85]">
+                <div className="bg-white/70 border-3 border-dotted border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center scale-[0.7] lg:scale-[0.9] md:scale-[0.8]">
+                  <div className="text-nowrap scale-[1.2] lg:scale-[1.6] md:scale-[1.6]">
                     {stats.seedNumber}
                   </div>
                 </div>
@@ -392,8 +392,8 @@ export default function SeedStewardStats({
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2 mt-2 lg:mt-2 md:mt-2">
                   SNAPSHOTS
                 </div>
-                <div className="bg-white/70 border-3 border-dotted border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
-                  <div className="text-nowrap scale-[1.2] lg:scale-[0.9] md:scale-[0.85]">
+                <div className="bg-white/70 border-3 border-dotted border-gray-700 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center scale-[0.7] lg:scale-[0.9] md:scale-[0.8]">
+                  <div className="text-nowrap scale-[1.2] lg:scale-[1.6] md:scale-[1.6]">
                     {stats.totalSnapshots}
                   </div>
                 </div>
@@ -404,8 +404,10 @@ export default function SeedStewardStats({
                 <div className="text-[9px] lg:text-[10px] md:text-[10px] text-nowrap tracking-wide text-black/90 mb-2 mt-2 lg:mt-2 md:mt-2">
                   SNAPSHOT SHARE
                 </div>
-                <div className="bg-white/70 border-3 border-dotted border-black/70 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center">
-                  {formatPercentage(stats.snapshotShare)}
+                <div className="bg-white/70 border-3 border-dotted border-black/70 rounded-full px-2 py-2 text-[11px] text-gray-900 text-center scale-[0.7] lg:scale-[0.9] md:scale-[0.8]">
+                  <div className="text-nowrap scale-[1.2] lg:scale-[1.6] md:scale-[1.6]">
+                    {formatPercentage(stats.snapshotShare)}
+                  </div>
                 </div>
               </div>
 
@@ -415,7 +417,9 @@ export default function SeedStewardStats({
                   MINTED ON
                 </div>
                 <div className="bg-white/70 rounded-full px-1 py-2 text-[10px] lg:text-[11px] md:text-[11px] text-gray-900 text-center">
-                  {formatDate(stats.mintedOn)}
+                  <div className="text-nowrap scale-[0.9] lg:scale-[1.2] md:scale-[1.2]">
+                    {formatDate(stats.mintedOn)}
+                  </div>
                 </div>
               </div>
 
@@ -425,7 +429,7 @@ export default function SeedStewardStats({
                   SNAPSHOT PRICE
                 </div>
                 <div className="bg-white/70 border-2 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center text-nowrap">
-                  <div className="text-nowrap scale-[0.85] lg:scale-[0.9] md:scale-[0.85]">
+                  <div className="text-nowrap scale-[0.9] lg:scale-[1.2] md:scale-[1.2]">
                     {parseFloat(stats.snapshotPrice).toFixed(5)} ETH
                   </div>
                 </div>
@@ -438,14 +442,16 @@ export default function SeedStewardStats({
                   20% SHARE VALUE
                 </div>
                 <div className="bg-white/70 border-2 rounded-full px-1 py-2 text-[10px] text-gray-900 text-center">
-                  {parseFloat(stats.twentyPercentShareValue).toFixed(3)} ETH
+                  <div className="text-nowrap scale-[0.9] lg:scale-[1.2] md:scale-[1.2]">
+                    {parseFloat(stats.twentyPercentShareValue).toFixed(3)} ETH
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Two separate sections below - always side by side */}
-          <div className="grid grid-cols-2 gap-2 mx-4 mb-6 scale-[1.0] lg:scale-[1.05] md:scale-[1.05] ml-[6%] lg:ml-[8%] md:ml-[8%]">
+          <div className="grid grid-cols-2 gap-2 mx-4 mb-6 scale-[1.0] lg:scale-[1.05] md:scale-[1.05] ml-[6%] lg:ml-[4%] md:ml-[8%]">
             {/* Left Card: NUTRIENT RESERVE - Single background with individual value containers */}
             <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 -ml-6 lg:-ml-1 md:-ml-4 w-52 scale-[0.85] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
@@ -482,7 +488,7 @@ export default function SeedStewardStats({
             </div>
 
             {/* Right Card: HARVESTABLE - Single background with individual value containers */}
-            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 w-40 ml-2 lg:ml-8 md:ml-4 scale-[0.85] lg:scale-[1.0] md:scale-[1.0]">
+            <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 w-40 ml-2 lg:ml-6 md:ml-4 scale-[0.85] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
                 {/* HARVESTABLE */}
                 <div className="text-center">
@@ -518,8 +524,8 @@ export default function SeedStewardStats({
           </div>
 
           {/* Action buttons */}
-          <div className="mx-4 mb-6">
-            <div className="flex gap-4">
+          <div className="mx-4 mb-6 relative z-30">
+            <div className="flex gap-4 relative z-30">
               {/* Amplify Impact Section */}
               <div className="flex-1">
                 {/* Button with scalloped edges and border */}
@@ -527,10 +533,15 @@ export default function SeedStewardStats({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    console.log('🔍 Amplify button clicked directly');
                     handleAmplifyClick();
                   }}
-                  className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors cursor-pointer z-40"
-                  style={{ pointerEvents: 'auto' }}
+                  onMouseDown={() => console.log('🖱️ Amplify button mouse down')}
+                  onMouseUp={() => console.log('🖱️ Amplify button mouse up')}
+                  onTouchStart={() => console.log('📱 Amplify button touch start')}
+                  onTouchEnd={() => console.log('📱 Amplify button touch end')}
+                  className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors cursor-pointer z-50"
+                  style={{ pointerEvents: 'auto', zIndex: 50 }}
                 >
                   Amplify Impact
                 </button>
@@ -550,10 +561,15 @@ export default function SeedStewardStats({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    console.log('🔍 Harvest button clicked directly');
                     handleHarvestClick();
                   }}
-                  className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors cursor-pointer z-40"
-                  style={{ pointerEvents: 'auto' }}
+                  onMouseDown={() => console.log('🖱️ Harvest button mouse down')}
+                  onMouseUp={() => console.log('🖱️ Harvest button mouse up')}
+                  onTouchStart={() => console.log('📱 Harvest button touch start')}
+                  onTouchEnd={() => console.log('📱 Harvest button touch end')}
+                  className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors cursor-pointer z-50"
+                  style={{ pointerEvents: 'auto', zIndex: 50 }}
                 >
                   Harvest
                 </button>
@@ -731,7 +747,7 @@ export default function SeedStewardStats({
                         </div>
 
                         {/* #SNAPSHOTS */}
-                        <div className="bg-white/70 border-2 border-dotted border-black rounded-[20px] rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] p-2 h-[75%] lg:h-[60%] md:h-[55%] flex flex-col w-[180px] lg:w-[150px] md:w-[150px] scale-[0.6] lg:scale-[0.8] md:scale-[0.7] -ml-2 lg:ml-2 md:-ml-2 relative top-0 bottom-auto z-50">
+                        <div className="bg-white/70 border-2 border-dotted border-black rounded-[20px] rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] p-2 h-[75%] lg:h-[60%] md:h-[55%] flex flex-col w-[180px] lg:w-[150px] md:w-[150px] scale-[0.6] lg:scale-[0.8] md:scale-[0.7] -ml-2 lg:ml-2 md:ml-2 relative top-0 bottom-auto z-50">
                             <div className="text-[14px] lg:text-[12px] md:text-[12px] text-black/80 mb-1 tracking-wide uppercase text-left -mt-2 lg:-mt-2 md:-mt-2 -ml-2 lg:-ml-2 md:-ml-2 relative top-0 bottom-auto">
                               #SNAPSHOTS
                             </div>
@@ -742,23 +758,23 @@ export default function SeedStewardStats({
                             <div className=" px-2 py-1 text-gray-900 text-[18px] lg:text-[10px] md:text-[10px] text-center -mt-5 lg:-mt-5 md:-mt-5 text-nowrap scale-[0.8] lg:scale-[1.1] md:scale-[1.05] -ml-1 lg:-ml-1 md:-ml-1 relative top-0 bottom-auto">
                               {parseFloat(beneficiary.snapshotsGain).toFixed(6)} 
                               </div>
-                                <span className="text-[8px] lg:text-[6px] md:text-[3px] -mt-8 lg:-mt-2 md:-mt-6 -ml-4 lg:-ml-4 md:-ml-1 relative -top-2 lg:-top-4 md:-top-4 bottom-auto">ETH</span>
+                                <span className="text-[8px] lg:text-[6px] md:text-[6px] -mt-8 lg:-mt-2 md:-mt-6 -ml-4 lg:-ml-4 md:-ml-2 relative -top-2 lg:-top-4 md:top-0 bottom-auto">ETH</span>
                             </div>
                           </div>
-                          <div className="bg-white/70 rounded-tl-[30px] rounded-br-[30px] rounded-bl-[4px] rounded-tr-[4px] px-1 w-[90%] lg:w-[70%] md:w-[70%] py-1 text-gray-900 text-[20px] text-center -mt-1 lg:-mt-1 md:-mt-1 scale-[0.5] lg:scale-[0.6] md:scale-[0.7] -ml-16 lg:-ml-22 md:-ml-16 relative top-0 bottom-auto">
+                          <div className="bg-white/70 rounded-tl-[30px] rounded-br-[30px] rounded-bl-[4px] rounded-tr-[4px] px-1 w-[90%] lg:w-[70%] md:w-[70%] py-1 text-gray-900 text-[20px] text-center -mt-1 lg:-mt-1 md:-mt-1 scale-[0.5] lg:scale-[0.6] md:scale-[0.7] -ml-16 lg:-ml-22 md:-ml-18 relative top-0 bottom-auto">
                             <div className="scale-[0.8] lg:scale-[0.8] md:scale-[0.8] mt-6 lg:mt-6 md:mt-10 -ml-1 lg:-ml-1 md:-ml-4 relative top-2 bottom-auto">
                               {beneficiary.snapshotCount}
                               </div>
                           </div>
 
                         {/* UNCLAIMED */}
-                        <div className="rounded-[20px] p-2 bg-[#B7B7B799] rounded-tl-[20px] rounded-tr-[5px] rounded-bl-[20px] rounded-br-[20px] h-[32%] mt-4 lg:mt-4 md:mt-4 relative top-0 bottom-auto scale-[0.8] lg:scale-[1.15] md:scale-[0.95]">
-                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-right -mt-6 lg:-mt-6 md:-mt-4 ml-2 lg:ml-2 md:ml-3 relative top-2 lg:top-2 md:top-2 bottom-auto">
+                        <div className="rounded-[20px] p-2 bg-[#B7B7B799] rounded-tl-[20px] rounded-tr-[5px] rounded-bl-[20px] rounded-br-[20px] h-[32%] mt-4 lg:mt-4 md:mt-4 relative top-0 bottom-auto scale-[0.8] lg:scale-[1.15] md:scale-[1.1]">
+                          <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-right -mt-6 lg:-mt-6 md:-mt-4 ml-2 lg:ml-2 md:ml-3 relative top-2 lg:top-2 md:-top-1 bottom-auto">
                             UNCLAIMED
                           </div>
-                          <div className="text-gray-900 text-[10px] text-right scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative top-1 bottom-auto">
+                          <div className="text-gray-900 text-[10px] text-right scale-[0.8] lg:scale-[0.8] md:scale-[0.95] relative top-1 lg:top-1 md:-top-1 bottom-auto">
                             {parseFloat(beneficiary.unclaimed).toFixed(6)} 
-                            <span className="text-[8px] lg:text-[7px] md:text-[3px] -mt-2 lg:mt-2 md:-mt-8 ml-0 lg:ml-0 md:ml-0 relative -top-1 bottom-auto">ETH</span>
+                            <span className="text-[8px] lg:text-[7px] md:text-[7px] -mt-2 lg:mt-2 md:-mt-8 ml-0 lg:ml-0 md:ml-0 relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span>
                           </div>
                         </div>
 
@@ -770,42 +786,42 @@ export default function SeedStewardStats({
                       {/* Second row: GARDEN and YIELD SHARE */}
                       <div className="grid grid-cols-2 gap-2 relative top-0 bottom-auto">
                         {/* GARDEN */}
-                        <div className="rounded-[20px] p-2 relative -top-10 lg:-top-10 md:-top-10 bottom-auto -left-3 lg:-left-3 md:-left-3">
+                        <div className="rounded-[20px] p-2 relative -top-10 lg:-top-10 md:top-0 bottom-auto -left-3 lg:-left-3 md:-left-3">
                           <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left -mt-6 lg:-mt-6 md:-mt-20 -ml-2 lg:-ml-2 md:-ml-2 relative top-0 lg:top-0 md:top-0 bottom-auto">
                             GARDEN
                           </div>
                           <div className="bg-white/70 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-gray-900 text-[10px] text-center w-[75%] lg:w-[60%] md:w-[60%] text-nowrap relative top-0 bottom-auto">
                           <div className="bg-white/50 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-4 py-1 text-gray-900 text-[10px] text-center w-[80px] lg:w-[84px] md:w-[84px] h-[20px] border-1 border-dotted border-black -ml-1 lg:-ml-1.5 md:-ml-2 relative top-1 lg:top-1 md:top-1 bottom-auto">
                             <span className="text-[9px] lg:text-[10px] md:text-[10px] -mt-4 lg:-mt-2 md:-mt-12 -ml-3 lg:-ml-1 md:-ml-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative -top-1 lg:-top-1 md:-top-1 bottom-auto">{parseFloat(beneficiary.garden).toFixed(6)} 
-                              <span className="text-[8px] lg:text-[7px] md:text-[3px] -mt-4 lg:-mt-2 md:-mt-12 ml-1 lg:ml-0 md:ml-0 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span></span>
+                              <span className="text-[8px] lg:text-[7px] md:text-[7px] -mt-4 lg:-mt-2 md:-mt-12 ml-1 lg:ml-0 md:ml-0 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span></span>
                           </div>
                           </div>
                         </div>
 
                         {/* YIELD SHARE */}
-                        <div className="p-2 flex flex-col relative -top-8 lg:-top-8 md:-top-8 bottom-auto left-4 lg:left-3 md:left-3">
-                          <div className="bg-white/70 border-2 border-dotted border-black rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] rounded-full px-2 py-0 text-gray-900 text-[10px] text-center h-[80%] lg:h-[90%] md:h-[90%] w-[92%] lg:w-[70%] md:w-[70%] -ml-14 lg:-ml-16 md:-ml-8 -mt-6 lg:-mt-6 md:-mt-18 scale-[0.8] lg:scale-[1.05] md:scale-[0.9] relative top-0 bottom-auto">
-                            <div className="text-[10px] lg:text-[11px] md:text-[11px] text-black/80 mb-1 tracking-wide uppercase text-left -ml-2 lg:-ml-2 md:-ml-1 relative top-0 bottom-auto">
+                        <div className="p-2 flex flex-col relative -top-8 lg:-top-8 md:top-0 bottom-auto left-4 lg:left-3 md:-left-2">
+                          <div className="bg-white/70 border-2 border-dotted border-black rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] rounded-full px-2 py-0 text-gray-900 text-[10px] text-center h-[80%] lg:h-[90%] md:h-[90%] w-[92%] lg:w-[70%] md:w-[70%] -ml-14 lg:-ml-16 md:-ml-8 -mt-6 lg:-mt-6 md:-mt-18 scale-[0.8] lg:scale-[1.05] md:scale-[0.85] relative top-0 bottom-auto">
+                            <div className="text-[10px] lg:text-[11px] md:text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left -ml-2 lg:-ml-2 md:-ml-1 relative top-0 bottom-auto">
                               YIELD
                             </div>
                             <div className="flex items-center justify-between relative top-0 bottom-auto">
-                              <div className="text-[10px] text-black/80 tracking-wide uppercase text-left -mt-2 lg:-mt-2 md:-mt-2 -ml-2 lg:-ml-2 md:-ml-1 relative top-0 bottom-auto">
+                              <div className="text-[10px] lg:text-[11px] md:text-[9px] text-black/80 tracking-wide uppercase text-left -mt-2 lg:-mt-2 md:-mt-2 -ml-2 lg:-ml-2 md:-ml-1 relative top-0 bottom-auto">
                                 SHARE
                               </div>
                               <div className="-mt-5 lg:-mt-5 md:-mt-5 scale-[0.95] lg:scale-[0.95] md:scale-[1.05] relative top-0 bottom-auto left-1 lg:left-1 md:left-1">
                                 {parseFloat(beneficiary.yieldShare).toFixed(6)} 
-                                <span className="text-[7px] lg:text-[6px] md:text-[2px] -mt-12 lg:-mt-2 md:mt-2 ml-0 lg:ml-0 md:ml-0 relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span>
+                                <span className="text-[7px] lg:text-[6px] md:text-[6px] -mt-12 lg:-mt-2 md:mt-2 ml-0 lg:ml-0 md:ml-0 relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span>
                               </div>
                             </div>
                           </div>
                           {/* Third row: CLAIMED */}
                           <div className="grid grid-cols-1 gap-2 relative top-0 bottom-auto">
-                            <div className="rounded-[20px] p-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] ml-4 lg:ml-4 md:ml-2 -mt-2 lg:-mt-2 md:mt-2 relative -top-10 lg:-top-10 md:-top-10 left-4 lg:left-6 md:left-6 bottom-auto">
-                              <div className="bg-[#D3C9DE66] border-2 border-dotted border-black rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[5px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1 relative top-2 bottom-auto">
+                            <div className="rounded-[20px] p-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] ml-4 lg:ml-4 md:ml-2 -mt-2 lg:-mt-2 md:mt-2 relative -top-10 lg:-top-10 md:-top-14 left-4 lg:left-6 md:left-12 bottom-auto">
+                              <div className="bg-[#D3C9DE66] border-2 border-dotted border-black rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[5px] px-2 py-1 text-gray-900 text-[9px] lg:text-[10px] md:text-[10px] text-center mt-1 relative top-2 bottom-auto">
                                 {parseFloat(beneficiary.claimed).toFixed(6)} 
-                                <span className="text-[7px] lg:text-[6px] md:text-[2px] -mt-12 lg:-mt-2 md:mt-2 ml-0 lg:-ml-1 md:ml-0 relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span>
+                                <span className="text-[7px] lg:text-[6px] md:text-[9px] -mt-12 lg:-mt-2 md:mt-2 ml-0 lg:-ml-1 md:ml-0 relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span>
                               </div>
-                              <div className="bg-[#D3C9DE66] rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-gray-900 text-[9px] text-center mt-1 lg:mt-1 md:-mt-2 relative top-0 bottom-auto">
+                              <div className="bg-[#D3C9DE66] rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-gray-900 text-[9px] lg:text-[10px] md:text-[10px] text-center mt-1 lg:mt-1 md:mt-2 relative top-0 bottom-auto">
                                 CLAIMED
                               </div>
                             </div>
@@ -825,7 +841,7 @@ export default function SeedStewardStats({
         </div>
 
         {/* Footer root shape */}
-        <div className="fixed -bottom-1 left-0 right-0 z-30 pt-4 scale-[0.98] lg:scale-[1.08] md:scale-[1.08]">
+        <div className="fixed -bottom-4 lg:-bottom-3 md:-bottom-3 left-0 right-0 z-30 pt-4 scale-[0.99] lg:scale-[1.08] md:scale-[1.08]">
           <div className="max-w-md mx-auto px-4">
             <RootShapeArea
               onWallet={() => { }}
@@ -835,9 +851,7 @@ export default function SeedStewardStats({
           </div>
         </div>
       </div>
-
-      {/* Modals moved to page level for proper centering */}
-    </>
+    </> //
   );
 }
 

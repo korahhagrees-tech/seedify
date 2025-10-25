@@ -674,7 +674,7 @@ export default function StewardMint({
                 </motion.div>
 
                 {/* Confirmation Modal */}
-                <div className="-mt-10 lg:-mt-10 md:-mt-55">
+                <div className="-mt-10 lg:-mt-10 md:-mt-25">
                   <SeedCreationConfirmModal
                     isOpen={showConfirmModal}
                     onClose={() => setShowConfirmModal(false)}
