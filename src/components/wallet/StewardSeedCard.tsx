@@ -111,10 +111,11 @@ export default function StewardSeedCard({
             <div className="space-y-3 max-w-sm scale-[0.7] -ml-6">
               <button
                 onClick={onTendSeed}
-                className="w-full px-10 py-1 text-2xl border-1 border-black rounded-full hover:bg-gray-50 transition-colors peridia-display leading-relaxed text-nowrap"
+                className="w-full px-10 py-2 text-xl lg:text-[22px] md:text-[22px] border-1 border-black rounded-full hover:bg-gray-50 transition-colors peridia-display leading-relaxed text-nowrap"
               >
-                T<span className="text-nowrap favorit-mono">end </span>S
-                <span className="text-nowrap favorit-mono">eed</span>
+                <div className="scale-[1.15] lg:scale-[1.2] md:scale-[1.2]">
+                  T<span className="text-nowrap favorit-mono">end </span>S<span className="text-nowrap favorit-mono">eed</span>
+                </div>
               </button>
               <button
                 onClick={onExplore}
