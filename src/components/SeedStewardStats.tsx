@@ -802,7 +802,7 @@ export default function SeedStewardStats({
 
                         {/* YIELD SHARE */}
                         <div className="p-2 flex flex-col relative -top-8 lg:-top-8 md:top-0 bottom-auto left-2 lg:left-3 md:-left-2">
-                          <div className="bg-white/70 border-2 border-dotted border-black rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] rounded-full px-2 py-0 text-gray-900 text-[10px] text-center h-[80%] lg:h-[90%] md:h-[90%] w-[98%] lg:w-[70%] md:w-[70%] -ml-14 lg:-ml-16 md:-ml-8 -mt-6 lg:-mt-6 md:-mt-18 scale-[0.8] lg:scale-[1.05] md:scale-[0.85] relative top-0 bottom-auto">
+                          <div className="bg-white/70 border-2 border-dotted border-black rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] rounded-full px-2 py-0 text-gray-900 text-[10px] text-center h-[80%] lg:h-[90%] md:h-[90%] w-[90%] lg:w-[70%] md:w-[70%] -ml-14 lg:-ml-16 md:-ml-8 -mt-6 lg:-mt-6 md:-mt-18 scale-[0.8] lg:scale-[1.05] md:scale-[0.85] relative top-0 bottom-auto">
                             <div className="text-[10px] lg:text-[11px] md:text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left -ml-2 lg:-ml-2 md:-ml-1 relative top-0 bottom-auto">
                               YIELD
                             </div>
