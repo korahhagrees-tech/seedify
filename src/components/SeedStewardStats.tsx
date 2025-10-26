@@ -760,7 +760,7 @@ export default function SeedStewardStats({
                             <div className=" px-2 py-1 text-gray-900 text-[18px] lg:text-[10px] md:text-[10px] text-center -mt-5 lg:-mt-5 md:-mt-5 text-nowrap scale-[0.8] lg:scale-[1.1] md:scale-[1.05] -ml-1 lg:-ml-1 md:-ml-1 relative top-0 bottom-auto">
                               {parseFloat(beneficiary.snapshotsGain).toFixed(6)} 
                               </div>
-                                <span className="text-[8px] lg:text-[6px] md:text-[6px] -mt-8 lg:-mt-2 md:-mt-6 -ml-4 lg:-ml-4 md:-ml-2 relative -top-2 lg:-top-4 md:top-0 bottom-auto">ETH</span>
+                                <span className="text-[8px] lg:text-[6px] md:text-[6px] -mt-8 lg:-mt-2 md:-mt-6 -ml-6 lg:-ml-4 md:-ml-2 relative -top-2 lg:-top-4 md:top-0 bottom-auto">ETH</span>
                             </div>
                           </div>
                           <div className="bg-white/70 rounded-tl-[30px] rounded-br-[30px] rounded-bl-[4px] rounded-tr-[4px] px-1 w-[90%] lg:w-[70%] md:w-[70%] py-1 text-gray-900 text-[20px] text-center -mt-1 lg:-mt-1 md:-mt-1 scale-[0.5] lg:scale-[0.6] md:scale-[0.7] -ml-16 lg:-ml-22 md:-ml-18 relative top-0 bottom-auto">
@@ -770,7 +770,7 @@ export default function SeedStewardStats({
                           </div>
 
                         {/* UNCLAIMED */}
-                        <div className="rounded-[20px] p-2 bg-[#B7B7B799] rounded-tl-[20px] rounded-tr-[5px] rounded-bl-[20px] rounded-br-[20px] h-[32%] mt-4 lg:mt-4 md:mt-4 relative top-0 bottom-auto scale-[0.8] lg:scale-[1.15] md:scale-[1.1]">
+                        <div className="rounded-[20px] p-2 bg-[#B7B7B799] rounded-tl-[20px] rounded-tr-[5px] rounded-bl-[20px] rounded-br-[20px] h-[32%] mt-4 lg:mt-4 md:mt-4 relative top-0 bottom-auto scale-[0.95] lg:scale-[1.15] md:scale-[1.1]">
                           <div className="text-[9px] text-black/80 mb-1 tracking-wide uppercase text-right -mt-6 lg:-mt-6 md:-mt-4 ml-2 lg:ml-2 md:ml-3 relative top-2 lg:top-2 md:-top-1 bottom-auto">
                             UNCLAIMED
                           </div>
@@ -793,16 +793,16 @@ export default function SeedStewardStats({
                             GARDEN
                           </div>
                           <div className="bg-white/70 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-2 py-1 text-gray-900 text-[10px] text-center w-[75%] lg:w-[60%] md:w-[60%] text-nowrap relative top-0 bottom-auto">
-                          <div className="bg-white/50 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-4 py-1 text-gray-900 text-[10px] text-center w-[80px] lg:w-[84px] md:w-[84px] h-[20px] border-1 border-dotted border-black -ml-1 lg:-ml-1.5 md:-ml-2 relative top-1 lg:top-1 md:top-1 bottom-auto">
-                            <span className="text-[9px] lg:text-[10px] md:text-[10px] -mt-4 lg:-mt-2 md:-mt-12 -ml-3 lg:-ml-1 md:-ml-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative -top-1 lg:-top-1 md:-top-1 bottom-auto">{parseFloat(beneficiary.garden).toFixed(6)} 
-                              <span className="text-[8px] lg:text-[7px] md:text-[7px] -mt-4 lg:-mt-2 md:-mt-12 ml-1 lg:ml-0 md:ml-0 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span></span>
+                          <div className="bg-white/50 rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] px-4 py-1 text-gray-900 text-[10px] text-center w-[84px] lg:w-[84px] md:w-[84px] h-[20px] border-1 border-dotted border-black -ml-1 lg:-ml-1.5 md:-ml-2 relative top-1 lg:top-1 md:top-1 bottom-auto">
+                            <span className="text-[12px] lg:text-[10px] md:text-[10px] -mt-4 lg:-mt-2 md:-mt-12 -ml-3 lg:-ml-1 md:-ml-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative -top-1 lg:-top-1 md:-top-1 bottom-auto">{parseFloat(beneficiary.garden).toFixed(6)} 
+                              <span className="text-[6px] lg:text-[7px] md:text-[7px] -mt-4 lg:-mt-2 md:-mt-12 ml-0 lg:ml-0 md:ml-0 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span></span>
                           </div>
                           </div>
                         </div>
 
                         {/* YIELD SHARE */}
-                        <div className="p-2 flex flex-col relative -top-8 lg:-top-8 md:top-0 bottom-auto left-4 lg:left-3 md:-left-2">
-                          <div className="bg-white/70 border-2 border-dotted border-black rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] rounded-full px-2 py-0 text-gray-900 text-[10px] text-center h-[80%] lg:h-[90%] md:h-[90%] w-[92%] lg:w-[70%] md:w-[70%] -ml-14 lg:-ml-16 md:-ml-8 -mt-6 lg:-mt-6 md:-mt-18 scale-[0.8] lg:scale-[1.05] md:scale-[0.85] relative top-0 bottom-auto">
+                        <div className="p-2 flex flex-col relative -top-8 lg:-top-8 md:top-0 bottom-auto left-2 lg:left-3 md:-left-2">
+                          <div className="bg-white/70 border-2 border-dotted border-black rounded-tl-[5px] rounded-tr-[20px] rounded-bl-[5px] rounded-br-[20px] rounded-full px-2 py-0 text-gray-900 text-[10px] text-center h-[80%] lg:h-[90%] md:h-[90%] w-[98%] lg:w-[70%] md:w-[70%] -ml-14 lg:-ml-16 md:-ml-8 -mt-6 lg:-mt-6 md:-mt-18 scale-[0.8] lg:scale-[1.05] md:scale-[0.85] relative top-0 bottom-auto">
                             <div className="text-[10px] lg:text-[11px] md:text-[9px] text-black/80 mb-1 tracking-wide uppercase text-left -ml-2 lg:-ml-2 md:-ml-1 relative top-0 bottom-auto">
                               YIELD
                             </div>
@@ -810,7 +810,7 @@ export default function SeedStewardStats({
                               <div className="text-[10px] lg:text-[11px] md:text-[9px] text-black/80 tracking-wide uppercase text-left -mt-2 lg:-mt-2 md:-mt-2 -ml-2 lg:-ml-2 md:-ml-1 relative top-0 bottom-auto">
                                 SHARE
                               </div>
-                              <div className="-mt-5 lg:-mt-5 md:-mt-5 scale-[0.95] lg:scale-[0.95] md:scale-[1.05] relative top-0 bottom-auto left-1 lg:left-1 md:left-1">
+                              <div className="-mt-5 lg:-mt-5 md:-mt-5 scale-[0.95] lg:scale-[0.95] md:scale-[1.05] relative top-0 bottom-auto left-1 lg:left-1 md:left-1 text-[12px] lg:text-[10px] md:text-[10px]">
                                 {parseFloat(beneficiary.yieldShare).toFixed(6)} 
                                 <span className="text-[7px] lg:text-[6px] md:text-[6px] -mt-12 lg:-mt-2 md:mt-2 ml-0 lg:ml-0 md:ml-0 relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span>
                               </div>
@@ -818,7 +818,7 @@ export default function SeedStewardStats({
                           </div>
                           {/* Third row: CLAIMED */}
                           <div className="grid grid-cols-1 gap-2 relative top-0 bottom-auto">
-                            <div className="rounded-[20px] p-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] ml-4 lg:ml-4 md:ml-2 -mt-2 lg:-mt-2 md:mt-2 relative -top-10 lg:-top-10 md:-top-14 left-4 lg:left-6 md:left-12 bottom-auto">
+                            <div className="rounded-[20px] p-2 scale-[0.8] lg:scale-[0.8] md:scale-[0.8] ml-4 lg:ml-4 md:ml-2 -mt-2 lg:-mt-2 md:mt-2 relative -top-10 lg:-top-10 md:-top-14 left-6 lg:left-6 md:left-12 bottom-auto">
                               <div className="bg-[#D3C9DE66] border-2 border-dotted border-black rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[20px] rounded-br-[5px] px-2 py-1 text-gray-900 text-[9px] lg:text-[10px] md:text-[10px] text-center mt-1 relative top-2 bottom-auto">
                                 {parseFloat(beneficiary.claimed).toFixed(6)} 
                                 <span className="text-[7px] lg:text-[6px] md:text-[9px] -mt-12 lg:-mt-2 md:mt-2 ml-0 lg:-ml-1 md:ml-0 relative -top-1 lg:-top-1 md:-top-1 bottom-auto">ETH</span>

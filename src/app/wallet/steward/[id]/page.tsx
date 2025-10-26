@@ -7,6 +7,9 @@ import { useParams, useRouter } from "next/navigation";
 import SeedStewardStats from "@/components/SeedStewardStats";
 import AmplifySeedModal from "@/components/wallet/AmplifySeedModal";
 import HarvestSeedModal from "@/components/wallet/HarvestSeedModal";
+import WalletConnectButton from "@/components/auth/WalletConnectButton";
+import { usePrivy } from '@privy-io/react-auth';
+import { useAuth } from "@/components/auth/AuthProvider";
 import { Seed } from "@/types/seed";
 import { fetchSeedById } from "@/lib/api/seeds";
 
@@ -19,6 +22,10 @@ export default function StewardStatsRoute() {
   // Render immediately without a loading state
   const [isAmplifyModalOpen, setIsAmplifyModalOpen] = useState(false);
   const [isHarvestModalOpen, setIsHarvestModalOpen] = useState(false);
+
+  // Wallet authentication check
+  const { ready, authenticated } = usePrivy();
+  const { activeWallet } = useAuth();
 
   useEffect(() => {
     async function load() {
@@ -82,9 +89,29 @@ export default function StewardStatsRoute() {
     });
   };
 
+  // Check if user is authenticated and has a wallet
+  const needsWalletConnect = ready && (!authenticated || !activeWallet);
+
   return (
     <div className="min-h-screen w-full max-w-md mx-auto">
-      {seed && stats && (
+      {/* Wallet Connect Modal */}
+      {needsWalletConnect && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-[40px] p-8 max-w-md w-full text-center">
+            <h2 className="text-2xl font-bold mb-4 peridia-display">Connect Your Wallet</h2>
+            <p className="text-gray-600 mb-6">
+              Please connect your wallet to view your seed steward stats.
+            </p>
+            <WalletConnectButton
+              onSuccess={() => {
+                // Modal will close automatically when authenticated
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {seed && stats && !needsWalletConnect && (
         <SeedStewardStats
           seed={seed}
           links={{ openseaUrl: stats.openSeaUrl }}
