@@ -482,34 +482,34 @@ export default function AmplifySeedModal({
                   </div>
 
                   {/* Contribution Section */}
-                  <div className="mb-4 relative -left-14 lg:left-4 md:left-20 right-auto scale-[0.7] lg:scale-[1.0] md:scale-[1.1] top-22 lg:top-28 md:top-18 -mt-16 lg:-mt-16 md:-mt-16">
-                    <label className="block text-[14px] lg:text-[14px] md:text-[14px] text-black mb-2 relative left-6 lg:left-4 md:left-4 right-auto">CONTRIBUTION AMOUNT</label>
+                  <div className="mb-4 relative -left-14 lg:left-4 md:left-12 right-auto scale-[0.7] lg:scale-[1.0] md:scale-[1.1] top-22 lg:top-28 md:top-28 -mt-16 lg:-mt-16 md:-mt-6">
+                    <label className="block text-[14px] lg:text-[14px] md:text-[12px] text-black mb-2 relative left-6 lg:left-4 md:left-3 right-auto">CONTRIBUTION AMOUNT</label>
                     <div className="w-[50%] lg:w-[35%] md:w-[30%] bg-white rounded-full px-4 py-2 lg:py-2 md:py-2 border-3 border-dotted border-black relative left-0 right-auto -top-2 lg:-top-2 md:-top-2 flex items-center">
                       <input
                         type="text"
                         value={contributionAmount}
                         onChange={(e) => setContributionAmount(e.target.value)}
-                        className="flex-1 bg-transparent text-black text-lg lg:text-[16px] md:text-[16px] scale-[1.8] lg:scale-[1.6] md:scale-[1.5] border-none outline-none relative left-28 lg:left-18 md:left-6 right-auto"
+                        className="flex-1 bg-transparent text-black text-lg lg:text-[16px] md:text-[16px] scale-[1.8] lg:scale-[1.6] md:scale-[1.5] border-none outline-none relative left-28 lg:left-18 md:left-16 right-auto"
                         placeholder="_.___"
                       />
-                      <span className="text-xs text-black relative -left-28 lg:-left-30 md:-left-24 right-auto ml-2 scale-[1.85] lg:scale-[1.7] md:scale-[1.5]">ETH</span>
+                      <span className="text-xs text-black relative -left-28 lg:-left-30 md:-left-30 right-auto ml-2 scale-[1.85] lg:scale-[1.7] md:scale-[1.5]">ETH</span>
                     </div>
                   </div>  
 
                   {/* Extend Cultivation Button */}
-                  <div className="mb-4 relative left-50 lg:left-60 md:left-90 right-auto scale-[1.1] lg:scale-[1.0] md:scale-[1.4] -top-6 lg:-top-2 md:-top-8">
+                  <div className="mb-4 relative left-50 lg:left-60 md:left-85 right-auto scale-[1.1] lg:scale-[1.0] md:scale-[1.4] -top-6 lg:-top-2 md:-top-8">
                     <div className="flex items-center gap-4 relative left-0 right-auto">
                       <div className="text-left relative left-0 right-auto">
                         <button
                           onClick={handleExtendCultivation}
                           className="bg-white border-3 border-dotted border-black text-black text-sm font-medium py-2 px-6 rounded-full hover:bg-gray-100 transition-colors relative left-0 right-auto w-[230px] lg:w-[250px] md:w-[200px]"
                         >
-                          <div className="scale-[1.85] lg:scale-[1.85] md:scale-[1.25] relative left-0 right-auto top-2 lg:top-2 md:top-2">
+                          <div className="scale-[1.85] lg:scale-[1.85] md:scale-[1.65] relative left-0 right-auto top-2 lg:top-2 md:top-2">
                            <p className="peridia-display relative left-0 right-auto">E<span className="favorit-mono relative left-0 right-auto">xtend</span></p>
                            <p className="peridia-display relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">C<span className="favorit-mono relative left-0 right-auto">ultivation</span></p>
                           </div>
                         </button>
-                        <p className="text-[12px] lg:text-[12px] md:text-[12px] text-black mt-1 relative left-6 lg:left-8 md:left-4 right-auto">INCREASE SEED VESTING VALUE</p>
+                        <p className="text-[12px] lg:text-[12px] md:text-[10px] text-black mt-1 relative left-6 lg:left-8 md:left-4 right-auto">INCREASE SEED VESTING VALUE</p>
                       </div>
                     </div>
                   </div>
@@ -519,7 +519,7 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto">
                       <p className="text-[10px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto top-2 lg:top-2 md:top-2">CURRENT CLAIMABLE</p>
                       <div className="bg-white rounded-full px-3 py-2 border border-dotted border-gray-400 relative left-0 right-auto">
-                        <div className="scale-[1.4] lg:scale-[1.3] md:scale-[1.25] relative left-0 right-auto">
+                        <div className="scale-[1.4] lg:scale-[1.3] md:scale-[1.85] relative left-0 right-auto">
                         <span className="text-xs lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative left-0 right-auto">{stats.currentClaimable}</span>
                         </div>
                       </div>
@@ -527,7 +527,7 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto">
                       <p className="text-[10px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto top-2 lg:top-2 md:top-2">MATURATION DATE</p>
                       <div className="bg-white rounded-full px-3 py-2 border border-dotted border-gray-400 relative left-0 right-auto">
-                        <div className="scale-[1.4] lg:scale-[1.3] md:scale-[1.25] relative left-0 right-auto">
+                        <div className="scale-[1.4] lg:scale-[1.3] md:scale-[1.85] relative left-0 right-auto">
                         <span className="text-xs lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative left-0 right-auto">{stats.maturationDate}</span>
                         </div>
                       </div>
@@ -535,7 +535,7 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto">
                       <p className="text-[10px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto top-2 lg:top-2 md:top-2">PREMATURE PENALTY</p>
                       <div className="bg-white rounded-full px-3 py-2 border border-dotted border-gray-400 relative left-0 right-auto">
-                        <div className="scale-[1.4] lg:scale-[1.3] md:scale-[1.25] relative left-0 right-auto">
+                        <div className="scale-[1.4] lg:scale-[1.3] md:scale-[1.85] relative left-0 right-auto">
                         <span className="text-xs lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative left-0 right-auto">{stats.prematurePenalty}</span>
                         </div>
                       </div>
