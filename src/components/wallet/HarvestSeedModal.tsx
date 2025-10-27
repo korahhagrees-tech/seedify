@@ -229,7 +229,7 @@ export default function HarvestSeedModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[0.75] md:scale-[0.75] scale-[0.8] h-10 w-[460px] lg:w-full md:w-full -ml-10 lg:-ml-0 md:-ml-0 mt-84 lg:mt-88 md:mt-80"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[0.75] md:scale-[0.75] scale-[0.8] h-10 w-[460px] lg:w-full md:w-full -ml-6 lg:-ml-0 md:-ml-0 mt-84 lg:mt-88 md:mt-80"
           >
             {/* State 1: Disconnected Wallet */}  
             {!authenticated ? (
@@ -330,17 +330,17 @@ export default function HarvestSeedModal({
                       </button>
                       <button
                         onClick={handleAddFunds}
-                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-22 lg:left-44 md:left-40 -top-11 lg:-top-12 md:-top-14 right-auto z-50"
+                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-[8px] lg:text-base md:text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-34 lg:left-44 md:left-40 -top-11 lg:-top-12 md:-top-14 right-auto z-50"
                       >
-                        <div className="scale-[1.0] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto text-nowrap">
+                        <div className="scale-[1.8] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto text-nowrap">
                           <span className="peridia-display relative left-0 right-auto">A</span>dd <span className="peridia-display relative left-0 right-auto">F</span>unds
                         </div>
                       </button>
                       <button
                         onClick={handleWalletConnect}
-                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-sm h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-22 lg:left-0 md:-left-3 right-auto text-nowrap"
+                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-sm h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-2 lg:left-0 md:-left-3 right-auto text-nowrap text-[8px] lg:text-base md:text-base"
                       >
-                        <div className="scale-[0.9] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto text-nowrap">
+                        <div className="scale-[1.3] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto text-nowrap">
                           <span className="peridia-display relative left-0 right-auto">W</span>allet <span className="peridia-display relative left-0 right-auto">C</span>onnect
                         </div>
                       </button>
