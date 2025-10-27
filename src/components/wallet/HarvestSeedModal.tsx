@@ -84,6 +84,25 @@ export default function HarvestSeedModal({
 
   const balance = balanceData ? parseFloat(balanceData.formatted).toFixed(4) : '0.0000';
 
+  // Helper function to convert wei to ETH
+  const weiToEth = (value: string) => {
+    const wei = parseFloat(value);
+    const eth = wei / 1e18;
+    return eth.toFixed(6);
+  };
+
+  // Parse ETH values that might be in wei format
+  const parseEthValue = (value: string) => {
+    // Remove "ETH" suffix if present and parse as number
+    const numStr = value.replace(' ETH', '');
+    const num = parseFloat(numStr);
+    // If the number is very large (> 1000), it's likely in wei
+    if (num > 1000) {
+      return weiToEth(num.toString());
+    }
+    return numStr; // Return as is if already in ETH
+  };
+
   const formatAddress = (address: string) => {
     if (!address) return '';
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -210,11 +229,11 @@ export default function HarvestSeedModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[0.75] md:scale-[0.75] scale-[0.8] h-10 w-[460px] lg:w-full md:w-full -ml-8 lg:-ml-0 md:-ml-0 mt-94 lg:mt-80 md:mt-80"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[0.75] md:scale-[0.75] scale-[0.8] h-10 w-[460px] lg:w-full md:w-full -ml-8 lg:-ml-0 md:-ml-0 mt-94 lg:mt-88 md:mt-80"
           >
             {/* State 1: Disconnected Wallet */}
             {!authenticated ? (
-              <div className="bg-gray-200 rounded-[40px] border-2 border-black border-dotted p-8 max-w-sm w-full mx-auto relative">
+              <div className="bg-[#D9D9D9] rounded-[60px] border-2 border-black border-dotted p-8 max-w-sm w-full mx-auto relative">
                 {/* Close Button */}
                 <button
                   onClick={onClose}
@@ -224,8 +243,8 @@ export default function HarvestSeedModal({
                 </button>
 
                 {/* Header */}
-                <h2 className="text-2xl text-black text-center -mt-6 peridia-display-light">
-                  Harvest Seed Nutrients
+                <h2 className="text-2xl text-black text-center -mt-6 peridia-display-light scale-[0.9] lg:scale-[1.1] md:scale-[1.1]">
+                  <span className="peridia-display-light">H</span>arvest <span className="peridia-display-light">S</span>eed <span className="peridia-display-light">N</span>utrients
                 </h2>
 
                 {/* Wallet Connect Button */}
@@ -250,26 +269,26 @@ export default function HarvestSeedModal({
               </div>
             ) : (
               /* State 2: Connected Wallet - Harvest Modal */
-              <div className="bg-[#D9D9D9] rounded-[40px] border-2 border-black border-dotted p-8 max-w-lg w-full mx-auto relative shadow-xl">
+              <div className="bg-[#D9D9D9] rounded-[60px] border-2 border-black border-dotted p-8 max-w-lg w-full mx-auto relative shadow-xl h-[670px] overflow-hidden">
                 {/* Close Button */}
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors z-10"
+                  className="absolute top-8 right-8 w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors z-10"
                 >
                   <span className="text-black text-xl font-bold">×</span>
                 </button>
 
                 {/* Header */}
-                <h2 className="text-2xl text-black text-center mb-6 peridia-display-light">
-                  Harvest Seed Nutrients
+                <h2 className="text-2xl text-black text-center mb-3 scale-[0.8] lg:scale-[1.0] md:scale-[0.9]">
+                  <span className="peridia-display-light">H</span>arvest <span className="peridia-display-light">S</span>eed <span className="peridia-display-light">N</span>utrients
                 </h2>
 
                 {/* Wallet Details Section */}
-                <div className="bg-none rounded-[20px] p-4 mb-6">
-                  <div className="bg-white rounded-full p-2 w-95 mb-6 -ml-8">
-                    <p className="text-[11px] lg:text-[11px] md:text-[11px] text-nowrap text-black font-medium -mb-2 ml-4">YOUR WALLET</p>
+                <div className="bg-none rounded-[20px] p-4 mb-1 relative left-0 right-auto">
+                  <div className="bg-white border border-black/70 rounded-full p-2 w-[350px] lg:w-[450px] md:w-[450px] mb-3 -ml-8 z-20 py-3 lg:py-4 md:py-4 relative left-0 right-auto">
+                    <p className="text-[11px] lg:text-[11px] md:text-[11px] text-nowrap text-black font-medium -mb-2 ml-4 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">YOUR WALLET</p>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 relative left-4 lg:left-8 md:left-6 right-auto scale-[0.9] lg:scale-[1.5] md:scale-[1.3]">
                         <span className="text-base font-mono text-black ml-4">
                           {formatAddress(walletAddress || '')}
                         </span>
@@ -281,20 +300,20 @@ export default function HarvestSeedModal({
                         </button>
                         {copied && <span className="text-xs text-green-600">Copied!</span>}
                       </div>
-                      <div className="bg-[#F1F2F9] px-3 py-1 rounded-lg">
+                      <div className="bg-[#F1F2F9] px-3 py-1 rounded-lg ">
                         <span className="text-base font-light text-gray-700">{balance} ETH</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Email and Actions */}
-                  <div className="bg-[#cdc9c9] rounded-[40px] p-2 w-95 mb-6 -ml-8 -mt-8">
-                    <div className="flex items-center gap-2 mt-3">
-                      <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4" />
-                      <span className="text-sm text-black">{user?.email || formatAddress(walletAddress || '')}</span>
+                  <div className="bg-[#cdc9c9] rounded-[40px] p-2 w-[350px] lg:w-[450px] md:w-[450px] mb-2 -ml-8 -mt-8 py-4 relative left-4 lg:left-2 md:left-2 right-auto">
+                    <div className="flex items-center gap-2 mt-2 lg:mt-4 md:mt-4 relative left-2 lg:left-4 md:left-3 right-auto">
+                      <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4 relative left-0 right-auto" />
+                      <span className="text-lg text-black relative left-0 right-auto">{user?.email || formatAddress(walletAddress || '')}</span>
                     </div>
 
-                    <div className="flex gap-2 mt-3">
+                    <div className="flex gap-2 mt-1 relative left-0 right-auto">
                       <button
                         onClick={async () => {
                           onClose();
@@ -304,112 +323,132 @@ export default function HarvestSeedModal({
                             window.location.href = "/";
                           }, 100);
                         }}
-                        className="flex items-center gap-2 px-4 py-0 h-8 text-sm text-black hover:text-gray-800 transition-colors text-nowrap"
+                        className="flex items-center gap-2 px-4 py-0 h-8 text-lg text-black hover:text-gray-800 transition-colors text-nowrap relative left-0 right-auto"
                       >
-                        <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4" />
+                        <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4 relative left-0 right-auto" />
                         Log out
                       </button>
                       <button
                         onClick={handleAddFunds}
-                        className="px-4 py-0 h-8 border border-dotted border-gray-500 rounded-full text-sm text-black bg-gray-50 hover:bg-gray-100 transition-colors text-nowrap"
+                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-18 lg:left-44 md:left-40 -top-16 lg:-top-12 md:-top-14 right-auto z-50"
                       >
-                        Add Funds
+                        <div className="scale-[0.6] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto">
+                          <span className="peridia-display relative left-0 right-auto">A</span>dd <span className="peridia-display relative left-0 right-auto">F</span>unds
+                        </div>
                       </button>
                       <button
                         onClick={handleWalletConnect}
-                        className="px-4 py-1 border border-dotted border-black rounded-full text-sm text-black bg-white hover:bg-gray-50 transition-colors"
+                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-sm h-6 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative left-0 lg:left-0 md:-left-3 right-auto text-nowrap"
                       >
-                        Connect Account
+                        <div className="scale-[0.6] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto">
+                          <span className="peridia-display relative left-0 right-auto">W</span>allet <span className="peridia-display relative left-0 right-auto">C</span>onnect
+                        </div>
                       </button>
                     </div>
                   </div>
                 </div>
 
                 {/* SeedId Current Maturation Overview Bar */}
-                <div className="bg-gray-100 rounded-full px-6 py-3 mb-6 border border-dotted border-gray-400">
-                  <p className="text-black text-nowrap text-center text-sm font-medium">
-                    Seed {seedId} current maturation overview.
+                <div className="bg-gray-100 rounded-tl-[30px] rounded-tr-[30px] rounded-bl-[20px] rounded-br-[20px] px-6 py-1 mb-2 border-3 border-dotted border-black relative left-0 right-auto">
+                  <p className="text-black text-nowrap text-center text-[13px] lg:text-[13px] md:text-[13px] scale-[0.8] lg:scale-[1.6] md:scale-[1.5] font-medium relative left-0 right-auto">
+                    Seed {seedId} <span className="peridia-display relative left-0 right-auto">current maturation overview.</span>
                   </p>
                 </div>
 
                 {/* Six Stats Grid */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-3 gap-2 mb-3">
                   {/* Row 1 */}
-                  <div className="text-center">
-                    <p className="text-xs text-gray-600 mb-2">NUTRIENT RESERVE</p>
-                    <div className="bg-gray-100 rounded-lg px-3 py-2">
-                      <span className="text-sm font-medium text-black">{stats.nutrientReserve}</span>
+                  <div className="text-center relative left-0 right-auto">
+                    <p className="text-[10px] text-gray-600 mb-1 relative left-0 right-auto">NUTRIENT RESERVE</p>
+                    <div className="bg-gray-100 rounded-full px-2 py-1 relative left-0 right-auto">
+                      <span className="text-xs font-medium text-black relative left-0 right-auto">{parseEthValue(stats.nutrientReserve)} ETH</span>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-xs text-gray-600 mb-2">MINTING DATE</p>
-                    <div className="bg-gray-100 rounded-lg px-3 py-2">
-                      <span className="text-sm font-medium text-black">{stats.mintingDate}</span>
+                  <div className="text-center relative left-0 right-auto">
+                    <p className="text-[10px] text-gray-600 mb-1 relative left-0 right-auto">MINTING DATE</p>
+                    <div className="bg-gray-100 rounded-full px-2 py-1 relative left-0 right-auto">
+                      <span className="text-xs font-medium text-black relative left-0 right-auto">{stats.mintingDate}</span>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-xs text-gray-600 mb-2">TOTAL COMMITTED</p>
-                    <div className="bg-gray-100 rounded-lg px-3 py-2">
-                      <span className="text-sm font-medium text-black">{stats.totalCommitted}</span>
+                  <div className="text-center relative left-0 right-auto">
+                    <p className="text-[10px] text-gray-600 mb-1 relative left-0 right-auto">TOTAL COMMITTED</p>
+                    <div className="bg-gray-100 rounded-full px-2 py-1 relative left-0 right-auto">
+                      <span className="text-xs font-medium text-black relative left-0 right-auto">{stats.totalCommitted}</span>
                     </div>
                   </div>
 
                   {/* Row 2 */}
-                  <div className="text-center">
-                    <p className="text-xs text-gray-600 mb-2">CURRENT CLAIMABLE</p>
-                    <div className="bg-gray-100 rounded-lg px-3 py-2">
-                      <span className="text-sm font-medium text-black">{stats.currentClaimable}</span>
+                  <div className="text-center relative left-0 right-auto">
+                    <p className="text-[10px] text-gray-600 mb-1 relative left-0 right-auto">CURRENT CLAIMABLE</p>
+                    <div className="bg-gray-100 rounded-full px-2 py-1 relative left-0 right-auto">
+                      <span className="text-xs font-medium text-black relative left-0 right-auto">{stats.currentClaimable}</span>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-xs text-gray-600 mb-2">MATURATION DATE</p>
-                    <div className="bg-gray-100 rounded-lg px-3 py-2">
-                      <span className="text-sm font-medium text-black">{stats.maturationDate}</span>
+                  <div className="text-center relative left-0 right-auto">
+                    <p className="text-[10px] text-gray-600 mb-1 relative left-0 right-auto">MATURATION DATE</p>
+                    <div className="bg-gray-100 rounded-full px-2 py-1 relative left-0 right-auto">
+                      <span className="text-xs font-medium text-black relative left-0 right-auto">{stats.maturationDate}</span>
                     </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-xs text-gray-600 mb-2">PREMATURE PENALTY</p>
-                    <div className="bg-gray-100 rounded-lg px-3 py-2">
-                      <span className="text-sm font-medium text-black">{stats.prematurePenalty}</span>
+                  <div className="text-center relative left-0 right-auto">
+                    <p className="text-[10px] text-gray-600 mb-1 relative left-0 right-auto">PREMATURE PENALTY</p>
+                    <div className="bg-gray-100 rounded-full px-2 py-1 relative left-0 right-auto">
+                      <span className="text-xs font-medium text-black relative left-0 right-auto">{stats.prematurePenalty}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Thank You Message */}
-                <div className="text-center mb-6">
-                  <p className="text-sm text-black leading-relaxed">
-                    We Thank You & Appreciate You for nurturing<br />
-                    The Way of Flowers<br />
-                    & many precious<br />
-                    ecosystems with us!
-                  </p>
-                </div>
-
-                {/* Harvest Button */}
-                <div className="text-center mb-4">
-                  <Button
-                    onClick={handleHarvest}
-                    disabled={isProcessing}
-                    className="bg-white border-2 border-dotted border-black text-black text-sm font-medium py-3 px-8 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50"
-                  >
-                    {isProcessing ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                        PROCESSING...
+                {/* Thank You Message with Harvest Button */}
+                <div className="mb-2 relative left-0 right-auto">
+                  <div className="flex items-start justify-between gap-4">
+                      <p className="text-lg lg:text-[18px] md:text-[18px] text-black leading-tight relative left-0 right-auto peridia-display-light">
+                        We Thank You & Appreciate You for nurturing
+                      </p>
+                    </div>
+                  <div className="flex items-start justify-between gap-4">
+                    {/* Left side - three lines */}
+                    <div className="flex flex-col text-left relative left-0 right-auto">
+                      <p className="text-lg lg:text-[18px] md:text-[18px] text-black leading-tight relative left-0 right-auto peridia-display-light">The Way of Flowers</p>
+                      <p className="text-lg lg:text-[18px] md:text-[18px] text-black leading-tight relative left-0 right-auto peridia-display-light">& many precious</p>
+                      <p className="text-lg lg:text-[18px] md:text-[18px] text-black leading-tight relative left-0 right-auto peridia-display-light">ecosystems with us!</p>
+                    </div>
+                    
+                    {/* Right side - long thank you text */}
+                    <div className="text-right relative left-0 right-auto">
+                      {/* Harvest Button */}
+                      <div className="mt-2 relative left-0 right-auto scale-[0.9] lg:scale-[1.3] md:scale-[1.3] top-4 lg:top-4 md:top-4">
+                        <Button
+                          onClick={handleHarvest}
+                          disabled={isProcessing}
+                          className="bg-white border-2 border-dotted border-black text-black text-xs font-medium py-2 px-6 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 relative left-0 lg:-left-6 md:-left-4 right-auto"
+                        >
+                          {isProcessing ? (
+                            <div className="flex items-center justify-center gap-2 relative left-0 right-auto">
+                              <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin relative left-0 right-auto"></div>
+                              PROCESSING...
+                            </div>
+                          ) : (
+                            <div className="scale-[0.7] lg:scale-[1.3] md:scale-[1.3] relative left-0 right-auto">
+                              <p className="peridia-display relative left-0 right-auto top-1 lg:top-1 md:top-1">H<span className="favorit-mono relative left-0 right-auto">arvest</span></p>
+                              <p className="peridia-display relative left-0 right-auto -top-1 lg:-top-1 md:-top-1">N<span className="favorit-mono relative left-0 right-auto">utrients</span></p>
+                            </div>
+                          )}
+                        </Button>
+                        <div className="relative left-0 right-auto scale-[0.6] lg:scale-[0.7] md:scale-[0.7] -top-1 lg:-top-1 md:-top-1">
+                        <p className="text-[9px] lg:text-[11px] md:text-[11px] text-gray-600 mt-1 relative left-0 right-auto">WITHDRAW CLAIMABLE NUTRIENTS</p>
+                        </div>
                       </div>
-                    ) : (
-                      "Harvest Nutrients"
-                    )}
-                  </Button>
-                  <p className="text-xs text-gray-600 mt-2">WITHDRAW CLAIMABLE NUTRIENTS</p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Warning and Redirection */}
-                <div className="text-center">
-                  <p className="text-xs text-purple-600 mb-2">
-                    PLEASE NOTE THE ACTION IS IRREVOCABLE & YOUR STEWARDED SEED WILL BECOME DORMANT. NO FURTHER EVOLUTIONS WILL BE POSSIBLE
+                <div className="text-center relative left-0 right-auto scale-[0.9] lg:scale-[1.45] md:scale-[1.45] mt-10 lg:mt-10 md:mt-10 mb-2 lg:mb-2 md:mb-2">
+                  <p className="text-[9px] text-[#7E3EA8] mb-1 relative left-0 right-auto">
+                    PLEASE NOTE THE ACTION IS IRREVOCABLE & YOUR STEWARDED SEED 
+                    <p className="text-[9px] text-[#7E3EA8] mb-1 relative left-0 right-auto">WILL BECOME DORMANT. NO FURTHER EVOLUTIONS WILL BE POSSIBLE</p>
                   </p>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-[9px] lg:text-[11px] md:text-[11 px] text-black relative left-0 right-auto">
                     YOU WILL BE REDIRECTED TO CONFIRM TRANSACTION
                   </p>
                 </div>
@@ -509,3 +548,4 @@ export default function HarvestSeedModal({
     </AnimatePresence>
   );
 }
+

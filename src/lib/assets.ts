@@ -39,6 +39,7 @@ export const assets = {
 
   textPink: "/test-pink.svg",
   textBlack: "/assets/WOF_Logo-black.png",
+  arrowRight: "/arrow-right.svg",
 
   chooseBeneficiary: '/assets/BENEFICIARIES.svg'
 
