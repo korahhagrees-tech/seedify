@@ -270,7 +270,7 @@ export default function AmplifySeedModal({
           >
             {/* Modal with animated border transition and scaling */}
             <motion.div
-              className="bg-[#D9D9D9] p-6 border-3 border-dotted border-gray-600 shadow-xl scale-[0.75] lg:scale-[0.7] md:scale-[0.7] -ml-18 lg:-ml-8 md:-ml-8 -mt-12 lg:-mt-0 md:-mt-0 w-[480px] lg:w-[580px] md:w-[580px]"
+              className="bg-[#D9D9D9] p-6 border-3 border-dotted border-gray-600 shadow-xl scale-[0.75] lg:scale-[0.7] md:scale-[0.7] -ml-16 lg:-ml-8 md:-ml-8 -mt-12 lg:-mt-0 md:-mt-0 w-[480px] lg:w-[580px] md:w-[580px]"
               animate={{
                 borderRadius: currentState === 'communication'
                   ? '80px 80px 40px 120px' // asymmetric: top-left large, others small
@@ -318,7 +318,7 @@ export default function AmplifySeedModal({
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">TOTAL VALUE</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:px-1 md:px-1 border border-dotted border-gray-400 relative left-0 right-auto text-nowrap -top-2 lg:-top-2 md:-top-2">
                         <div className="text-center relative left-0 right-auto scale-[0.75] lg:scale-[1.1] md:scale-[1.2]">
-                          <span className="text-[14px] lg:text-[12px] md:text-[11px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalValue)} ETH</span>
+                          <span className="text-[12px] lg:text-[12px] md:text-[11px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalValue)} ETH</span>
                         </div>
                       </div>
                     </div>
@@ -326,7 +326,7 @@ export default function AmplifySeedModal({
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-nowrap text-black mb-2 relative left-0 right-auto">FUNDS COMMITTED</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:px-1 md:px-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
                         <div className="text-center relative left-0 right-auto scale-[0.8] lg:scale-[1.1] md:scale-[1.1]">
-                          <span className="text-[14px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-2 lg:left-0 md:left-0 right-auto">{stats.fundsCommitted}</span>
+                          <span className="text-[12px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-2 lg:left-0 md:left-0 right-auto">{stats.fundsCommitted}</span>
                         </div>
                       </div>
                     </div>
@@ -334,7 +334,7 @@ export default function AmplifySeedModal({
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-nowrap text-black mb-2 relative left-0 right-auto">SNAP REWARDS</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
                         <div className="text-center relative left-0 right-auto scale-[0.8] lg:scale-[1.1] md:scale-[1.1]">
-                          <span className="text-[14px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-2 lg:left-0 md:left-0 right-auto">{stats.snapRewards}</span>
+                          <span className="text-[12px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-2 lg:left-0 md:left-0 right-auto">{stats.snapRewards}</span>
                         </div>
                       </div>
                     </div>
@@ -342,7 +342,7 @@ export default function AmplifySeedModal({
                       <p className="text-[10px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">#SNAPS</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-3 lg:-top-2 md:-top-2">
                         <div className="text-center relative left-0 right-auto scale-[1.0] lg:scale-[1.1] md:scale-[1.1]">
-                          <span className="text-[14px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 left-0 right-auto">{stats.numSnaps}</span>
+                          <span className="text-[12px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 left-0 right-auto">{stats.numSnaps}</span>
                         </div>
                       </div>
                     </div>
@@ -352,7 +352,7 @@ export default function AmplifySeedModal({
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">TOTAL FUNDINGS</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
                         <div className="text-center relative left-0 right-auto scale-[0.75] lg:scale-[1.1] md:scale-[1.1]">
-                          <span className="text-[14px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalFundings)} ETH</span>
+                          <span className="text-[12px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalFundings)} ETH</span>
                         </div>
                       </div>
                     </div>
@@ -360,7 +360,7 @@ export default function AmplifySeedModal({
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">YEARLY FUNDING</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
                         <div className="text-center relative left-0 right-auto scale-[0.9] lg:scale-[1.1] md:scale-[1.1]">
-                          <span className="text-[14px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-2 lg:left-0 md:left-0 right-auto">{stats.yearlyFunding}</span>
+                          <span className="text-[12px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-2 lg:left-0 md:left-0 right-auto">{stats.yearlyFunding}</span>
                         </div>
                       </div>
                     </div>
@@ -368,7 +368,7 @@ export default function AmplifySeedModal({
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">ALL SEEDS TOTAL</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
                         <div className="text-center relative left-0 right-auto scale-[0.75] lg:scale-[1.1] md:scale-[1.1]">
-                          <span className="text-[14px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.allSeedsTotal)} ETH</span>
+                          <span className="text-[12px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.allSeedsTotal)} ETH</span>
                         </div>
                       </div>
                     </div>

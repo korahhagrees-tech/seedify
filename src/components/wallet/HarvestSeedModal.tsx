@@ -308,9 +308,9 @@ export default function HarvestSeedModal({
 
                   {/* Email and Actions */}
                   <div className="bg-[#cdc9c9] rounded-[40px] p-2 w-[350px] lg:w-[450px] md:w-[450px] mb-2 -ml-8 -mt-8 py-4 relative left-4 lg:left-2 md:left-2 right-auto">
-                    <div className="flex items-center gap-2 mt-2 lg:mt-4 md:mt-4 relative left-2 lg:left-4 md:left-3 right-auto">
+                    <div className="flex items-center gap-2 mt-2 lg:mt-4 md:mt-4 relative left-4 lg:left-4 md:left-3 right-auto">
                       <Image src={assets.email} alt="Email" width={16} height={16} className="w-4 h-4 relative left-0 right-auto" />
-                      <span className="text-lg text-black relative left-0 right-auto">{user?.email || formatAddress(walletAddress || '')}</span>
+                      <span className="lg:text-lg md:text-lg text-[12px] text-black relative left-0 right-auto">{user?.email || formatAddress(walletAddress || '')}</span>
                     </div>
 
                     <div className="flex gap-2 mt-1 relative left-0 right-auto">
@@ -323,24 +323,24 @@ export default function HarvestSeedModal({
                             window.location.href = "/";
                           }, 100);
                         }}
-                        className="flex items-center gap-2 px-4 py-0 h-8 text-lg text-black hover:text-gray-800 transition-colors text-nowrap relative left-0 right-auto"
+                        className="flex items-center gap-2 px-4 py-0 h-8 text-[12px] lg:text-lg md:text-lg text-black hover:text-gray-800 transition-colors text-nowrap relative left-0 right-auto"
                       >
                         <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4 relative left-0 right-auto" />
                         Log out
                       </button>
                       <button
                         onClick={handleAddFunds}
-                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-16 lg:left-44 md:left-40 -top-11 lg:-top-12 md:-top-14 right-auto z-50"
+                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-22 lg:left-44 md:left-40 -top-11 lg:-top-12 md:-top-14 right-auto z-50"
                       >
-                        <div className="scale-[1.1] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto">
+                        <div className="scale-[1.0] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto text-nowrap">
                           <span className="peridia-display relative left-0 right-auto">A</span>dd <span className="peridia-display relative left-0 right-auto">F</span>unds
                         </div>
                       </button>
                       <button
                         onClick={handleWalletConnect}
-                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-sm h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-28 lg:left-0 md:-left-3 right-auto text-nowrap"
+                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-sm h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-22 lg:left-0 md:-left-3 right-auto text-nowrap"
                       >
-                        <div className="scale-[1.0] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto">
+                        <div className="scale-[0.9] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto text-nowrap">
                           <span className="peridia-display relative left-0 right-auto">W</span>allet <span className="peridia-display relative left-0 right-auto">C</span>onnect
                         </div>
                       </button>

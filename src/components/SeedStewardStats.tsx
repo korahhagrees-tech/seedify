@@ -152,14 +152,14 @@ export default function SeedStewardStats({
   const toggleInfoDropdown = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('🔍 INFO button clicked - BEFORE:', isInfoDropdownOpen);
-    console.log('🔍 Event details:', e);
-    console.log('🔍 Button element:', e.currentTarget);
+    console.log('INFO button clicked - BEFORE:', isInfoDropdownOpen);
+    console.log('Event details:', e);
+    console.log('Button element:', e.currentTarget);
     setIsInfoDropdownOpen(!isInfoDropdownOpen);
-    console.log('🔍 INFO button clicked - AFTER:', !isInfoDropdownOpen);
+    console.log('INFO button clicked - AFTER:', !isInfoDropdownOpen);
     // Force a re-render to test
     setTimeout(() => {
-      console.log('🔍 State after timeout:', isInfoDropdownOpen);
+      console.log('State after timeout:', isInfoDropdownOpen);
     }, 100);
   };
 
@@ -210,7 +210,7 @@ export default function SeedStewardStats({
   };
 
   // Debug logging
-  console.log('🔍 SeedStewardStats state:', {
+  console.log('SeedStewardStats state:', {
     isInfoDropdownOpen
   });
 
@@ -453,7 +453,7 @@ export default function SeedStewardStats({
           </div>
 
           {/* Two separate sections below - always side by side */}
-          <div className="grid grid-cols-2 gap-2 mx-4 mb-6 scale-[1.0] lg:scale-[1.05] md:scale-[1.05] ml-[6%] lg:ml-[4%] md:ml-[8%]">
+          <div className="grid grid-cols-2 gap-2 mx-4 mb-6 scale-[0.95] lg:scale-[1.05] md:scale-[1.05] ml-[4%] lg:ml-[4%] md:ml-[8%]">
             {/* Left Card: NUTRIENT RESERVE - Single background with individual value containers */}
             <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 -ml-6 lg:-ml-1 md:-ml-4 w-52 scale-[0.85] lg:scale-[1.0] md:scale-[1.0]">
               <div className="space-y-4">
@@ -535,21 +535,21 @@ export default function SeedStewardStats({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('🔍 Amplify button clicked directly');
+                    console.log('Amplify button clicked directly');
                     handleAmplifyClick();
                   }}
-                  onMouseDown={() => console.log('🖱️ Amplify button mouse down')}
-                  onMouseUp={() => console.log('🖱️ Amplify button mouse up')}
-                  onTouchStart={() => console.log('📱 Amplify button touch start')}
-                  onTouchEnd={() => console.log('📱 Amplify button touch end')}
-                  className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 transition-colors cursor-pointer z-50"
+                  onMouseDown={() => console.log('Amplify button mouse down')}
+                  onMouseUp={() => console.log('Amplify button mouse up')}
+                  onTouchStart={() => console.log('Amplify button touch start')}
+                  onTouchEnd={() => console.log('Amplify button touch end')}
+                  className="relative w-full px-4 py-2 bg-purple-200/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-purple-200/90 text-nowrap transition-colors cursor-pointer z-50"
                   style={{ pointerEvents: 'auto', zIndex: 50 }}
                 >
                   Amplify Impact
                 </button>
                 {/* Description container - narrower and touching button */}
-                <div className="bg-purple-200/40 rounded-xl p-2 mx-2 -mt-3">
-                  <div className="text-[9px] text-center text-black/70 leading-tight">
+                <div className="bg-purple-200/40 rounded-xl p-2 mx-2 -mt-5 relative left-0 right-auto scale-[1.15] lg:scale-[1.0] md:scale-[1.0] top-2 lg:top-0 md:top-0">
+                  <div className="text-[9px] text-center text-black/70 leading-tight relative left-0 right-auto scale-[0.95] lg:scale-[1.0] md:scale-[1.0] top-2 lg:top-0 md:top-0">
                     <span className="">Add more funds to your seed to amplify its</span> <span className="peridia-display-light">longterm impact & </span>
                     <span className="">increase your <span className="peridia-display-light">snapshot share</span></span>
                   </div>
@@ -563,21 +563,21 @@ export default function SeedStewardStats({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('🔍 Harvest button clicked directly');
+                    console.log('Harvest button clicked directly');
                     handleHarvestClick();
                   }}
-                  onMouseDown={() => console.log('🖱️ Harvest button mouse down')}
-                  onMouseUp={() => console.log('🖱️ Harvest button mouse up')}
-                  onTouchStart={() => console.log('📱 Harvest button touch start')}
-                  onTouchEnd={() => console.log('📱 Harvest button touch end')}
+                  onMouseDown={() => console.log('Harvest button mouse down')}
+                  onMouseUp={() => console.log('Harvest button mouse up')}
+                  onTouchStart={() => console.log('Harvest button touch start')}
+                  onTouchEnd={() => console.log('Harvest button touch end')}
                   className="relative w-full px-4 py-2 bg-white/80 text-gray-900 peridia-display text-base mb-1 rounded-full border-2 border-dotted border-black/60 hover:bg-white/90 transition-colors cursor-pointer z-50"
                   style={{ pointerEvents: 'auto', zIndex: 50 }}
                 >
                   Harvest
                 </button>
                 {/* Description container - narrower and touching button */}
-                <div className="bg-white/40 rounded-xl p-2 mx-5 -mt-3">
-                  <div className="text-[9px] text-black/70 text-center leading-tight">
+                <div className="bg-white/40 rounded-xl p-2 mx-5 -mt-3 relative left-0 right-auto scale-[1.45] lg:scale-[1.0] md:scale-[1.0] top-2 lg:top-0 md:top-0">
+                  <div className="text-[8px] text-black/70 text-center leading-tight relative left-0 right-auto top-1 lg:top-0 md:top-0">
                     Harvest the nutrient reserve to <span className="peridia-display-light">withdraw</span> available funds
                   </div>
                 </div>
@@ -598,7 +598,7 @@ export default function SeedStewardStats({
 
             <div className="grid grid-cols-2 gap-4 scale-[0.9] lg:scale-[1.05] md:scale-[1.05] -ml-3 lg:-ml-1 md:-ml-1 -mt-10 lg:-mt-6 md:-mt-6">
               {/* Left Card: Impact Details */}
-              <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 h-45 w-45 lg:w-45 md:w-45 scale-[1.0] lg:scale-[1.0] md:scale-[1.0] -ml-8 lg:-ml-4 md:-ml-4">
+              <div className="rounded-[28px] bg-[#E2E3F0B2] p-4 h-45 w-45 lg:w-45 md:w-45 scale-[1.0] lg:scale-[1.0] md:scale-[1.0] -ml-10 lg:-ml-4 md:-ml-4">
                 <div className="space-y-4">
                   {/* IMMEDIATE IMPACT */}
                   <div className="">
