@@ -229,9 +229,9 @@ export default function HarvestSeedModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[0.75] md:scale-[0.75] scale-[0.8] h-10 w-[460px] lg:w-full md:w-full -ml-8 lg:-ml-0 md:-ml-0 mt-94 lg:mt-88 md:mt-80"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:scale-[0.75] md:scale-[0.75] scale-[0.8] h-10 w-[460px] lg:w-full md:w-full -ml-10 lg:-ml-0 md:-ml-0 mt-84 lg:mt-88 md:mt-80"
           >
-            {/* State 1: Disconnected Wallet */}
+            {/* State 1: Disconnected Wallet */}  
             {!authenticated ? (
               <div className="bg-[#D9D9D9] rounded-[60px] border-2 border-black border-dotted p-8 max-w-sm w-full mx-auto relative">
                 {/* Close Button */}
@@ -285,10 +285,10 @@ export default function HarvestSeedModal({
 
                 {/* Wallet Details Section */}
                 <div className="bg-none rounded-[20px] p-4 mb-1 relative left-0 right-auto">
-                  <div className="bg-white border border-black/70 rounded-full p-2 w-[350px] lg:w-[450px] md:w-[450px] mb-3 -ml-8 z-20 py-3 lg:py-4 md:py-4 relative left-0 right-auto">
+                  <div className="bg-white border border-black/70 rounded-full p-2 w-[370px] lg:w-[450px] md:w-[450px] mb-3 -ml-8 z-20 py-3 lg:py-4 md:py-4 relative left-0 right-auto">
                     <p className="text-[11px] lg:text-[11px] md:text-[11px] text-nowrap text-black font-medium -mb-2 ml-4 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">YOUR WALLET</p>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3 relative left-4 lg:left-8 md:left-6 right-auto scale-[0.9] lg:scale-[1.5] md:scale-[1.3]">
+                      <div className="flex items-center gap-3 relative left-2 lg:left-8 md:left-6 right-auto scale-[1.1] lg:scale-[1.5] md:scale-[1.3]">
                         <span className="text-base font-mono text-black ml-4">
                           {formatAddress(walletAddress || '')}
                         </span>
@@ -300,7 +300,7 @@ export default function HarvestSeedModal({
                         </button>
                         {copied && <span className="text-xs text-green-600">Copied!</span>}
                       </div>
-                      <div className="bg-[#F1F2F9] px-3 py-1 rounded-lg ">
+                      <div className="bg-[#F1F2F9] px-3 py-1 rounded-lg relative left-0 right-auto -top-3 lg:top-0 md:top-0">
                         <span className="text-base font-light text-gray-700">{balance} ETH</span>
                       </div>
                     </div>
@@ -330,17 +330,17 @@ export default function HarvestSeedModal({
                       </button>
                       <button
                         onClick={handleAddFunds}
-                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-18 lg:left-44 md:left-40 -top-16 lg:-top-12 md:-top-14 right-auto z-50"
+                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-16 lg:left-44 md:left-40 -top-11 lg:-top-12 md:-top-14 right-auto z-50"
                       >
-                        <div className="scale-[0.6] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto">
+                        <div className="scale-[1.1] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto">
                           <span className="peridia-display relative left-0 right-auto">A</span>dd <span className="peridia-display relative left-0 right-auto">F</span>unds
                         </div>
                       </button>
                       <button
                         onClick={handleWalletConnect}
-                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-sm h-6 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative left-0 lg:left-0 md:-left-3 right-auto text-nowrap"
+                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-sm h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-28 lg:left-0 md:-left-3 right-auto text-nowrap"
                       >
-                        <div className="scale-[0.6] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto">
+                        <div className="scale-[1.0] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto">
                           <span className="peridia-display relative left-0 right-auto">W</span>allet <span className="peridia-display relative left-0 right-auto">C</span>onnect
                         </div>
                       </button>
@@ -350,7 +350,7 @@ export default function HarvestSeedModal({
 
                 {/* SeedId Current Maturation Overview Bar */}
                 <div className="bg-gray-100 rounded-tl-[30px] rounded-tr-[30px] rounded-bl-[20px] rounded-br-[20px] px-6 py-1 mb-2 border-3 border-dotted border-black relative left-0 right-auto">
-                  <p className="text-black text-nowrap text-center text-[13px] lg:text-[13px] md:text-[13px] scale-[0.8] lg:scale-[1.6] md:scale-[1.5] font-medium relative left-0 right-auto">
+                  <p className="text-black text-nowrap text-center text-[13px] lg:text-[13px] md:text-[13px] scale-[1.1] lg:scale-[1.6] md:scale-[1.5] font-medium relative left-0 right-auto">
                     Seed {seedId} <span className="peridia-display relative left-0 right-auto">current maturation overview.</span>
                   </p>
                 </div>
@@ -416,11 +416,11 @@ export default function HarvestSeedModal({
                     {/* Right side - long thank you text */}
                     <div className="text-right relative left-0 right-auto">
                       {/* Harvest Button */}
-                      <div className="mt-2 relative left-0 right-auto scale-[0.9] lg:scale-[1.3] md:scale-[1.3] top-4 lg:top-4 md:top-4">
+                      <div className="mt-2 relative left-0 right-auto scale-[1.5] lg:scale-[1.3] md:scale-[1.3] top-4 lg:top-4 md:top-4">
                         <Button
                           onClick={handleHarvest}
                           disabled={isProcessing}
-                          className="bg-white border-2 border-dotted border-black text-black text-xs font-medium py-2 px-6 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 relative left-0 lg:-left-6 md:-left-4 right-auto"
+                          className="bg-white border-2 border-dotted border-black text-black text-xs font-medium py-2 px-6 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 relative -left-4 lg:-left-6 md:-left-4 right-auto"
                         >
                           {isProcessing ? (
                             <div className="flex items-center justify-center gap-2 relative left-0 right-auto">
@@ -428,7 +428,7 @@ export default function HarvestSeedModal({
                               PROCESSING...
                             </div>
                           ) : (
-                            <div className="scale-[0.7] lg:scale-[1.3] md:scale-[1.3] relative left-0 right-auto">
+                            <div className="scale-[1.2] lg:scale-[1.3] md:scale-[1.3] relative left-0 right-auto">
                               <p className="peridia-display relative left-0 right-auto top-1 lg:top-1 md:top-1">H<span className="favorit-mono relative left-0 right-auto">arvest</span></p>
                               <p className="peridia-display relative left-0 right-auto -top-1 lg:-top-1 md:-top-1">N<span className="favorit-mono relative left-0 right-auto">utrients</span></p>
                             </div>
@@ -443,7 +443,7 @@ export default function HarvestSeedModal({
                 </div>
 
                 {/* Warning and Redirection */}
-                <div className="text-center relative left-0 right-auto scale-[0.9] lg:scale-[1.45] md:scale-[1.45] mt-10 lg:mt-10 md:mt-10 mb-2 lg:mb-2 md:mb-2">
+                <div className="text-center relative left-0 right-auto scale-[1.2] lg:scale-[1.45] md:scale-[1.45] mt-20 lg:mt-10 md:mt-10 mb-2 lg:mb-2 md:mb-2">
                   <p className="text-[9px] text-[#7E3EA8] mb-1 relative left-0 right-auto">
                     PLEASE NOTE THE ACTION IS IRREVOCABLE & YOUR STEWARDED SEED 
                     <p className="text-[9px] text-[#7E3EA8] mb-1 relative left-0 right-auto">WILL BECOME DORMANT. NO FURTHER EVOLUTIONS WILL BE POSSIBLE</p>
