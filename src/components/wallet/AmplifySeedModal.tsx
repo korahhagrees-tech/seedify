@@ -318,7 +318,7 @@ export default function AmplifySeedModal({
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">TOTAL VALUE</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:px-1 md:px-1 border border-dotted border-gray-400 relative left-0 right-auto text-nowrap -top-2 lg:-top-2 md:-top-2">
                         <div className="text-center relative left-0 right-auto scale-[0.75] lg:scale-[1.1] md:scale-[1.2]">
-                          <span className="text-[12px] lg:text-[12px] md:text-[11px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalValue)} ETH</span>
+                          <span className="text-[9px] lg:text-[12px] md:text-[11px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalValue)} ETH</span>
                         </div>
                       </div>
                     </div>
@@ -352,7 +352,7 @@ export default function AmplifySeedModal({
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">TOTAL FUNDINGS</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
                         <div className="text-center relative left-0 right-auto scale-[0.75] lg:scale-[1.1] md:scale-[1.1]">
-                          <span className="text-[12px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalFundings)} ETH</span>
+                          <span className="text-[9px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalFundings)} ETH</span>
                         </div>
                       </div>
                     </div>
@@ -368,7 +368,7 @@ export default function AmplifySeedModal({
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">ALL SEEDS TOTAL</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
                         <div className="text-center relative left-0 right-auto scale-[0.75] lg:scale-[1.1] md:scale-[1.1]">
-                          <span className="text-[12px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.allSeedsTotal)} ETH</span>
+                          <span className="text-[8px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.allSeedsTotal)} ETH</span>
                         </div>
                       </div>
                     </div>
@@ -492,7 +492,7 @@ export default function AmplifySeedModal({
                         className="flex-1 bg-transparent text-black text-lg lg:text-[16px] md:text-[16px] scale-[1.8] lg:scale-[1.6] md:scale-[1.5] border-none outline-none relative left-28 lg:left-18 md:left-16 right-auto"
                         placeholder="_.___"
                       />
-                      <span className="text-xs text-black relative -left-28 lg:-left-30 md:-left-30 right-auto ml-2 scale-[1.85] lg:scale-[1.7] md:scale-[1.5]">ETH</span>
+                      <span className="text-xs text-black relative -left-24 lg:-left-30 md:-left-30 right-auto ml-2 scale-[1.85] lg:scale-[1.7] md:scale-[1.5]">ETH</span>
                     </div>
                   </div>  
 

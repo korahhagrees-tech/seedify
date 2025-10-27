@@ -323,7 +323,7 @@ export default function HarvestSeedModal({
                             window.location.href = "/";
                           }, 100);
                         }}
-                        className="flex items-center gap-2 px-4 py-0 h-8 text-[12px] lg:text-lg md:text-lg text-black hover:text-gray-800 transition-colors text-nowrap relative left-0 right-auto"
+                        className="flex items-center gap-2 px-4 py-0 h-8 text-[10px] lg:text-lg md:text-lg text-black hover:text-gray-800 transition-colors text-nowrap relative left-0 right-auto"
                       >
                         <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4 relative left-0 right-auto" />
                         Log out
@@ -332,15 +332,15 @@ export default function HarvestSeedModal({
                         onClick={handleAddFunds}
                         className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-[8px] lg:text-base md:text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-34 lg:left-44 md:left-40 -top-11 lg:-top-12 md:-top-14 right-auto z-50"
                       >
-                        <div className="scale-[1.8] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto text-nowrap">
+                        <div className="scale-[1.0] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto text-nowrap">
                           <span className="peridia-display relative left-0 right-auto">A</span>dd <span className="peridia-display relative left-0 right-auto">F</span>unds
                         </div>
                       </button>
                       <button
                         onClick={handleWalletConnect}
-                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-sm h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-2 lg:left-0 md:-left-3 right-auto text-nowrap text-[8px] lg:text-base md:text-base"
+                        className="px-6 py-1 border-2 border-dotted border-black rounded-full text-sm h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-2 lg:left-0 md:-left-3 right-auto text-nowrap text-[8px] lg:text-base md:text-base"
                       >
-                        <div className="scale-[1.3] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto text-nowrap">
+                        <div className="scale-[1.1] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto text-nowrap">
                           <span className="peridia-display relative left-0 right-auto">W</span>allet <span className="peridia-display relative left-0 right-auto">C</span>onnect
                         </div>
                       </button>
