@@ -33,13 +33,17 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
           autoPlay
           playsInline
           muted
-          className="object-cover opacity-120"
           loop
+          controls={false}
+          disablePictureInPicture
+          disableRemotePlayback
+          className="object-cover opacity-120"
           style={{
             width: "100%",
             height: "100%",
             objectFit: "cover",
             display: "block",
+            pointerEvents: "none",
           }}
         />
         {/* <Image
@@ -64,20 +68,20 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          <div className="top-26">
+          <div className="relative left-0 right-auto top-20 lg:top-0 md:top-0">
             <Image
               src="/text.svg"
               alt="THE WAY OF FLOWERS"
               width={354}
               height={84}
-              className="w-auto h-auto max-w-[200px] lg:max-w-[350px] md:max-w-[300px] mt-64 lg:mt-32 md:mt-4"
+              className="w-auto h-auto max-w-[300px] lg:max-w-[350px] md:max-w-[300px] mt-64 lg:mt-32 md:mt-4"
               priority
             />
             <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-6">
               <p>by CROSSLUCID.</p>
             </div>
           </div>
-          <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-42 lg:mt-30 md:mt-36 scale-[0.8] lg:scale-[1] md:scale-[0.9]">
+          <div className="bg-transparent peridia-display-light text-white text-xl text-center w-full mt-42 lg:mt-30 md:mt-36 text-[8px] lg:text-[12px] md:text-[12px] scale-[1.8] lg:scale-[1.0] md:scale-[0.9] relative left-0 right-auto top-4 lg:top-0 md:top-0">
             <p>a regenerative art project</p>
             <p className="text-nowrap">reimagining environmental art</p>
             <p className="text-nowrap">through living digital botanicals </p>
@@ -95,7 +99,7 @@ export default function SplashScreen({ onStart }: SplashScreenProps) {
         >
           <WalletConnectButton
             onSuccess={handleSuccess}
-            className="text-white text-lg hover:text-white animate-bounce font-light px-8 py-4 hover:bg-white/20 transition-colors bg-transparent"
+            className="text-white text-lg hover:text-white animate-bounce font-light px-8 py-4 hover:bg-white/20 transition-colors bg-transparent relative left-0 right-auto -top-14 lg:top-0 md:top-0"
           >
             Tap to Start
           </WalletConnectButton>
