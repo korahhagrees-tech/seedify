@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { usePrivy, useLogin } from '@privy-io/react-auth';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface WalletConnectButtonProps {
   onSuccess?: () => void;
@@ -22,7 +23,7 @@ export default function WalletConnectButton({
   const { ready, authenticated } = usePrivy();
   const [retryCount, setRetryCount] = useState(0);
   const [isRetrying, setIsRetrying] = useState(false);
-  
+  const router = useRouter();
   const { login } = useLogin({
     onComplete: ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod, loginAccount }) => {
       // console.log('User logged in successfully', user);
@@ -40,12 +41,14 @@ export default function WalletConnectButton({
         onSuccess();
       }
     },
-    onError: (error) => {
-      console.error('Login failed', error);
-      setIsRetrying(false);
-      
-      // Handle error with retry logic
-      handleLoginError(error);
+    onError: async (error) => {
+      try {
+        router.refresh();
+        await login();
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
+      return;
     }
   });
 

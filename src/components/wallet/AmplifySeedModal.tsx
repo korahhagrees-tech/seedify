@@ -17,6 +17,7 @@ import {
   useConnectWallet,
   useLogin,
   usePrivy,
+  useLogout,
 } from "@privy-io/react-auth";
 import { useBalance, useWriteContract, usePublicClient } from "wagmi";
 import { useSetActiveWallet } from "@privy-io/wagmi";
@@ -91,15 +92,22 @@ export default function AmplifySeedModal({
   const { sendTransaction } = useSendTransaction();
   const { writeContractAsync } = useWriteContract();
   const publicClient = usePublicClient();
-  const privy = usePrivy(); // Get Privy instance for export functionality
+  const privy = usePrivy();
+  const { logout } = useLogout();
   const { connectWallet } = useConnectWallet({
     onSuccess: ({ wallet }) => {
       // console.log(" Wallet connected successfully:", wallet);
       // The newly connected wallet will automatically be available in the wallets array
       // User can switch to it via the wallet selector if needed
     },
-    onError: (error) => {
+    onError: async (error) => {
       // console.error("Wallet connection failed:", error);
+      try {
+        await login();
+      } catch (error) {
+        console.error("Login failed:", error);
+      }
+      return;
     },
   });
 
@@ -305,7 +313,7 @@ export default function AmplifySeedModal({
 
   const handleLogout = async () => {
     try {
-      // TODO: Implement logout logic
+      await logout();
       // console.log('Logging out user');
       onClose();
     } catch (error) {
@@ -434,7 +442,7 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto">
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">TOTAL VALUE</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:px-1 md:px-1 border border-dotted border-gray-400 relative left-0 right-auto text-nowrap -top-2 lg:-top-2 md:-top-2">
-                        <div className="text-center relative left-0 right-auto scale-[0.7] lg:scale-[1.1] md:scale-[1.2]">
+                        <div className="text-center relative left-0 right-auto scale-[0.9] lg:scale-[1.1] md:scale-[1.2]">
                           <span className="text-[8px] lg:text-[12px] md:text-[11px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalValue)} ETH</span>
                         </div>
                       </div>
@@ -468,7 +476,7 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto -top-6 lg:-top-4 md:-top-3">
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">TOTAL FUNDINGS</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
-                        <div className="text-center relative left-0 right-auto scale-[0.7] lg:scale-[1.1] md:scale-[1.1]">
+                        <div className="text-center relative left-0 right-auto scale-[0.9] lg:scale-[1.1] md:scale-[1.1]">
                           <span className="text-[7px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalFundings)} ETH</span>
                         </div>
                       </div>
@@ -484,7 +492,7 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto -top-6 lg:-top-4 md:-top-3">
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">ALL SEEDS TOTAL</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
-                        <div className="text-center relative left-0 right-auto scale-[0.7] lg:scale-[1.1] md:scale-[1.1]">
+                        <div className="text-center relative left-0 right-auto scale-[0.9] lg:scale-[1.1] md:scale-[1.1]">
                           <span className="text-[7px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.allSeedsTotal)} ETH</span>
                         </div>
                       </div>
@@ -569,11 +577,11 @@ export default function AmplifySeedModal({
                         className="flex items-center gap-2 px-4 py-0 h-8 text-lg text-black hover:text-gray-800 transition-colors text-nowrap relative left-0 right-auto"
                       >
                         <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4 relative left-0 right-auto" />
-                        Log out
+                        <span className="text-nowrap text-[8px] lg:text-[12px] md:text-[12px]">Log out</span>
                       </button>
                       <button
                         onClick={handleAddFunds}
-                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-32 lg:left-44 md:left-40 -top-16 lg:-top-12 md:-top-14 right-auto z-50"
+                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-[8px] lg:text-[12px] md:text-[12px] text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-32 lg:left-44 md:left-40 -top-16 lg:-top-12 md:-top-14 right-auto z-50"
                       >
                         <div className="scale-[0.8] lg:scale-[1.2] md:scale-[1.1] relative left-0 right-auto">
                           <span className="peridia-display relative left-0 right-auto">A</span>dd <span className="peridia-display relative left-0 right-auto">F</span>unds
@@ -581,7 +589,7 @@ export default function AmplifySeedModal({
                       </button>
                       <button
                         onClick={handleConnectAccount}
-                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-sm h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-12 lg:left-0 md:-left-3 right-auto text-nowrap scale-[1.1] lg:scale-[1.3] md:scale-[1.25]"
+                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-[8px] lg:text-[12px] md:text-[12px] h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-12 lg:left-0 md:-left-3 right-auto text-nowrap scale-[1.1] lg:scale-[1.3] md:scale-[1.25]"
                       >
                         <div className="scale-[1.1] lg:scale-[1.2] md:scale-[1.1] relative left-0 right-auto">
                           <span className="peridia-display relative left-0 right-auto">W</span>allet <span className="peridia-display relative left-0 right-auto">C</span>onnect
@@ -619,7 +627,7 @@ export default function AmplifySeedModal({
                             placeholder="0.000"
                             style={
                               { width: contributionAmount ? `${Math.max(60, contributionAmount.length * 14)}px` : '120px',
-                                marginLeft: contributionAmount ? `-34px` : '-20px'
+                                marginLeft: contributionAmount ? `-34px` : '-5px'
                                }
                             }
                           />

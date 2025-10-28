@@ -160,7 +160,7 @@ export default function HarvestSeedModal({
         });
       } catch (error) {
         console.error('Failed to fund wallet:', error);
-        toast.error('Failed to open funding flow');
+        // toast.error('Failed to open funding flow');
       }
     }
   };
@@ -225,7 +225,7 @@ export default function HarvestSeedModal({
       // Check if we have a public client for reading contract state
       if (!publicClient) {
         console.error('Public client not available');
-        toast.error('Unable to connect to blockchain. Please try again.');
+        // toast.error('Unable to connect to blockchain. Please try again.');
         setIsProcessing(false);
         return;
       }
@@ -240,7 +240,7 @@ export default function HarvestSeedModal({
 
       if (isWithdrawn) {
         console.error('Seed has already been withdrawn');
-        toast.error('This seed has already been withdrawn. No nutrients available.');
+        // toast.error('This seed has already been withdrawn. No nutrients available.');
         setIsProcessing(false);
         return;
       }
@@ -267,7 +267,7 @@ export default function HarvestSeedModal({
       // Ensure we have a valid wallet address
       if (!walletAddress) {
         console.error('No wallet address found');
-        toast.error('No wallet address found. Please reconnect your wallet.');
+        // toast.error('No wallet address found. Please reconnect your wallet.');
         setIsProcessing(false);
         return;
       }
@@ -311,7 +311,7 @@ export default function HarvestSeedModal({
                   break;
                 } else if (status === 'reverted') {
                   console.error('Transaction reverted:', statusData.transaction.revertReason);
-                  toast.error('Transaction failed and reverted. Please try again.');
+                  // toast.error('Transaction failed and reverted. Please try again.');
                   setIsProcessing(false);
                   return;
                 } else {
@@ -329,20 +329,20 @@ export default function HarvestSeedModal({
 
         if (!transactionStatus) {
           console.error('Transaction verification timed out');
-          toast.error('Transaction verification timed out. Please check your wallet.');
+          // toast.error('Transaction verification timed out. Please check your wallet.');
           setIsProcessing(false);
           return;
         }
 
         // Success - close modal and show notification
-        toast.success('Withdrawal processed successfully!');
+        // toast.success('Withdrawal processed successfully!');
         setShowWithdrawalModal(false);
         onClose();
       }
 
     } catch (error) {
       console.error('Withdrawal failed:', error);
-      toast.error('Withdrawal failed. Please try again.');
+      // toast.error('Withdrawal failed. Please try again.');
     } finally {
       setIsProcessing(false);
     }
