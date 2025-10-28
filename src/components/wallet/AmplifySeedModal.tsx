@@ -442,7 +442,7 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto">
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">TOTAL VALUE</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:px-1 md:px-1 border border-dotted border-gray-400 relative left-0 right-auto text-nowrap -top-2 lg:-top-2 md:-top-2">
-                        <div className="text-center relative left-0 right-auto scale-[0.9] lg:scale-[1.1] md:scale-[1.2]">
+                        <div className="text-center relative left-0 right-auto scale-[1.1] lg:scale-[1.1] md:scale-[1.2]">
                           <span className="text-[8px] lg:text-[12px] md:text-[11px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalValue)} ETH</span>
                         </div>
                       </div>
@@ -476,7 +476,7 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto -top-6 lg:-top-4 md:-top-3">
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">TOTAL FUNDINGS</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
-                        <div className="text-center relative left-0 right-auto scale-[0.9] lg:scale-[1.1] md:scale-[1.1]">
+                        <div className="text-center relative left-0 right-auto scale-[1.1] lg:scale-[1.1] md:scale-[1.1]">
                           <span className="text-[7px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalFundings)} ETH</span>
                         </div>
                       </div>
@@ -492,7 +492,7 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto -top-6 lg:-top-4 md:-top-3">
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">ALL SEEDS TOTAL</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
-                        <div className="text-center relative left-0 right-auto scale-[0.9] lg:scale-[1.1] md:scale-[1.1]">
+                        <div className="text-center relative left-0 right-auto scale-[1.1] lg:scale-[1.1] md:scale-[1.1]">
                           <span className="text-[7px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.allSeedsTotal)} ETH</span>
                         </div>
                       </div>
@@ -577,13 +577,13 @@ export default function AmplifySeedModal({
                         className="flex items-center gap-2 px-4 py-0 h-8 text-lg text-black hover:text-gray-800 transition-colors text-nowrap relative left-0 right-auto"
                       >
                         <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4 relative left-0 right-auto" />
-                        <div className="scale-[0.9] lg:scale-[1.0] md:scale-[1.0] relative left-0 right-auto">
+                        <div className="scale-[1.1] lg:scale-[1.0] md:scale-[1.0] relative left-0 right-auto">
                           <span className="text-nowrap text-[8px] lg:text-[12px] md:text-[12px]">Log out</span>
                         </div>
                       </button>
                       <button
                         onClick={handleAddFunds}
-                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-[8px] lg:text-[12px] md:text-[12px] text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-44 lg:left-44 md:left-40 -top-16 lg:-top-12 md:-top-14 right-auto z-50"
+                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-[8px] lg:text-[12px] md:text-[12px] text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-50 lg:left-44 md:left-40 -top-16 lg:-top-12 md:-top-14 right-auto z-50"
                       >
                         <div className="scale-[1.1] lg:scale-[1.2] md:scale-[1.1] relative left-0 right-auto">
                           <span className="peridia-display relative left-0 right-auto">A</span>dd <span className="peridia-display relative left-0 right-auto">F</span>unds
