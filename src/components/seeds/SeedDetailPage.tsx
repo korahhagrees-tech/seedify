@@ -47,14 +47,14 @@ export default function SeedDetailPage({
 
   const handleImageError = () => {
     if (imageErrorCount < 2) {
-      console.log(
-        `🌸 [IMAGE] Error loading seed detail image (tier ${
-          imageErrorCount + 1
-        }), trying next fallback`
-      );
+      // console.log(
+      //   `[IMAGE] Error loading seed detail image (tier ${
+      //     imageErrorCount + 1
+      //   }), trying next fallback`
+      // );
       setImageErrorCount((prev) => prev + 1);
     } else {
-      console.log("🌸 [IMAGE] All fallbacks exhausted, using final fallback");
+      // console.log("[IMAGE] All fallbacks exhausted, using final fallback");
       setImageError(true);
     }
   };

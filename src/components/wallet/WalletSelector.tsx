@@ -30,8 +30,8 @@ export default function WalletSelector({
   // Use wallets from context (Zustand store) which has the most up-to-date list
   const wallets = contextWallets.length > 0 ? contextWallets : privyWallets;
   
-  console.log('🔍 WalletSelector - Context wallets:', contextWallets.length, 'Privy wallets:', privyWallets.length, 'Ready:', ready);
-  console.log('🔍 WalletSelector - Using wallets:', wallets.length, wallets);
+  // console.log(' WalletSelector - Context wallets:', contextWallets.length, 'Privy wallets:', privyWallets.length, 'Ready:', ready);
+  // console.log(' WalletSelector - Using wallets:', wallets.length, wallets);
 
   const handleWalletSelect = (wallet: any) => {
     onWalletSelect(wallet);

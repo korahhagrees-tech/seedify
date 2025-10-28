@@ -18,11 +18,26 @@ import {
   useLogin,
   usePrivy,
 } from "@privy-io/react-auth";
-import { useBalance } from "wagmi";
+import { useBalance, useWriteContract, usePublicClient } from "wagmi";
 import { useSetActiveWallet } from "@privy-io/wagmi";
 import { base } from "viem/chains";
 import { toast } from 'sonner';
 import { clearAppStorage } from "@/lib/auth/logoutUtils";
+import { encodeFunctionData, parseEther } from "viem";
+import { useSendTransaction } from "@privy-io/react-auth";
+
+// SeedFactory ABI for deposit
+const SEED_FACTORY_ABI = [
+  {
+    "inputs": [{"internalType": "uint256","name": "seedId","type": "uint256"}],
+    "name": "depositForSeed",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+] as const;
+
+const SEED_FACTORY_ADDRESS = "0x7e75F9eC72dd70Eb4E6C701Be225cDBd77e51463";
 
 interface AmplifySeedModalProps {
   isOpen: boolean;
@@ -66,21 +81,25 @@ export default function AmplifySeedModal({
   const [showWalletSelector, setShowWalletSelector] = useState(false);
   const [showAddFunds, setShowAddFunds] = useState(false);
   const [currentState, setCurrentState] = useState<'communication' | 'payment'>('communication');
-  const [contributionAmount, setContributionAmount] = useState("_.___");
+  const [contributionAmount, setContributionAmount] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Use Privy hooks for wallet management
   const { wallets: privyWallets, ready } = useWallets(); // Get all connected wallets from Privy
   const { setActiveWallet: setWagmiActiveWallet } = useSetActiveWallet(); // Set active wallet for wagmi
   const { fundWallet } = useFundWallet();
+  const { sendTransaction } = useSendTransaction();
+  const { writeContractAsync } = useWriteContract();
+  const publicClient = usePublicClient();
   const privy = usePrivy(); // Get Privy instance for export functionality
   const { connectWallet } = useConnectWallet({
     onSuccess: ({ wallet }) => {
-      console.log(" Wallet connected successfully:", wallet);
+      // console.log(" Wallet connected successfully:", wallet);
       // The newly connected wallet will automatically be available in the wallets array
       // User can switch to it via the wallet selector if needed
     },
     onError: (error) => {
-      console.error("Wallet connection failed:", error);
+      // console.error("Wallet connection failed:", error);
     },
   });
 
@@ -109,14 +128,14 @@ export default function AmplifySeedModal({
       loginMethod,
       loginAccount,
     }) => {
-      console.log("User logged in successfully", user);
-      console.log("Is new user:", isNewUser);
-      console.log("Was already authenticated:", wasAlreadyAuthenticated);
-      console.log("Login method:", loginMethod);
-      console.log("Login account:", loginAccount);
+      // console.log("User logged in successfully", user);
+      // console.log("Is new user:", isNewUser);
+      // console.log("Was already authenticated:", wasAlreadyAuthenticated);
+      // console.log("Login method:", loginMethod);
+      // console.log("Login account:", loginAccount);
     },
     onError: (error) => {
-      console.error("Login failed", error);
+      // console.error("Login failed", error);
     },
   });
 
@@ -124,16 +143,16 @@ export default function AmplifySeedModal({
     ? parseFloat(balanceData.formatted).toFixed(4)
     : "0.0000";
 
-  console.log(
-    "🔍 WalletModal - Context wallets:",
-    contextWallets.length,
-    "Privy wallets:",
-    privyWallets.length,
-    "Using:",
-    wallets.length,
-    ready ? "(ready)" : "(loading)"
-  );
-  console.log("🔍 WalletModal - Wallets detail:", wallets);
+  // console.log(
+  //   "WalletModal - Context wallets:",
+  //   contextWallets.length,
+  //   "Privy wallets:",
+  //   privyWallets.length,
+  //   "Using:",
+  //   wallets.length,
+  //   ready ? "(ready)" : "(loading)"
+  // );
+  // console.log("WalletModal - Wallets detail:", wallets);
 
   const copyToClipboard = async () => {
     if (walletAddress) {
@@ -147,24 +166,122 @@ export default function AmplifySeedModal({
     setCurrentState('payment');
   };
 
-  const handleExtendCultivation = () => {
-    // Defensive checks for wallet functionality
-    if (!ready) {
-      // toast.info('Setting up wallet... Please wait.');
-      return;
-    }
-    if (!user) {
-      // toast.info('Please connect your wallet to continue.');
-      return;
-    }
-    if (!activeWallet) {
-      // toast.error("No active wallet found. Please connect your wallet.");
-      return;
-    }
+  const handleExtendCultivation = async () => {
+    setIsProcessing(true);
 
-    // TODO: Implement extend cultivation logic
-    console.log('Extending cultivation with amount:', contributionAmount);
-    onClose();
+    try {
+      // Defensive checks for wallet functionality
+      if (!ready) {
+        // toast.info('Setting up wallet... Please wait.');
+        setIsProcessing(false);
+        return;
+      }
+      if (!user) {
+        // toast.info('Please connect your wallet to continue.');
+        setIsProcessing(false);
+        return;
+      }
+      if (!activeWallet) {
+        // toast.error("No active wallet found. Please connect your wallet.");
+        setIsProcessing(false);
+        return;
+      }
+
+      // Validate contribution amount
+      if (!contributionAmount || contributionAmount.trim() === "" || isNaN(parseFloat(contributionAmount))) {
+        // toast.error('Please enter a valid contribution amount.');
+        setIsProcessing(false);
+        return;
+      }
+
+      const seedIdNum = parseInt(seedId || "1");
+      const contributionAmountNum = parseFloat(contributionAmount);
+
+      if (isNaN(contributionAmountNum) || contributionAmountNum <= 0) {
+        // toast.error('Contribution amount must be greater than 0.');
+        setIsProcessing(false);
+        return;
+      }
+
+      // console.log('Executing deposit for seed:', seedIdNum, 'with amount:', contributionAmountNum, 'ETH');
+
+      // Convert ETH to wei
+      const contributionAmountWei = parseEther(contributionAmountNum.toString());
+
+      // Use writeContractAsync instead of sendTransaction for better wallet compatibility
+      const txHash = await writeContractAsync({
+        address: SEED_FACTORY_ADDRESS as `0x${string}`,
+        abi: SEED_FACTORY_ABI,
+        functionName: 'depositForSeed',
+        args: [BigInt(seedIdNum)],
+        value: contributionAmountWei,
+      });
+
+      // console.log('Deposit transaction submitted:', txHash);
+
+      // Wait for transaction receipt and verify status
+      if (txHash) {
+        // console.log('Deposit transaction submitted with hash:', txHash);
+        
+        // Poll transaction status
+        let transactionStatus = null;
+        const maxAttempts = 20;
+        let attempts = 0;
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+
+        while (attempts < maxAttempts && !transactionStatus) {
+          try {
+            await new Promise(resolve => setTimeout(resolve, 6000));
+            
+            const statusResponse = await fetch(`${apiBaseUrl}/transactions/${txHash}/status`);
+            
+            if (statusResponse.ok) {
+              const statusData = await statusResponse.json();
+              // console.log('Transaction status response:', statusData);
+
+              if (statusData.success && statusData.transaction) {
+                const status = statusData.transaction.status;
+                
+                if (status === 'success') {
+                  // console.log('Transaction confirmed as successful');
+                  transactionStatus = statusData.transaction;
+                  break;
+                } else if (status === 'reverted') {
+                  console.error('Transaction reverted:', statusData.transaction.revertReason);
+                  // toast.error('Transaction failed and reverted. Please try again.');
+                  setIsProcessing(false);
+                  return;
+                } else {
+                  // console.log('Transaction status pending, continuing to poll...');
+                }
+              }
+            }
+            
+            attempts++;
+          } catch (error) {
+            console.warn(`Status check attempt ${attempts + 1} failed:`, error);
+            attempts++;
+          }
+        }
+
+        if (!transactionStatus) {
+          console.error('Transaction verification timed out');
+          // toast.error('Transaction verification timed out. Please check your wallet.');
+          setIsProcessing(false);
+          return;
+        }
+
+        // Success - close modal and show notification
+        // toast.success('Deposit successful! Your seed cultivation has been extended.');
+        onClose();
+      }
+
+    } catch (error: any) {
+      console.error('Deposit failed:', error);
+      //  toast.error(error?.message || 'Deposit failed. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleSwitchWallet = () => {
@@ -189,7 +306,7 @@ export default function AmplifySeedModal({
   const handleLogout = async () => {
     try {
       // TODO: Implement logout logic
-      console.log('Logging out user');
+      // console.log('Logging out user');
       onClose();
     } catch (error) {
       console.error('Logout failed:', error);
@@ -200,7 +317,7 @@ export default function AmplifySeedModal({
     // Use context's setActiveWallet which syncs with Zustand store and wagmi
     contextSetActiveWallet(wallet);
     setShowWalletSelector(false);
-    console.log("Selected wallet:", wallet);
+    // console.log("Selected wallet:", wallet);
   };
 
   const handleAddFunds = async () => {
@@ -317,8 +434,8 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto">
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">TOTAL VALUE</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:px-1 md:px-1 border border-dotted border-gray-400 relative left-0 right-auto text-nowrap -top-2 lg:-top-2 md:-top-2">
-                        <div className="text-center relative left-0 right-auto scale-[0.75] lg:scale-[1.1] md:scale-[1.2]">
-                          <span className="text-[9px] lg:text-[12px] md:text-[11px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalValue)} ETH</span>
+                        <div className="text-center relative left-0 right-auto scale-[0.7] lg:scale-[1.1] md:scale-[1.2]">
+                          <span className="text-[8px] lg:text-[12px] md:text-[11px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalValue)} ETH</span>
                         </div>
                       </div>
                     </div>
@@ -351,8 +468,8 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto -top-6 lg:-top-4 md:-top-3">
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">TOTAL FUNDINGS</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
-                        <div className="text-center relative left-0 right-auto scale-[0.75] lg:scale-[1.1] md:scale-[1.1]">
-                          <span className="text-[9px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalFundings)} ETH</span>
+                        <div className="text-center relative left-0 right-auto scale-[0.7] lg:scale-[1.1] md:scale-[1.1]">
+                          <span className="text-[7px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.totalFundings)} ETH</span>
                         </div>
                       </div>
                     </div>
@@ -367,8 +484,8 @@ export default function AmplifySeedModal({
                     <div className="text-center relative left-0 right-auto -top-6 lg:-top-4 md:-top-3">
                       <p className="text-[8px] lg:text-[12px] md:text-[12px] text-black mb-2 relative left-0 right-auto">ALL SEEDS TOTAL</p>
                       <div className="bg-white rounded-full px-3 py-0 lg:py-1 md:py-1 border border-dotted border-gray-400 relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">
-                        <div className="text-center relative left-0 right-auto scale-[0.75] lg:scale-[1.1] md:scale-[1.1]">
-                          <span className="text-[8px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.allSeedsTotal)} ETH</span>
+                        <div className="text-center relative left-0 right-auto scale-[0.7] lg:scale-[1.1] md:scale-[1.1]">
+                          <span className="text-[7px] lg:text-[12px] md:text-[12px] font-medium text-black text-nowrap relative top-0 lg:top-0 md:-top-0 -left-4 lg:left-0 md:left-0 right-auto">{parseEthValue(stats.allSeedsTotal)} ETH</span>
                         </div>
                       </div>
                     </div>
@@ -484,15 +601,42 @@ export default function AmplifySeedModal({
                   {/* Contribution Section */}
                   <div className="mb-4 relative -left-14 lg:left-4 md:left-12 right-auto scale-[0.7] lg:scale-[1.0] md:scale-[1.1] top-22 lg:top-28 md:top-28 -mt-16 lg:-mt-16 md:-mt-6">
                     <label className="block text-[14px] lg:text-[14px] md:text-[12px] text-black mb-2 relative left-6 lg:left-4 md:left-3 right-auto">CONTRIBUTION AMOUNT</label>
-                    <div className="w-[50%] lg:w-[35%] md:w-[30%] bg-white rounded-full px-4 py-2 lg:py-2 md:py-2 border-3 border-dotted border-black relative left-0 right-auto -top-2 lg:-top-2 md:-top-2 flex items-center">
-                      <input
-                        type="text"
-                        value={contributionAmount}
-                        onChange={(e) => setContributionAmount(e.target.value)}
-                        className="flex-1 bg-transparent text-black text-lg lg:text-[16px] md:text-[16px] scale-[1.8] lg:scale-[1.6] md:scale-[1.5] border-none outline-none relative left-28 lg:left-18 md:left-16 right-auto"
-                        placeholder="_.___"
-                      />
-                      <span className="text-xs text-black relative -left-24 lg:-left-30 md:-left-30 right-auto ml-2 scale-[1.85] lg:scale-[1.7] md:scale-[1.5]">ETH</span>
+                    <div className="bg-white rounded-full px-4 py-2 lg:py-2 md:py-2 border-3 border-dotted border-black relative left-0 right-auto -top-2 lg:-top-2 md:-top-2 inline-flex items-center min-w-[120px]">
+                      <div className="flex items-center w-full">
+                        <div className="relative flex-1">
+                          <input
+                            type="number"
+                            step="any"
+                            value={contributionAmount}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              // Allow empty string, numbers, and decimal points
+                              if (value === '' || /^\d*\.?\d*$/.test(value)) {
+                                setContributionAmount(value);
+                              }
+                            }}
+                            className="bg-transparent text-black text-[8px] lg:text-[12px] md:text-[12px] scale-[1.8] lg:scale-[1.6] md:scale-[1.5] border-none outline-none relative left-8 lg:left-14 md:left-12 right-auto w-full min-w-[60px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            placeholder="0.000"
+                            style={
+                              { width: contributionAmount ? `${Math.max(60, contributionAmount.length * 14)}px` : '120px',
+                                marginLeft: contributionAmount ? `-34px` : '-20px'
+                               }
+                            }
+                          />
+                          {/* Custom underline that skips decimal point */}
+                          {contributionAmount && (
+                            <div className="absolute bottom-2 lg:bottom-4 md:bottom-4 left-0 right-0 h-[1px] pointer-events-none">
+                              {contributionAmount.split('').map((char, index) => {
+                                if (char === '.') {
+                                  return <span key={index} className="inline-block w-[0.5em] h-[1px]"></span>;
+                                }
+                                return <span key={index} className="inline-block w-[0.5em] h-[1px] bg-black"></span>;
+                              })}
+                            </div>
+                          )}
+                        </div>
+                        <span className="text-xs text-black ml-2 scale-[1.85] lg:scale-[1.7] md:scale-[1.5] flex-shrink-0">ETH</span>
+                      </div>
                     </div>
                   </div>  
 
@@ -502,12 +646,20 @@ export default function AmplifySeedModal({
                       <div className="text-left relative left-0 right-auto">
                         <button
                           onClick={handleExtendCultivation}
-                          className="bg-white border-3 border-dotted border-black text-black text-sm font-medium py-2 px-6 rounded-full hover:bg-gray-100 transition-colors relative left-0 right-auto w-[230px] lg:w-[250px] md:w-[200px]"
+                          disabled={isProcessing}
+                          className="bg-white border-3 border-dotted border-black text-black text-sm font-medium py-2 px-6 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 relative left-0 right-auto w-[230px] lg:w-[250px] md:w-[200px]"
                         >
-                          <div className="scale-[1.85] lg:scale-[1.85] md:scale-[1.65] relative left-0 right-auto top-2 lg:top-2 md:top-2">
-                           <p className="peridia-display relative left-0 right-auto">E<span className="favorit-mono relative left-0 right-auto">xtend</span></p>
-                           <p className="peridia-display relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">C<span className="favorit-mono relative left-0 right-auto">ultivation</span></p>
-                          </div>
+                          {isProcessing ? (
+                            <div className="scale-[1.85] lg:scale-[1.85] md:scale-[1.65] relative left-0 right-auto top-2 lg:top-2 md:top-2 flex items-center gap-2">
+                              <div className="w-3 h-3 border-2 border-black border-t-transparent rounded-full animate-spin relative left-0 right-auto"></div>
+                              <span className="relative left-0 right-auto">PROCESSING...</span>
+                            </div>
+                          ) : (
+                            <div className="scale-[1.85] lg:scale-[1.85] md:scale-[1.65] relative left-0 right-auto top-2 lg:top-2 md:top-2">
+                             <p className="peridia-display relative left-0 right-auto">E<span className="favorit-mono relative left-0 right-auto">xtend</span></p>
+                             <p className="peridia-display relative left-0 right-auto -top-2 lg:-top-2 md:-top-2">C<span className="favorit-mono relative left-0 right-auto">ultivation</span></p>
+                            </div>
+                          )}
                         </button>
                         <p className="text-[12px] lg:text-[12px] md:text-[10px] text-black mt-1 relative left-6 lg:left-8 md:left-4 right-auto">INCREASE SEED VESTING VALUE</p>
                       </div>

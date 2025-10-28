@@ -108,21 +108,21 @@ export default function SeedStewardStats({
   );
 
   const handleImageLoad = () => {
-    console.log(" [IMAGE] Successfully loaded:", currentImageSrc);
+    // console.log(" [IMAGE] Successfully loaded:", currentImageSrc);
   };
 
   const handleImageError = () => {
     const nextIndex = imageErrorCount + 1;
     
     if (nextIndex < FALLBACK_IMAGES.length) {
-      console.log(
-        ` [IMAGE] Error loading image (attempt ${nextIndex}/${FALLBACK_IMAGES.length}), trying fallback:`,
-        FALLBACK_IMAGES[nextIndex]
-      );
+      // console.log(
+      //   ` [IMAGE] Error loading image (attempt ${nextIndex}/${FALLBACK_IMAGES.length}), trying fallback:`,
+      //   FALLBACK_IMAGES[nextIndex]
+      // );
       setCurrentImageSrc(FALLBACK_IMAGES[nextIndex]);
       setImageErrorCount(nextIndex);
     } else {
-      console.log(" [IMAGE] All fallbacks exhausted, showing final fallback");
+      // console.log(" [IMAGE] All fallbacks exhausted, showing final fallback");
     }
   };
 
@@ -152,20 +152,20 @@ export default function SeedStewardStats({
   const toggleInfoDropdown = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('INFO button clicked - BEFORE:', isInfoDropdownOpen);
-    console.log('Event details:', e);
-    console.log('Button element:', e.currentTarget);
+    // console.log('INFO button clicked - BEFORE:', isInfoDropdownOpen);
+    // console.log('Event details:', e);
+    // console.log('Button element:', e.currentTarget);
     setIsInfoDropdownOpen(!isInfoDropdownOpen);
-    console.log('INFO button clicked - AFTER:', !isInfoDropdownOpen);
+    // console.log('INFO button clicked - AFTER:', !isInfoDropdownOpen);
     // Force a re-render to test
     setTimeout(() => {
-      console.log('State after timeout:', isInfoDropdownOpen);
+      // console.log('State after timeout:', isInfoDropdownOpen);
     }, 100);
   };
 
   // Open Amplify Modal
   const handleAmplifyClick = () => {
-    console.log('🌱 Amplify button clicked');
+    // console.log('[SEED-STEWARD-STATS] Amplify button clicked');
 
     // Defensive checks for wallet functionality
     if (!ready) {
@@ -188,7 +188,7 @@ export default function SeedStewardStats({
 
   // Open Harvest Modal
   const handleHarvestClick = () => {
-    console.log('🌾 Harvest button clicked');
+    // console.log('[SEED-STEWARD-STATS] Harvest button clicked');
 
     // Defensive checks for wallet functionality
     if (!ready) {
@@ -210,9 +210,9 @@ export default function SeedStewardStats({
   };
 
   // Debug logging
-  console.log('SeedStewardStats state:', {
-    isInfoDropdownOpen
-  });
+  // console.log('SeedStewardStats state:', {
+  //   isInfoDropdownOpen
+  // });
 
   return (
     <>
@@ -280,7 +280,7 @@ export default function SeedStewardStats({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Customise Display clicked');
+                    // console.log('Customise Display clicked');
                   }}
                 >
                   Customise Display
@@ -535,7 +535,7 @@ export default function SeedStewardStats({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Amplify button clicked directly');
+                    // console.log('Amplify button clicked directly');
                     handleAmplifyClick();
                   }}
                   onMouseDown={() => console.log('Amplify button mouse down')}
@@ -563,7 +563,7 @@ export default function SeedStewardStats({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Harvest button clicked directly');
+                    // console.log('Harvest button clicked directly');
                     handleHarvestClick();
                   }}
                   onMouseDown={() => console.log('Harvest button mouse down')}
@@ -677,7 +677,7 @@ export default function SeedStewardStats({
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          console.log('Distribute Yield clicked');
+                          // console.log('Distribute Yield clicked');
                         }}
                         style={{ pointerEvents: 'auto' }}
                       >

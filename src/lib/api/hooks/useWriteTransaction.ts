@@ -75,7 +75,7 @@ export function useWriteTransaction(): UseWriteTransactionResult {
 
       const hash = await writeContractAsync(txConfig);
 
-      console.log("✍️ [WRITE-HOOK] Transaction submitted:", hash);
+      // console.log("[WRITE-HOOK] Transaction submitted:", hash);
 
       setTxHash(hash);
       setIsSuccess(true);
@@ -83,7 +83,7 @@ export function useWriteTransaction(): UseWriteTransactionResult {
     } catch (err) {
       const error =
         err instanceof Error ? err : new Error("Transaction failed");
-      console.error("✍️ [WRITE-HOOK] Transaction failed:", error);
+      console.error("[WRITE-HOOK] Transaction failed:", error);
       setError(error);
       throw error;
     }

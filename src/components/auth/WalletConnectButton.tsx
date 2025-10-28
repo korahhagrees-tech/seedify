@@ -25,11 +25,11 @@ export default function WalletConnectButton({
   
   const { login } = useLogin({
     onComplete: ({ user, isNewUser, wasAlreadyAuthenticated, loginMethod, loginAccount }) => {
-      console.log('User logged in successfully', user);
-      console.log('Is new user:', isNewUser);
-      console.log('Was already authenticated:', wasAlreadyAuthenticated);
-      console.log('Login method:', loginMethod);
-      console.log('Login account:', loginAccount);
+      // console.log('User logged in successfully', user);
+      // console.log('Is new user:', isNewUser);
+      // console.log('Was already authenticated:', wasAlreadyAuthenticated);
+      // console.log('Login method:', loginMethod);
+      // console.log('Login account:', loginAccount);
       
       // Reset retry state on success
       setRetryCount(0);
@@ -60,7 +60,7 @@ export default function WalletConnectButton({
     
     // Retry logic: try up to 3 times
     if (retryCount < 3) {
-      console.log(`Retrying login attempt ${retryCount + 1}/3...`);
+      // console.log(`Retrying login attempt ${retryCount + 1}/3...`);
       setRetryCount(prev => prev + 1);
       setIsRetrying(true);
       
@@ -72,7 +72,7 @@ export default function WalletConnectButton({
       }, 1000 * (retryCount + 1)); // Exponential backoff: 1s, 2s, 3s
     } else {
       // Max retries reached, refresh the page
-      console.log('Max retries reached, refreshing page...');
+      // console.log('Max retries reached, refreshing page...');
       window.location.reload();
     }
   };

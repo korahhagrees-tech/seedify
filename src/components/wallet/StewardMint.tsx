@@ -125,10 +125,10 @@ export default function StewardMint({
   };
 
   const handleSelect = (slot: number, b: Beneficiary) => {
-    console.log(`🔍 [STEWARD-MINT] Selecting beneficiary ${b.name} for slot ${slot}`);
+    // console.log(`[STEWARD-MINT] Selecting beneficiary ${b.name} for slot ${slot}`);
     setSelectedBySlot((prev) => {
       const newState = { ...prev, [slot]: b };
-      console.log(`🔍 [STEWARD-MINT] New selectedBySlot state:`, newState);
+      // console.log(`[STEWARD-MINT] New selectedBySlot state:`, newState);
       return newState;
     });
     setOpenDropdown(null);
@@ -199,12 +199,12 @@ export default function StewardMint({
     try {
       setShowConfirmModal(false);
       
-      console.log('🌱 [MINT] Confirming mint with values:', {
-        snapshotPrice,
-        payableAmount,
-        snapshotPriceType: typeof snapshotPrice,
-        payableAmountType: typeof payableAmount
-      });
+      // console.log('[MINT] Confirming mint with values:', {
+      //   snapshotPrice,
+      //   payableAmount,
+      //   snapshotPriceType: typeof snapshotPrice,
+      //   payableAmountType: typeof payableAmount
+      // });
       
       if (!userEvmAddress || !prepareData) {
         // toast.error('Missing required data');
@@ -242,11 +242,11 @@ export default function StewardMint({
       //  CRITICAL: Convert snapshot price from ETH to wei
       const snapshotPriceWei = parseEther(snapshotPrice);
       
-      console.log('🔍 [MINT] Snapshot price conversion:', {
-        inputEth: snapshotPrice,
-        outputWei: snapshotPriceWei.toString(),
-        exampleCheck: `${snapshotPrice} ETH = ${snapshotPriceWei.toString()} wei`
-      });
+      // console.log(' [MINT] Snapshot price conversion:', {
+      //   inputEth: snapshotPrice,
+      //   outputWei: snapshotPriceWei.toString(),
+      //   exampleCheck: `${snapshotPrice} ETH = ${snapshotPriceWei.toString()} wei`
+      // });
 
       const data = encodeFunctionData({
         abi: createSeedABI as any,
@@ -266,35 +266,35 @@ export default function StewardMint({
 
       //  CRITICAL: Use the user's payable amount directly as a string
       // No conversion, no parseEther, just pass the value as the user entered it
-      console.log('🔍 [MINT] Using payable amount directly:', {
-        payableAmount,
-        payableAmountType: typeof payableAmount
-      });
+      // console.log(' [MINT] Using payable amount directly:', {
+      //   payableAmount,
+      //   payableAmountType: typeof payableAmount
+      // });
       
       // Pass the payable amount directly as a string - no conversion needed
       const valueToSend = parseEther(payableAmount);
       
-      console.log('🔍 [MINT] Transaction details:', {
-        to: contractAddress,
-        value: valueToSend,
-        payableAmountEth: payableAmount,
-        breakdown: {
-          snapshotPriceEth: snapshotPrice,
-          seedPriceEth: prepareData.seedPrice,
-          userPayableEth: payableAmount
-        },
-        snapshotPriceWei: snapshotPriceWei.toString(),
-        beneficiaries: indices
-      });
+      // console.log(' [MINT] Transaction details:', {
+      //   to: contractAddress,
+      //   value: valueToSend,
+      //   payableAmountEth: payableAmount,
+      //   breakdown: {
+      //     snapshotPriceEth: snapshotPrice,
+      //     seedPriceEth: prepareData.seedPrice,
+      //     userPayableEth: payableAmount
+      //   },
+      //   snapshotPriceWei: snapshotPriceWei.toString(),
+      //   beneficiaries: indices
+      // });
       
       // toast.info('Please confirm transaction in your wallet...');
       
-      console.log('🔍 [MINT] About to send transaction:', {
-        to: contractAddress,
-        value: valueToSend,
-        valueLength: valueToSend,
-        dataLength: data.length
-      });
+      // console.log(' [MINT] About to send transaction:', {
+      //   to: contractAddress,
+      //   value: valueToSend,
+      //   valueLength: valueToSend,
+      //   dataLength: data.length
+      // });
 
       const tx = await sendTransaction(
         {
@@ -322,12 +322,12 @@ export default function StewardMint({
         }
       );
 
-          console.log(' [MINT] Transaction hash:', tx.hash);
+          // console.log(' [MINT] Transaction hash:', tx.hash);
           // toast.success('Seed creation transaction submitted!');
           setTxHash(tx.hash);
           
           // Step 4: Verify transaction status before proceeding
-          console.log('🔍 [MINT] Verifying transaction status for hash:', tx.hash);
+          // console.log(' [MINT] Verifying transaction status for hash:', tx.hash);
           // toast.info('Verifying transaction... Please wait.');
 
           // Poll transaction status with retries
@@ -344,22 +344,22 @@ export default function StewardMint({
               
               if (statusResponse.ok) {
                 const statusData = await statusResponse.json();
-                console.log('🔍 [MINT] Transaction status response:', statusData);
+                // console.log(' [MINT] Transaction status response:', statusData);
 
                 if (statusData.success && statusData.transaction) {
                   const status = statusData.transaction.status;
                   
                   if (status === 'success') {
-                    console.log(' [MINT] Transaction confirmed as successful');
+                    // console.log(' [MINT] Transaction confirmed as successful');
                     transactionStatus = statusData.transaction;
                     break;
                   } else if (status === 'reverted') {
-                    console.error('❌ [MINT] Transaction reverted:', statusData.transaction.revertReason);
+                    console.error('[MINT] Transaction reverted:', statusData.transaction.revertReason);
                     // toast.error('Transaction failed and reverted. Please try again.');
                     setTransactionStatus("failed");
                     return; // Exit early - do not proceed with routing
                   } else {
-                    console.log('⏳ [MINT] Transaction status pending, continuing to poll...');
+                    // console.log('[MINT] Transaction status pending, continuing to poll...');
                   }
                 }
               }
@@ -373,7 +373,7 @@ export default function StewardMint({
 
           // Check if we timed out without getting a success status
           if (!transactionStatus) {
-            console.error('❌ [MINT] Transaction verification timed out');
+            console.error('[MINT] Transaction verification timed out');
             // toast.error('Transaction verification timed out. Please check your wallet.');
             setTransactionStatus("failed");
             return; // Exit early - do not proceed
@@ -399,13 +399,13 @@ export default function StewardMint({
                 blockNumber: transactionStatus.blockNumber || '0'
               })
             });
-            console.log(' [MINT] Webhook called successfully');
+            // console.log(' [MINT] Webhook called successfully');
           } catch (webhookError) {
             console.warn(' [MINT] Webhook call failed:', webhookError);
           }
 
           // Transaction completed successfully - route to wallet page
-          console.log('🎉 [MINT] Seed creation completed successfully!');
+          // console.log('[MINT] Seed creation completed successfully!');
           // toast.success('Seed created successfully! Redirecting to wallet...');
           
           // Route to wallet page
@@ -414,7 +414,7 @@ export default function StewardMint({
           }, 2000); // Give user time to see success message
       
     } catch (error: any) {
-      console.error('❌ [MINT] Transaction failed:', error);
+      console.error('[MINT] Transaction failed:', error);
       if (error?.message?.includes('User rejected')) {
         // toast.error('Transaction rejected');
       } else {
@@ -437,9 +437,9 @@ export default function StewardMint({
         className="object-cover"
         priority
         onError={(e) => {
-          console.log(
-            " [IMAGE] Error loading WayOfFlowers background image, using placeholder"
-          );
+          // console.log(
+          //   " [IMAGE] Error loading WayOfFlowers background image, using placeholder"
+          // );
           const target = e.target as HTMLImageElement;
           if (target.src !== `${window.location.origin}/project_images/01__GRG.png`) {
             target.src = "/project_images/01__GRG.png";
@@ -523,9 +523,9 @@ export default function StewardMint({
                       height={80}
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        console.log(
-                          " [IMAGE] Error loading beneficiary image, using placeholder"
-                        );
+                        // console.log(
+                        //   " [IMAGE] Error loading beneficiary image, using placeholder"
+                        // );
                         const target = e.target as HTMLImageElement;
                         if (
                           target.src !==
@@ -631,7 +631,7 @@ export default function StewardMint({
                   <button
                     onClick={() => {
                       // Pre-flight checks before showing modal
-                      console.log('🌱 [MINT] Mint button clicked');
+                      // console.log('[MINT] Mint button clicked');
 
                       if (prepareLoading) {
                         // toast.info('Loading mint data...');

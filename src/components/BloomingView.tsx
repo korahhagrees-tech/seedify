@@ -59,12 +59,12 @@ export default function BloomingView({
     setImageErrorCount(0);
     setIsSnapshotReady(false);
 
-    console.log("🔍 [BloomingView] Image URLs:", {
-      snapshotImageUrl,
-      seedImageUrl,
-      currentImageSrc: newImageUrl,
-      finalImageUrl,
-    });
+    // console.log("[BloomingView] Image URLs:", {
+    //   snapshotImageUrl,
+    //   seedImageUrl,
+    //   currentImageSrc: newImageUrl,
+    //   finalImageUrl,
+    // });
   }, [snapshotImageUrl, seedImageUrl, finalImageUrl]);
 
   // Attempt to check the constructed snapshot image URL before switching
@@ -238,16 +238,16 @@ export default function BloomingView({
                   fill
                   className="object-cover scale-[1.05] lg:scale-[1.05] md:scale-[1.05] mt-2 lg:-mt-2 md:-mt-2"
                   onError={(e) => {
-                    console.log(
-                      ` [BloomingView IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
-                    );
+                    // console.log(
+                    //   ` [BloomingView IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
+                    // );
 
                     const newErrorCount = imageErrorCount + 1;
                     setImageErrorCount(newErrorCount);
 
                     // Prevent infinite retry loops
                     if (newErrorCount > 3) {
-                      console.log(" [BloomingView IMAGE] Max retries reached, using final fallback");
+                      // console.log(" [BloomingView IMAGE] Max retries reached, using final fallback");
                       setCurrentImageSrc("https://d17wy07434ngk.cloudfront.net/seed1/seed.png");
                       return;
                     }
@@ -261,7 +261,7 @@ export default function BloomingView({
 
                     if (newErrorCount <= fallbackImages.length) {
                       const fallbackSrc = fallbackImages[newErrorCount - 1];
-                      console.log(` [BloomingView IMAGE] Trying fallback: ${fallbackSrc}`);
+                      // console.log(`[BloomingView IMAGE] Trying fallback: ${fallbackSrc}`);
                       setCurrentImageSrc(fallbackSrc);
                     } else {
                       // Use a simple placeholder

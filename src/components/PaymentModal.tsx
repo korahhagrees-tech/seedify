@@ -163,22 +163,22 @@ export default function PaymentModal({
         if (amountInput === backendValueEth) {
           // User hasn't changed the amount → Use backend's exact wei value (no precision loss)
           amountInWei = mintData.data.value;
-          console.log(' Using backend\'s exact wei value (no conversion):', amountInWei);
+          // console.log(' Using backend\'s exact wei value (no conversion):', amountInWei);
         } else {
           // User changed the amount → Convert their new value to wei
           amountInWei = (parseFloat(amountInput) * 1e18).toString();
-          console.log(' User changed amount, converting to wei:', amountInWei);
+          // console.log(' User changed amount, converting to wei:', amountInWei);
         }
 
         // Debug: Log the backend data we received
-        console.log('🔍 Backend mintData:', JSON.stringify(mintData, null, 2));
-        console.log('🔍 Backend valueEth:', backendValueEth);
-        console.log('🔍 User input:', amountInput);
-        console.log('🔍 Amounts match:', amountInput === backendValueEth);
-        console.log('🔍 Using beneficiaryIndex:', beneficiaryIndex);
-        console.log('🔍 Using beneficiaryCode:', beneficiaryCode);
-        console.log('🔍 Final amountInWei:', amountInWei);
-        console.log('🔍 Using royaltyRecipient from backend:', mintData.data.args.royaltyRecipient);
+        // console.log(' Backend mintData:', JSON.stringify(mintData, null, 2));
+        // console.log(' Backend valueEth:', backendValueEth);
+        // console.log(' User input:', amountInput);
+        // console.log(' Amounts match:', amountInput === backendValueEth);
+        // console.log(' Using beneficiaryIndex:', beneficiaryIndex);
+        // console.log(' Using beneficiaryCode:', beneficiaryCode);
+        // console.log(' Final amountInWei:', amountInWei);
+        // console.log(' Using royaltyRecipient from backend:', mintData.data.args.royaltyRecipient);
 
         // Detect wallet type and use appropriate transaction method
         // Embedded wallets include: email/social login wallets, privy embedded wallets
@@ -203,20 +203,20 @@ export default function PaymentModal({
         //   }),
         // }).then(response => response.json()).then(data => data.result);
 
-        console.log('🔍 Wallet detection:', {
-          walletClientType: currentActiveWallet.walletClientType,
-          connectorType: currentActiveWallet.connectorType,
-          isEmbeddedWallet,
-          isSolanaWallet,
-          address: currentActiveWallet.address,
-          activeWalletFromContext: activeWallet?.address,
-          // Additional debugging for embedded wallets
-          allWallets: wallets.map(w => ({
-            walletClientType: w.walletClientType,
-            connectorType: w.connectorType,
-            address: w.address
-          }))
-        });
+        // console.log(' Wallet detection:', {
+        //   walletClientType: currentActiveWallet.walletClientType,
+        //   connectorType: currentActiveWallet.connectorType,
+        //   isEmbeddedWallet,
+        //   isSolanaWallet,
+        //   address: currentActiveWallet.address,
+        //   activeWalletFromContext: activeWallet?.address,
+        //   // Additional debugging for embedded wallets
+        //   allWallets: wallets.map(w => ({
+        //     walletClientType: w.walletClientType,
+        //     connectorType: w.connectorType,
+        //     address: w.address
+        //   }))
+        // });
 
         if (isSolanaWallet) {
           // For Solana wallets, use useSignAndSendTransaction
@@ -224,18 +224,18 @@ export default function PaymentModal({
           setIsProcessing(false);
           return;
         } else if (isEmbeddedWallet) {
-          console.log(' Using embedded wallet flow for email/social login wallet');
+          // console.log('[PAYMENT-MODAL] Using embedded wallet flow for email/social login wallet');
 
           // Determine which contract we're interacting with
           const contractAddress = mintData.data.contractAddress.toLowerCase();
           const isSnapFactory = contractAddress === SNAP_FACTORY_ADDRESS.toLowerCase();
           const isSnapshotNFT = contractAddress === SNAPSHOT_NFT_ADDRESS.toLowerCase();
 
-          console.log('🔍 Contract detection:', {
-            contractAddress,
-            isSnapFactory,
-            isSnapshotNFT
-          });
+          // console.log(' Contract detection:', {
+          //   contractAddress,
+          //   isSnapFactory,
+          //   isSnapshotNFT
+          // });
 
           // Use appropriate ABI based on contract address
           let simplifiedABI: any[];
@@ -327,7 +327,7 @@ export default function PaymentModal({
             );
 
             txHash = txResult.hash;
-            console.log(' Embedded wallet transaction hash:', txHash);
+            // console.log(' Embedded wallet transaction hash:', txHash);
           } catch (embeddedError) {
             console.error('Embedded wallet transaction failed:', embeddedError);
             // toast.error('Transaction failed. Please try again or switch to an external wallet.');
@@ -338,7 +338,7 @@ export default function PaymentModal({
 
         // If embedded wallet failed or this is an external wallet, use external wallet flow
         if (!txHash) {
-          console.log(' Using external wallet flow (MetaMask, Coinbase, etc.)');
+          // console.log(' Using external wallet flow (MetaMask, Coinbase, etc.)');
           // For external EVM wallets (MetaMask, Coinbase, etc.) or fallback for any EVM wallet
           // This will trigger the wallet's native transaction modal
           // toast.info('Please confirm the transaction in your wallet...');
@@ -349,11 +349,11 @@ export default function PaymentModal({
             const isSnapFactory = contractAddress === SNAP_FACTORY_ADDRESS.toLowerCase();
             const isSnapshotNFT = contractAddress === SNAPSHOT_NFT_ADDRESS.toLowerCase();
 
-            console.log('🔍 External wallet contract detection:', {
-              contractAddress,
-              isSnapFactory,
-              isSnapshotNFT
-            });
+            // console.log(' External wallet contract detection:', {
+            //   contractAddress,
+            //   isSnapFactory,
+            //   isSnapshotNFT
+            // });
 
             // Use appropriate ABI based on contract address
             let comprehensiveABI: any[];
@@ -443,7 +443,7 @@ export default function PaymentModal({
 
 
             // toast.success('Transaction submitted! Waiting for confirmation...');
-            console.log(' External wallet transaction hash:', txHash);
+            // console.log(' External wallet transaction hash:', txHash);
           } catch (error: any) {
             console.error('External wallet transaction failed:', error);
             if (error?.code === 4001 || error?.message?.includes('User rejected')) {
@@ -464,7 +464,7 @@ export default function PaymentModal({
 
         // Step 4: Verify transaction status before proceeding
         if (txHash) {
-          console.log('🔍 Transaction submitted with hash:', txHash);
+          // console.log(' Transaction submitted with hash:', txHash);
           // toast.info('Verifying transaction... Please wait.');
 
           // Poll transaction status with retries
@@ -481,13 +481,13 @@ export default function PaymentModal({
               
               if (statusResponse.ok) {
                 const statusData = await statusResponse.json();
-                console.log('🔍 Transaction status response:', statusData);
+                // console.log(' Transaction status response:', statusData);
 
                 if (statusData.success && statusData.transaction) {
                   const status = statusData.transaction.status;
                   
                   if (status === 'success') {
-                    console.log(' Transaction confirmed as successful');
+                    // console.log(' Transaction confirmed as successful');
                     transactionStatus = statusData.transaction;
                     break;
                   } else if (status === 'reverted') {
@@ -496,7 +496,7 @@ export default function PaymentModal({
                     setIsProcessing(false);
                     return; // Exit early - do not proceed with routing or API calls
                   } else {
-                    console.log('⏳ Transaction status pending, continuing to poll...');
+                    // console.log('Transaction status pending, continuing to poll...');
                   }
                 }
               }
@@ -535,17 +535,17 @@ export default function PaymentModal({
             transactionFee: '0',
           };
 
-          console.log(' Verified data for snapshot-minted:', JSON.stringify(webhookData, null, 2));
+          // console.log(' Verified data for snapshot-minted:', JSON.stringify(webhookData, null, 2));
 
           // Store webhook data for way-of-flowers page to use
           if (seedId) {
             localStorage.setItem(`webhook_data_${seedId}`, JSON.stringify(webhookData));
-            console.log(' Webhook data stored for way-of-flowers page:', seedId);
+            // console.log(' Webhook data stored for way-of-flowers page:', seedId);
           }
 
           // Trigger wallet snapshots refresh if available
           if (typeof window !== 'undefined' && (window as any).refreshWalletSnapshots) {
-            console.log(' Triggering wallet snapshots refresh...');
+            // console.log(' Triggering wallet snapshots refresh...');
             try {
               (window as any).refreshWalletSnapshots();
             } catch (refreshError) {
@@ -557,7 +557,7 @@ export default function PaymentModal({
         /* COMMENTED OUT: Moralis API transaction verification
         // Step 4: Verify transaction status using Alchemy API before proceeding
         if (txHash) {
-          console.log('🔍 Verifying transaction status for hash:', txHash);
+          console.log(' Verifying transaction status for hash:', txHash);
           toast.info('Verifying transaction... Please wait.');
 
           try {
@@ -582,21 +582,21 @@ export default function PaymentModal({
 
                 if (response.ok) {
                   const data = await response.json();
-                  console.log(`🔍 Moralis response:`, data);
+                  console.log(` Moralis response:`, data);
 
                   // Check if transaction is confirmed (has receipt_status)
                   if (data.receipt_status !== undefined) {
                     transactionData = data;
                     break;
                   } else {
-                    console.log(`⏳ Transaction not yet confirmed, waiting...`);
+                    console.log(`Transaction not yet confirmed, waiting...`);
                   }
                 } else {
                   console.warn(`Moralis API returned ${response.status}: ${response.statusText}`);
                   if (response.status === 401) {
                     console.warn('🔑 API key may be invalid or missing');
                   } else if (response.status === 429) {
-                    console.warn('⏳ Rate limit exceeded, waiting longer...');
+                    console.warn('Rate limit exceeded, waiting longer...');
                     await new Promise(resolve => setTimeout(resolve, 10000)); // Wait 10 seconds for rate limit
                   }
                 }
@@ -605,7 +605,7 @@ export default function PaymentModal({
                 await new Promise(resolve => setTimeout(resolve, 5000));
                 attempts++;
               } catch (fetchError) {
-                console.warn(`🔍 Moralis attempt ${attempts + 1} failed:`, fetchError);
+                console.warn(` Moralis attempt ${attempts + 1} failed:`, fetchError);
                 await new Promise(resolve => setTimeout(resolve, 5000));
                 attempts++;
               }
@@ -663,8 +663,8 @@ export default function PaymentModal({
             // Check transaction status if data is available
             if (transactionData) {
               const receiptStatus = transactionData.receipt_status;
-              console.log('🔍 Moralis receipt_status:', receiptStatus);
-              console.log('🔍 Full transaction data:', transactionData);
+              console.log(' Moralis receipt_status:', receiptStatus);
+              console.log(' Full transaction data:', transactionData);
 
               if (receiptStatus === "0") {
                 console.error('Transaction failed (receipt_status: 0)');
@@ -730,13 +730,13 @@ export default function PaymentModal({
         // toast.success('Snapshot minted successfully!');
 
         // Close payment modal and call callback
-        console.log(' [PaymentModal] Transaction completed, calling onConfirm callback');
+        // console.log(' [PaymentModal] Transaction completed, calling onConfirm callback');
         onClose();
         if (onConfirm) {
-          console.log(' [PaymentModal] Calling onConfirm with amount:', amountInput);
+          // console.log(' [PaymentModal] Calling onConfirm with amount:', amountInput);
           onConfirm(amountInput);
         } else {
-          console.log('[PaymentModal] No onConfirm callback provided');
+          // console.log('[PaymentModal] No onConfirm callback provided');
         }
       } else {
         // For non-snapshot minting, just call the callback
@@ -745,7 +745,7 @@ export default function PaymentModal({
         }
       }
     } catch (error) {
-      console.error('Transaction failed:', error);
+      // console.error('Transaction failed:', error);
       // toast.error('Transaction failed. Please try again.');
     } finally {
       setIsProcessing(false);

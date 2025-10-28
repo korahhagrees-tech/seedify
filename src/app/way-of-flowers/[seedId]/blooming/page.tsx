@@ -78,7 +78,7 @@ export default function BloomingPage({
           );
 
           if (ecosystem.seedEmblemUrl) {
-            console.log('🌱 [BloomingPage] Setting ecosystem seed emblem:', ecosystem.seedEmblemUrl);
+            // console.log('[BloomingPage] Setting ecosystem seed emblem:', ecosystem.seedEmblemUrl);
             setEcosystemSeedEmblemUrl(ecosystem.seedEmblemUrl);
           }
         }

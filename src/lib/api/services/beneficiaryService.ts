@@ -12,7 +12,7 @@ import { BeneficiariesResponse, BeneficiaryResponse, BeneficiaryData } from '@/t
  * Fetch all beneficiaries
  */
 export async function fetchBeneficiaries(): Promise<BeneficiaryData[]> {
-  console.log('🌱 [BENEFICIARY-SERVICE] Fetching beneficiaries...');
+  // console.log('[BENEFICIARY-SERVICE] Fetching beneficiaries...');
 
   try {
     const response = await apiClient.get<BeneficiariesResponse>(
@@ -23,15 +23,15 @@ export async function fetchBeneficiaries(): Promise<BeneficiaryData[]> {
       throw new APIError('Invalid response format');
     }
 
-    console.log(
-      '🌱 [BENEFICIARY-SERVICE] Successfully fetched',
-      response.beneficiaries.length,
-      'beneficiaries'
-    );
+    // console.log(
+    //   '[BENEFICIARY-SERVICE] Successfully fetched',
+    //   response.beneficiaries.length,
+    //   'beneficiaries'
+    // );
 
     return response.beneficiaries;
   } catch (error) {
-    console.error('🌱 [BENEFICIARY-SERVICE] Error fetching beneficiaries:', error);
+    console.error('[BENEFICIARY-SERVICE] Error fetching beneficiaries:', error);
     throw error;
   }
 }
@@ -42,7 +42,7 @@ export async function fetchBeneficiaries(): Promise<BeneficiaryData[]> {
 export async function fetchBeneficiaryByIndex(
   index: number
 ): Promise<BeneficiaryData | null> {
-  console.log('🌱 [BENEFICIARY-SERVICE] Fetching beneficiary by index:', index);
+  // console.log('[BENEFICIARY-SERVICE] Fetching beneficiary by index:', index);
 
   try {
     const response = await apiClient.get<BeneficiaryResponse>(
@@ -53,10 +53,10 @@ export async function fetchBeneficiaryByIndex(
       return null;
     }
 
-    console.log('🌱 [BENEFICIARY-SERVICE] Successfully fetched beneficiary:', index);
+    // console.log('[BENEFICIARY-SERVICE] Successfully fetched beneficiary:', index);
     return response.beneficiary;
   } catch (error) {
-    console.error('🌱 [BENEFICIARY-SERVICE] Error fetching beneficiary:', error);
+    console.error('[BENEFICIARY-SERVICE] Error fetching beneficiary:', error);
     throw error;
   }
 }
@@ -67,7 +67,7 @@ export async function fetchBeneficiaryByIndex(
 export async function fetchBeneficiaryByCode(
   code: string
 ): Promise<BeneficiaryData | null> {
-  console.log('🌱 [BENEFICIARY-SERVICE] Fetching beneficiary by code:', code);
+  // console.log('[BENEFICIARY-SERVICE] Fetching beneficiary by code:', code);
 
   try {
     const response = await apiClient.get<BeneficiaryResponse>(
@@ -78,10 +78,10 @@ export async function fetchBeneficiaryByCode(
       return null;
     }
 
-    console.log('🌱 [BENEFICIARY-SERVICE] Successfully fetched beneficiary:', code);
+    // console.log('[BENEFICIARY-SERVICE] Successfully fetched beneficiary:', code);
     return response.beneficiary;
   } catch (error) {
-    console.error('🌱 [BENEFICIARY-SERVICE] Error fetching beneficiary:', error);
+    console.error('[BENEFICIARY-SERVICE] Error fetching beneficiary:', error);
     throw error;
   }
 }

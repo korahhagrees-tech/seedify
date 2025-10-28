@@ -167,12 +167,12 @@ export async function retryWebhook(
         beneficiaryCode
       };
       
-      console.log('🖼️ Image data extracted from webhook:', {
-        imageUrl: imageUrl ? `${imageUrl.substring(0, 50)}...` : 'none',
-        beneficiaryCode,
-        transformedBeneficiaryCode,
-        backgroundImageUrl
-      });
+      // console.log('Image data extracted from webhook:', {
+      //   imageUrl: imageUrl ? `${imageUrl.substring(0, 50)}...` : 'none',
+      //   beneficiaryCode,
+      //   transformedBeneficiaryCode,
+      //   backgroundImageUrl
+      // });
     }
     
     onSuccess?.(imageData);

@@ -25,24 +25,24 @@ export default function WalletConnectionModal({
   
   // Debug logging
   useEffect(() => {
-    console.log('🔍 [WalletConnectionModal] Wallets updated:', wallets);
-    console.log('🔍 [WalletConnectionModal] Wallet count:', wallets?.length || 0);
+    // console.log(' [WalletConnectionModal] Wallets updated:', wallets);
+    // console.log(' [WalletConnectionModal] Wallet count:', wallets?.length || 0);
     if (wallets?.length > 0) {
       wallets.forEach((wallet, index) => {
-        console.log(`🔍 [WalletConnectionModal] Wallet ${index}:`, {
-          address: wallet.address,
-          walletClientType: wallet.walletClientType,
-          connectorType: wallet.connectorType,
-          meta: wallet.meta
-        });
+        // console.log(` [WalletConnectionModal] Wallet ${index}:`, {
+        //   address: wallet.address,
+        //   walletClientType: wallet.walletClientType,
+        //   connectorType: wallet.connectorType,
+        //   meta: wallet.meta
+        // });
       });
     }
   }, [wallets]);
   const { connectWallet } = useConnectWallet({
     onSuccess: ({ wallet }) => {
-      console.log(" Wallet connected successfully:", wallet);
-      console.log(" New wallet address:", wallet.address);
-      console.log(" New wallet type:", wallet.walletClientType);
+      // console.log(" Wallet connected successfully:", wallet);
+      // console.log(" New wallet address:", wallet.address);
+      // console.log(" New wallet type:", wallet.walletClientType);
       onSuccess?.();
     },
     onError: (error) => {
@@ -51,8 +51,8 @@ export default function WalletConnectionModal({
   });
 
   const handleConnectNewWallet = () => {
-    console.log('🔍 [WalletConnectionModal] Connecting new wallet...');
-    console.log('🔍 [WalletConnectionModal] Current wallets before connect:', wallets.length);
+    // console.log(' [WalletConnectionModal] Connecting new wallet...');
+    // console.log(' [WalletConnectionModal] Current wallets before connect:', wallets.length);
     connectWallet({
       walletChainType: "ethereum-and-solana",
     });

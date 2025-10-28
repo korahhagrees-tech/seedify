@@ -23,7 +23,7 @@ export async function fetchUserSeeds(address: string): Promise<{
   seeds: Seed[];
   count: number;
 }> {
-  console.log('👤 [USER-SERVICE] Fetching user seeds for:', address);
+  // console.log('[USER-SERVICE] Fetching user seeds for:', address);
 
   try {
     const response = await apiClient.get<UserSeedsResponse>(
@@ -34,14 +34,14 @@ export async function fetchUserSeeds(address: string): Promise<{
       throw new APIError('Failed to fetch user seeds');
     }
 
-    console.log('👤 [USER-SERVICE] Successfully fetched', response.count, 'seeds');
+    // console.log('[USER-SERVICE] Successfully fetched', response.count, 'seeds');
 
     return {
       seeds: response.seeds as unknown as Seed[],
       count: response.count,
     };
   } catch (error) {
-    console.error('👤 [USER-SERVICE] Error fetching user seeds:', error);
+    console.error('[USER-SERVICE] Error fetching user seeds:', error);
     throw error;
   }
 }
@@ -50,7 +50,7 @@ export async function fetchUserSeeds(address: string): Promise<{
  * Fetch user's seed count
  */
 export async function fetchUserSeedCount(address: string): Promise<number> {
-  console.log('👤 [USER-SERVICE] Fetching user seed count for:', address);
+  // console.log('[USER-SERVICE] Fetching user seed count for:', address);
 
   try {
     const response = await apiClient.get<CountResponse>(
@@ -58,7 +58,7 @@ export async function fetchUserSeedCount(address: string): Promise<number> {
     );
     return response.count;
   } catch (error) {
-    console.error('👤 [USER-SERVICE] Error fetching user seed count:', error);
+    console.error('[USER-SERVICE] Error fetching user seed count:', error);
     throw error;
   }
 }
@@ -67,7 +67,7 @@ export async function fetchUserSeedCount(address: string): Promise<number> {
  * Fetch user's snapshots (tended ecosystems)
  */
 export async function fetchUserSnapshots(address: string) {
-  console.log('👤 [USER-SERVICE] Fetching user snapshots for:', address);
+  // console.log('[USER-SERVICE] Fetching user snapshots for:', address);
 
   try {
     const response = await apiClient.get<UserSnapshotsResponse>(
@@ -78,14 +78,14 @@ export async function fetchUserSnapshots(address: string) {
       throw new APIError('Failed to fetch user snapshots');
     }
 
-    console.log('👤 [USER-SERVICE] Successfully fetched', response.count, 'snapshots');
+    // console.log('[USER-SERVICE] Successfully fetched', response.count, 'snapshots');
 
     return {
       snapshots: response.snapshots,
       count: response.count,
     };
   } catch (error) {
-    console.error('👤 [USER-SERVICE] Error fetching user snapshots:', error);
+    console.error('[USER-SERVICE] Error fetching user snapshots:', error);
     throw error;
   }
 }
@@ -94,7 +94,7 @@ export async function fetchUserSnapshots(address: string) {
  * Fetch user's snapshot count
  */
 export async function fetchUserSnapshotCount(address: string): Promise<number> {
-  console.log('👤 [USER-SERVICE] Fetching user snapshot count for:', address);
+  // console.log('[USER-SERVICE] Fetching user snapshot count for:', address);
 
   try {
     const response = await apiClient.get<CountResponse>(
@@ -102,7 +102,7 @@ export async function fetchUserSnapshotCount(address: string): Promise<number> {
     );
     return response.count;
   } catch (error) {
-    console.error('👤 [USER-SERVICE] Error fetching user snapshot count:', error);
+    console.error('[USER-SERVICE] Error fetching user snapshot count:', error);
     throw error;
   }
 }
@@ -111,7 +111,7 @@ export async function fetchUserSnapshotCount(address: string): Promise<number> {
  * Fetch user's pool balance
  */
 export async function fetchUserBalance(address: string) {
-  console.log('👤 [USER-SERVICE] Fetching user balance for:', address);
+  // console.log('[USER-SERVICE] Fetching user balance for:', address);
 
   try {
     const response = await apiClient.get<UserBalanceResponse>(
@@ -122,14 +122,14 @@ export async function fetchUserBalance(address: string) {
       throw new APIError('Failed to fetch user balance');
     }
 
-    console.log('👤 [USER-SERVICE] Successfully fetched balance:', response.balance);
+    // console.log('[USER-SERVICE] Successfully fetched balance:', response.balance);
 
     return {
       balance: response.balance,
       balanceWei: response.balanceWei,
     };
   } catch (error) {
-    console.error('👤 [USER-SERVICE] Error fetching user balance:', error);
+    console.error('[USER-SERVICE] Error fetching user balance:', error);
     throw error;
   }
 }
@@ -138,7 +138,7 @@ export async function fetchUserBalance(address: string) {
  * Fetch user's stats
  */
 export async function fetchUserStats(address: string) {
-  console.log('👤 [USER-SERVICE] Fetching user stats for:', address);
+  // console.log('[USER-SERVICE] Fetching user stats for:', address);
 
   try {
     const response = await apiClient.get<UserStatsResponse>(
@@ -149,11 +149,11 @@ export async function fetchUserStats(address: string) {
       throw new APIError('Failed to fetch user stats');
     }
 
-    console.log('👤 [USER-SERVICE] Successfully fetched user stats');
+    // console.log('[USER-SERVICE] Successfully fetched user stats');
 
     return response.stats;
   } catch (error) {
-    console.error('👤 [USER-SERVICE] Error fetching user stats:', error);
+    console.error('[USER-SERVICE] Error fetching user stats:', error);
     throw error;
   }
 }
@@ -162,7 +162,7 @@ export async function fetchUserStats(address: string) {
  * Fetch user's complete portfolio
  */
 export async function fetchUserPortfolio(address: string) {
-  console.log('👤 [USER-SERVICE] Fetching user portfolio for:', address);
+  // console.log('[USER-SERVICE] Fetching user portfolio for:', address);
 
   try {
     const response = await apiClient.get<UserPortfolioResponse>(
@@ -173,11 +173,11 @@ export async function fetchUserPortfolio(address: string) {
       throw new APIError('Failed to fetch user portfolio');
     }
 
-    console.log('👤 [USER-SERVICE] Successfully fetched user portfolio');
+    // console.log('[USER-SERVICE] Successfully fetched user portfolio');
 
     return response.portfolio;
   } catch (error) {
-    console.error('👤 [USER-SERVICE] Error fetching user portfolio:', error);
+    console.error('[USER-SERVICE] Error fetching user portfolio:', error);
     throw error;
   }
 }

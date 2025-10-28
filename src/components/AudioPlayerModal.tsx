@@ -47,7 +47,7 @@ export default function AudioPlayerModal({
     setPlayerState("orb");
     setIsPlaying(true);
     // Don't reset audioInitialized - keep the audio state
-    console.log('🎵 Transitioning to orb state - audio should continue');
+    // console.log('[AUDIO-PLAYER-MODAL] Transitioning to orb state - audio should continue');
   };
 
   const handleStopPlaying = () => {

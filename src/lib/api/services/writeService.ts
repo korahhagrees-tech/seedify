@@ -20,7 +20,7 @@ import {
 export async function prepareCreateSeed(
   request: CreateSeedRequest
 ): Promise<WriteTransactionData> {
-  console.log("✍️ [WRITE-SERVICE] Preparing create seed transaction:", request);
+  // console.log("[WRITE-SERVICE] Preparing create seed transaction:", request);
 
   const response = await apiClient.post<WriteTransactionResponse>(
     API_ENDPOINTS.writeCreateSeed,
@@ -31,7 +31,7 @@ export async function prepareCreateSeed(
     throw new Error(response.message || "Failed to prepare transaction");
   }
 
-  console.log("✍️ [WRITE-SERVICE] Transaction data prepared:", response.data);
+  // console.log("[WRITE-SERVICE] Transaction data prepared:", response.data);
   return response.data;
 }
 
@@ -42,11 +42,11 @@ export async function prepareDepositToSeed(
   seedId: string,
   request: DepositRequest
 ): Promise<WriteTransactionData> {
-  console.log(
-    "✍️ [WRITE-SERVICE] Preparing deposit transaction:",
-    seedId,
-    request
-  );
+  // console.log(
+  //   "[WRITE-SERVICE] Preparing deposit transaction:",
+  //   seedId,
+  //   request
+  // );
 
   const response = await apiClient.post<WriteTransactionResponse>(
     API_ENDPOINTS.writeDepositToSeed(seedId),
@@ -57,7 +57,7 @@ export async function prepareDepositToSeed(
     throw new Error(response.message || "Failed to prepare transaction");
   }
 
-  console.log("✍️ [WRITE-SERVICE] Transaction data prepared:", response.data);
+  // console.log("[WRITE-SERVICE] Transaction data prepared:", response.data);
   return response.data;
 }
 
@@ -68,11 +68,11 @@ export async function prepareWithdrawFromSeed(
   seedId: string,
   request: WithdrawRequest
 ): Promise<WriteTransactionData> {
-  console.log(
-    "✍️ [WRITE-SERVICE] Preparing withdraw transaction:",
-    seedId,
-    request
-  );
+  // console.log(
+  //   "[WRITE-SERVICE] Preparing withdraw transaction:",
+  //   seedId,
+  //   request
+  // );
 
   const response = await apiClient.post<WriteTransactionResponse>(
     API_ENDPOINTS.writeWithdrawFromSeed(seedId),
@@ -83,7 +83,7 @@ export async function prepareWithdrawFromSeed(
     throw new Error(response.message || "Failed to prepare transaction");
   }
 
-  console.log("✍️ [WRITE-SERVICE] Transaction data prepared:", response.data);
+  // console.log("[WRITE-SERVICE] Transaction data prepared:", response.data);
   return response.data;
 }
 
@@ -93,10 +93,10 @@ export async function prepareWithdrawFromSeed(
 export async function prepareClaimProfits(
   seedId: string
 ): Promise<WriteTransactionData> {
-  console.log(
-    "✍️ [WRITE-SERVICE] Preparing claim profits transaction:",
-    seedId
-  );
+  // console.log(
+  //   "[WRITE-SERVICE] Preparing claim profits transaction:",
+  //   seedId
+  // );
 
   const response = await apiClient.post<WriteTransactionResponse>(
     API_ENDPOINTS.writeClaimProfits(seedId)
@@ -106,7 +106,7 @@ export async function prepareClaimProfits(
     throw new Error(response.message || "Failed to prepare transaction");
   }
 
-  console.log("✍️ [WRITE-SERVICE] Transaction data prepared:", response.data);
+  // console.log("[WRITE-SERVICE] Transaction data prepared:", response.data);
   return response.data;
 }
 
@@ -116,10 +116,10 @@ export async function prepareClaimProfits(
 export async function prepareMintSnapshot(
   request: MintSnapshotRequest
 ): Promise<WriteTransactionData> {
-  console.log(
-    "✍️ [WRITE-SERVICE] Preparing mint snapshot transaction:",
-    request
-  );
+  // console.log(
+  //   "[WRITE-SERVICE] Preparing mint snapshot transaction:",
+  //   request
+  // );
 
   const response = await apiClient.post<WriteTransactionResponse>(
     `${API_ENDPOINTS.writeMintSnapshot}`,
@@ -130,7 +130,7 @@ export async function prepareMintSnapshot(
     throw new Error(response.message || "Failed to prepare transaction");
   }
 
-  console.log("✍️ [WRITE-SERVICE] Transaction data prepared:", response.data);
+  // console.log("[WRITE-SERVICE] Transaction data prepared:", response.data);
   return response.data;
 }
 

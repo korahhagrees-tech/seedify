@@ -72,20 +72,20 @@ export default function SeedCreationConfirmModal({
   const [payableAmount, setPayableAmount] = useState('0.0000099'); // Initialize with a reasonable default
 
   // Debug: Log the initial values
-  console.log('🔍 [MODAL] Initial values:', {
-    defaultSnapshotPrice,
-    seedPrice,
-    seedFee,
-    userPayableAmount: payableAmount
-  });
+  // console.log(' [MODAL] Initial values:', {
+  //   defaultSnapshotPrice,
+  //   seedPrice,
+  //   seedFee,
+  //   userPayableAmount: payableAmount
+  // });
 
   const handleConfirm = () => {
-    console.log('🔍 [MODAL] Confirming with values:', {
-      snapshotPrice,
-      payableAmount,
-      snapshotPriceType: typeof snapshotPrice,
-      payableAmountType: typeof payableAmount
-    });
+    // console.log('[MODAL] Confirming with values:', {
+    //   snapshotPrice,
+    //   payableAmount,
+    //   snapshotPriceType: typeof snapshotPrice,
+    //   payableAmountType: typeof payableAmount
+    // });
     onConfirm(snapshotPrice, payableAmount);
   };
 
@@ -178,7 +178,7 @@ export default function SeedCreationConfirmModal({
                   min="0"
                   value={payableAmount}
                   onChange={(e) => {
-                    console.log('🔍 [MODAL] Payable amount changed:', e.target.value);
+                    // console.log('[MODAL] Payable amount changed:', e.target.value);
                     setPayableAmount(e.target.value);
                   }}
                   className="w-full bg-transparent text-lg lg:text-2xl md:text-2xl font-medium text-black outline-none border-none"

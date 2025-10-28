@@ -47,23 +47,23 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
 
   // Sync Privy user to Zustand store
   useEffect(() => {
-    console.log('🔍 [AUTH] Syncing user to store:', user);
-    console.log('🔍 [AUTH] User linkedAccounts:', user?.linkedAccounts);
+    // console.log(' [AUTH] Syncing user to store:', user);
+    // console.log(' [AUTH] User linkedAccounts:', user?.linkedAccounts);
     setUser(user || null);
   }, [user, setUser]);
 
   // Sync Privy wallets to Zustand store
   useEffect(() => {
-    console.log('🔍 [AUTH] Syncing wallets to store:', wallets);
-    console.log('🔍 [AUTH] Privy wallets count:', wallets?.length || 0);
+    // console.log(' [AUTH] Syncing wallets to store:', wallets);
+    // console.log(' [AUTH] Privy wallets count:', wallets?.length || 0);
     if (wallets?.length > 0) {
       wallets.forEach((wallet, index) => {
-        console.log(`🔍 [AUTH] Privy wallet ${index}:`, {
-          address: wallet.address,
-          walletClientType: wallet.walletClientType,
-          connectorType: wallet.connectorType,
-          meta: wallet.meta
-        });
+        // console.log(`[AUTH] Privy wallet ${index}:`, {
+        //   address: wallet.address,
+        //   walletClientType: wallet.walletClientType,
+        //   connectorType: wallet.connectorType,
+        //   meta: wallet.meta
+        // });
       });
     }
     setWallets(wallets);
@@ -72,7 +72,7 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
   // Sync user's linked accounts as wallets (more comprehensive than useWallets)
   useEffect(() => {
     if (user?.linkedAccounts && user.linkedAccounts.length > 0) {
-      console.log('🔍 [AUTH] Syncing linkedAccounts as wallets:', user.linkedAccounts);
+      // console.log('[AUTH] Syncing linkedAccounts as wallets:', user.linkedAccounts);
 
       // Convert linkedAccounts to wallet format for consistency
       const linkedWallets = user.linkedAccounts.map((account: any) => ({
@@ -110,7 +110,7 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
         }
       }));
 
-      console.log('🔍 [AUTH] Converted linkedAccounts to wallets:', linkedWallets);
+      // console.log('[AUTH] Converted linkedAccounts to wallets:', linkedWallets);
 
       // Start with linked accounts as base wallets
       const allWallets = [...linkedWallets];
@@ -121,7 +121,7 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
           existing.address?.toLowerCase() === wallet.address?.toLowerCase()
         );
         if (!exists) {
-          console.log('🔍 [AUTH] Adding new connected wallet:', wallet.address, wallet.walletClientType);
+          // console.log('[AUTH] Adding new connected wallet:', wallet.address, wallet.walletClientType);
           allWallets.push(wallet);
         }
       });
@@ -148,9 +148,9 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
         return (a.address || '').localeCompare(b.address || '');
       });
 
-      console.log('🔍 [AUTH] Final merged wallets:', allWallets);
-      console.log('🔍 [AUTH] Total wallets count:', allWallets.length);
-      console.log('🔍 [AUTH] Wallet addresses:', allWallets.map(w => w.address));
+      // console.log('[AUTH] Final merged wallets:', allWallets);
+      // console.log('[AUTH] Total wallets count:', allWallets.length);
+      // console.log('[AUTH] Wallet addresses:', allWallets.map(w => w.address));
       setWallets(allWallets as any);
 
       // Auto-set the first EVM wallet as active if no active wallet is set
@@ -172,10 +172,10 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
 
         const chosen = firstExternalEvm || firstEmbeddedEvm || null;
         if (chosen) {
-          console.log('🔍 [AUTH] Auto-setting EVM wallet as active:', chosen.address);
+          // console.log('[AUTH] Auto-setting EVM wallet as active:', chosen.address);
           setActiveWallet(chosen as any);
     } else {
-          console.log('🔍 [AUTH] No EVM wallet available to set active (only non-EVM wallets present).');
+          // console.log('[AUTH] No EVM wallet available to set active (only non-EVM wallets present).');
         }
       }
     }
@@ -199,10 +199,10 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
       if (wallet && (wallet as any).chainType === 'ethereum') {
         setWagmiActiveWallet(wallet);
       } else if (wallet) {
-        console.log('🔍 [AUTH] Skipping Wagmi setActiveWallet for non-EVM wallet:', (wallet as any).chainType);
+        // console.log('[AUTH] Skipping Wagmi setActiveWallet for non-EVM wallet:', (wallet as any).chainType);
       }
     } catch (err) {
-      console.warn(' [AUTH] Failed to set Wagmi active wallet (likely non-EVM):', err);
+      // console.warn('[AUTH] Failed to set Wagmi active wallet (likely non-EVM):', err);
     }
   };
 

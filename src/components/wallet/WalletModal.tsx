@@ -21,6 +21,7 @@ import {
 import { useBalance } from "wagmi";
 import { useSetActiveWallet } from "@privy-io/wagmi";
 import { base } from "viem/chains";
+import { toast } from "sonner";
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -55,7 +56,7 @@ export default function WalletModal({
   const privy = usePrivy(); // Get Privy instance for export functionality
   const { connectWallet } = useConnectWallet({
     onSuccess: ({ wallet }) => {
-      console.log(" Wallet connected successfully:", wallet);
+      // console.log(" Wallet connected successfully:", wallet);
       // The newly connected wallet will automatically be available in the wallets array
       // User can switch to it via the wallet selector if needed
     },
@@ -96,11 +97,11 @@ export default function WalletModal({
       loginMethod,
       loginAccount,
     }) => {
-      console.log("User logged in successfully", user);
-      console.log("Is new user:", isNewUser);
-      console.log("Was already authenticated:", wasAlreadyAuthenticated);
-      console.log("Login method:", loginMethod);
-      console.log("Login account:", loginAccount);
+      // console.log("User logged in successfully", user);
+      // console.log("Is new user:", isNewUser);
+      // console.log("Was already authenticated:", wasAlreadyAuthenticated);
+      // console.log("Login method:", loginMethod);
+      // console.log("Login account:", loginAccount);
     },
     onError: (error) => {
       console.error("Login failed", error);
@@ -117,16 +118,16 @@ export default function WalletModal({
     ? parseFloat(balanceData.formatted).toFixed(4)
     : "0.0000";
 
-  console.log(
-    "🔍 WalletModal - Context wallets:",
-    contextWallets.length,
-    "Privy wallets:",
-    privyWallets.length,
-    "Using:",
-    wallets.length,
-    ready ? "(ready)" : "(loading)"
-  );
-  console.log("🔍 WalletModal - Wallets detail:", wallets);
+  // console.log(
+  //   " WalletModal - Context wallets:",
+  //   contextWallets.length,
+  //   "Privy wallets:",
+  //   privyWallets.length,
+  //   "Using:",
+  //   wallets.length,
+  //   ready ? "(ready)" : "(loading)"
+  // );
+  // console.log(" WalletModal - Wallets detail:", wallets);
 
   const copyToClipboard = async () => {
     if (walletAddress) {
@@ -185,7 +186,7 @@ export default function WalletModal({
         default:
           console.warn("Unknown social provider:", provider);
       }
-      console.log(` Successfully linked ${provider} account`);
+      // console.log(` Successfully linked ${provider} account`);
     } catch (error) {
       console.error(`Failed to link ${provider} account:`, error);
     }
@@ -194,7 +195,7 @@ export default function WalletModal({
   const handleLinkEmail = async () => {
     try {
       await linkEmail();
-      console.log(" Successfully linked email account");
+      // console.log(" Successfully linked email account");
     } catch (error) {
       console.error("Failed to link email account:", error);
     }
@@ -256,15 +257,15 @@ export default function WalletModal({
         activeWallet.connectorType === 'embedded';
 
       if (!isEmbedded) {
-        console.log('External wallets manage their own private keys');
-        alert('External wallets (like MetaMask) manage their own private keys. Please export from your wallet directly.');
+        // console.log('External wallets manage their own private keys');
+        // toast.error('External wallets (like MetaMask) manage their own private keys. Please export from your wallet directly.');
         return;
       }
 
       // For embedded wallets, use Privy's exportWallet function
       if (privy?.exportWallet) {
         await privy.exportWallet({ address: activeWallet.address });
-        console.log('Private key export initiated for embedded wallet');
+        // console.log('Private key export initiated for embedded wallet');
       } else {
         console.error('Privy exportWallet function not available');
         alert('Private key export is not available for this wallet type.');

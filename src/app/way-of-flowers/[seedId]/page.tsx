@@ -39,12 +39,12 @@ export default function WayOfFlowers({
   // Function to call webhook and handle response
   const callWebhookForImageGeneration = useCallback(async (webhookData: any) => {
     if (webhookInFlightRef.current) {
-      console.log('⏭️ Webhook already in-flight; skipping duplicate call');
+      // console.log('[WAY-OF-FLOWERS] Webhook already in-flight; skipping duplicate call');
       return;
     }
     webhookInFlightRef.current = true;
     try {
-      console.log(' Calling webhook from way-of-flowers page:', webhookData);
+      // console.log('[WAY-OF-FLOWERS] Calling webhook from way-of-flowers page:', webhookData);
 
       const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
       const response = await fetch(`${apiBaseUrl}/snapshot-minted`, {
@@ -58,7 +58,7 @@ export default function WayOfFlowers({
       }
 
       const webhookResult = await response.json();
-      console.log(' Webhook response:', webhookResult);
+      // console.log('[WAY-OF-FLOWERS] Webhook response:', webhookResult);
 
       // Process webhook response
       if (webhookResult.success && webhookResult.data) {
@@ -86,13 +86,13 @@ export default function WayOfFlowers({
         // Clean up webhook data
         // Keep data around until navigation completes; do cleanup later if needed
 
-        console.log('🖼️ Image generation completed:', imageData);
+        // console.log('[WAY-OF-FLOWERS] Image generation completed:', imageData);
       } else {
         throw new Error('Webhook response indicates failure');
       }
 
     } catch (error) {
-      console.error('Webhook call failed:', error);
+      // console.error('[WAY-OF-FLOWERS] Webhook call failed:', error);
       setIsWaitingForImage(false);
       // toast.error('Image generation failed. You can still explore the blooming view.');
 
@@ -106,7 +106,7 @@ export default function WayOfFlowers({
           setImageGenerationData({ snapshotImageUrl: constructedImageUrl, backgroundImageUrl, beneficiaryCode });
         }
       } catch (e) {
-        console.warn('Fallback URL construction failed', e);
+        // console.warn('[WAY-OF-FLOWERS] Fallback URL construction failed', e);
       }
     }
     finally {
@@ -136,19 +136,19 @@ export default function WayOfFlowers({
       if (webhookDataString) {
         // We have webhook data from transaction → Start webhook call
         setIsWaitingForImage(true);
-        console.log(' Starting webhook call from way-of-flowers page');
+        // console.log('[WAY-OF-FLOWERS] Starting webhook call from way-of-flowers page');
 
         try {
           const webhookData = JSON.parse(webhookDataString);
           callWebhookForImageGeneration(webhookData);
         } catch (error) {
-          console.error('Error parsing webhook data:', error);
+          // console.error('[WAY-OF-FLOWERS] Error parsing webhook data:', error);
           setIsWaitingForImage(false);
         }
       } else {
         // No webhook data, assume we're not in minting flow
         setIsWaitingForImage(false);
-        console.log('ℹ️ No webhook data found - not in minting flow');
+        // console.log('[WAY-OF-FLOWERS] No webhook data found - not in minting flow');
       }
     }
   }, [searchParams, seedId, callWebhookForImageGeneration]);
@@ -174,12 +174,12 @@ export default function WayOfFlowers({
           }
           
           if (ecosystem.seedEmblemUrl) {
-            console.log('🌱 [WayOfFlowers] Setting ecosystem seed emblem:', ecosystem.seedEmblemUrl);
+            // console.log('[WAY-OF-FLOWERS] Setting ecosystem seed emblem:', ecosystem.seedEmblemUrl);
             setEcosystemSeedEmblemUrl(ecosystem.seedEmblemUrl);
           }
         }
       } catch (err) {
-        console.error("Error loading ecosystem background:", err);
+        // console.error("[WAY-OF-FLOWERS] Error loading ecosystem background:", err);
         // Fallback to original background if ecosystem fails
         setEcosystemBackgroundUrl(wayOfFlowersData.backgroundImageUrl);
         setEcosystemSeedEmblemUrl(wayOfFlowersData.seedEmblemUrl);

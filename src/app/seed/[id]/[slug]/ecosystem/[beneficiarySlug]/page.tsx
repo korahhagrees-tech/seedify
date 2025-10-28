@@ -21,7 +21,7 @@ export default function EcosystemPage() {
     async function loadEcosystemData() {
       // Prevent duplicate calls
       if (isLoading || hasFetched) {
-        console.log('⏭️ Skipping duplicate ecosystem data load');
+        console.log('Skipping duplicate ecosystem data load');
         return;
       }
 
@@ -30,7 +30,7 @@ export default function EcosystemPage() {
         setError(null);
 
         console.log(
-          "🌱 Loading ecosystem for seed:",
+          "Loading ecosystem for seed:",
           seedId,
           "beneficiary:",
           beneficiarySlug
@@ -56,12 +56,12 @@ export default function EcosystemPage() {
           throw new Error(`Beneficiary "${beneficiarySlug}" not found`);
         }
 
-        console.log("🌱 Found beneficiary:", beneficiary.name);
+        console.log("Found beneficiary:", beneficiary.name);
 
         // Convert beneficiary data to ecosystem project format, passing seed data for seedEmblemUrl
         const ecosystem = beneficiaryToEcosystemProject(beneficiary, seed);
-        console.log('🔍 [EcosystemPage] ecosystem data:', ecosystem);
-        console.log('🔍 [EcosystemPage] seedEmblemUrl type:', typeof ecosystem.seedEmblemUrl, ecosystem.seedEmblemUrl);
+        console.log('[EcosystemPage] ecosystem data:', ecosystem);
+        console.log('[EcosystemPage] seedEmblemUrl type:', typeof ecosystem.seedEmblemUrl, ecosystem.seedEmblemUrl);
         setEcosystemData(ecosystem);
       } catch (err) {
         console.error("Error loading ecosystem data:", err);

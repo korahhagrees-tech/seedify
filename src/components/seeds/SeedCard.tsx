@@ -27,21 +27,21 @@ export default function SeedCard({ seed, onClick, index = 0 }: SeedCardProps) {
   ].filter(Boolean) as string[];
 
   const handleImageLoad = () => {
-    console.log(" [IMAGE] Successfully loaded:", currentImageSrc);
+    // console.log("[IMAGE] Successfully loaded:", currentImageSrc);
   };
 
   const handleImageError = () => {
     const nextIndex = imageErrorCount + 1;
     
     if (nextIndex < FALLBACK_IMAGES.length) {
-      console.log(
-        ` [IMAGE] Error loading image (attempt ${nextIndex}/${FALLBACK_IMAGES.length}), trying fallback:`,
-        FALLBACK_IMAGES[nextIndex]
-      );
+      // console.log(
+      //   ` [IMAGE] Error loading image (attempt ${nextIndex}/${FALLBACK_IMAGES.length}), trying fallback:`,
+      //   FALLBACK_IMAGES[nextIndex]
+      // );
       setCurrentImageSrc(FALLBACK_IMAGES[nextIndex]);
       setImageErrorCount(nextIndex);
     } else {
-      console.log(" [IMAGE] All fallbacks exhausted, showing final fallback");
+      // console.log("[IMAGE] All fallbacks exhausted, showing final fallback");
     }
   };
 

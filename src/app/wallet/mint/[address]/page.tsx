@@ -25,27 +25,27 @@ export default function MintPage() {
   const authenticated = !!user && !!walletAddress;
 
   // Debug logging
-  console.log('🔍 MintPage Debug:', {
-    authenticated,
-    privyAuthenticated,
-    user: user ? 'exists' : 'null',
-    userType: typeof user,
-    walletAddress,
-    walletAddressType: typeof walletAddress,
-    activeWallet: activeWallet?.address || 'no active wallet',
-    address
-  });
+  // console.log(' MintPage Debug:', {
+  //   authenticated,
+  //   privyAuthenticated,
+  //   user: user ? 'exists' : 'null',
+  //   userType: typeof user,
+  //   walletAddress,
+  //   walletAddressType: typeof walletAddress,
+  //   activeWallet: activeWallet?.address || 'no active wallet',
+  //   address
+  // });
 
   // Render-first approach: do NOT redirect away. We'll check readiness/address lazily for actions.
   useEffect(() => {
-    console.log('🔍 MintPage mounted with:', {
-      authenticated,
-      privyAuthenticated,
-      user: !!user,
-      walletAddress,
-      activeWallet: activeWallet?.address,
-      address
-    });
+    // console.log(' MintPage mounted with:', {
+    //   authenticated,
+    //   privyAuthenticated,
+    //   user: !!user,
+    //   walletAddress,
+    //   activeWallet: activeWallet?.address,
+    //   address
+    // });
   }, [authenticated, privyAuthenticated, user, walletAddress, address, activeWallet]);
 
   // Fetch prepare data once
@@ -73,14 +73,14 @@ export default function MintPage() {
   }, [address]);
 
   const userEvmAddress = useMemo(() => {
-    console.log('🔍 [MINT] Computing userEvmAddress:', {
-      walletAddress,
-      walletAddressType: typeof walletAddress,
-      walletAddressStartsWith0x: walletAddress?.startsWith('0x'),
-      activeWalletAddress: activeWallet?.address,
-      activeWalletType: typeof activeWallet?.address,
-      activeWalletStartsWith0x: activeWallet?.address?.startsWith('0x')
-    });
+    // console.log(' [MINT] Computing userEvmAddress:', {
+    //   walletAddress,
+    //   walletAddressType: typeof walletAddress,
+    //   walletAddressStartsWith0x: walletAddress?.startsWith('0x'),
+    //   activeWalletAddress: activeWallet?.address,
+    //   activeWalletType: typeof activeWallet?.address,
+    //   activeWalletStartsWith0x: activeWallet?.address?.startsWith('0x')
+    // });
 
     // Priority 1: Use walletAddress from Zustand store
     if (walletAddress && typeof walletAddress === 'string' && walletAddress.startsWith('0x')) {
@@ -90,17 +90,17 @@ export default function MintPage() {
     
     // Priority 2: Use activeWallet address
     if (activeWallet?.address && typeof activeWallet.address === 'string' && activeWallet.address.startsWith('0x')) {
-      console.log(' [MINT] Using activeWallet.address:', activeWallet.address);
+      // console.log(' [MINT] Using activeWallet.address:', activeWallet.address);
       return activeWallet.address;
     }
     
     // Priority 3: Use URL param address (the user's address we're minting for)
     if (address && typeof address === 'string' && address.startsWith('0x')) {
-      console.log(' [MINT] Falling back to URL param address:', address);
+      // console.log(' [MINT] Falling back to URL param address:', address);
       return address;
     }
     
-    console.error('❌ [MINT] No valid EVM address found!');
+    console.error('[MINT] No valid EVM address found!');
     return undefined;
   }, [walletAddress, activeWallet?.address, address]);
 

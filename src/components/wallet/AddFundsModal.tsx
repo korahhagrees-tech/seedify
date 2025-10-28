@@ -26,7 +26,7 @@ export default function AddFundsModal({
   // Use Privy's fundWallet hook with callback
   const { fundWallet } = useFundWallet({
     onUserExited: () => {
-      console.log("User exited funding flow");
+      // console.log("User exited funding flow");
       // You can add custom logic here based on the result
       onCloseAction();
     },

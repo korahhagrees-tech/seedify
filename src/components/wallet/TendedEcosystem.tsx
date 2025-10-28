@@ -54,7 +54,7 @@ export default function TendedEcosystem({
   const handleTendAgain = () => {
     if (seedId && seedSlug && beneficiarySlug) {
       const url = `/seed/${seedId}/${seedSlug}/ecosystem/${beneficiarySlug}`;
-      console.log("Routing to:", url); // Debug log
+      // console.log("Routing to:", url);
       router.push(url);
     } else {
       console.error("Missing routing data:", {
@@ -118,16 +118,16 @@ export default function TendedEcosystem({
               fill
               className="object-cover"
               onError={(e) => {
-                console.log(
-                  ` [IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
-                );
+                // console.log(
+                //   ` [IMAGE] Error loading image (attempt ${imageErrorCount + 1}), trying fallback`
+                // );
 
                 const newErrorCount = imageErrorCount + 1;
                 setImageErrorCount(newErrorCount);
 
                 // Prevent infinite retry loops
                 if (newErrorCount > 3) {
-                  console.log(" [IMAGE] Max retries reached, using final fallback");
+                  // console.log("[IMAGE] Max retries reached, using final fallback");
                   setCurrentImageSrc("https://d17wy07434ngk.cloudfront.net/seed1/seed.png");
                   return;
                 }
@@ -141,7 +141,7 @@ export default function TendedEcosystem({
 
                 if (newErrorCount <= fallbackImages.length) {
                   const fallbackSrc = fallbackImages[newErrorCount - 1];
-                  console.log(` [IMAGE] Trying fallback: ${fallbackSrc}`);
+                  // console.log(` [IMAGE] Trying fallback: ${fallbackSrc}`);
                   setCurrentImageSrc(fallbackSrc);
                 } else {
                   // Use a simple placeholder

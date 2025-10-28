@@ -72,15 +72,15 @@ const mockStewardSeeds = [
 
 // --- Helper functions outside component for cache access ---
 const getInitialCachedSnapshots = (walletAddress: string | null): any[] => {
-  console.log('🚀 [WALLET INIT] getInitialCachedSnapshots called with walletAddress:', walletAddress);
+  // console.log('[WALLET INIT] getInitialCachedSnapshots called with walletAddress:', walletAddress);
   
   if (typeof window === 'undefined') {
-    console.log('[WALLET INIT] Server-side render, returning empty array');
+    // console.log('[WALLET INIT] Server-side render, returning empty array');
     return [];
   }
   
   if (!walletAddress) {
-    console.log('[WALLET INIT] No wallet address, returning empty array');
+    // console.log('[WALLET INIT] No wallet address, returning empty array');
     return [];
   }
   
@@ -90,7 +90,7 @@ const getInitialCachedSnapshots = (walletAddress: string | null): any[] => {
     const cached = localStorage.getItem(cacheKey);
     
     if (!cached) {
-      console.log('[WALLET INIT] No cached data found in localStorage for key:', cacheKey);
+      // console.log('[WALLET INIT] No cached data found in localStorage for key:', cacheKey);
       return [];
     }
     
@@ -98,15 +98,15 @@ const getInitialCachedSnapshots = (walletAddress: string | null): any[] => {
     const isExpired = Date.now() - cacheData.timestamp > 60 * 60 * 2 * 1000; // 2 hours
     
     if (isExpired) {
-      console.log('⏰ [WALLET INIT] Cache expired, clearing and returning empty array');
+      // console.log('[WALLET INIT] Cache expired, clearing and returning empty array');
       localStorage.removeItem(cacheKey);
       return [];
     }
     
-    console.log(' [WALLET INIT] Loaded cached snapshots from localStorage:', cacheData.snapshots?.length || 0, 'snapshots');
+    // console.log('[WALLET INIT] Loaded cached snapshots from localStorage:', cacheData.snapshots?.length || 0, 'snapshots');
     return cacheData.snapshots || [];
   } catch (error) {
-    console.warn(' [WALLET INIT] Failed to parse cached snapshots:', error);
+    // console.warn('[WALLET INIT] Failed to parse cached snapshots:', error);
     return [];
   }
 };
@@ -150,14 +150,14 @@ export default function WalletPage() {
 
   // Debug wallet address and load cache when wallet address becomes available
   useEffect(() => {
-    console.log('🔍 [WALLET] Current walletAddress:', walletAddress);
-    console.log('🔍 [WALLET] Current state - allSnapshots.length:', allSnapshots.length, 'tendedEcosystems.length:', tendedEcosystems.length);
+    // console.log(' [WALLET] Current walletAddress:', walletAddress);
+    // console.log(' [WALLET] Current state - allSnapshots.length:', allSnapshots.length, 'tendedEcosystems.length:', tendedEcosystems.length);
     
     // If wallet address just became available and we don't have data yet, try loading from cache
     if (walletAddress && allSnapshots.length === 0) {
       const cachedSnapshots = getInitialCachedSnapshots(walletAddress);
       if (cachedSnapshots.length > 0) {
-        console.log('⚡ [WALLET] Wallet address now available, loading cache immediately');
+        // console.log('[WALLET] Wallet address now available, loading cache immediately');
         setAllSnapshots(cachedSnapshots);
         setTendedEcosystems(cachedSnapshots.slice(0, snapshotsPerPage));
         setHasMoreSnapshots(cachedSnapshots.length > snapshotsPerPage);
@@ -189,7 +189,7 @@ export default function WalletPage() {
     
     try {
       localStorage.setItem(cacheKey, JSON.stringify(cacheData));
-      console.log('💾 [WALLET] Cached', snapshots.length, 'snapshots to localStorage');
+      // console.log('[WALLET] Cached', snapshots.length, 'snapshots to localStorage');
     } catch (error) {
       console.warn(' [WALLET] Failed to cache snapshots to localStorage:', error);
     }
@@ -214,7 +214,7 @@ export default function WalletPage() {
       
       return cacheData.snapshots || [];
     } catch (error) {
-      console.warn(' [WALLET] Failed to get cached snapshots:', error);
+      // console.warn(' [WALLET] Failed to get cached snapshots:', error);
       return null;
     }
   };
@@ -321,11 +321,11 @@ export default function WalletPage() {
     let cancelled = false;
     const load = async () => {
       if (!walletAddress) {
-        console.log('[WALLET] No wallet address available');
+        // console.log('[WALLET] No wallet address available');
         return;
       }
 
-      console.log(' [WALLET] Starting to load wallet data for address:', walletAddress);
+      // console.log(' [WALLET] Starting to load wallet data for address:', walletAddress);
 
       // Check if we need to refresh (cache may already be loaded in state)
       const shouldRefresh = shouldRefreshSnapshots(walletAddress);
@@ -334,35 +334,35 @@ export default function WalletPage() {
         // Fetch user's seeds from /users/{address}/seeds endpoint for StewardSeedCard (with ETag cookies)
         const addressKey = walletAddress.toLowerCase();
         const seedsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSeeds(walletAddress)}`;
-        console.log(' [WALLET] Fetching seeds from:', seedsUrl);
+        // console.log('[WALLET] Fetching seeds from:', seedsUrl);
         const seedsEtagCookieKey = `seeds_etag_${addressKey}`;
         const seedsPrevEtag = getCookie(seedsEtagCookieKey);
         const seedsResponse = await fetch(seedsUrl, {
           headers: seedsPrevEtag ? { 'If-None-Match': seedsPrevEtag } : undefined,
         });
-        console.log('📊 [WALLET] Seeds API Response status:', seedsResponse.status);
+        // console.log('[WALLET] Seeds API Response status:', seedsResponse.status);
 
         if (seedsResponse.status === 304) {
-          console.log(' [WALLET] Seeds not modified (ETag). Skipping state update.');
+          // console.log('[WALLET] Seeds not modified (ETag). Skipping state update.');
         } else if (seedsResponse.ok) {
           const seedsData = await seedsResponse.json();
-          console.log('📊 [WALLET] Seeds API Response data:', seedsData);
+          // console.log('[WALLET] Seeds API Response data:', seedsData);
 
           if (seedsData.success && seedsData.seeds && seedsData.seeds.length > 0) {
-            console.log(' [WALLET] Loaded seeds:', seedsData.seeds);
+            // console.log('[WALLET] Loaded seeds:', seedsData.seeds);
             if (!cancelled) {
               setStewardSeeds(seedsData.seeds);
             }
             const newEtag = seedsResponse.headers.get('ETag');
             if (newEtag) setCookie(seedsEtagCookieKey, newEtag, 60 * 60); // 1 hour
           } else {
-            console.log('[WALLET] No seeds found or API failed:', seedsData);
+            // console.log('[WALLET] No seeds found or API failed:', seedsData);
             if (!cancelled) {
               setStewardSeeds([]);
             }
           }
         } else {
-          console.error('[WALLET] Seeds API request failed with status:', seedsResponse.status);
+          // console.error('[WALLET] Seeds API request failed with status:', seedsResponse.status);
           if (!cancelled) {
             setStewardSeeds([]);
           }
@@ -374,7 +374,7 @@ export default function WalletPage() {
         
         // If we have cached data and don't need to refresh, use it
         if (hasCachedData && !shouldRefresh) {
-          console.log(' [WALLET] Using cached data, skipping API fetch (', cachedSnapshots.length, 'snapshots)');
+          // console.log('[WALLET] Using cached data, skipping API fetch (', cachedSnapshots.length, 'snapshots)');
           if (!cancelled && allSnapshots.length === 0) {
             // Only update state if we don't already have data (avoid unnecessary re-renders)
             const reversedSnapshots = cachedSnapshots; // Already reversed in cache
@@ -384,11 +384,11 @@ export default function WalletPage() {
           }
         } else {
           // Fetch fresh data if no cache or need refresh
-          console.log(' [WALLET] Fetching fresh snapshots data (hasCachedData:', hasCachedData, 'shouldRefresh:', shouldRefresh, ')');
+          // console.log('[WALLET] Fetching fresh snapshots data (hasCachedData:', hasCachedData, 'shouldRefresh:', shouldRefresh, ')');
 
           // Fetch user's snapshots from /users/{address}/snapshots endpoint for TendedEcosystem (with ETag + throttle)
           const snapshotsUrl = `${API_CONFIG.baseUrl}${API_ENDPOINTS.userSnapshots(walletAddress)}`;
-          console.log(' [WALLET] Final snapshots URL:', snapshotsUrl);
+          // console.log('[WALLET] Final snapshots URL:', snapshotsUrl);
           const snapsEtagCookieKey = `snaps_etag_${addressKey}`;
           const snapsLastCookieKey = `snaps_last_${addressKey}`;
           const prevSnapsEtag = getCookie(snapsEtagCookieKey);
@@ -405,11 +405,11 @@ export default function WalletPage() {
               headers: prevSnapsEtag ? { 'If-None-Match': prevSnapsEtag } : undefined,
             });
           } else {
-            console.log('⏭️ [WALLET] Skipping snapshots refetch (throttled <20s).');
+            // console.log('[WALLET] Skipping snapshots refetch (throttled <20s).');
           }
 
           if (snapshotsResponse) {
-            console.log('📊 [WALLET] API Response status:', snapshotsResponse.status);
+            // console.log('[WALLET] API Response status:', snapshotsResponse.status);
           }
 
           if (snapshotsResponse && !snapshotsResponse.ok && snapshotsResponse.status !== 304) {
@@ -418,11 +418,11 @@ export default function WalletPage() {
 
           if (snapshotsResponse && snapshotsResponse.status !== 304) {
             const snapshotsData = await snapshotsResponse.json();
-            console.log('📊 [WALLET] API Response data:', snapshotsData);
+            // console.log('[WALLET] API Response data:', snapshotsData);
 
             if (snapshotsData.success && snapshotsData.snapshots.length > 0) {
-              console.log(' [WALLET] Loaded snapshots:', snapshotsData.snapshots);
-              console.log('🔍 [WALLET] First snapshot structure:', snapshotsData.snapshots[0]);
+              // console.log('[WALLET] Loaded snapshots:', snapshotsData.snapshots);
+              // console.log('[WALLET] First snapshot structure:', snapshotsData.snapshots[0]);
 
               // Enrich snapshots with seed and beneficiary data
               const enrichedSnapshots = await Promise.all(
@@ -433,35 +433,35 @@ export default function WalletPage() {
 
                     // Fetch beneficiary data to get proper name and readMoreLink
                     const beneficiary = await fetchBeneficiaryByIndex(snapshot.beneficiaryIndex);
-                    console.log(`🔍 [WALLET] Beneficiary data for index ${snapshot.beneficiaryIndex}:`, beneficiary);
+                    // console.log(` [WALLET] Beneficiary data for index ${snapshot.beneficiaryIndex}:`, beneficiary);
 
                     // Fetch seed stats to get ecosystem compost value
                     let ecosystemCompost = "0.00 ETH"; // Default fallback
                     try {
-                      console.log(`🔍 [WALLET] Fetching seed stats for seedId: ${snapshot.seedId} (type: ${typeof snapshot.seedId}), beneficiaryCode: ${beneficiary?.code}`);
+                      // console.log(` [WALLET] Fetching seed stats for seedId: ${snapshot.seedId} (type: ${typeof snapshot.seedId}), beneficiaryCode: ${beneficiary?.code}`);
                       const seedStats = await fetchSeedStats(snapshot.seedId.toString());
-                      console.log(`🔍 [WALLET] Seed stats response for seedId ${snapshot.seedId}:`, seedStats);
+                      // console.log(` [WALLET] Seed stats response for seedId ${snapshot.seedId}:`, seedStats);
 
                       if (seedStats?.beneficiaries && Array.isArray(seedStats.beneficiaries)) {
-                        console.log(`🔍 [WALLET] Available beneficiaries in stats:`, seedStats.beneficiaries.map((b: any) => ({ code: b.code, totalValue: b.totalValue })));
+                        // console.log(` [WALLET] Available beneficiaries in stats:`, seedStats.beneficiaries.map((b: any) => ({ code: b.code, totalValue: b.totalValue })));
 
                         // Find matching beneficiary by code
                         const matchingBeneficiary = seedStats.beneficiaries.find(
                           (b: any) => b.code === beneficiary?.code
                         );
 
-                        console.log(`🔍 [WALLET] Looking for beneficiary code: ${beneficiary?.code}`);
-                        console.log(`🔍 [WALLET] Matching beneficiary found:`, matchingBeneficiary);
+                        // console.log(` [WALLET] Looking for beneficiary code: ${beneficiary?.code}`);
+                        // console.log(` [WALLET] Matching beneficiary found:`, matchingBeneficiary);
 
                         if (matchingBeneficiary?.totalValue) {
                           const rawValue = parseFloat(matchingBeneficiary.totalValue);
                           ecosystemCompost = `${rawValue.toFixed(6)} ETH`;
-                          console.log(`🔍 [WALLET] Raw totalValue: ${matchingBeneficiary.totalValue}, parsed: ${rawValue}, formatted: ${ecosystemCompost}`);
+                          // console.log(` [WALLET] Raw totalValue: ${matchingBeneficiary.totalValue}, parsed: ${rawValue}, formatted: ${ecosystemCompost}`);
                         } else {
-                          console.log(`🔍 [WALLET] No matching beneficiary or totalValue found`);
+                          // console.log(` [WALLET] No matching beneficiary or totalValue found`);
                         }
                       } else {
-                        console.log(`🔍 [WALLET] No beneficiaries array in seed stats`);
+                        // console.log(` [WALLET] No beneficiaries array in seed stats`);
                       }
                     } catch (statsError) {
                       console.warn(`Failed to fetch seed stats for snapshot ${snapshot.id}:`, statsError);
@@ -487,13 +487,13 @@ export default function WalletPage() {
                       ecosystemCompost: ecosystemCompost,
                     };
 
-                    console.log(`🔍 [WALLET] Enriched snapshot ${snapshot.id}:`, {
-                      originalImageUrl: snapshot.imageUrl,
-                      seedImageUrl: enrichedSnapshot.seedImageUrl,
-                      beneficiaryName: enrichedSnapshot.beneficiaryName,
-                      beneficiaryCode: enrichedSnapshot.beneficiaryCode,
-                      ecosystemCompost: enrichedSnapshot.ecosystemCompost
-                    });
+                    // console.log(` [WALLET] Enriched snapshot ${snapshot.id}:`, {
+                    //   originalImageUrl: snapshot.imageUrl,
+                    //   seedImageUrl: enrichedSnapshot.seedImageUrl,
+                    //   beneficiaryName: enrichedSnapshot.beneficiaryName,
+                    //   beneficiaryCode: enrichedSnapshot.beneficiaryCode,
+                    //   ecosystemCompost: enrichedSnapshot.ecosystemCompost
+                    // });
 
                     return enrichedSnapshot;
                   } catch (e) {
@@ -511,12 +511,12 @@ export default function WalletPage() {
                       ecosystemCompost: "0.00 ETH", // Default fallback
                     };
 
-                    console.log(`🔍 [WALLET] Fallback snapshot ${snapshot.id}:`, {
-                      originalImageUrl: snapshot.imageUrl,
-                      seedImageUrl: fallbackSnapshot.seedImageUrl,
-                      beneficiaryName: fallbackSnapshot.beneficiaryName,
-                      ecosystemCompost: fallbackSnapshot.ecosystemCompost
-                    });
+                    // console.log(` [WALLET] Fallback snapshot ${snapshot.id}:`, {
+                    //   originalImageUrl: snapshot.imageUrl,
+                    //   seedImageUrl: fallbackSnapshot.seedImageUrl,
+                    //   beneficiaryName: fallbackSnapshot.beneficiaryName,
+                    //   ecosystemCompost: fallbackSnapshot.ecosystemCompost
+                    // });
 
                     return fallbackSnapshot;
                   }
@@ -536,14 +536,14 @@ export default function WalletPage() {
 
                 // Cache the data
                 cacheSnapshots(reversedSnapshots, walletAddress);
-                console.log(' [WALLET] Enriched snapshots (newest first):', reversedSnapshots);
+                // console.log(' [WALLET] Enriched snapshots (newest first):', reversedSnapshots);
               }
 
               const newSnapsEtag = snapshotsResponse.headers.get('ETag');
               if (newSnapsEtag) setCookie(snapsEtagCookieKey, newSnapsEtag, 60 * 10); // 10 minutes
               setCookie(snapsLastCookieKey, String(Date.now()), 60 * 10);
             } else {
-              console.log('[WALLET] No snapshots found or API failed:', snapshotsData);
+              // console.log('[WALLET] No snapshots found or API failed:', snapshotsData);
               if (!cancelled) {
                 setAllSnapshots([]);
                 setTendedEcosystems([]);
@@ -552,11 +552,11 @@ export default function WalletPage() {
             }
           } else {
             // 304 or throttled
-            console.log(' [WALLET] Using existing snapshots (304/throttled).');
+            // console.log(' [WALLET] Using existing snapshots (304/throttled).');
           }
         } // End of else block for fresh data fetch
       } catch (_e) {
-        console.error('Failed to load wallet data:', _e);
+        // console.error('Failed to load wallet data:', _e);
         if (!cancelled) {
           setStewardSeeds([]);
           setTendedEcosystems([]);
@@ -623,7 +623,7 @@ export default function WalletPage() {
   const refreshSnapshots = useCallback(async () => {
     if (!walletAddress) return;
 
-    console.log(' [WALLET] Refreshing snapshots data');
+    // console.log(' [WALLET] Refreshing snapshots data');
 
     // Clear localStorage cache to force fresh fetch
     const addressKey = walletAddress.toLowerCase();
@@ -633,7 +633,7 @@ export default function WalletPage() {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(cacheKey);
       localStorage.removeItem(lastCheckKey);
-      console.log('🗑️ [WALLET] Cleared localStorage cache');
+      // console.log('[WALLET] Cleared localStorage cache');
     }
 
     // Reset pagination

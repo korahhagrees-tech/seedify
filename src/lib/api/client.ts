@@ -119,7 +119,7 @@ export const apiClient = {
    */
   async get<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
     const url = `${API_CONFIG.baseUrl}${endpoint}`;
-    console.log(`[API] GET ${url}`);
+    // console.log(`[API] GET ${url}`);
 
     const response = await fetchWithRetry(url, {
       ...options,
@@ -131,7 +131,7 @@ export const apiClient = {
     });
 
     const data = await parseResponse<T>(response);
-    console.log(`[API] GET ${url} - Success`);
+    // console.log(`[API] GET ${url} - Success`);
     return data;
   },
 
@@ -144,7 +144,7 @@ export const apiClient = {
     options: FetchOptions = {}
   ): Promise<T> {
     const url = `${API_CONFIG.baseUrl}${endpoint}`;
-    console.log(`[API] POST ${url}`);
+    // console.log(`[API] POST ${url}`);
 
     const response = await fetchWithRetry(url, {
       ...options,
@@ -157,7 +157,7 @@ export const apiClient = {
     });
 
     const data = await parseResponse<T>(response);
-    console.log(`[API] POST ${url} - Success`);
+    // console.log(`[API] POST ${url} - Success`);
     return data;
   },
 
@@ -170,7 +170,7 @@ export const apiClient = {
     options: FetchOptions = {}
   ): Promise<T> {
     const url = `${API_CONFIG.baseUrl}${endpoint}`;
-    console.log(`[API] PUT ${url}`);
+    // console.log(`[API] PUT ${url}`);
 
     const response = await fetchWithRetry(url, {
       ...options,
@@ -183,7 +183,7 @@ export const apiClient = {
     });
 
     const data = await parseResponse<T>(response);
-    console.log(`[API] PUT ${url} - Success`);
+    // console.log(`[API] PUT ${url} - Success`);
     return data;
   },
 
@@ -192,7 +192,7 @@ export const apiClient = {
    */
   async delete<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
     const url = `${API_CONFIG.baseUrl}${endpoint}`;
-    console.log(`[API] DELETE ${url}`);
+    // console.log(`[API] DELETE ${url}`);
 
     const response = await fetchWithRetry(url, {
       ...options,
@@ -204,7 +204,7 @@ export const apiClient = {
     });
 
     const data = await parseResponse<T>(response);
-    console.log(`[API] DELETE ${url} - Success`);
+    // console.log(`[API] DELETE ${url} - Success`);
     return data;
   },
 };

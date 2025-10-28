@@ -61,7 +61,7 @@ export default function SeedsListing({
     if (onSeedClick) {
       onSeedClick(seed);
     } else {
-      console.log("Seed clicked:", seed);
+      // console.log("Seed clicked:", seed);
     }
   };
 

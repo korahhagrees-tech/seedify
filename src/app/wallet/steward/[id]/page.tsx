@@ -48,13 +48,13 @@ export default function StewardStatsRoute() {
           const statsData = await statsResponse.json();
           setStats(statsData.success ? statsData.stats : null);
         } else {
-          console.error("Failed to fetch stats:", statsResponse.statusText);
+          // console.error("Failed to fetch stats:", statsResponse.statusText);
           setStats(null);
         }
 
         setHasFetched(true);
       } catch (error) {
-        console.error("Error loading data:", error);
+        // console.error("Error loading data:", error);
         setHasFetched(true);
       } finally {
         // no-op
@@ -65,12 +65,12 @@ export default function StewardStatsRoute() {
 
   // Modal handlers
   const handleAmplifyClick = () => {
-    console.log('🌱 Amplify button clicked from page level');
+    // console.log('[STEWARD] Amplify button clicked from page level');
     setIsAmplifyModalOpen(true);
   };
 
   const handleHarvestClick = () => {
-    console.log('🌾 Harvest button clicked from page level');
+    // console.log('[STEWARD] Harvest button clicked from page level');
     setIsHarvestModalOpen(true);
   };
 

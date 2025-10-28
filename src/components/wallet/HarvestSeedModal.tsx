@@ -14,12 +14,39 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { clearAppStorage } from "@/lib/auth/logoutUtils";
 import Image from "next/image";
 import { assets } from "@/lib/assets";
-import { useBalance, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useBalance, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from 'wagmi';
 import { useSendTransaction, useWallets, useFundWallet } from "@privy-io/react-auth";
 import { encodeFunctionData } from "viem";
 import { SNAPSHOT_NFT_ABI, SNAP_FACTORY_ABI } from "@/lib/contracts";
 import { base } from "viem/chains";
 import WalletConnectionModal from "@/components/wallet/WalletConnectionModal";
+
+// SeedFactory ABI for withdrawal
+const SEED_FACTORY_ABI = [
+  {
+    "inputs": [{"internalType": "uint256","name": "seedId","type": "uint256"}],
+    "name": "seedWithdrawn",
+    "outputs": [{"internalType": "bool","name": "", "type": "bool"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "uint256","name": "seedId","type": "uint256"}],
+    "name": "getDepositAmount",
+    "outputs": [{"internalType": "uint256","name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "uint256","name": "seedId","type": "uint256"}],
+    "name": "withdrawSeedDeposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+] as const;
+
+const SEED_FACTORY_ADDRESS = "0x7e75F9eC72dd70Eb4E6C701Be225cDBd77e51463";
 
 // Contract addresses for conditional ABI logic
 const SNAP_FACTORY_ADDRESS = "0x038cC19fF06F823B2037C7EFF239bE99aD99A01D"; // Uses mintSnapshot with royaltyRecipient
@@ -56,7 +83,7 @@ export default function HarvestSeedModal({
   const [copied, setCopied] = useState(false);
   const [showWalletConnection, setShowWalletConnection] = useState(false);
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
-  const [withdrawalAmount, setWithdrawalAmount] = useState(stats.currentClaimable);
+  const [withdrawalAmount, setWithdrawalAmount] = useState("");
   const { ready, authenticated, login, logout } = usePrivy();
   const { execute } = useWriteTransaction();
   const { user, walletAddress, wallets: contextWallets, activeWallet, linkedAccounts } = useAuth();
@@ -66,13 +93,14 @@ export default function HarvestSeedModal({
   // Update withdrawal amount when stats change
   useEffect(() => {
     if (stats.currentClaimable) {
-      setWithdrawalAmount(stats.currentClaimable);
+      setWithdrawalAmount(parseEthValue(stats.currentClaimable));
     }
   }, [stats.currentClaimable]);
 
   const { wallets: privyWallets } = useWallets();
   const { writeContractAsync } = useWriteContract();
   const { fundWallet } = useFundWallet();
+  const publicClient = usePublicClient();
 
   // Use wallets from context (Zustand store) or fallback to Privy wallets
   const wallets = contextWallets.length > 0 ? contextWallets : privyWallets;
@@ -192,17 +220,129 @@ export default function HarvestSeedModal({
         return;
       }
 
-      // TODO: Implement actual withdrawal logic here
-      console.log('Withdrawing:', withdrawalAmount);
+      const seedIdNum = parseInt(seedId || "1");
 
-      // For now, just show success
-      // toast.success('Withdrawal processed successfully!');
-      setShowWithdrawalModal(false);
-      onClose();
+      // Check if we have a public client for reading contract state
+      if (!publicClient) {
+        console.error('Public client not available');
+        toast.error('Unable to connect to blockchain. Please try again.');
+        setIsProcessing(false);
+        return;
+      }
+
+      // Check if seed has already been withdrawn
+      const isWithdrawn = await publicClient.readContract({
+        address: SEED_FACTORY_ADDRESS,
+        abi: SEED_FACTORY_ABI,
+        functionName: 'seedWithdrawn',
+        args: [BigInt(seedIdNum)],
+      });
+
+      if (isWithdrawn) {
+        console.error('Seed has already been withdrawn');
+        toast.error('This seed has already been withdrawn. No nutrients available.');
+        setIsProcessing(false);
+        return;
+      }
+
+      // Get deposit amount to display
+      const depositAmount = await publicClient.readContract({
+        address: SEED_FACTORY_ADDRESS,
+        abi: SEED_FACTORY_ABI,
+        functionName: 'getDepositAmount',
+        args: [BigInt(seedIdNum)],
+      });
+
+      if (depositAmount) {
+        const depositAmountEth = parseEthValue(depositAmount.toString());
+        // console.log('Claimable amount:', depositAmountEth, 'ETH');
+        // Update the withdrawal amount with the actual claimable amount (just the number, no ETH suffix)
+        setWithdrawalAmount(depositAmountEth);
+      }
+
+      // console.log('Executing withdrawal for seed:', seedIdNum);
+      // console.log('Active wallet address:', walletAddress);
+      // console.log('Active wallet object:', activeWallet);
+      
+      // Ensure we have a valid wallet address
+      if (!walletAddress) {
+        console.error('No wallet address found');
+        toast.error('No wallet address found. Please reconnect your wallet.');
+        setIsProcessing(false);
+        return;
+      }
+      
+      // Use writeContractAsync instead of sendTransaction for better wallet compatibility
+      const txHash = await writeContractAsync({
+        address: SEED_FACTORY_ADDRESS as `0x${string}`,
+        abi: SEED_FACTORY_ABI,
+        functionName: 'withdrawSeedDeposit',
+        args: [BigInt(seedIdNum)],
+      });
+
+      // console.log('Withdrawal transaction submitted:', txHash);
+
+      // Wait for transaction receipt and verify status
+      if (txHash) {
+        // console.log('Withdrawal transaction submitted with hash:', txHash);
+        
+        // Poll transaction status
+        let transactionStatus = null;
+        const maxAttempts = 20;
+        let attempts = 0;
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+
+        while (attempts < maxAttempts && !transactionStatus) {
+          try {
+            await new Promise(resolve => setTimeout(resolve, 6000));
+            
+            const statusResponse = await fetch(`${apiBaseUrl}/transactions/${txHash}/status`);
+            
+            if (statusResponse.ok) {
+              const statusData = await statusResponse.json();
+              // console.log('Transaction status response:', statusData);
+
+              if (statusData.success && statusData.transaction) {
+                const status = statusData.transaction.status;
+                
+                if (status === 'success') {
+                  // console.log('Transaction confirmed as successful');
+                  transactionStatus = statusData.transaction;
+                  break;
+                } else if (status === 'reverted') {
+                  console.error('Transaction reverted:', statusData.transaction.revertReason);
+                  toast.error('Transaction failed and reverted. Please try again.');
+                  setIsProcessing(false);
+                  return;
+                } else {
+                  // console.log('Transaction status pending, continuing to poll...');
+                }
+              }
+            }
+            
+            attempts++;
+          } catch (error) {
+            console.warn(`Status check attempt ${attempts + 1} failed:`, error);
+            attempts++;
+          }
+        }
+
+        if (!transactionStatus) {
+          console.error('Transaction verification timed out');
+          toast.error('Transaction verification timed out. Please check your wallet.');
+          setIsProcessing(false);
+          return;
+        }
+
+        // Success - close modal and show notification
+        toast.success('Withdrawal processed successfully!');
+        setShowWithdrawalModal(false);
+        onClose();
+      }
 
     } catch (error) {
       console.error('Withdrawal failed:', error);
-      // toast.error('Withdrawal failed. Please try again.');
+      toast.error('Withdrawal failed. Please try again.');
     } finally {
       setIsProcessing(false);
     }
@@ -326,21 +466,21 @@ export default function HarvestSeedModal({
                         className="flex items-center gap-2 px-4 py-0 h-8 text-[10px] lg:text-lg md:text-lg text-black hover:text-gray-800 transition-colors text-nowrap relative left-0 right-auto"
                       >
                         <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4 relative left-0 right-auto" />
-                        Log out
+                        <span className="text-[7px] lg:text-lg md:text-lg text-black relative left-0 right-auto">Log out</span>
                       </button>
                       <button
                         onClick={handleAddFunds}
-                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-[8px] lg:text-base md:text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-34 lg:left-44 md:left-40 -top-11 lg:-top-12 md:-top-14 right-auto z-50"
+                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-[6px] lg:text-base md:text-base text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-34 lg:left-44 md:left-40 -top-11 lg:-top-12 md:-top-14 right-auto z-50"
                       >
-                        <div className="scale-[1.0] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto text-nowrap">
+                        <div className="scale-[0.8] lg:scale-[1.2] md:scale-[0.8] relative left-0 right-auto text-nowrap">
                           <span className="peridia-display relative left-0 right-auto">A</span>dd <span className="peridia-display relative left-0 right-auto">F</span>unds
                         </div>
                       </button>
                       <button
                         onClick={handleWalletConnect}
-                        className="px-6 py-1 border-2 border-dotted border-black rounded-full text-sm h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-2 lg:left-0 md:-left-3 right-auto text-nowrap text-[8px] lg:text-base md:text-base"
+                        className="px-6 py-1 border-2 border-dotted border-black rounded-full text-sm h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-2 lg:left-0 md:-left-3 right-auto text-nowrap text-[6px] lg:text-base md:text-base"
                       >
-                        <div className="scale-[1.1] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto text-nowrap">
+                        <div className="scale-[0.9] lg:scale-[1.1] md:scale-[0.8] relative left-0 right-auto text-nowrap">
                           <span className="peridia-display relative left-0 right-auto">W</span>allet <span className="peridia-display relative left-0 right-auto">C</span>onnect
                         </div>
                       </button>
@@ -463,7 +603,7 @@ export default function HarvestSeedModal({
         isOpen={showWalletConnection}
         onClose={() => setShowWalletConnection(false)}
         onSuccess={() => {
-          console.log('Wallet connected successfully from HarvestModal');
+          // console.log('Wallet connected successfully from HarvestModal');
         }}
       />
 
@@ -488,7 +628,7 @@ export default function HarvestSeedModal({
               transition={{ type: "spring", duration: 0.5 }}
               className="fixed inset-0 z-60 flex items-center justify-center p-4"
             >
-              <div className="bg-white rounded-[40px] border-2 border-dotted border-black p-6 max-w-md w-full mx-auto relative shadow-2xl">
+              <div className="bg-white rounded-[40px] border-2 border-dotted border-black p-6 max-w-md w-full mx-auto relative shadow-2xl scale-[0.7] lg:scale-[0.9] md:scale-[0.9]">
                 {/* Close Button */}
                 <button
                   onClick={() => setShowWithdrawalModal(false)}
@@ -520,9 +660,9 @@ export default function HarvestSeedModal({
                     value={withdrawalAmount}
                     onChange={(e) => setWithdrawalAmount(e.target.value)}
                     className="w-full bg-gray-100 rounded-lg px-4 py-3 text-black text-sm border-none outline-none"
-                    placeholder="0.753 ETH"
+                    placeholder="0.000330"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Maximum: {stats.currentClaimable}</p>
+                  <p className="text-xs text-gray-500 mt-1">Maximum: {withdrawalAmount} ETH</p>
                 </div>
 
                 {/* Withdraw Button */}

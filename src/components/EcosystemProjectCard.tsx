@@ -100,8 +100,8 @@ export default function EcosystemProjectCard({
 
   // Handle payment confirmation from modal
   const handlePaymentConfirm = async (amount: string) => {
-    console.log(' [EcosystemCard] handlePaymentConfirm called with amount:', amount);
-    console.log(' [EcosystemCard] seedId:', seedId);
+    // console.log(' [EcosystemCard] handlePaymentConfirm called with amount:', amount);
+    // console.log(' [EcosystemCard] seedId:', seedId);
 
     setPaymentAmount(amount);
     setShowPaymentModal(false);
@@ -578,7 +578,7 @@ export default function EcosystemProjectCard({
           {/* Seed emblem - right side */}
           <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-md">
             {(() => {
-              console.log('🔍 EcosystemProjectCard seedEmblemUrl:', seedEmblemUrl, typeof seedEmblemUrl);
+              console.log(' EcosystemProjectCard seedEmblemUrl:', seedEmblemUrl, typeof seedEmblemUrl);
               return seedEmblemUrl && typeof seedEmblemUrl === 'string';
             })() && (
                 <Image

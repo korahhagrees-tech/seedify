@@ -93,9 +93,9 @@ export default function WayOfFlowersCard({
         className="object-cover"
         priority
         onError={(e) => {
-          console.log(
-            " [IMAGE] Error loading WayOfFlowers background image, using placeholder"
-          );
+          // console.log(
+          //   " [IMAGE] Error loading WayOfFlowers background image, using placeholder"
+          // );
           const target = e.target as HTMLImageElement;
           if (target.src !== `${window.location.origin}/seeds/01__GRG.png`) {
             target.src = "/seeds/01__GRG.png";
@@ -163,9 +163,9 @@ export default function WayOfFlowersCard({
                     height={60}
                     className="lg:w-37 md:w-32 w-26 lg:h-37 md:h-32 h-26 -mt-14 mb-8 lg:mb-6 md:mb-11"
                     onError={(e) => {
-                      console.log(
-                        " [IMAGE] Error loading seed emblem, using placeholder"
-                      );
+                      // console.log(
+                      //   " [IMAGE] Error loading seed emblem, using placeholder"
+                      // );
                       const target = e.target as HTMLImageElement;
                       if (
                         target.src !==
