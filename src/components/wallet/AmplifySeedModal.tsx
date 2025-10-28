@@ -577,19 +577,21 @@ export default function AmplifySeedModal({
                         className="flex items-center gap-2 px-4 py-0 h-8 text-lg text-black hover:text-gray-800 transition-colors text-nowrap relative left-0 right-auto"
                       >
                         <Image src={assets.logout} alt="Logout" width={16} height={16} className="w-4 h-4 relative left-0 right-auto" />
-                        <span className="text-nowrap text-[8px] lg:text-[12px] md:text-[12px]">Log out</span>
+                        <div className="scale-[0.9] lg:scale-[1.0] md:scale-[1.0] relative left-0 right-auto">
+                          <span className="text-nowrap text-[8px] lg:text-[12px] md:text-[12px]">Log out</span>
+                        </div>
                       </button>
                       <button
                         onClick={handleAddFunds}
-                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-[8px] lg:text-[12px] md:text-[12px] text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-32 lg:left-44 md:left-40 -top-16 lg:-top-12 md:-top-14 right-auto z-50"
+                        className="px-8 py-0 lg:py-0 md:py-0 h-8 border-2 border-dotted border-gray-500 rounded-full text-[8px] lg:text-[12px] md:text-[12px] text-black bg-gray-300 hover:bg-gray-100 transition-colors text-nowrap relative left-44 lg:left-44 md:left-40 -top-16 lg:-top-12 md:-top-14 right-auto z-50"
                       >
-                        <div className="scale-[0.8] lg:scale-[1.2] md:scale-[1.1] relative left-0 right-auto">
+                        <div className="scale-[1.1] lg:scale-[1.2] md:scale-[1.1] relative left-0 right-auto">
                           <span className="peridia-display relative left-0 right-auto">A</span>dd <span className="peridia-display relative left-0 right-auto">F</span>unds
                         </div>
                       </button>
                       <button
                         onClick={handleConnectAccount}
-                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-[8px] lg:text-[12px] md:text-[12px] h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative -left-12 lg:left-0 md:-left-3 right-auto text-nowrap scale-[1.1] lg:scale-[1.3] md:scale-[1.25]"
+                        className="px-4 py-1 border-2 border-dotted border-black rounded-full text-[8px] lg:text-[12px] md:text-[12px] h-8 lg:h-8 md:h-8 text-black bg-white hover:bg-gray-50 transition-colors relative left-18 lg:left-0 md:-left-3 right-auto text-nowrap scale-[1.1] lg:scale-[1.3] md:scale-[1.25]"
                       >
                         <div className="scale-[1.1] lg:scale-[1.2] md:scale-[1.1] relative left-0 right-auto">
                           <span className="peridia-display relative left-0 right-auto">W</span>allet <span className="peridia-display relative left-0 right-auto">C</span>onnect
@@ -627,7 +629,7 @@ export default function AmplifySeedModal({
                             placeholder="0.000"
                             style={
                               { width: contributionAmount ? `${Math.max(60, contributionAmount.length * 14)}px` : '120px',
-                                marginLeft: contributionAmount ? `-34px` : '-5px'
+                                marginLeft: contributionAmount ? `-34px` : '10px'
                                }
                             }
                           />
